@@ -330,6 +330,15 @@ class EnvVarReveal(BaseModel):
     key: str
 
 
+class ChatRequest(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+
+
+class ChatResponse(BaseModel):
+    response: str
+    session_id: str
+
 _GATEWAY_HEALTH_URL = os.getenv("GATEWAY_HEALTH_URL")
 _GATEWAY_HEALTH_TIMEOUT = float(os.getenv("GATEWAY_HEALTH_TIMEOUT", "3"))
 
@@ -537,6 +546,113 @@ async def search_sessions(q: str = "", limit: int = 20):
     except Exception:
         _log.exception("GET /api/sessions/search failed")
         raise HTTPException(status_code=500, detail="Search failed")
+
+
+# ── Chat endpoint ─────────────────────────────────────────────────────────────
+
+@ app.post("/api/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    """
+    Web chat endpoint — receives a message, runs the agent, returns the response.
+
+    The agent is run in a thread pool to avoid blocking the async event loop.
+    Messages are stored in the session database for persistence.
+    """
+    import uuid
+    import asyncio
+    from sinoclaw_state import SessionDB
+
+    db = SessionDB()
+    try:
+        # Create or resume session
+        session_id = req.session_id
+        if not session_id:
+            session_id = f"webchat-{uuid.uuid4().hex[:12]}"
+            db.create_session(session_id=session_id, source="webchat")
+        else:
+            try:
+                db.reopen_session(session_id)
+            except Exception:
+                session_id = f"webchat-{uuid.uuid4().hex[:12]}"
+                db.create_session(session_id=session_id, source="webchat")
+
+        # Add user message
+        db.append_message(
+            session_id=session_id,
+            role="user",
+            content=req.message,
+        )
+
+        def _run_agent() -> str:
+            """Run the agent synchronously in a thread."""
+            try:
+                import run_agent
+                from sinoclaw_cli.config import load_config
+                config = load_config()
+
+                # Collect recent conversation history for context
+                messages = db.get_messages(session_id=session_id)
+                prompt_parts = []
+                for msg in messages[:-1]:
+                    role = msg.get("role", "user")
+                    content = msg.get("content") or ""
+                    if content:
+                        prompt_parts.append(f"{role.upper()}: {content}")
+
+                last_user_msg = req.message
+                recent = "\n".join(prompt_parts[-10:])
+                full_prompt = (recent + f"\n\nUSER: {last_user_msg}\n\n" if prompt_parts else last_user_msg)
+
+                model = config.get("model", "anthropic/claude-sonnet-4-20250514")
+                provider = config.get("model_provider", "anthropic")
+
+                base_url = None
+                api_key = ""
+                if provider == "openai":
+                    base_url = config.get("openai_base_url") or "https://api.openai.com/v1"
+                    api_key = os.environ.get("OPENAI_API_KEY", "")
+                elif provider == "openrouter":
+                    base_url = "https://openrouter.ai/api/v1"
+                    api_key = os.environ.get("OPENROUTER_API_KEY", "")
+                elif provider == "anthropic":
+                    base_url = "https://api.anthropic.com/v1"
+                    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+                elif provider == "minimax":
+                    base_url = "https://api.minimax.chat/v1"
+                    api_key = os.environ.get("MINIMAX_API_KEY", "")
+                elif provider == "gemini":
+                    base_url = config.get("gemini_base_url") or "https://generativelanguage.googleapis.com/v1"
+                    api_key = os.environ.get("GEMINI_API_KEY", "")
+
+                if not api_key:
+                    return "（No API key configured. Please set your API key in the Keys page.）"
+
+                agent = run_agent.AIAgent(
+                    model=model,
+                    base_url=base_url,
+                    api_key=api_key,
+                )
+
+                response = agent.run_conversation(full_prompt)
+                return response or "（No response）"
+            except Exception as e:
+                _log.exception("Agent run failed in chat endpoint")
+                return f"（Error: {str(e)}）"
+
+        # Run in thread pool to avoid blocking
+        loop = asyncio.get_event_loop()
+        response_text = await loop.run_in_executor(None, _run_agent)
+
+        # Store assistant response
+        db.append_message(
+            session_id=session_id,
+            role="assistant",
+            content=response_text,
+        )
+
+        return ChatResponse(response=response_text, session_id=session_id)
+    finally:
+        db.close()
 
 
 def _normalize_config_for_web(config: Dict[str, Any]) -> Dict[str, Any]:
