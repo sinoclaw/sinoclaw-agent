@@ -1,4 +1,4 @@
-"""Tests for hermes_constants module."""
+"""Tests for sinoclaw_constants module."""
 
 import os
 from pathlib import Path
@@ -6,51 +6,51 @@ from unittest.mock import patch
 
 import pytest
 
-import hermes_constants
-from hermes_constants import get_default_hermes_root, is_container
+import sinoclaw_constants
+from sinoclaw_constants import get_default_sinoclaw_root, is_container
 
 
-class TestGetDefaultHermesRoot:
-    """Tests for get_default_hermes_root() — Docker/custom deployment awareness."""
+class TestGetDefaultSinoclawRoot:
+    """Tests for get_default_sinoclaw_root() — Docker/custom deployment awareness."""
 
-    def test_no_hermes_home_returns_native(self, tmp_path, monkeypatch):
-        """When HERMES_HOME is not set, returns ~/.hermes."""
+    def test_no_sinoclaw_home_returns_native(self, tmp_path, monkeypatch):
+        """When HERMES_HOME is not set, returns ~/.sinoclaw."""
         monkeypatch.delenv("HERMES_HOME", raising=False)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        assert get_default_hermes_root() == tmp_path / ".hermes"
+        assert get_default_sinoclaw_root() == tmp_path / ".sinoclaw"
 
-    def test_hermes_home_is_native(self, tmp_path, monkeypatch):
-        """When HERMES_HOME = ~/.hermes, returns ~/.hermes."""
-        native = tmp_path / ".hermes"
+    def test_sinoclaw_home_is_native(self, tmp_path, monkeypatch):
+        """When HERMES_HOME = ~/.sinoclaw, returns ~/.sinoclaw."""
+        native = tmp_path / ".sinoclaw"
         native.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("HERMES_HOME", str(native))
-        assert get_default_hermes_root() == native
+        assert get_default_sinoclaw_root() == native
 
-    def test_hermes_home_is_profile(self, tmp_path, monkeypatch):
-        """When HERMES_HOME is a profile under ~/.hermes, returns ~/.hermes."""
-        native = tmp_path / ".hermes"
+    def test_sinoclaw_home_is_profile(self, tmp_path, monkeypatch):
+        """When HERMES_HOME is a profile under ~/.sinoclaw, returns ~/.sinoclaw."""
+        native = tmp_path / ".sinoclaw"
         profile = native / "profiles" / "coder"
         profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("HERMES_HOME", str(profile))
-        assert get_default_hermes_root() == native
+        assert get_default_sinoclaw_root() == native
 
-    def test_hermes_home_is_docker(self, tmp_path, monkeypatch):
-        """When HERMES_HOME points outside ~/.hermes (Docker), returns HERMES_HOME."""
+    def test_sinoclaw_home_is_docker(self, tmp_path, monkeypatch):
+        """When HERMES_HOME points outside ~/.sinoclaw (Docker), returns HERMES_HOME."""
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("HERMES_HOME", str(docker_home))
-        assert get_default_hermes_root() == docker_home
+        assert get_default_sinoclaw_root() == docker_home
 
-    def test_hermes_home_is_custom_path(self, tmp_path, monkeypatch):
-        """Any HERMES_HOME outside ~/.hermes is treated as the root."""
-        custom = tmp_path / "my-hermes-data"
+    def test_sinoclaw_home_is_custom_path(self, tmp_path, monkeypatch):
+        """Any HERMES_HOME outside ~/.sinoclaw is treated as the root."""
+        custom = tmp_path / "my-sinoclaw-data"
         custom.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("HERMES_HOME", str(custom))
-        assert get_default_hermes_root() == custom
+        assert get_default_sinoclaw_root() == custom
 
     def test_docker_profile_active(self, tmp_path, monkeypatch):
         """When a Docker profile is active (HERMES_HOME=<root>/profiles/<name>),
@@ -60,7 +60,7 @@ class TestGetDefaultHermesRoot:
         profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("HERMES_HOME", str(profile))
-        assert get_default_hermes_root() == docker_root
+        assert get_default_sinoclaw_root() == docker_root
 
 
 class TestIsContainer:
@@ -68,7 +68,7 @@ class TestIsContainer:
 
     def _reset_cache(self, monkeypatch):
         """Reset the cached detection result before each test."""
-        monkeypatch.setattr(hermes_constants, "_container_detected", None)
+        monkeypatch.setattr(sinoclaw_constants, "_container_detected", None)
 
     def test_detects_dockerenv(self, monkeypatch, tmp_path):
         """/.dockerenv triggers container detection."""
@@ -106,7 +106,7 @@ class TestIsContainer:
 
     def test_caches_result(self, monkeypatch):
         """Second call uses cached value without re-probing."""
-        monkeypatch.setattr(hermes_constants, "_container_detected", True)
+        monkeypatch.setattr(sinoclaw_constants, "_container_detected", True)
         assert is_container() is True
         # Even if we make os.path.exists return False, cached value wins
         monkeypatch.setattr(os.path, "exists", lambda p: False)

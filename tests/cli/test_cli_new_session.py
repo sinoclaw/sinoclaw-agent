@@ -8,7 +8,7 @@ import sys
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
-from hermes_state import SessionDB
+from sinoclaw_state import SessionDB
 from tools.todo_tool import TodoStore
 
 
@@ -75,7 +75,7 @@ class _FakeAgent:
 
 
 def _make_cli(env_overrides=None, config_overrides=None, **kwargs):
-    """Create a HermesCLI instance with minimal mocking."""
+    """Create a SinoclawCLI instance with minimal mocking."""
     _clean_config = {
         "model": {
             "default": "anthropic/claude-opus-4.6",
@@ -117,7 +117,7 @@ def _make_cli(env_overrides=None, config_overrides=None, **kwargs):
         with patch.object(_cli_mod, "get_tool_definitions", return_value=[]), patch.dict(
             _cli_mod.__dict__, {"CLI_CONFIG": _clean_config}
         ):
-            return _cli_mod.HermesCLI(**kwargs)
+            return _cli_mod.SinoclawCLI(**kwargs)
 
 
 def _prepare_cli_with_active_session(tmp_path):

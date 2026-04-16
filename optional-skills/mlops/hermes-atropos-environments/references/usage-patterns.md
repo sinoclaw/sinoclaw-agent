@@ -11,7 +11,7 @@ training server.
 ### Step 1: Run 1 trajectory
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 source venv/bin/activate
 
 python environments/your_env.py process \
@@ -103,7 +103,7 @@ Run evaluate with different models and compare the metrics.json files.
 
 ### What to check:
 - **"data_dir_to_save_evals is not set"** — you forgot the flag, results won't be saved
-- **Tool usage rate = 0** — evaluate() is using chat_completion instead of HermesAgentLoop
+- **Tool usage rate = 0** — evaluate() is using chat_completion instead of SinoclawAgentLoop
 - **All scores identical** — judge failing, falling back to heuristic
 - **Very slow** — each item runs a full agent loop (~30-90s). Use `--env.eval_size 5` for quick checks.
 

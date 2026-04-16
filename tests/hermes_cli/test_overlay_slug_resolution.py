@@ -1,7 +1,7 @@
 """Test that overlay providers with mismatched models.dev keys resolve correctly.
 
 HERMES_OVERLAYS keys may be models.dev IDs (e.g. "github-copilot") while
-_PROVIDER_MODELS and config.yaml use Hermes IDs ("copilot").  The slug
+_PROVIDER_MODELS and config.yaml use Sinoclaw IDs ("copilot").  The slug
 resolution in list_authenticated_providers() Section 2 must bridge this gap.
 
 Covers: #5223, #6492
@@ -13,13 +13,13 @@ from unittest.mock import patch
 
 import pytest
 
-from hermes_cli.model_switch import list_authenticated_providers
+from sinoclaw_cli.model_switch import list_authenticated_providers
 
 
 # -- Copilot slug resolution (env var path) ----------------------------------
 
 @patch.dict(os.environ, {"COPILOT_GITHUB_TOKEN": "fake-ghu"}, clear=False)
-def test_copilot_uses_hermes_slug():
+def test_copilot_uses_sinoclaw_slug():
     """github-copilot overlay should resolve to slug='copilot' with curated models."""
     providers = list_authenticated_providers(current_provider="copilot")
 
@@ -48,7 +48,7 @@ def test_copilot_no_duplicate_entries():
 
 def test_kimi_for_coding_alias():
     """resolve_provider('kimi-for-coding') should return 'kimi-coding'."""
-    from hermes_cli.auth import resolve_provider
+    from sinoclaw_cli.auth import resolve_provider
 
     result = resolve_provider("kimi-for-coding")
     assert result == "kimi-coding"
@@ -57,7 +57,7 @@ def test_kimi_for_coding_alias():
 # -- Generic slug mismatch providers -----------------------------------------
 
 @patch.dict(os.environ, {"KIMI_API_KEY": "fake-key"}, clear=False)
-def test_kimi_for_coding_overlay_uses_hermes_slug():
+def test_kimi_for_coding_overlay_uses_sinoclaw_slug():
     """kimi-for-coding overlay should resolve to slug='kimi-coding'."""
     providers = list_authenticated_providers(current_provider="kimi-coding")
 
@@ -71,7 +71,7 @@ def test_kimi_for_coding_overlay_uses_hermes_slug():
 
 
 @patch.dict(os.environ, {"KILOCODE_API_KEY": "fake-key"}, clear=False)
-def test_kilo_overlay_uses_hermes_slug():
+def test_kilo_overlay_uses_sinoclaw_slug():
     """kilo overlay should resolve to slug='kilocode'."""
     providers = list_authenticated_providers(current_provider="kilocode")
 

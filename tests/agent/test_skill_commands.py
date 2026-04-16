@@ -380,14 +380,14 @@ class TestPlanSkillHelpers:
             now=datetime(2026, 3, 15, 9, 30, 45),
         )
 
-        assert path == Path(".hermes") / "plans" / "2026-03-15_093045-implement-oauth-login-refresh-tokens.md"
+        assert path == Path(".sinoclaw") / "plans" / "2026-03-15_093045-implement-oauth-login-refresh-tokens.md"
 
     def test_plan_skill_message_can_include_runtime_save_path_note(self, tmp_path):
         with patch("tools.skills_tool.SKILLS_DIR", tmp_path):
             _make_skill(
                 tmp_path,
                 "plan",
-                body="Save plans under .hermes/plans in the active workspace and do not execute the work.",
+                body="Save plans under .sinoclaw/plans in the active workspace and do not execute the work.",
             )
             scan_skill_commands()
             msg = build_skill_invocation_message(
@@ -395,13 +395,13 @@ class TestPlanSkillHelpers:
                 "Add a /plan command",
                 runtime_note=(
                     "Save the markdown plan with write_file to this exact relative path inside "
-                    "the active workspace/backend cwd: .hermes/plans/plan.md"
+                    "the active workspace/backend cwd: .sinoclaw/plans/plan.md"
                 ),
             )
 
         assert msg is not None
         assert "Save plans under $HERMES_HOME/plans" not in msg
-        assert ".hermes/plans" in msg
+        assert ".sinoclaw/plans" in msg
         assert "Add a /plan command" in msg
-        assert ".hermes/plans/plan.md" in msg
+        assert ".sinoclaw/plans/plan.md" in msg
         assert "Runtime note:" in msg

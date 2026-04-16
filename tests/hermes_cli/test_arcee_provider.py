@@ -10,7 +10,7 @@ if "dotenv" not in sys.modules:
     fake_dotenv.load_dotenv = lambda *args, **kwargs: None
     sys.modules["dotenv"] = fake_dotenv
 
-from hermes_cli.auth import (
+from sinoclaw_cli.auth import (
     PROVIDER_REGISTRY,
     resolve_provider,
     get_api_key_provider_status,
@@ -67,12 +67,12 @@ class TestArceeAliases:
         assert resolve_provider(alias) == "arcee"
 
     def test_normalize_provider_models_py(self):
-        from hermes_cli.models import normalize_provider
+        from sinoclaw_cli.models import normalize_provider
         assert normalize_provider("arcee-ai") == "arcee"
         assert normalize_provider("arceeai") == "arcee"
 
     def test_normalize_provider_providers_py(self):
-        from hermes_cli.providers import normalize_provider
+        from sinoclaw_cli.providers import normalize_provider
         assert normalize_provider("arcee-ai") == "arcee"
         assert normalize_provider("arceeai") == "arcee"
 
@@ -121,7 +121,7 @@ class TestArceeCredentials:
 
 class TestArceeModelCatalog:
     def test_static_model_list(self):
-        from hermes_cli.models import _PROVIDER_MODELS
+        from sinoclaw_cli.models import _PROVIDER_MODELS
         assert "arcee" in _PROVIDER_MODELS
         models = _PROVIDER_MODELS["arcee"]
         assert "trinity-large-thinking" in models
@@ -129,7 +129,7 @@ class TestArceeModelCatalog:
         assert "trinity-mini" in models
 
     def test_canonical_provider_entry(self):
-        from hermes_cli.models import CANONICAL_PROVIDERS
+        from sinoclaw_cli.models import CANONICAL_PROVIDERS
         slugs = [p.slug for p in CANONICAL_PROVIDERS]
         assert "arcee" in slugs
 
@@ -141,15 +141,15 @@ class TestArceeModelCatalog:
 
 class TestArceeNormalization:
     def test_in_matching_prefix_strip_set(self):
-        from hermes_cli.model_normalize import _MATCHING_PREFIX_STRIP_PROVIDERS
+        from sinoclaw_cli.model_normalize import _MATCHING_PREFIX_STRIP_PROVIDERS
         assert "arcee" in _MATCHING_PREFIX_STRIP_PROVIDERS
 
     def test_strips_prefix(self):
-        from hermes_cli.model_normalize import normalize_model_for_provider
+        from sinoclaw_cli.model_normalize import normalize_model_for_provider
         assert normalize_model_for_provider("arcee/trinity-mini", "arcee") == "trinity-mini"
 
     def test_bare_name_unchanged(self):
-        from hermes_cli.model_normalize import normalize_model_for_provider
+        from sinoclaw_cli.model_normalize import normalize_model_for_provider
         assert normalize_model_for_provider("trinity-mini", "arcee") == "trinity-mini"
 
 
@@ -183,7 +183,7 @@ class TestArceeURLMapping:
 
 class TestArceeProvidersModule:
     def test_overlay_exists(self):
-        from hermes_cli.providers import HERMES_OVERLAYS
+        from sinoclaw_cli.providers import HERMES_OVERLAYS
         assert "arcee" in HERMES_OVERLAYS
         overlay = HERMES_OVERLAYS["arcee"]
         assert overlay.transport == "openai_chat"
@@ -191,7 +191,7 @@ class TestArceeProvidersModule:
         assert not overlay.is_aggregator
 
     def test_label(self):
-        from hermes_cli.models import _PROVIDER_LABELS
+        from sinoclaw_cli.models import _PROVIDER_LABELS
         assert _PROVIDER_LABELS["arcee"] == "Arcee AI"
 
 

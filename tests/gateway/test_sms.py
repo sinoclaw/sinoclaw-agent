@@ -181,19 +181,19 @@ class TestSmsRequirements:
 # ── Toolset verification ───────────────────────────────────────────
 
 class TestSmsToolset:
-    def test_hermes_sms_toolset_exists(self):
+    def test_sinoclaw_sms_toolset_exists(self):
         from toolsets import get_toolset
 
-        ts = get_toolset("hermes-sms")
+        ts = get_toolset("sinoclaw-sms")
         assert ts is not None
         assert "tools" in ts
 
-    def test_hermes_sms_in_gateway_includes(self):
+    def test_sinoclaw_sms_in_gateway_includes(self):
         from toolsets import get_toolset
 
-        gw = get_toolset("hermes-gateway")
+        gw = get_toolset("sinoclaw-gateway")
         assert gw is not None
-        assert "hermes-sms" in gw["includes"]
+        assert "sinoclaw-sms" in gw["includes"]
 
     def test_sms_platform_hint_exists(self):
         from agent.prompt_builder import PLATFORM_HINTS

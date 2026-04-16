@@ -526,7 +526,7 @@ class TestSendViaRestApi:
         # Verify the REST API was called with correct payload
         call_args = mock_session.post.call_args
         assert "/api/services/persistent_notification/create" in call_args[0][0]
-        assert call_args[1]["json"]["title"] == "Hermes Agent"
+        assert call_args[1]["json"]["title"] == "Sinoclaw Agent"
         assert call_args[1]["json"]["message"] == "Test notification"
         assert "Bearer tok" in call_args[1]["headers"]["Authorization"]
 
@@ -592,11 +592,11 @@ class TestToolsetIntegration:
     def test_gateway_toolset_includes_ha_tools(self):
         from toolsets import resolve_toolset
 
-        gateway_tools = resolve_toolset("hermes-gateway")
+        gateway_tools = resolve_toolset("sinoclaw-gateway")
         for tool in ("ha_list_entities", "ha_get_state", "ha_call_service", "ha_list_services"):
             assert tool in gateway_tools
 
-    def test_hermes_core_tools_includes_ha(self):
+    def test_sinoclaw_core_tools_includes_ha(self):
         from toolsets import _HERMES_CORE_TOOLS
 
         for tool in ("ha_list_entities", "ha_get_state", "ha_call_service", "ha_list_services"):

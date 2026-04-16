@@ -16,7 +16,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from hermes_cli.plugins import (
+from sinoclaw_cli.plugins import (
     PluginContext,
     PluginManager,
     PluginManifest,
@@ -202,7 +202,7 @@ class TestHonchoRegisterCli:
         assert args.honcho_command == "status"
 
     def test_setup_redirects_to_memory_setup(self):
-        """hermes honcho setup redirects to memory setup."""
+        """sinoclaw honcho setup redirects to memory setup."""
         from plugins.memory.honcho.cli import register_cli
 
         parser = argparse.ArgumentParser()

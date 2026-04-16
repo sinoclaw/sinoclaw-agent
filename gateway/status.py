@@ -5,7 +5,7 @@ Provides PID-file based detection of whether the gateway daemon is running,
 used by send_message's check_fn to gate availability in the CLI.
 
 The PID file lives at ``{HERMES_HOME}/gateway.pid``.  HERMES_HOME defaults to
-``~/.hermes`` but can be overridden via the environment variable.  This means
+``~/.sinoclaw`` but can be overridden via the environment variable.  This means
 separate HERMES_HOME directories naturally get separate PID files — a property
 that will be useful when we add named profiles (multiple agents running
 concurrently under distinct configurations).
@@ -19,10 +19,10 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from hermes_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 from typing import Any, Optional
 
-_GATEWAY_KIND = "hermes-gateway"
+_GATEWAY_KIND = "sinoclaw-gateway"
 _RUNTIME_STATUS_FILE = "gateway_state.json"
 _LOCKS_DIRNAME = "gateway-locks"
 _IS_WINDOWS = sys.platform == "win32"
@@ -31,7 +31,7 @@ _UNSET = object()
 
 def _get_pid_path() -> Path:
     """Return the path to the gateway PID file, respecting HERMES_HOME."""
-    home = get_hermes_home()
+    home = get_sinoclaw_home()
     return home / "gateway.pid"
 
 
@@ -46,7 +46,7 @@ def _get_lock_dir() -> Path:
     if override:
         return Path(override)
     state_home = Path(os.getenv("XDG_STATE_HOME", Path.home() / ".local" / "state"))
-    return state_home / "hermes" / _LOCKS_DIRNAME
+    return state_home / "sinoclaw" / _LOCKS_DIRNAME
 
 
 def _utc_now_iso() -> str:
@@ -112,15 +112,15 @@ def _read_process_cmdline(pid: int) -> Optional[str]:
 
 
 def _looks_like_gateway_process(pid: int) -> bool:
-    """Return True when the live PID still looks like the Hermes gateway."""
+    """Return True when the live PID still looks like the Sinoclaw gateway."""
     cmdline = _read_process_cmdline(pid)
     if not cmdline:
         return False
 
     patterns = (
-        "hermes_cli.main gateway",
-        "hermes_cli/main.py gateway",
-        "hermes gateway",
+        "sinoclaw_cli.main gateway",
+        "sinoclaw_cli/main.py gateway",
+        "sinoclaw gateway",
         "gateway/run.py",
     )
     return any(pattern in cmdline for pattern in patterns)
@@ -137,9 +137,9 @@ def _record_looks_like_gateway(record: dict[str, Any]) -> bool:
 
     cmdline = " ".join(str(part) for part in argv)
     patterns = (
-        "hermes_cli.main gateway",
-        "hermes_cli/main.py gateway",
-        "hermes gateway",
+        "sinoclaw_cli.main gateway",
+        "sinoclaw_cli/main.py gateway",
+        "sinoclaw gateway",
         "gateway/run.py",
     )
     return any(pattern in cmdline for pattern in patterns)

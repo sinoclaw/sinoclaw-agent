@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 
-def hermes_xai_user_agent() -> str:
-    """Return a stable Hermes-specific User-Agent for xAI HTTP calls."""
+def sinoclaw_xai_user_agent() -> str:
+    """Return a stable Sinoclaw-specific User-Agent for xAI HTTP calls."""
     try:
-        from hermes_cli import __version__
+        from sinoclaw_cli import __version__
     except Exception:
         __version__ = "unknown"
-    return f"Hermes-Agent/{__version__}"
+    return f"Sinoclaw-Agent/{__version__}"

@@ -11,7 +11,7 @@ which handles discovery, dynamic client registration, PKCE, token exchange,
 refresh, and step-up authorization automatically.
 
 This module provides the glue:
-    - ``HermesTokenStorage``: persists tokens/client-info to disk so they
+    - ``SinoclawTokenStorage``: persists tokens/client-info to disk so they
       survive across process restarts.
     - Callback server: ephemeral localhost HTTP server to capture the OAuth
       redirect with the authorization code.
@@ -29,7 +29,7 @@ Configuration in config.yaml::
           client_secret: "secret"               # confidential clients only
           scope: "read write"                   # default: server-provided
           redirect_port: 0                      # 0 = auto-pick free port
-          client_name: "My Custom Client"       # default: "Hermes Agent"
+          client_name: "My Custom Client"       # default: "Sinoclaw Agent"
 """
 
 import asyncio
@@ -97,10 +97,10 @@ def _get_token_dir() -> Path:
     Layout: ``HERMES_HOME/mcp-tokens/``
     """
     try:
-        from hermes_constants import get_hermes_home
-        base = Path(get_hermes_home())
+        from sinoclaw_constants import get_sinoclaw_home
+        base = Path(get_sinoclaw_home())
     except ImportError:
-        base = Path(os.environ.get("HERMES_HOME", str(Path.home() / ".hermes")))
+        base = Path(os.environ.get("HERMES_HOME", str(Path.home() / ".sinoclaw")))
     return base / "mcp-tokens"
 
 
@@ -168,11 +168,11 @@ def _write_json(path: Path, data: dict) -> None:
 
 
 # ---------------------------------------------------------------------------
-# HermesTokenStorage -- persistent token/client-info on disk
+# SinoclawTokenStorage -- persistent token/client-info on disk
 # ---------------------------------------------------------------------------
 
 
-class HermesTokenStorage:
+class SinoclawTokenStorage:
     """Persist OAuth tokens and client registration to JSON files.
 
     File layout::
@@ -262,7 +262,7 @@ def _make_callback_handler() -> tuple[type, dict]:
 
             body = (
                 "<html><body><h2>Authorization Successful</h2>"
-                "<p>You can close this tab and return to Hermes.</p></body></html>"
+                "<p>You can close this tab and return to Sinoclaw.</p></body></html>"
             ) if code else (
                 "<html><body><h2>Authorization Failed</h2>"
                 f"<p>Error: {error or 'unknown'}</p></body></html>"
@@ -370,7 +370,7 @@ async def _wait_for_callback() -> tuple[str, str | None]:
 
 def remove_oauth_tokens(server_name: str) -> None:
     """Delete stored OAuth tokens and client info for a server."""
-    storage = HermesTokenStorage(server_name)
+    storage = SinoclawTokenStorage(server_name)
     storage.remove()
     logger.info("OAuth tokens removed for '%s'", server_name)
 
@@ -406,7 +406,7 @@ def build_oauth_auth(
     cfg = oauth_config or {}
 
     # --- Storage ---
-    storage = HermesTokenStorage(server_name)
+    storage = SinoclawTokenStorage(server_name)
 
     # --- Non-interactive warning ---
     if not _is_interactive() and not storage.has_cached_tokens():
@@ -424,7 +424,7 @@ def build_oauth_auth(
     _oauth_port = redirect_port
 
     # --- Client metadata ---
-    client_name = cfg.get("client_name", "Hermes Agent")
+    client_name = cfg.get("client_name", "Sinoclaw Agent")
     scope = cfg.get("scope")
     redirect_uri = f"http://127.0.0.1:{redirect_port}/callback"
 

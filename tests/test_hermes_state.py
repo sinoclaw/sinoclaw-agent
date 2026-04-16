@@ -1,10 +1,10 @@
-"""Tests for hermes_state.py — SessionDB SQLite CRUD, FTS5 search, export."""
+"""Tests for sinoclaw_state.py — SessionDB SQLite CRUD, FTS5 search, export."""
 
 import time
 import pytest
 from pathlib import Path
 
-from hermes_state import SessionDB
+from sinoclaw_state import SessionDB
 
 
 @pytest.fixture()
@@ -405,7 +405,7 @@ class TestFTS5Search:
 
     def test_sanitize_fts5_query_strips_dangerous_chars(self):
         """Unit test for _sanitize_fts5_query static method."""
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
         s = SessionDB._sanitize_fts5_query
         assert s('hello world') == 'hello world'
         assert '+' not in s('C++')
@@ -422,7 +422,7 @@ class TestFTS5Search:
 
     def test_sanitize_fts5_preserves_quoted_phrases(self):
         """Properly paired double-quoted phrases should be preserved."""
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
         s = SessionDB._sanitize_fts5_query
         # Simple quoted phrase
         assert s('"exact phrase"') == '"exact phrase"'
@@ -437,7 +437,7 @@ class TestFTS5Search:
 
     def test_sanitize_fts5_quotes_hyphenated_terms(self):
         """Hyphenated terms should be wrapped in quotes for exact matching."""
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
         s = SessionDB._sanitize_fts5_query
         # Simple hyphenated term
         assert s('chat-send') == '"chat-send"'
@@ -459,7 +459,7 @@ class TestFTS5Search:
 
     def test_sanitize_fts5_quotes_dotted_terms(self):
         """Dotted terms should be wrapped in quotes to avoid FTS5 query parse edge cases."""
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
         s = SessionDB._sanitize_fts5_query
 
         assert s('P2.2') == '"P2.2"'
@@ -1370,7 +1370,7 @@ class TestConcurrentWriteSafety:
         # There is no public API, so we check the kwarg via the module default.
         import sqlite3
         import inspect
-        from hermes_state import SessionDB as _SessionDB
+        from sinoclaw_state import SessionDB as _SessionDB
         src = inspect.getsource(_SessionDB.__init__)
         assert "30" in src, (
             "SQLite timeout should be at least 30s to handle CLI/gateway lock contention"

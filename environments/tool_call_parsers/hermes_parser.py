@@ -1,8 +1,8 @@
 """
-Hermes tool call parser.
+Sinoclaw tool call parser.
 
 Format: <tool_call>{"name": "func", "arguments": {...}}</tool_call>
-Based on VLLM's Hermes2ProToolParser.extract_tool_calls()
+Based on VLLM's Sinoclaw2ProToolParser.extract_tool_calls()
 """
 
 import json
@@ -18,10 +18,10 @@ from openai.types.chat.chat_completion_message_tool_call import (
 from environments.tool_call_parsers import ParseResult, ToolCallParser, register_parser
 
 
-@register_parser("hermes")
-class HermesToolCallParser(ToolCallParser):
+@register_parser("sinoclaw")
+class SinoclawToolCallParser(ToolCallParser):
     """
-    Parser for Hermes-format tool calls.
+    Parser for Sinoclaw-format tool calls.
 
     Matches <tool_call>...</tool_call> tags containing JSON with "name" and "arguments".
     Also handles unclosed <tool_call> at end-of-string (truncated generation).

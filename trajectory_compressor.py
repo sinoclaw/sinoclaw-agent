@@ -43,15 +43,15 @@ from datetime import datetime
 import fire
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeElapsedColumn, TimeRemainingColumn
 from rich.console import Console
-from hermes_constants import OPENROUTER_BASE_URL, get_hermes_home
+from sinoclaw_constants import OPENROUTER_BASE_URL, get_sinoclaw_home
 from agent.retry_utils import jittered_backoff
 
 # Load .env from HERMES_HOME first, then project root as a dev fallback.
-from hermes_cli.env_loader import load_hermes_dotenv
+from sinoclaw_cli.env_loader import load_sinoclaw_dotenv
 
-_hermes_home = get_hermes_home()
+_sinoclaw_home = get_sinoclaw_home()
 _project_env = Path(__file__).parent / ".env"
-load_hermes_dotenv(hermes_home=_hermes_home, project_env=_project_env)
+load_sinoclaw_dotenv(sinoclaw_home=_sinoclaw_home, project_env=_project_env)
 
 
 @dataclass
@@ -366,7 +366,7 @@ class TrajectoryCompressor:
             if client is None:
                 raise RuntimeError(
                     f"Provider '{provider}' is not configured. "
-                    f"Check your API key or run: hermes setup")
+                    f"Check your API key or run: sinoclaw setup")
             self.client = None  # Not used directly
             self.async_client = None  # Not used directly
         else:

@@ -44,7 +44,7 @@ ScoredDataGroup = TypedDict with:
 | `max_token_length` | 2048 | Max token length for generations |
 | `total_steps` | 1000 | Total training steps |
 | `use_wandb` | True | Enable wandb logging |
-| `tokenizer_name` | DeepHermes-3 | Tokenizer for token encoding |
+| `tokenizer_name` | DeepSinoclaw-3 | Tokenizer for token encoding |
 | `ensure_scores_are_not_same` | True | Skip groups with identical scores |
 | `worker_timeout` | 600 | Task timeout seconds |
 

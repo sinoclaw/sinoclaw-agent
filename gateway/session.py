@@ -301,7 +301,7 @@ def build_session_context_prompt(
     lines.append("")
     lines.append("**Delivery options for scheduled tasks:**")
     
-    from hermes_constants import display_hermes_home
+    from sinoclaw_constants import display_sinoclaw_home
 
     # Origin delivery
     if context.source.platform == Platform.LOCAL:
@@ -314,7 +314,7 @@ def build_session_context_prompt(
 
     # Local always available
     lines.append(
-        f"- `\"local\"` → Save to local files only ({display_hermes_home()}/cron/output/)"
+        f"- `\"local\"` → Save to local files only ({display_sinoclaw_home()}/cron/output/)"
     )
     
     # Platform home channels
@@ -515,7 +515,7 @@ class SessionStore:
         # Initialize SQLite session database
         self._db = None
         try:
-            from hermes_state import SessionDB
+            from sinoclaw_state import SessionDB
             self._db = SessionDB()
         except Exception as e:
             print(f"[gateway] Warning: SQLite session store unavailable, falling back to JSONL: {e}")

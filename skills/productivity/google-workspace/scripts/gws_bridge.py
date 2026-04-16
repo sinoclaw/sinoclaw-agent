@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bridge between Hermes OAuth token and gws CLI.
+"""Bridge between Sinoclaw OAuth token and gws CLI.
 
 Refreshes the token if expired, then executes gws with the valid access token.
 """
@@ -11,12 +11,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-def get_hermes_home() -> Path:
-    return Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
+def get_sinoclaw_home() -> Path:
+    return Path(os.environ.get("HERMES_HOME", Path.home() / ".sinoclaw"))
 
 
 def get_token_path() -> Path:
-    return get_hermes_home() / "google_token.json"
+    return get_sinoclaw_home() / "google_token.json"
 
 
 def _normalize_authorized_user_payload(payload: dict) -> dict:

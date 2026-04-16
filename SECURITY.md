@@ -1,15 +1,15 @@
-# Hermes Agent Security Policy
+# Sinoclaw Agent Security Policy
 
-This document outlines the security protocols, trust model, and deployment hardening guidelines for the **Hermes Agent** project.
+This document outlines the security protocols, trust model, and deployment hardening guidelines for the **Sinoclaw Agent** project.
 
 ## 1. Vulnerability Reporting
 
-Hermes Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/NousResearch/hermes-agent/security/advisories/new) or by emailing **security@nousresearch.com**. Do not open public issues for security vulnerabilities.
+Sinoclaw Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/NousResearch/sinoclaw-agent/security/advisories/new) or by emailing **security@nousresearch.com**. Do not open public issues for security vulnerabilities.
 
 ### Required Submission Details
 - **Title & Severity:** Concise description and CVSS score/rating.
 - **Affected Component:** Exact file path and line range (e.g., `tools/approval.py:120-145`).
-- **Environment:** Output of `hermes version`, commit SHA, OS, and Python version.
+- **Environment:** Output of `sinoclaw version`, commit SHA, OS, and Python version.
 - **Reproduction:** Step-by-step Proof-of-Concept (PoC) against `main` or the latest release.
 - **Impact:** Explanation of what trust boundary was crossed.
 
@@ -17,7 +17,7 @@ Hermes Agent does **not** operate a bug bounty program. Security issues should b
 
 ## 2. Trust Model
 
-The core assumption is that Hermes is a **personal agent** with one trusted operator.
+The core assumption is that Sinoclaw is a **personal agent** with one trusted operator.
 
 ### Operator & Session Trust
 - **Single Tenant:** The system protects the operator from LLM actions, not from malicious co-tenants. Multi-user isolation must happen at the OS/host level.
@@ -38,7 +38,7 @@ The approval system (`tools/approval.py`) is a core security boundary. Terminal 
 - **MCP Servers:** Lower trust. MCP subprocesses receive a filtered environment (`_build_safe_env()` in `tools/mcp_tool.py`) — only safe baseline variables (`PATH`, `HOME`, `XDG_*`) plus variables explicitly declared in the server's `env` config block are passed through. Host credentials are stripped by default. Additionally, packages invoked via `npx`/`uvx` are checked against the OSV malware database before spawning.
 
 ### Code Execution Sandbox
-The `execute_code` tool (`tools/code_execution_tool.py`) runs LLM-generated Python scripts in a child process with API keys and tokens stripped from the environment to prevent credential exfiltration. Only environment variables explicitly declared by loaded skills (via `env_passthrough`) or by the user in `config.yaml` (`terminal.env_passthrough`) are passed through. The child accesses Hermes tools via RPC, not direct API calls.
+The `execute_code` tool (`tools/code_execution_tool.py`) runs LLM-generated Python scripts in a child process with API keys and tokens stripped from the environment to prevent credential exfiltration. Only environment variables explicitly declared by loaded skills (via `env_passthrough`) or by the user in `config.yaml` (`terminal.env_passthrough`) are passed through. The child accesses Sinoclaw tools via RPC, not direct API calls.
 
 ### Subagents
 - **No recursive delegation:** The `delegate_task` tool is disabled for child agents.
@@ -52,7 +52,7 @@ The `execute_code` tool (`tools/code_execution_tool.py`) runs LLM-generated Pyth
 The following scenarios are **not** considered security breaches:
 - **Prompt Injection:** Unless it results in a concrete bypass of the approval system, toolset restrictions, or container sandbox.
 - **Public Exposure:** Deploying the gateway to the public internet without external authentication or network protection.
-- **Trusted State Access:** Reports that require pre-existing write access to `~/.hermes/`, `.env`, or `config.yaml` (these are operator-owned files).
+- **Trusted State Access:** Reports that require pre-existing write access to `~/.sinoclaw/`, `.env`, or `config.yaml` (these are operator-owned files).
 - **Default Behavior:** Host-level command execution when `terminal.backend` is set to `local` — this is the documented default, not a vulnerability.
 - **Configuration Trade-offs:** Intentional break-glass settings such as `approvals.mode: "off"` or `terminal.backend: local` in production.
 - **Tool-level read/access restrictions:** The agent has unrestricted shell access via the `terminal` tool by design. Reports that a specific tool (e.g., `read_file`) can access a resource are not vulnerabilities if the same access is available through `terminal`. Tool-level deny lists only constitute a meaningful security boundary when paired with equivalent restrictions on the terminal side (as with write operations, where `WRITE_DENIED_PATHS` is paired with the dangerous command approval system).
@@ -63,16 +63,16 @@ The following scenarios are **not** considered security breaches:
 
 ### Filesystem & Network
 - **Production sandboxing:** Use container backends (`docker`, `modal`, `daytona`) instead of `local` for untrusted workloads.
-- **File permissions:** Run as non-root (the Docker image uses UID 10000); protect credentials with `chmod 600 ~/.hermes/.env` on local installs.
+- **File permissions:** Run as non-root (the Docker image uses UID 10000); protect credentials with `chmod 600 ~/.sinoclaw/.env` on local installs.
 - **Network exposure:** Do not expose the gateway or API server to the public internet without VPN, Tailscale, or firewall protection. SSRF protection is enabled by default across all gateway platform adapters (Telegram, Discord, Slack, Matrix, Mattermost, etc.) with redirect validation. Note: the local terminal backend does not apply SSRF filtering, as it operates within the trusted operator's environment.
 
 ### Skills & Supply Chain
-- **Skill installation:** Review Skills Guard reports (`tools/skills_guard.py`) before installing third-party skills. The audit log at `~/.hermes/skills/.hub/audit.log` tracks every install and removal.
+- **Skill installation:** Review Skills Guard reports (`tools/skills_guard.py`) before installing third-party skills. The audit log at `~/.sinoclaw/skills/.hub/audit.log` tracks every install and removal.
 - **MCP safety:** OSV malware checking runs automatically for `npx`/`uvx` packages before MCP server processes are spawned.
 - **CI/CD:** GitHub Actions are pinned to full commit SHAs. The `supply-chain-audit.yml` workflow blocks PRs containing `.pth` files or suspicious `base64`+`exec` patterns.
 
 ### Credential Storage
-- API keys and tokens belong exclusively in `~/.hermes/.env` — never in `config.yaml` or checked into version control.
+- API keys and tokens belong exclusively in `~/.sinoclaw/.env` — never in `config.yaml` or checked into version control.
 - The credential pool system (`agent/credential_pool.py`) handles key rotation and fallback. Credentials are resolved from environment variables, not stored in plaintext databases.
 
 ---

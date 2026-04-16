@@ -11,7 +11,7 @@ authors:
   - haileymarshall
 license: MIT
 metadata:
-  hermes:
+  sinoclaw:
     tags: [health, fitness, nutrition, gym, workout, diet, exercise]
     category: health
     prerequisites:

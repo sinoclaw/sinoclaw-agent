@@ -140,7 +140,7 @@ except Exception as e:
 
 # Plugin tool discovery (user/project/pip plugins)
 try:
-    from hermes_cli.plugins import discover_plugins
+    from sinoclaw_cli.plugins import discover_plugins
     discover_plugins()
 except Exception as e:
     logger.debug("Plugin discovery failed: %s", e)
@@ -457,7 +457,7 @@ def handle_function_call(
         if not skip_pre_tool_call_hook:
             block_message: Optional[str] = None
             try:
-                from hermes_cli.plugins import get_pre_tool_call_block_message
+                from sinoclaw_cli.plugins import get_pre_tool_call_block_message
                 block_message = get_pre_tool_call_block_message(
                     function_name,
                     function_args,
@@ -474,7 +474,7 @@ def handle_function_call(
             # Still fire the hook for observers — just don't check for blocking
             # (the caller already did that).
             try:
-                from hermes_cli.plugins import invoke_hook
+                from sinoclaw_cli.plugins import invoke_hook
                 invoke_hook(
                     "pre_tool_call",
                     tool_name=function_name,
@@ -512,7 +512,7 @@ def handle_function_call(
             )
 
         try:
-            from hermes_cli.plugins import invoke_hook
+            from sinoclaw_cli.plugins import invoke_hook
             invoke_hook(
                 "post_tool_call",
                 tool_name=function_name,

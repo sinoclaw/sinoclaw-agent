@@ -1,4 +1,4 @@
-"""Tests that `hermes model` always shows the model selection menu for custom
+"""Tests that `sinoclaw model` always shows the model selection menu for custom
 providers, even when a model is already saved.
 
 Regression test for the bug where _model_flow_named_custom() returned
@@ -15,7 +15,7 @@ import pytest
 @pytest.fixture
 def config_home(tmp_path, monkeypatch):
     """Isolated HERMES_HOME with a minimal config."""
-    home = tmp_path / "hermes"
+    home = tmp_path / "sinoclaw"
     home.mkdir()
     config_yaml = home / "config.yaml"
     config_yaml.write_text("model: old-model\ncustom_providers: []\n")
@@ -36,7 +36,7 @@ class TestCustomProviderModelSwitch:
     def test_saved_model_still_probes_endpoint(self, config_home):
         """When a model is already saved, the function must still call
         fetch_api_models to probe the endpoint — not skip with early return."""
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         provider_info = {
             "name": "My vLLM",
@@ -45,7 +45,7 @@ class TestCustomProviderModelSwitch:
             "model": "model-A",  # already saved
         }
 
-        with patch("hermes_cli.models.fetch_api_models", return_value=["model-A", "model-B"]) as mock_fetch, \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=["model-A", "model-B"]) as mock_fetch, \
              patch.dict("sys.modules", {"simple_term_menu": None}), \
              patch("builtins.input", return_value="2"), \
              patch("builtins.print"):
@@ -57,7 +57,7 @@ class TestCustomProviderModelSwitch:
     def test_can_switch_to_different_model(self, config_home):
         """User selects a different model than the saved one."""
         import yaml
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         provider_info = {
             "name": "My vLLM",
@@ -66,7 +66,7 @@ class TestCustomProviderModelSwitch:
             "model": "model-A",
         }
 
-        with patch("hermes_cli.models.fetch_api_models", return_value=["model-A", "model-B"]), \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=["model-A", "model-B"]), \
              patch.dict("sys.modules", {"simple_term_menu": None}), \
              patch("builtins.input", return_value="2"), \
              patch("builtins.print"):
@@ -80,7 +80,7 @@ class TestCustomProviderModelSwitch:
     def test_probe_failure_falls_back_to_saved(self, config_home):
         """When endpoint probe fails and user presses Enter, saved model is used."""
         import yaml
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         provider_info = {
             "name": "My vLLM",
@@ -90,7 +90,7 @@ class TestCustomProviderModelSwitch:
         }
 
         # fetch returns empty list (probe failed), user presses Enter (empty input)
-        with patch("hermes_cli.models.fetch_api_models", return_value=[]), \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=[]), \
              patch("builtins.input", return_value=""), \
              patch("builtins.print"):
             _model_flow_named_custom({}, provider_info)
@@ -103,7 +103,7 @@ class TestCustomProviderModelSwitch:
     def test_no_saved_model_still_works(self, config_home):
         """First-time flow (no saved model) still works as before."""
         import yaml
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         provider_info = {
             "name": "My vLLM",
@@ -112,7 +112,7 @@ class TestCustomProviderModelSwitch:
             # no "model" key
         }
 
-        with patch("hermes_cli.models.fetch_api_models", return_value=["model-X"]), \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=["model-X"]), \
              patch.dict("sys.modules", {"simple_term_menu": None}), \
              patch("builtins.input", return_value="1"), \
              patch("builtins.print"):
@@ -126,7 +126,7 @@ class TestCustomProviderModelSwitch:
     def test_api_mode_set_from_provider_info(self, config_home):
         """When custom_providers entry has api_mode, it should be applied."""
         import yaml
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         provider_info = {
             "name": "Anthropic Proxy",
@@ -136,7 +136,7 @@ class TestCustomProviderModelSwitch:
             "api_mode": "anthropic_messages",
         }
 
-        with patch("hermes_cli.models.fetch_api_models", return_value=["claude-3"]), \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=["claude-3"]), \
              patch.dict("sys.modules", {"simple_term_menu": None}), \
              patch("builtins.input", return_value="1"), \
              patch("builtins.print"):
@@ -150,7 +150,7 @@ class TestCustomProviderModelSwitch:
     def test_api_mode_cleared_when_not_specified(self, config_home):
         """When custom_providers entry has no api_mode, stale api_mode is removed."""
         import yaml
-        from hermes_cli.main import _model_flow_named_custom
+        from sinoclaw_cli.main import _model_flow_named_custom
 
         # Pre-seed a stale api_mode in config
         config_path = config_home / "config.yaml"
@@ -163,7 +163,7 @@ class TestCustomProviderModelSwitch:
             "model": "llama-3",
         }
 
-        with patch("hermes_cli.models.fetch_api_models", return_value=["llama-3"]), \
+        with patch("sinoclaw_cli.models.fetch_api_models", return_value=["llama-3"]), \
              patch.dict("sys.modules", {"simple_term_menu": None}), \
              patch("builtins.input", return_value="1"), \
              patch("builtins.print"):

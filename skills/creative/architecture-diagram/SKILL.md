@@ -2,11 +2,11 @@
 name: architecture-diagram
 description: Generate professional dark-themed system architecture diagrams as standalone HTML/SVG files. Self-contained output with no external dependencies. Based on Cocoon AI's architecture-diagram-generator (MIT).
 version: 1.0.0
-author: Cocoon AI (hello@cocoon-ai.com), ported by Hermes Agent
+author: Cocoon AI (hello@cocoon-ai.com), ported by Sinoclaw Agent
 license: MIT
 dependencies: []
 metadata:
-  hermes:
+  sinoclaw:
     tags: [architecture, diagrams, SVG, HTML, visualization, infrastructure, cloud]
     related_skills: [excalidraw]
 ---

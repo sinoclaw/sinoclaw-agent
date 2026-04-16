@@ -12,7 +12,7 @@ Config via environment variables (profile-scoped via each profile's .env):
   OPENVIKING_API_KEY   — API key (required for authenticated servers)
   OPENVIKING_ACCOUNT   — Tenant account (default: default)
   OPENVIKING_USER      — Tenant user (default: default)
-  OPENVIKING_AGENT   — Tenant agent (default: hermes)
+  OPENVIKING_AGENT   — Tenant agent (default: sinoclaw)
 
 Capabilities:
   - Automatic memory extraction on session commit (6 categories)
@@ -86,7 +86,7 @@ class _VikingClient:
         self._api_key = api_key
         self._account = account or os.environ.get("OPENVIKING_ACCOUNT", "default")
         self._user = user or os.environ.get("OPENVIKING_USER", "default")
-        self._agent = agent or os.environ.get("OPENVIKING_AGENT", "hermes")
+        self._agent = agent or os.environ.get("OPENVIKING_AGENT", "sinoclaw")
         self._httpx = _get_httpx()
         if self._httpx is None:
             raise ImportError("httpx is required for OpenViking: pip install httpx")
@@ -303,8 +303,8 @@ class OpenVikingMemoryProvider(MemoryProvider):
             },
             {
                 "key": "agent",
-                "description": "OpenViking agent ID within the account ([hermes], useful in multi-agent mode)",
-                "default": "hermes",
+                "description": "OpenViking agent ID within the account ([sinoclaw], useful in multi-agent mode)",
+                "default": "sinoclaw",
                 "env_var": "OPENVIKING_AGENT",
             },
         ]
@@ -314,7 +314,7 @@ class OpenVikingMemoryProvider(MemoryProvider):
         self._api_key = os.environ.get("OPENVIKING_API_KEY", "")
         self._account = os.environ.get("OPENVIKING_ACCOUNT", "default")
         self._user = os.environ.get("OPENVIKING_USER", "default")
-        self._agent = os.environ.get("OPENVIKING_AGENT", "hermes")
+        self._agent = os.environ.get("OPENVIKING_AGENT", "sinoclaw")
         self._session_id = session_id
         self._turn_count = 0
 

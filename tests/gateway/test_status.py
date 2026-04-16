@@ -15,7 +15,7 @@ class TestGatewayPidState:
 
         payload = json.loads((tmp_path / "gateway.pid").read_text())
         assert payload["pid"] == os.getpid()
-        assert payload["kind"] == "hermes-gateway"
+        assert payload["kind"] == "sinoclaw-gateway"
         assert isinstance(payload["argv"], list)
         assert payload["argv"]
 
@@ -32,8 +32,8 @@ class TestGatewayPidState:
         pid_path = tmp_path / "gateway.pid"
         pid_path.write_text(json.dumps({
             "pid": os.getpid(),
-            "kind": "hermes-gateway",
-            "argv": ["python", "-m", "hermes_cli.main", "gateway"],
+            "kind": "sinoclaw-gateway",
+            "argv": ["python", "-m", "sinoclaw_cli.main", "gateway"],
             "start_time": 123,
         }))
 
@@ -48,8 +48,8 @@ class TestGatewayPidState:
         pid_path = tmp_path / "gateway.pid"
         pid_path.write_text(json.dumps({
             "pid": os.getpid(),
-            "kind": "hermes-gateway",
-            "argv": ["/venv/bin/python", "/repo/hermes_cli/main.py", "gateway", "run", "--replace"],
+            "kind": "sinoclaw-gateway",
+            "argv": ["/venv/bin/python", "/repo/sinoclaw_cli/main.py", "gateway", "run", "--replace"],
             "start_time": 123,
         }))
 
@@ -58,7 +58,7 @@ class TestGatewayPidState:
         monkeypatch.setattr(
             status,
             "_read_process_cmdline",
-            lambda pid: "/venv/bin/python /repo/hermes_cli/main.py gateway run --replace",
+            lambda pid: "/venv/bin/python /repo/sinoclaw_cli/main.py gateway run --replace",
         )
 
         assert status.get_running_pid() == os.getpid()
@@ -74,7 +74,7 @@ class TestGatewayRuntimeStatus:
         state_path.write_text(json.dumps({
             "pid": 99999,
             "start_time": 1000.0,
-            "kind": "hermes-gateway",
+            "kind": "sinoclaw-gateway",
             "platforms": {},
             "updated_at": "2025-01-01T00:00:00Z",
         }))
@@ -176,7 +176,7 @@ class TestScopedLocks:
         lock_path.write_text(json.dumps({
             "pid": 99999,
             "start_time": 123,
-            "kind": "hermes-gateway",
+            "kind": "sinoclaw-gateway",
         }))
 
         monkeypatch.setattr(status.os, "kill", lambda pid, sig: None)
@@ -194,7 +194,7 @@ class TestScopedLocks:
         lock_path.write_text(json.dumps({
             "pid": 99999,
             "start_time": 123,
-            "kind": "hermes-gateway",
+            "kind": "sinoclaw-gateway",
         }))
 
         def fake_kill(pid, sig):
