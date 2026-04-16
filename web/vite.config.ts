@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../hermes_cli/web_dist",
+    outDir: "../sinoclaw_cli/web_dist",
     emptyOutDir: true,
   },
   server: {

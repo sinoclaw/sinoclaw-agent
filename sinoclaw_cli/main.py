@@ -1017,7 +1017,7 @@ def select_provider_and_model(args=None):
 
     effective_provider = (
         config_provider
-        or os.getenv("HERMES_INFERENCE_PROVIDER")
+        or os.getenv("SINOCLAW_INFERENCE_PROVIDER") or os.getenv("HERMES_INFERENCE_PROVIDER")
         or "auto"
     )
     try:
