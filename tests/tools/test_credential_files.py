@@ -36,7 +36,7 @@ class TestRegisterCredentialFiles:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "token.json").write_text("{}")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             missing = register_credential_files([{"path": "token.json"}])
 
         assert missing == []
@@ -51,7 +51,7 @@ class TestRegisterCredentialFiles:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "google_token.json").write_text("{}")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             missing = register_credential_files([
                 {"name": "google_token.json", "description": "OAuth token"},
             ])
@@ -66,7 +66,7 @@ class TestRegisterCredentialFiles:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "secret.key").write_text("key")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             missing = register_credential_files(["secret.key"])
 
         assert missing == []
@@ -77,7 +77,7 @@ class TestRegisterCredentialFiles:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             missing = register_credential_files([
                 {"name": "does_not_exist.json"},
             ])
@@ -91,7 +91,7 @@ class TestRegisterCredentialFiles:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "real.json").write_text("{}")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             missing = register_credential_files([
                 {"path": "real.json", "name": "wrong.json"},
             ])
@@ -109,7 +109,7 @@ class TestSkillsDirectoryMount:
         (skills_dir / "test-skill").mkdir()
         (skills_dir / "test-skill" / "SKILL.md").write_text("# test")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             mounts = get_skills_directory_mount()
 
         assert len(mounts) >= 1
@@ -120,7 +120,7 @@ class TestSkillsDirectoryMount:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             mounts = get_skills_directory_mount()
 
         # No local skills dir → no local mount (external dirs may still appear)
@@ -131,7 +131,7 @@ class TestSkillsDirectoryMount:
         sinoclaw_home = tmp_path / ".sinoclaw"
         (sinoclaw_home / "skills").mkdir(parents=True)
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             mounts = get_skills_directory_mount(container_base="/home/user/.sinoclaw")
 
         assert mounts[0]["container_path"] == "/home/user/.sinoclaw/skills"
@@ -147,7 +147,7 @@ class TestSkillsDirectoryMount:
         secret.write_text("TOP SECRET")
         (skills_dir / "evil_link").symlink_to(secret)
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             mounts = get_skills_directory_mount()
 
         assert len(mounts) >= 1
@@ -168,7 +168,7 @@ class TestSkillsDirectoryMount:
         skills_dir.mkdir(parents=True)
         (skills_dir / "skill.md").write_text("ok")
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             mounts = get_skills_directory_mount()
 
         assert mounts[0]["host_path"] == str(skills_dir)
@@ -187,7 +187,7 @@ class TestIterSkillsFiles:
         secret.write_text("nope")
         (skills_dir / "cat" / "myskill" / "evil").symlink_to(secret)
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             files = iter_skills_files()
 
         paths = {f["container_path"] for f in files}
@@ -200,7 +200,7 @@ class TestIterSkillsFiles:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             assert iter_skills_files() == []
 
 class TestPathTraversalSecurity:
@@ -217,7 +217,7 @@ class TestPathTraversalSecurity:
 
     def test_dotdot_traversal_rejected(self, tmp_path, monkeypatch):
         """'../sensitive' must not escape HERMES_HOME."""
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         (tmp_path / ".sinoclaw").mkdir()
 
         # Create a sensitive file one level above sinoclaw_home
@@ -233,7 +233,7 @@ class TestPathTraversalSecurity:
         """'../../etc/passwd' style traversal must be rejected."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         # Create a fake sensitive file outside sinoclaw_home
         ssh_dir = tmp_path / ".ssh"
@@ -249,7 +249,7 @@ class TestPathTraversalSecurity:
         """Absolute paths must be rejected regardless of whether they exist."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         # Create a file at an absolute path
         sensitive = tmp_path / "absolute.json"
@@ -264,7 +264,7 @@ class TestPathTraversalSecurity:
         """Normal files inside HERMES_HOME must still be registered."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         (sinoclaw_home / "token.json").write_text('{"token": "abc"}')
 
         result = register_credential_file("token.json")
@@ -281,7 +281,7 @@ class TestPathTraversalSecurity:
         subdir = sinoclaw_home / "creds"
         subdir.mkdir()
         (subdir / "oauth.json").write_text("{}")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         result = register_credential_file("creds/oauth.json")
 
@@ -291,7 +291,7 @@ class TestPathTraversalSecurity:
         """A symlink inside HERMES_HOME pointing outside must be rejected."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         # Create a sensitive file outside sinoclaw_home
         sensitive = tmp_path / "sensitive.json"
@@ -327,7 +327,7 @@ class TestConfigPathTraversal:
         """'../secret' in config.yaml must not escape HERMES_HOME."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         sensitive = tmp_path / "secret.json"
         sensitive.write_text("{}")
@@ -342,7 +342,7 @@ class TestConfigPathTraversal:
         """Absolute paths in config.yaml must be rejected."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         sensitive = tmp_path / "abs.json"
         sensitive.write_text("{}")
@@ -355,7 +355,7 @@ class TestConfigPathTraversal:
         """Normal files inside HERMES_HOME via config must still mount."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         (sinoclaw_home / "oauth.json").write_text("{}")
         self._write_config(sinoclaw_home, ["oauth.json"])
@@ -378,7 +378,7 @@ class TestCacheDirectoryMounts:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "cache" / "documents").mkdir(parents=True)
         (sinoclaw_home / "cache" / "audio").mkdir(parents=True)
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         mounts = get_cache_directory_mounts()
         paths = {m["container_path"] for m in mounts}
@@ -391,7 +391,7 @@ class TestCacheDirectoryMounts:
         sinoclaw_home.mkdir()
         # Create only one cache dir
         (sinoclaw_home / "cache" / "documents").mkdir(parents=True)
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         mounts = get_cache_directory_mounts()
         assert len(mounts) == 1
@@ -404,7 +404,7 @@ class TestCacheDirectoryMounts:
         # Use legacy dir name — get_sinoclaw_dir prefers old if it exists
         (sinoclaw_home / "document_cache").mkdir()
         (sinoclaw_home / "image_cache").mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         mounts = get_cache_directory_mounts()
         host_paths = {m["host_path"] for m in mounts}
@@ -419,7 +419,7 @@ class TestCacheDirectoryMounts:
         """No cache dirs → empty list."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         assert get_cache_directory_mounts() == []
 
@@ -434,7 +434,7 @@ class TestIterCacheFiles:
         doc_dir.mkdir(parents=True)
         (doc_dir / "upload.zip").write_bytes(b"PK\x03\x04")
         (doc_dir / "report.pdf").write_bytes(b"%PDF-1.4")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         entries = iter_cache_files()
         names = {Path(e["container_path"]).name for e in entries}
@@ -449,7 +449,7 @@ class TestIterCacheFiles:
         real_file = doc_dir / "real.txt"
         real_file.write_text("content")
         (doc_dir / "link.txt").symlink_to(real_file)
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         entries = iter_cache_files()
         names = [Path(e["container_path"]).name for e in entries]
@@ -463,7 +463,7 @@ class TestIterCacheFiles:
         sub = ss_dir / "session_abc"
         sub.mkdir(parents=True)
         (sub / "screen1.png").write_bytes(b"PNG")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         entries = iter_cache_files()
         assert len(entries) == 1
@@ -473,6 +473,6 @@ class TestIterCacheFiles:
         """No cache dirs → empty list."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         assert iter_cache_files() == []

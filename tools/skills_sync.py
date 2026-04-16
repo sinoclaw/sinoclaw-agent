@@ -32,18 +32,18 @@ from typing import Dict, List, Tuple
 logger = logging.getLogger(__name__)
 
 
-HERMES_HOME = get_sinoclaw_home()
-SKILLS_DIR = HERMES_HOME / "skills"
+SINOCLAW_HOME = get_sinoclaw_home()
+SKILLS_DIR = SINOCLAW_HOME / "skills"
 MANIFEST_FILE = SKILLS_DIR / ".bundled_manifest"
 
 
 def _get_bundled_dir() -> Path:
     """Locate the bundled skills/ directory.
 
-    Checks HERMES_BUNDLED_SKILLS env var first (set by Nix wrapper),
+    Checks SINOCLAW_BUNDLED_SKILLS env var first (set by Nix wrapper),
     then falls back to the relative path from this source file.
     """
-    env_override = os.getenv("HERMES_BUNDLED_SKILLS")
+    env_override = os.getenv("SINOCLAW_BUNDLED_SKILLS")
     if env_override:
         return Path(env_override)
     return Path(__file__).parent.parent / "skills"

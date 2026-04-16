@@ -77,8 +77,8 @@ import yaml
 
 
 # All skills live in ~/.sinoclaw/skills/ (single source of truth)
-HERMES_HOME = get_sinoclaw_home()
-SKILLS_DIR = HERMES_HOME / "skills"
+SINOCLAW_HOME = get_sinoclaw_home()
+SKILLS_DIR = SINOCLAW_HOME / "skills"
 
 MAX_NAME_LENGTH = 64
 MAX_DESCRIPTION_LENGTH = 1024

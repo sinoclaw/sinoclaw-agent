@@ -23,7 +23,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def _isolate_config(tmp_path, monkeypatch):
     """Redirect all config I/O to a temp directory."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     monkeypatch.setattr(
         "sinoclaw_cli.config.get_sinoclaw_home", lambda: tmp_path
     )

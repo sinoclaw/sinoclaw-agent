@@ -17,7 +17,7 @@ def sinoclaw_home(tmp_path, monkeypatch):
     """Set up an isolated HERMES_HOME with minimal logs."""
     home = tmp_path / ".sinoclaw"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
     # Create log files
     logs_dir = home / "logs"
@@ -150,7 +150,7 @@ class TestReadFullLog:
     def test_returns_none_for_missing(self, tmp_path, monkeypatch):
         home = tmp_path / ".sinoclaw"
         home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
         from sinoclaw_cli.debug import _read_full_log
         assert _read_full_log("agent") is None
@@ -266,7 +266,7 @@ class TestCollectDebugReport:
     def test_missing_logs_handled(self, tmp_path, monkeypatch):
         home = tmp_path / ".sinoclaw"
         home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
         from sinoclaw_cli.debug import collect_debug_report
 
@@ -344,7 +344,7 @@ class TestRunDebugShare:
         """Only uploads logs that exist."""
         home = tmp_path / ".sinoclaw"
         home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
         from sinoclaw_cli.debug import run_debug_share
 

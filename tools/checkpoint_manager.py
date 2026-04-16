@@ -11,7 +11,7 @@ controlled by the ``checkpoints`` config flag or ``--checkpoints`` CLI flag.
 Architecture:
     ~/.sinoclaw/checkpoints/{sha256(abs_dir)[:16]}/   — shadow git repo
         HEAD, refs/, objects/                        — standard git internals
-        HERMES_WORKDIR                               — original dir path
+        SINOCLAW_WORKDIR                               — original dir path
         info/exclude                                 — default excludes
 
 The shadow repo uses GIT_DIR + GIT_WORK_TREE so no git state leaks
@@ -60,7 +60,7 @@ DEFAULT_EXCLUDES = [
 ]
 
 # Git subprocess timeout (seconds).
-_GIT_TIMEOUT: int = max(10, min(60, int(os.getenv("HERMES_CHECKPOINT_TIMEOUT", "30"))))
+_GIT_TIMEOUT: int = max(10, min(60, int(os.getenv("SINOCLAW_CHECKPOINT_TIMEOUT", "30"))))
 
 # Max files to snapshot — skip huge directories to avoid slowdowns.
 _MAX_FILES = 50_000
@@ -218,7 +218,7 @@ def _init_shadow_repo(shadow_repo: Path, working_dir: str) -> Optional[str]:
         "\n".join(DEFAULT_EXCLUDES) + "\n", encoding="utf-8"
     )
 
-    (shadow_repo / "HERMES_WORKDIR").write_text(
+    (shadow_repo / "SINOCLAW_WORKDIR").write_text(
         str(_normalize_path(working_dir)) + "\n", encoding="utf-8"
     )
 

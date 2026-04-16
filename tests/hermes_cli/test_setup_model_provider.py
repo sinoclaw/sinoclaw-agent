@@ -65,7 +65,7 @@ def _write_model_config(provider, base_url="", model_name="test-model"):
 
 def test_setup_keep_current_custom_from_config_does_not_fall_through(tmp_path, monkeypatch):
     """Keep-current custom should not fall through to the generic model menu."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -93,7 +93,7 @@ def test_setup_keep_current_config_provider_uses_provider_specific_model_menu(
     tmp_path, monkeypatch
 ):
     """Keeping current provider preserves the config on disk."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -115,7 +115,7 @@ def test_setup_keep_current_config_provider_uses_provider_specific_model_menu(
 
 
 def test_setup_same_provider_rotation_strategy_saved_for_multi_credential_pool(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     save_env_value("OPENROUTER_API_KEY", "or-key")
 
@@ -169,7 +169,7 @@ def test_setup_same_provider_rotation_strategy_saved_for_multi_credential_pool(t
 
 
 def test_setup_same_provider_fallback_can_add_another_credential(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     save_env_value("OPENROUTER_API_KEY", "or-key")
 
@@ -231,7 +231,7 @@ def test_setup_same_provider_fallback_can_add_another_credential(tmp_path, monke
 
 
 def test_setup_same_provider_single_credential_keeps_existing_rotation_strategy(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     save_env_value("OPENROUTER_API_KEY", "or-key")
 
@@ -264,7 +264,7 @@ def test_setup_same_provider_single_credential_keeps_existing_rotation_strategy(
 
 
 def test_setup_pool_step_shows_manual_vs_auto_detected_counts(tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     save_env_value("OPENROUTER_API_KEY", "or-key")
 
@@ -312,7 +312,7 @@ def test_setup_pool_step_shows_manual_vs_auto_detected_counts(tmp_path, monkeypa
 
 
 def test_setup_copilot_acp_skips_same_provider_pool_step(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
 
     config = load_config()
@@ -347,7 +347,7 @@ def test_setup_copilot_acp_skips_same_provider_pool_step(tmp_path, monkeypatch):
 
 def test_setup_copilot_uses_gh_auth_and_saves_provider(tmp_path, monkeypatch):
     """Copilot provider saves correctly through delegation."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -368,7 +368,7 @@ def test_setup_copilot_uses_gh_auth_and_saves_provider(tmp_path, monkeypatch):
 
 def test_setup_copilot_acp_uses_model_picker_and_saves_provider(tmp_path, monkeypatch):
     """Copilot ACP provider saves correctly through delegation."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -391,7 +391,7 @@ def test_setup_switch_custom_to_codex_clears_custom_endpoint_and_updates_config(
     tmp_path, monkeypatch
 ):
     """Switching from custom to codex updates config correctly."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -417,7 +417,7 @@ def test_setup_switch_custom_to_codex_clears_custom_endpoint_and_updates_config(
 
 def test_setup_switch_preserves_non_model_config(tmp_path, monkeypatch):
     """Provider switch preserves other config sections (terminal, display, etc.)."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     _stub_tts(monkeypatch)
 
@@ -441,7 +441,7 @@ def test_setup_switch_preserves_non_model_config(tmp_path, monkeypatch):
 
 
 def test_setup_summary_marks_anthropic_auth_as_vision_available(tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-key")
     monkeypatch.setattr("shutil.which", lambda _name: None)
@@ -455,7 +455,7 @@ def test_setup_summary_marks_anthropic_auth_as_vision_available(tmp_path, monkey
 
 
 def test_setup_summary_shows_camofox_when_browser_feature_is_camofox(tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     monkeypatch.setattr(
         "sinoclaw_cli.setup.get_nous_subscription_features",
@@ -481,7 +481,7 @@ def test_setup_summary_shows_camofox_when_browser_feature_is_camofox(tmp_path, m
 
 
 def test_setup_summary_does_not_mark_incomplete_browserbase_as_available(tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     _clear_provider_env(monkeypatch)
     monkeypatch.setenv("BROWSERBASE_API_KEY", "bb-key")
     monkeypatch.setattr(

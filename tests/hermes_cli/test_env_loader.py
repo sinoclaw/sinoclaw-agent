@@ -59,7 +59,7 @@ def test_main_import_applies_user_env_over_shell_values(tmp_path, monkeypatch):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setenv("OPENAI_BASE_URL", "https://old.example/v1")
     monkeypatch.setenv("HERMES_INFERENCE_PROVIDER", "openrouter")
 
@@ -67,4 +67,4 @@ def test_main_import_applies_user_env_over_shell_values(tmp_path, monkeypatch):
     importlib.import_module("sinoclaw_cli.main")
 
     assert os.getenv("OPENAI_BASE_URL") == "https://new.example/v1"
-    assert os.getenv("HERMES_INFERENCE_PROVIDER") == "custom"
+    assert os.getenv("SINOCLAW_INFERENCE_PROVIDER") == "custom"

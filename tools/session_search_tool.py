@@ -238,7 +238,7 @@ async def _summarize_session(
 
 # Sources that are excluded from session browsing/searching by default.
 # Third-party integrations (Paperclip agents, etc.) tag their sessions with
-# HERMES_SESSION_SOURCE=tool so they don't clutter the user's session history.
+# SINOCLAW_SESSION_SOURCE=tool so they don't clutter the user's session history.
 _HIDDEN_SESSION_SOURCES = ("tool",)
 
 

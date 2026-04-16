@@ -509,7 +509,7 @@ class TestSkillViewSecureSetupOnLoad:
         )
 
         with patch.dict(
-            os.environ, {"HERMES_SESSION_PLATFORM": "telegram"}, clear=False
+            os.environ, {"SINOCLAW_SESSION_PLATFORM": "telegram"}, clear=False
         ):
             with patch("tools.skills_tool.SKILLS_DIR", tmp_path):
                 _make_skill(
@@ -846,7 +846,7 @@ class TestSkillViewPrerequisites:
         monkeypatch.setenv("TERMINAL_ENV", "docker")
 
         with patch.dict(
-            os.environ, {"HERMES_SESSION_PLATFORM": "telegram"}, clear=False
+            os.environ, {"SINOCLAW_SESSION_PLATFORM": "telegram"}, clear=False
         ):
             with patch("tools.skills_tool.SKILLS_DIR", tmp_path):
                 _make_skill(

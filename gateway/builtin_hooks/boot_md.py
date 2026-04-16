@@ -23,8 +23,8 @@ import threading
 logger = logging.getLogger("hooks.boot-md")
 
 from sinoclaw_constants import get_sinoclaw_home
-HERMES_HOME = get_sinoclaw_home()
-BOOT_FILE = HERMES_HOME / "BOOT.md"
+SINOCLAW_HOME = get_sinoclaw_home()
+BOOT_FILE = SINOCLAW_HOME / "BOOT.md"
 
 
 def _build_boot_prompt(content: str) -> str:

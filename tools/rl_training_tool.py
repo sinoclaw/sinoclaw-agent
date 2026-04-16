@@ -53,8 +53,8 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 # Path to tinker-atropos submodule (relative to sinoclaw-agent root)
-HERMES_ROOT = Path(__file__).parent.parent
-TINKER_ATROPOS_ROOT = HERMES_ROOT / "tinker-atropos"
+SINOCLAW_ROOT = Path(__file__).parent.parent
+TINKER_ATROPOS_ROOT = SINOCLAW_ROOT / "tinker-atropos"
 ENVIRONMENTS_DIR = TINKER_ATROPOS_ROOT / "tinker_atropos" / "environments"
 CONFIGS_DIR = TINKER_ATROPOS_ROOT / "configs"
 LOGS_DIR = get_sinoclaw_home() / "logs" / "rl_training"

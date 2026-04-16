@@ -21,7 +21,7 @@ import pytest
 @pytest.fixture
 def session_db(tmp_path):
     """Create a real SessionDB for testing."""
-    os.environ["HERMES_HOME"] = str(tmp_path / ".sinoclaw")
+    os.environ["SINOCLAW_HOME"] = str(tmp_path / ".sinoclaw")
     os.makedirs(tmp_path / ".sinoclaw", exist_ok=True)
     from sinoclaw_state import SessionDB
     db = SessionDB(db_path=tmp_path / ".sinoclaw" / "test_sessions.db")

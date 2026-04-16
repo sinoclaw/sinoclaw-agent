@@ -116,7 +116,7 @@ class TestFromGlobalConfig:
             }
         }))
         # Isolate from real ~/.sinoclaw/honcho.json
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "isolated"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "isolated"))
 
         config = HonchoClientConfig.from_global_config(config_path=config_file)
         assert config.api_key == "***"
@@ -345,7 +345,7 @@ class TestResolveConfigPath:
         local_cfg = sinoclaw_home / "honcho.json"
         local_cfg.write_text('{"apiKey": "local"}')
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             result = resolve_config_path()
         assert result == local_cfg
 
@@ -357,7 +357,7 @@ class TestResolveConfigPath:
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}), \
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
              patch.object(Path, "home", return_value=fake_home):
             result = resolve_config_path()
         assert result == GLOBAL_CONFIG_PATH
@@ -368,7 +368,7 @@ class TestResolveConfigPath:
 
         with patch.dict(os.environ, {}, clear=False), \
              patch.object(Path, "home", return_value=fake_home):
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             result = resolve_config_path()
         assert result == GLOBAL_CONFIG_PATH
 
@@ -381,7 +381,7 @@ class TestResolveConfigPath:
             "workspace": "local-ws",
         }))
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}), \
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
              patch.object(Path, "home", return_value=tmp_path):
             config = HonchoClientConfig.from_global_config()
         assert config.api_key == "***"
@@ -391,36 +391,36 @@ class TestResolveConfigPath:
 class TestResolveActiveHost:
     def test_default_returns_sinoclaw(self):
         with patch.dict(os.environ, {}, clear=True):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             assert resolve_active_host() == "sinoclaw"
 
     def test_explicit_env_var_wins(self):
-        with patch.dict(os.environ, {"HERMES_HONCHO_HOST": "sinoclaw.coder"}):
+        with patch.dict(os.environ, {"SINOCLAW_HONCHO_HOST": "sinoclaw.coder"}):
             assert resolve_active_host() == "sinoclaw.coder"
 
     def test_profile_name_derives_host(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="coder"):
                 assert resolve_active_host() == "sinoclaw.coder"
 
     def test_default_profile_returns_sinoclaw(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="default"):
                 assert resolve_active_host() == "sinoclaw"
 
     def test_custom_profile_returns_sinoclaw(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="custom"):
                 assert resolve_active_host() == "sinoclaw"
 
     def test_profiles_import_failure_falls_back(self):
         import sys
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             # Temporarily remove sinoclaw_cli.profiles to simulate import failure
             saved = sys.modules.get("sinoclaw_cli.profiles")
             sys.modules["sinoclaw_cli.profiles"] = None  # type: ignore

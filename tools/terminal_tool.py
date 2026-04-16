@@ -182,7 +182,7 @@ def _handle_sudo_failure(output: str, env_type: str) -> str:
     
     Returns enhanced output if sudo failed in messaging context, else original.
     """
-    is_gateway = os.getenv("HERMES_GATEWAY_SESSION")
+    is_gateway = os.getenv("SINOCLAW_GATEWAY_SESSION")
     
     if not is_gateway:
         return output
@@ -211,7 +211,7 @@ def _prompt_for_sudo_password(timeout_seconds: int = 45) -> str:
     - Timeout expires (45s default)
     - Any error occurs
     
-    Only works in interactive mode (HERMES_INTERACTIVE=1).
+    Only works in interactive mode (SINOCLAW_INTERACTIVE=1).
     If a _sudo_password_callback is registered (by the CLI), delegates to it
     so the prompt integrates with prompt_toolkit's UI.  Otherwise reads
     directly from /dev/tty with echo disabled.
@@ -277,7 +277,7 @@ def _prompt_for_sudo_password(timeout_seconds: int = 45) -> str:
             result["done"] = True
     
     try:
-        os.environ["HERMES_SPINNER_PAUSE"] = "1"
+        os.environ["SINOCLAW_SPINNER_PAUSE"] = "1"
         time_module.sleep(0.2)
         
         print()
@@ -323,8 +323,8 @@ def _prompt_for_sudo_password(timeout_seconds: int = 45) -> str:
         sys.stdout.flush()
         return ""
     finally:
-        if "HERMES_SPINNER_PAUSE" in os.environ:
-            del os.environ["HERMES_SPINNER_PAUSE"]
+        if "SINOCLAW_SPINNER_PAUSE" in os.environ:
+            del os.environ["SINOCLAW_SPINNER_PAUSE"]
 
 def _safe_command_preview(command: Any, limit: int = 200) -> str:
     """Return a log-safe preview for possibly-invalid command values."""
@@ -470,7 +470,7 @@ def _transform_sudo_command(command: str | None) -> tuple[str | None, str | None
     password in the command string themselves; see their execute() methods for
     how they handle the non-None sudo_stdin case.
 
-    If SUDO_PASSWORD is not set and in interactive mode (HERMES_INTERACTIVE=1):
+    If SUDO_PASSWORD is not set and in interactive mode (SINOCLAW_INTERACTIVE=1):
       Prompts user for password with 45s timeout, caches for session.
 
     If SUDO_PASSWORD is not set and NOT interactive:
@@ -487,7 +487,7 @@ def _transform_sudo_command(command: str | None) -> tuple[str | None, str | None
     has_configured_password = "SUDO_PASSWORD" in os.environ
     sudo_password = os.environ.get("SUDO_PASSWORD", "") if has_configured_password else _cached_sudo_password
 
-    if not has_configured_password and not sudo_password and os.getenv("HERMES_INTERACTIVE"):
+    if not has_configured_password and not sudo_password and os.getenv("SINOCLAW_INTERACTIVE"):
         sudo_password = _prompt_for_sudo_password(timeout_seconds=45)
         if sudo_password:
             _cached_sudo_password = sudo_password
@@ -762,7 +762,7 @@ def _create_environment(env_type: str, image: str, cwd: str, timeout: int,
             if modal_state["managed_mode_blocked"]:
                 raise ValueError(
                     "Modal backend is configured for managed mode, but "
-                    "HERMES_ENABLE_NOUS_MANAGED_TOOLS is not enabled and no direct "
+                    "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS is not enabled and no direct "
                     "Modal credentials/config were found. Enable the feature flag or "
                     "choose TERMINAL_MODAL_MODE=direct/auto."
                 )
@@ -1390,12 +1390,12 @@ def terminal_tool(
                 # routed back to the correct chat/thread.
                 if background and (notify_on_complete or watch_patterns):
                     from gateway.session_context import get_session_env as _gse
-                    _gw_platform = _gse("HERMES_SESSION_PLATFORM", "")
+                    _gw_platform = _gse("SINOCLAW_SESSION_PLATFORM", "")
                     if _gw_platform:
-                        _gw_chat_id = _gse("HERMES_SESSION_CHAT_ID", "")
-                        _gw_thread_id = _gse("HERMES_SESSION_THREAD_ID", "")
-                        _gw_user_id = _gse("HERMES_SESSION_USER_ID", "")
-                        _gw_user_name = _gse("HERMES_SESSION_USER_NAME", "")
+                        _gw_chat_id = _gse("SINOCLAW_SESSION_CHAT_ID", "")
+                        _gw_thread_id = _gse("SINOCLAW_SESSION_THREAD_ID", "")
+                        _gw_user_id = _gse("SINOCLAW_SESSION_USER_ID", "")
+                        _gw_user_name = _gse("SINOCLAW_SESSION_USER_NAME", "")
                         proc_session.watcher_platform = _gw_platform
                         proc_session.watcher_chat_id = _gw_chat_id
                         proc_session.watcher_user_id = _gw_user_id
@@ -1577,7 +1577,7 @@ def check_terminal_requirements() -> bool:
                 if modal_state["managed_mode_blocked"]:
                     logger.error(
                         "Modal backend selected with TERMINAL_MODAL_MODE=managed, but "
-                        "HERMES_ENABLE_NOUS_MANAGED_TOOLS is not enabled and no direct "
+                        "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS is not enabled and no direct "
                         "Modal credentials/config were found. Enable the feature flag "
                         "or choose TERMINAL_MODAL_MODE=direct/auto."
                     )

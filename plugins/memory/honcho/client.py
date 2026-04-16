@@ -35,11 +35,11 @@ def resolve_active_host() -> str:
     """Derive the Honcho host key from the active Sinoclaw profile.
 
     Resolution order:
-      1. HERMES_HONCHO_HOST env var (explicit override)
+      1. SINOCLAW_HONCHO_HOST env var (explicit override)
       2. Active profile name via profiles system -> ``sinoclaw.<profile>``
       3. Fallback: ``"sinoclaw"`` (default profile)
     """
-    explicit = os.environ.get("HERMES_HONCHO_HOST", "").strip()
+    explicit = os.environ.get("SINOCLAW_HONCHO_HOST", "").strip()
     if explicit:
         return explicit
 

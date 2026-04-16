@@ -167,7 +167,7 @@ class TestGatewayStopCleanup:
 
 class TestLaunchdServiceRecovery:
     def test_get_restart_drain_timeout_prefers_env_then_config_then_default(self, monkeypatch):
-        monkeypatch.delenv("HERMES_RESTART_DRAIN_TIMEOUT", raising=False)
+        monkeypatch.delenv("SINOCLAW_RESTART_DRAIN_TIMEOUT", raising=False)
         monkeypatch.setattr(gateway_cli, "read_raw_config", lambda: {})
 
         assert (
@@ -182,10 +182,10 @@ class TestLaunchdServiceRecovery:
         )
         assert gateway_cli._get_restart_drain_timeout() == 14.0
 
-        monkeypatch.setenv("HERMES_RESTART_DRAIN_TIMEOUT", "9")
+        monkeypatch.setenv("SINOCLAW_RESTART_DRAIN_TIMEOUT", "9")
         assert gateway_cli._get_restart_drain_timeout() == 9.0
 
-        monkeypatch.setenv("HERMES_RESTART_DRAIN_TIMEOUT", "invalid")
+        monkeypatch.setenv("SINOCLAW_RESTART_DRAIN_TIMEOUT", "invalid")
         assert (
             gateway_cli._get_restart_drain_timeout()
             == DEFAULT_GATEWAY_RESTART_DRAIN_TIMEOUT
@@ -662,7 +662,7 @@ class TestSystemUnitSinoclawHome:
     def test_system_unit_uses_target_user_home_not_calling_user(self, monkeypatch):
         # Simulate sudo: Path.home() returns /root, target user is alice
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("SINOCLAW_HOME", raising=False)
         monkeypatch.setattr(
             gateway_cli, "_system_service_identity",
             lambda run_as_user=None: ("alice", "alice", "/home/alice"),
@@ -674,13 +674,13 @@ class TestSystemUnitSinoclawHome:
 
         unit = gateway_cli.generate_systemd_unit(system=True, run_as_user="alice")
 
-        assert 'HERMES_HOME=/home/alice/.sinoclaw' in unit
+        assert 'SINOCLAW_HOME=/home/alice/.sinoclaw' in unit
         assert '/root/.sinoclaw' not in unit
 
     def test_system_unit_remaps_profile_to_target_user(self, monkeypatch):
         # Simulate sudo with a profile: HERMES_HOME was resolved under root
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.setenv("HERMES_HOME", "/root/.sinoclaw/profiles/coder")
+        monkeypatch.setenv("SINOCLAW_HOME", "/root/.sinoclaw/profiles/coder")
         monkeypatch.setattr(
             gateway_cli, "_system_service_identity",
             lambda run_as_user=None: ("alice", "alice", "/home/alice"),
@@ -692,13 +692,13 @@ class TestSystemUnitSinoclawHome:
 
         unit = gateway_cli.generate_systemd_unit(system=True, run_as_user="alice")
 
-        assert 'HERMES_HOME=/home/alice/.sinoclaw/profiles/coder' in unit
+        assert 'SINOCLAW_HOME=/home/alice/.sinoclaw/profiles/coder' in unit
         assert '/root/' not in unit
 
     def test_system_unit_preserves_custom_sinoclaw_home(self, monkeypatch):
         # Custom HERMES_HOME not under any user's home — keep as-is
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.setenv("HERMES_HOME", "/opt/sinoclaw-shared")
+        monkeypatch.setenv("SINOCLAW_HOME", "/opt/sinoclaw-shared")
         monkeypatch.setattr(
             gateway_cli, "_system_service_identity",
             lambda run_as_user=None: ("alice", "alice", "/home/alice"),
@@ -710,14 +710,14 @@ class TestSystemUnitSinoclawHome:
 
         unit = gateway_cli.generate_systemd_unit(system=True, run_as_user="alice")
 
-        assert 'HERMES_HOME=/opt/sinoclaw-shared' in unit
+        assert 'SINOCLAW_HOME=/opt/sinoclaw-shared' in unit
 
     def test_user_unit_unaffected_by_change(self):
         # User-scope units should still use the calling user's HERMES_HOME
         unit = gateway_cli.generate_systemd_unit(system=False)
 
         sinoclaw_home = str(gateway_cli.get_sinoclaw_home().resolve())
-        assert f'HERMES_HOME={sinoclaw_home}' in unit
+        assert f'SINOCLAW_HOME={sinoclaw_home}' in unit
 
 
 class TestSinoclawHomeForTargetUser:
@@ -725,28 +725,28 @@ class TestSinoclawHomeForTargetUser:
 
     def test_remaps_default_home(self, monkeypatch):
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("SINOCLAW_HOME", raising=False)
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
         assert result == "/home/alice/.sinoclaw"
 
     def test_remaps_profile_path(self, monkeypatch):
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.setenv("HERMES_HOME", "/root/.sinoclaw/profiles/coder")
+        monkeypatch.setenv("SINOCLAW_HOME", "/root/.sinoclaw/profiles/coder")
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
         assert result == "/home/alice/.sinoclaw/profiles/coder"
 
     def test_keeps_custom_path(self, monkeypatch):
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
-        monkeypatch.setenv("HERMES_HOME", "/opt/sinoclaw")
+        monkeypatch.setenv("SINOCLAW_HOME", "/opt/sinoclaw")
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
         assert result == "/opt/sinoclaw"
 
     def test_noop_when_same_user(self, monkeypatch):
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/home/alice")))
-        monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("SINOCLAW_HOME", raising=False)
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
         assert result == "/home/alice/.sinoclaw"
@@ -920,7 +920,7 @@ class TestProfileArg:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         result = gateway_cli._profile_arg(str(sinoclaw_home))
         assert result == ""
 
@@ -929,7 +929,7 @@ class TestProfileArg:
         profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(profile_dir))
         assert result == "--profile mybot"
 
@@ -938,7 +938,7 @@ class TestProfileArg:
         custom_home = tmp_path / "custom" / "sinoclaw"
         custom_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(custom_home))
         assert result == ""
 
@@ -947,7 +947,7 @@ class TestProfileArg:
         nested = tmp_path / ".sinoclaw" / "profiles" / "mybot" / "subdir"
         nested.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(nested))
         assert result == ""
 
@@ -956,7 +956,7 @@ class TestProfileArg:
         bad_profile = tmp_path / ".sinoclaw" / "profiles" / "My Bot!"
         bad_profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(bad_profile))
         assert result == ""
 
@@ -965,7 +965,7 @@ class TestProfileArg:
         profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(profile_dir))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile_dir))
         monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: profile_dir)
         unit = gateway_cli.generate_systemd_unit(system=False)
         assert "--profile mybot" in unit
@@ -976,7 +976,7 @@ class TestProfileArg:
         profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(profile_dir))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile_dir))
         monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: profile_dir)
         plist = gateway_cli.generate_launchd_plist()
         assert "<string>--profile</string>" in plist
@@ -991,7 +991,7 @@ class TestProfileArg:
         profile_home.mkdir()
 
         monkeypatch.setattr(Path, "home", lambda: profile_home)
-        monkeypatch.setenv("HERMES_HOME", str(profile_dir))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile_dir))
         monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: profile_dir)
         monkeypatch.setattr(pwd, "getpwuid", lambda uid: SimpleNamespace(pw_dir=str(machine_home)))
 
@@ -1041,7 +1041,7 @@ class TestSystemUnitPathRemapping:
         target_home = "/home/alice"
 
         monkeypatch.setattr(Path, "home", lambda: root_home)
-        monkeypatch.setenv("HERMES_HOME", str(root_home / ".sinoclaw"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(root_home / ".sinoclaw"))
         monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: root_home / ".sinoclaw")
         monkeypatch.setattr(gateway_cli, "PROJECT_ROOT", project)
         monkeypatch.setattr(gateway_cli, "_detect_venv_dir", lambda: project / "venv")

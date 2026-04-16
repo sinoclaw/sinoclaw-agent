@@ -38,11 +38,11 @@ class TestYoloMode:
 
     def test_dangerous_command_blocked_normally(self, monkeypatch):
         """Without yolo mode, dangerous commands in interactive mode require approval."""
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
-        monkeypatch.setenv("HERMES_SESSION_KEY", "test-session")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_SESSION_KEY", "test-session")
         monkeypatch.delenv("HERMES_YOLO_MODE", raising=False)
-        monkeypatch.delenv("HERMES_GATEWAY_SESSION", raising=False)
-        monkeypatch.delenv("HERMES_EXEC_ASK", raising=False)
+        monkeypatch.delenv("SINOCLAW_GATEWAY_SESSION", raising=False)
+        monkeypatch.delenv("SINOCLAW_EXEC_ASK", raising=False)
 
         # Verify the command IS detected as dangerous
         is_dangerous, _, _ = detect_dangerous_command("rm -rf /tmp/stuff")
@@ -57,8 +57,8 @@ class TestYoloMode:
     def test_dangerous_command_approved_in_yolo_mode(self, monkeypatch):
         """With HERMES_YOLO_MODE, dangerous commands are auto-approved."""
         monkeypatch.setenv("HERMES_YOLO_MODE", "1")
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
-        monkeypatch.setenv("HERMES_SESSION_KEY", "test-session")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_SESSION_KEY", "test-session")
 
         result = check_dangerous_command("rm -rf /", "local")
         assert result["approved"]
@@ -67,7 +67,7 @@ class TestYoloMode:
     def test_yolo_mode_works_for_all_patterns(self, monkeypatch):
         """Yolo mode bypasses all dangerous patterns, not just some."""
         monkeypatch.setenv("HERMES_YOLO_MODE", "1")
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
 
         dangerous_commands = [
             "rm -rf /",
@@ -85,7 +85,7 @@ class TestYoloMode:
     def test_combined_guard_bypasses_yolo_mode(self, monkeypatch):
         """The new combined guard should preserve yolo bypass semantics."""
         monkeypatch.setenv("HERMES_YOLO_MODE", "1")
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
 
         called = {"value": False}
 
@@ -104,13 +104,13 @@ class TestYoloMode:
         """HERMES_YOLO_MODE should not be set by default."""
         # Clean env check — if it happens to be set in test env, that's fine,
         # we just verify the mechanism exists
-        assert os.getenv("HERMES_YOLO_MODE") is None or True  # no-op, documents intent
+        assert os.getenv("SINOCLAW_YOLO_MODE") is None or True  # no-op, documents intent
 
     def test_yolo_mode_empty_string_does_not_bypass(self, monkeypatch):
         """Empty string for HERMES_YOLO_MODE should not trigger bypass."""
         monkeypatch.setenv("HERMES_YOLO_MODE", "")
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
-        monkeypatch.setenv("HERMES_SESSION_KEY", "test-session")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_SESSION_KEY", "test-session")
 
         # Empty string is falsy in Python, so getenv("HERMES_YOLO_MODE") returns ""
         # which is falsy — bypass should NOT activate
@@ -121,7 +121,7 @@ class TestYoloMode:
     def test_session_scoped_yolo_only_bypasses_current_session(self, monkeypatch):
         """Gateway /yolo should only bypass approvals for the active session."""
         monkeypatch.delenv("HERMES_YOLO_MODE", raising=False)
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
 
         enable_session_yolo("session-a")
         assert is_session_yolo_enabled("session-a") is True
@@ -151,7 +151,7 @@ class TestYoloMode:
     def test_session_scoped_yolo_bypasses_combined_guard_only_for_current_session(self, monkeypatch):
         """Combined guard should honor session-scoped YOLO without affecting others."""
         monkeypatch.delenv("HERMES_YOLO_MODE", raising=False)
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
+        monkeypatch.setenv("SINOCLAW_INTERACTIVE", "1")
 
         enable_session_yolo("session-a")
 

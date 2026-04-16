@@ -54,7 +54,7 @@ def _jwt_with_exp(exp_epoch: int) -> str:
 def test_read_codex_tokens_success(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_sinoclaw_auth(sinoclaw_home)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     data = _read_codex_tokens()
     assert data["tokens"]["access_token"] == "access"
@@ -66,7 +66,7 @@ def test_read_codex_tokens_missing(tmp_path, monkeypatch):
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
     # Empty auth store
     (sinoclaw_home / "auth.json").write_text(json.dumps({"version": 1, "providers": {}}))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     with pytest.raises(AuthError) as exc:
         _read_codex_tokens()
@@ -76,7 +76,7 @@ def test_read_codex_tokens_missing(tmp_path, monkeypatch):
 def test_resolve_codex_runtime_credentials_missing_access_token(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_sinoclaw_auth(sinoclaw_home, access_token="")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     with pytest.raises(AuthError) as exc:
         resolve_codex_runtime_credentials()
@@ -88,7 +88,7 @@ def test_resolve_codex_runtime_credentials_refreshes_expiring_token(tmp_path, mo
     sinoclaw_home = tmp_path / "sinoclaw"
     expiring_token = _jwt_with_exp(int(time.time()) - 10)
     _setup_sinoclaw_auth(sinoclaw_home, access_token=expiring_token, refresh_token="refresh-old")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     called = {"count": 0}
 
@@ -107,7 +107,7 @@ def test_resolve_codex_runtime_credentials_refreshes_expiring_token(tmp_path, mo
 def test_resolve_codex_runtime_credentials_force_refresh(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_sinoclaw_auth(sinoclaw_home, access_token="access-current", refresh_token="refresh-old")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     called = {"count": 0}
 
@@ -133,7 +133,7 @@ def test_save_codex_tokens_roundtrip(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
     (sinoclaw_home / "auth.json").write_text(json.dumps({"version": 1, "providers": {}}))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     _save_codex_tokens({"access_token": "at123", "refresh_token": "rt456"})
     data = _read_codex_tokens()
@@ -169,7 +169,7 @@ def test_codex_tokens_not_written_to_shared_file(tmp_path, monkeypatch):
     codex_home.mkdir(parents=True, exist_ok=True)
 
     (sinoclaw_home / "auth.json").write_text(json.dumps({"version": 1, "providers": {}}))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.setenv("CODEX_HOME", str(codex_home))
 
     _save_codex_tokens({"access_token": "sinoclaw-at", "refresh_token": "sinoclaw-rt"})
@@ -248,7 +248,7 @@ def test_refresh_codex_auth_tokens_writes_back_to_cli(tmp_path, monkeypatch):
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
     codex_home.mkdir(parents=True, exist_ok=True)
     (sinoclaw_home / "auth.json").write_text(json.dumps({"version": 1, "providers": {}}))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.setenv("CODEX_HOME", str(codex_home))
 
     # Write initial CLI tokens
@@ -277,7 +277,7 @@ def test_refresh_codex_auth_tokens_writes_back_to_cli(tmp_path, monkeypatch):
 def test_resolve_returns_sinoclaw_auth_store_source(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_sinoclaw_auth(sinoclaw_home)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     creds = resolve_codex_runtime_credentials()
     assert creds["source"] == "sinoclaw-auth-store"

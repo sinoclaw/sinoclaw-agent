@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 def get_sinoclaw_home() -> Path:
-    return Path(os.environ.get("HERMES_HOME", Path.home() / ".sinoclaw"))
+    return Path(os.environ.get("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
 
 
 def get_token_path() -> Path:

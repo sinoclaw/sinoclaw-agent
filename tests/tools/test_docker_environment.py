@@ -249,7 +249,7 @@ def _make_execute_only_env(forward_env=None):
     env._session_id = "test123"
     env._snapshot_path = "/tmp/sinoclaw-snap-test123.sh"
     env._cwd_file = "/tmp/sinoclaw-cwd-test123.txt"
-    env._cwd_marker = "__HERMES_CWD_test123__"
+    env._cwd_marker = "__SINOCLAW_CWD_test123__"
     env._snapshot_ready = True
     env._last_sync_time = None
     env._init_env_args = []
@@ -258,7 +258,7 @@ def _make_execute_only_env(forward_env=None):
 
 def test_init_env_args_uses_sinoclaw_dotenv_for_allowlisted_env(monkeypatch):
     """_build_init_env_args picks up forwarded env vars from .env file at init time."""
-    # Use a var that is NOT in _HERMES_PROVIDER_ENV_BLOCKLIST (GITHUB_TOKEN
+    # Use a var that is NOT in _SINOCLAW_PROVIDER_ENV_BLOCKLIST (GITHUB_TOKEN
     # is in the copilot provider's api_key_env_vars and gets stripped).
     env = _make_execute_only_env(["DATABASE_URL"])
 

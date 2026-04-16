@@ -26,8 +26,8 @@ def container_env(tmp_path, monkeypatch):
     """Set up a fake HERMES_HOME with .container-mode file."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
-    monkeypatch.delenv("HERMES_DEV", raising=False)
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
+    monkeypatch.delenv("SINOCLAW_DEV", raising=False)
 
     container_mode = sinoclaw_home / ".container-mode"
     container_mode.write_text(
@@ -64,8 +64,8 @@ def test_get_container_exec_info_none_without_file(tmp_path, monkeypatch):
     """Returns None when .container-mode doesn't exist (native mode)."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
-    monkeypatch.delenv("HERMES_DEV", raising=False)
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
+    monkeypatch.delenv("SINOCLAW_DEV", raising=False)
 
     with patch("sinoclaw_constants.is_container", return_value=False):
         info = get_container_exec_info()
@@ -74,8 +74,8 @@ def test_get_container_exec_info_none_without_file(tmp_path, monkeypatch):
 
 
 def test_get_container_exec_info_skipped_when_sinoclaw_dev(container_env, monkeypatch):
-    """Returns None when HERMES_DEV=1 is set (dev mode bypass)."""
-    monkeypatch.setenv("HERMES_DEV", "1")
+    """Returns None when SINOCLAW_DEV=1 is set (dev mode bypass)."""
+    monkeypatch.setenv("SINOCLAW_DEV", "1")
 
     with patch("sinoclaw_constants.is_container", return_value=False):
         info = get_container_exec_info()
@@ -84,8 +84,8 @@ def test_get_container_exec_info_skipped_when_sinoclaw_dev(container_env, monkey
 
 
 def test_get_container_exec_info_not_skipped_when_sinoclaw_dev_zero(container_env, monkeypatch):
-    """HERMES_DEV=0 does NOT trigger bypass — only '1' does."""
-    monkeypatch.setenv("HERMES_DEV", "0")
+    """SINOCLAW_DEV=0 does NOT trigger bypass — only '1' does."""
+    monkeypatch.setenv("SINOCLAW_DEV", "0")
 
     with patch("sinoclaw_constants.is_container", return_value=False):
         info = get_container_exec_info()
@@ -107,7 +107,7 @@ def test_get_container_exec_info_defaults():
         with patch("sinoclaw_constants.is_container", return_value=False), \
              patch("sinoclaw_cli.config.get_sinoclaw_home", return_value=sinoclaw_home), \
              patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_DEV", None)
+            os.environ.pop("SINOCLAW_DEV", None)
             info = get_container_exec_info()
 
         assert info is not None

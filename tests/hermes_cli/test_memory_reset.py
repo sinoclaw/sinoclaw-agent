@@ -20,7 +20,7 @@ def memory_env(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / ".sinoclaw"
     memories = sinoclaw_home / "memories"
     memories.mkdir(parents=True)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     # Create sample memory files
     (memories / "MEMORY.md").write_text(
@@ -98,7 +98,7 @@ class TestMemoryReset:
         """Should return 'nothing' when no memory files exist."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         (sinoclaw_home / "memories").mkdir(parents=True)
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         result = _run_memory_reset(target="all", yes=True)
         assert result == "nothing"
@@ -129,7 +129,7 @@ class TestMemoryReset:
         memories.mkdir(parents=True)
         (memories / "MEMORY.md").write_text("profile memory", encoding="utf-8")
         (memories / "USER.md").write_text("profile user", encoding="utf-8")
-        monkeypatch.setenv("HERMES_HOME", str(profile_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile_home))
 
         result = _run_memory_reset(target="all", yes=True)
         assert result == "deleted"
@@ -150,7 +150,7 @@ class TestMemoryReset:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir(parents=True)
         # No memories dir
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         # The memories dir won't exist; get_sinoclaw_home() / "memories" won't have files
         result = _run_memory_reset(target="all", yes=True)

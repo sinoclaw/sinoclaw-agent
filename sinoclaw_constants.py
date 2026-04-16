@@ -14,7 +14,7 @@ def get_sinoclaw_home() -> Path:
     Reads HERMES_HOME env var, falls back to ~/.sinoclaw.
     This is the single source of truth — all other copies should import this.
     """
-    return Path(os.getenv("HERMES_HOME", Path.home() / ".sinoclaw"))
+    return Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
 
 
 def get_default_sinoclaw_root() -> Path:
@@ -34,7 +34,7 @@ def get_default_sinoclaw_root() -> Path:
     Import-safe — no dependencies beyond stdlib.
     """
     native_home = Path.home() / ".sinoclaw"
-    env_home = os.environ.get("HERMES_HOME", "")
+    env_home = os.environ.get("SINOCLAW_HOME", "")
     if not env_home:
         return native_home
     env_path = Path(env_home)
@@ -60,9 +60,9 @@ def get_optional_skills_dir(default: Path | None = None) -> Path:
     """Return the optional-skills directory, honoring package-manager wrappers.
 
     Packaged installs may ship ``optional-skills`` outside the Python package
-    tree and expose it via ``HERMES_OPTIONAL_SKILLS``.
+    tree and expose it via ``SINOCLAW_OPTIONAL_SKILLS``.
     """
-    override = os.getenv("HERMES_OPTIONAL_SKILLS", "").strip()
+    override = os.getenv("SINOCLAW_OPTIONAL_SKILLS", "").strip()
     if override:
         return Path(override)
     if default is not None:
@@ -128,7 +128,7 @@ def get_subprocess_home() -> str | None:
     Activation is directory-based: if the ``home/`` subdirectory doesn't
     exist, returns ``None`` and behavior is unchanged.
     """
-    sinoclaw_home = os.getenv("HERMES_HOME")
+    sinoclaw_home = os.getenv("SINOCLAW_HOME")
     if not sinoclaw_home:
         return None
     profile_home = os.path.join(sinoclaw_home, "home")

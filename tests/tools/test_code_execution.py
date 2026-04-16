@@ -103,7 +103,7 @@ class TestSinoclawToolsGeneration(unittest.TestCase):
 
     def test_rpc_infrastructure_present(self):
         src = generate_sinoclaw_tools_module(["terminal"])
-        self.assertIn("HERMES_RPC_SOCKET", src)
+        self.assertIn("SINOCLAW_RPC_SOCKET", src)
         self.assertIn("AF_UNIX", src)
         self.assertIn("def _connect(", src)
         self.assertIn("def _call(", src)
@@ -120,7 +120,7 @@ class TestSinoclawToolsGeneration(unittest.TestCase):
         src = generate_sinoclaw_tools_module(["terminal"], transport="file")
         self.assertIn("import json, os, shlex, tempfile, time", src)
         self.assertIn("os.path.join(tempfile.gettempdir(), \"sinoclaw_rpc\")", src)
-        self.assertNotIn('os.environ.get("HERMES_RPC_DIR", "/tmp/sinoclaw_rpc")', src)
+        self.assertNotIn('os.environ.get("SINOCLAW_RPC_DIR", "/tmp/sinoclaw_rpc")', src)
 
 
 class TestExecuteCodeRemoteTempDir(unittest.TestCase):
@@ -154,7 +154,7 @@ class TestExecuteCodeRemoteTempDir(unittest.TestCase):
         run_cmd = next(cmd for cmd, _, _ in env.commands if "python3 script.py" in cmd)
         cleanup_cmd = env.commands[-1][0]
         self.assertIn("mkdir -p /data/data/com.termux/files/usr/tmp/sinoclaw_exec_", mkdir_cmd)
-        self.assertIn("HERMES_RPC_DIR=/data/data/com.termux/files/usr/tmp/sinoclaw_exec_", run_cmd)
+        self.assertIn("SINOCLAW_RPC_DIR=/data/data/com.termux/files/usr/tmp/sinoclaw_exec_", run_cmd)
         self.assertIn("rm -rf /data/data/com.termux/files/usr/tmp/sinoclaw_exec_", cleanup_cmd)
         self.assertNotIn("mkdir -p /tmp/sinoclaw_exec_", mkdir_cmd)
 
@@ -665,7 +665,7 @@ class TestEnvVarFiltering(unittest.TestCase):
 
     def test_sinoclaw_rpc_socket_injected(self):
         child_env = self._get_child_env()
-        self.assertIn("HERMES_RPC_SOCKET", child_env)
+        self.assertIn("SINOCLAW_RPC_SOCKET", child_env)
 
     def test_pythondontwritebytecode_set(self):
         child_env = self._get_child_env()
@@ -674,7 +674,7 @@ class TestEnvVarFiltering(unittest.TestCase):
     def test_timezone_injected_when_set(self):
         env_backup = os.environ.copy()
         try:
-            os.environ["HERMES_TIMEZONE"] = "America/New_York"
+            os.environ["SINOCLAW_TIMEZONE"] = "America/New_York"
             child_env = self._get_child_env()
             self.assertEqual(child_env.get("TZ"), "America/New_York")
         finally:
@@ -684,7 +684,7 @@ class TestEnvVarFiltering(unittest.TestCase):
     def test_timezone_not_set_when_empty(self):
         env_backup = os.environ.copy()
         try:
-            os.environ.pop("HERMES_TIMEZONE", None)
+            os.environ.pop("SINOCLAW_TIMEZONE", None)
             child_env = self._get_child_env()
             if "TZ" in child_env:
                 self.assertNotEqual(child_env["TZ"], "")

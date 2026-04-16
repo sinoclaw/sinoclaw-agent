@@ -65,7 +65,7 @@ class _SuccessfulAdapter(BasePlatformAdapter):
 
 @pytest.mark.asyncio
 async def test_runner_returns_failure_for_retryable_startup_errors(monkeypatch, tmp_path):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     config = GatewayConfig(
         platforms={
             Platform.TELEGRAM: PlatformConfig(enabled=True, token="***")
@@ -89,7 +89,7 @@ async def test_runner_returns_failure_for_retryable_startup_errors(monkeypatch, 
 
 @pytest.mark.asyncio
 async def test_runner_allows_cron_only_mode_when_no_platforms_are_enabled(monkeypatch, tmp_path):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     config = GatewayConfig(
         platforms={
             Platform.TELEGRAM: PlatformConfig(enabled=False, token="***")
@@ -109,7 +109,7 @@ async def test_runner_allows_cron_only_mode_when_no_platforms_are_enabled(monkey
 
 @pytest.mark.asyncio
 async def test_runner_records_connected_platform_state_on_success(monkeypatch, tmp_path):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     config = GatewayConfig(
         platforms={
             Platform.DISCORD: PlatformConfig(enabled=True, token="***")
@@ -135,7 +135,7 @@ async def test_runner_records_connected_platform_state_on_success(monkeypatch, t
 @pytest.mark.asyncio
 async def test_start_gateway_verbosity_imports_redacting_formatter(monkeypatch, tmp_path):
     """Verbosity != None must not crash with NameError on RedactingFormatter (#8044)."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
 
     class _CleanExitRunner:
         def __init__(self, config):
@@ -167,7 +167,7 @@ async def test_start_gateway_verbosity_imports_redacting_formatter(monkeypatch, 
 
 @pytest.mark.asyncio
 async def test_start_gateway_replace_force_uses_terminate_pid(monkeypatch, tmp_path):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
 
     calls = []
 

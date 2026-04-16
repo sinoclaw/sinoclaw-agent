@@ -925,11 +925,11 @@ class TestMatrixDeviceId:
             token="syt_test",
             extra={
                 "homeserver": "https://matrix.example.org",
-                "device_id": "HERMES_BOT_STABLE",
+                "device_id": "SINOCLAW_BOT_STABLE",
             },
         )
         adapter = MatrixAdapter(config)
-        assert adapter._device_id == "HERMES_BOT_STABLE"
+        assert adapter._device_id == "SINOCLAW_BOT_STABLE"
 
     def test_device_id_from_env(self, monkeypatch):
         monkeypatch.setenv("MATRIX_DEVICE_ID", "FROM_ENV")

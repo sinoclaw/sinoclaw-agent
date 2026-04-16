@@ -43,8 +43,8 @@ logger = logging.getLogger(__name__)
 # Paths
 # ---------------------------------------------------------------------------
 
-HERMES_HOME = get_sinoclaw_home()
-SKILLS_DIR = HERMES_HOME / "skills"
+SINOCLAW_HOME = get_sinoclaw_home()
+SKILLS_DIR = SINOCLAW_HOME / "skills"
 HUB_DIR = SKILLS_DIR / ".hub"
 LOCK_FILE = HUB_DIR / "lock.json"
 QUARANTINE_DIR = HUB_DIR / "quarantine"
@@ -2702,30 +2702,30 @@ def check_for_skill_updates(
 # Sinoclaw centralized index source
 # ---------------------------------------------------------------------------
 
-HERMES_INDEX_URL = "https://sinoclaw-agent.nousresearch.com/docs/api/skills-index.json"
-HERMES_INDEX_CACHE_FILE = INDEX_CACHE_DIR / "sinoclaw-index.json"
-HERMES_INDEX_TTL = 6 * 3600  # 6 hours
+SINOCLAW_INDEX_URL = "https://sinoclaw-agent.nousresearch.com/docs/api/skills-index.json"
+SINOCLAW_INDEX_CACHE_FILE = INDEX_CACHE_DIR / "sinoclaw-index.json"
+SINOCLAW_INDEX_TTL = 6 * 3600  # 6 hours
 
 
 def _load_sinoclaw_index() -> Optional[dict]:
     """Fetch the centralized skills index, with local cache.
 
     The index is a JSON file hosted on the docs site, rebuilt daily by CI.
-    We cache it locally for HERMES_INDEX_TTL seconds to avoid repeated
+    We cache it locally for SINOCLAW_INDEX_TTL seconds to avoid repeated
     downloads within a session.
     """
     # Check local cache
-    if HERMES_INDEX_CACHE_FILE.exists():
+    if SINOCLAW_INDEX_CACHE_FILE.exists():
         try:
-            age = time.time() - HERMES_INDEX_CACHE_FILE.stat().st_mtime
-            if age < HERMES_INDEX_TTL:
-                return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
+            age = time.time() - SINOCLAW_INDEX_CACHE_FILE.stat().st_mtime
+            if age < SINOCLAW_INDEX_TTL:
+                return json.loads(SINOCLAW_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
             pass
 
     # Fetch from docs site
     try:
-        resp = httpx.get(HERMES_INDEX_URL, timeout=15, follow_redirects=True)
+        resp = httpx.get(SINOCLAW_INDEX_URL, timeout=15, follow_redirects=True)
         if resp.status_code != 200:
             logger.debug("Sinoclaw index fetch returned %d", resp.status_code)
             return _load_stale_index_cache()
@@ -2740,8 +2740,8 @@ def _load_sinoclaw_index() -> Optional[dict]:
 
     # Cache locally
     try:
-        HERMES_INDEX_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        HERMES_INDEX_CACHE_FILE.write_text(json.dumps(data))
+        SINOCLAW_INDEX_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        SINOCLAW_INDEX_CACHE_FILE.write_text(json.dumps(data))
     except OSError:
         pass
 
@@ -2750,9 +2750,9 @@ def _load_sinoclaw_index() -> Optional[dict]:
 
 def _load_stale_index_cache() -> Optional[dict]:
     """Fall back to stale cache when the network fetch fails."""
-    if HERMES_INDEX_CACHE_FILE.exists():
+    if SINOCLAW_INDEX_CACHE_FILE.exists():
         try:
-            return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
+            return json.loads(SINOCLAW_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
             pass
     return None

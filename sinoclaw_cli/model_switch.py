@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 # Non-agentic model warning
 # ---------------------------------------------------------------------------
 
-_HERMES_MODEL_WARNING = (
+_SINOCLAW_MODEL_WARNING = (
     "Nous Research Sinoclaw 3 & 4 models are NOT agentic and are not designed "
     "for use with Sinoclaw Agent. They lack the tool-calling capabilities "
     "required for agent workflows. Consider using an agentic model instead "
@@ -66,7 +66,7 @@ _HERMES_MODEL_WARNING = (
 #   NousResearch/Sinoclaw-3-Llama-3.1-70B, sinoclaw-4-405b, openrouter/sinoclaw3:70b
 # Negative examples it must NOT match:
 #   sinoclaw-brain:qwen3-14b-ctx16k, qwen3:14b, claude-opus-4-6
-_NOUS_HERMES_NON_AGENTIC_RE = re.compile(
+_NOUS_SINOCLAW_NON_AGENTIC_RE = re.compile(
     r"(?:^|[/:])sinoclaw[-_ ]?[34](?:[-_.:]|$)",
     re.IGNORECASE,
 )
@@ -81,13 +81,13 @@ def is_nous_sinoclaw_non_agentic(model_name: str) -> bool:
     """
     if not model_name:
         return False
-    return bool(_NOUS_HERMES_NON_AGENTIC_RE.search(model_name))
+    return bool(_NOUS_SINOCLAW_NON_AGENTIC_RE.search(model_name))
 
 
 def _check_sinoclaw_model_warning(model_name: str) -> str:
     """Return a warning string if *model_name* is a Nous Sinoclaw 3/4 chat model."""
     if is_nous_sinoclaw_non_agentic(model_name):
-        return _HERMES_MODEL_WARNING
+        return _SINOCLAW_MODEL_WARNING
     return ""
 
 

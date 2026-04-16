@@ -86,7 +86,7 @@ def _find_git_root(start: Path) -> Optional[Path]:
     return None
 
 
-_HERMES_MD_NAMES = (".sinoclaw.md", "HERMES.md")
+_SINOCLAW_MD_NAMES = (".sinoclaw.md", "HERMES.md")
 
 
 def _find_sinoclaw_md(cwd: Path) -> Optional[Path]:
@@ -100,7 +100,7 @@ def _find_sinoclaw_md(cwd: Path) -> Optional[Path]:
     current = cwd.resolve()
 
     for directory in [current, *current.parents]:
-        for name in _HERMES_MD_NAMES:
+        for name in _SINOCLAW_MD_NAMES:
             candidate = directory / name
             if candidate.is_file():
                 return candidate
@@ -609,8 +609,8 @@ def build_skills_system_prompt(
     # produce distinct cache entries (gateway serves multiple platforms).
     from gateway.session_context import get_session_env
     _platform_hint = (
-        os.environ.get("HERMES_PLATFORM")
-        or get_session_env("HERMES_SESSION_PLATFORM")
+        os.environ.get("SINOCLAW_PLATFORM")
+        or get_session_env("SINOCLAW_SESSION_PLATFORM")
         or ""
     )
     cache_key = (

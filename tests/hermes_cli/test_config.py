@@ -26,19 +26,19 @@ from sinoclaw_cli.config import (
 class TestGetSinoclawHome:
     def test_default_path(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             home = get_sinoclaw_home()
             assert home == Path.home() / ".sinoclaw"
 
     def test_env_override(self):
-        with patch.dict(os.environ, {"HERMES_HOME": "/custom/path"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/path"}):
             home = get_sinoclaw_home()
             assert home == Path("/custom/path")
 
 
 class TestEnsureSinoclawHome:
     def test_creates_subdirs(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             ensure_sinoclaw_home()
             assert (tmp_path / "cron").is_dir()
             assert (tmp_path / "sessions").is_dir()
@@ -46,14 +46,14 @@ class TestEnsureSinoclawHome:
             assert (tmp_path / "memories").is_dir()
 
     def test_creates_default_soul_md_if_missing(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             ensure_sinoclaw_home()
             soul_path = tmp_path / "SOUL.md"
             assert soul_path.exists()
             assert soul_path.read_text(encoding="utf-8").strip() != ""
 
     def test_does_not_overwrite_existing_soul_md(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             soul_path = tmp_path / "SOUL.md"
             soul_path.write_text("custom soul", encoding="utf-8")
             ensure_sinoclaw_home()
@@ -62,7 +62,7 @@ class TestEnsureSinoclawHome:
 
 class TestLoadConfigDefaults:
     def test_returns_defaults_when_no_file(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config = load_config()
             assert config["model"] == DEFAULT_CONFIG["model"]
             assert config["agent"]["max_turns"] == DEFAULT_CONFIG["agent"]["max_turns"]
@@ -72,7 +72,7 @@ class TestLoadConfigDefaults:
             assert config["display"]["interim_assistant_messages"] is True
 
     def test_legacy_root_level_max_turns_migrates_to_agent_config(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config_path = tmp_path / "config.yaml"
             config_path.write_text("max_turns: 42\n")
 
@@ -83,7 +83,7 @@ class TestLoadConfigDefaults:
 
 class TestSaveAndLoadRoundtrip:
     def test_roundtrip(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config = load_config()
             config["model"] = "test/custom-model"
             config["agent"]["max_turns"] = 42
@@ -98,7 +98,7 @@ class TestSaveAndLoadRoundtrip:
             assert "max_turns" not in saved
 
     def test_save_config_normalizes_legacy_root_level_max_turns(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             save_config({"model": "test/custom-model", "max_turns": 37})
 
             saved = yaml.safe_load((tmp_path / "config.yaml").read_text())
@@ -106,7 +106,7 @@ class TestSaveAndLoadRoundtrip:
             assert "max_turns" not in saved
 
     def test_nested_values_preserved(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config = load_config()
             config["terminal"]["timeout"] = 999
             save_config(config)
@@ -117,7 +117,7 @@ class TestSaveAndLoadRoundtrip:
 
 class TestSaveEnvValueSecure:
     def test_save_env_value_writes_without_stdout(self, tmp_path, capsys):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             save_env_value("TENOR_API_KEY", "sk-test-secret")
             captured = capsys.readouterr()
             assert captured.out == ""
@@ -127,7 +127,7 @@ class TestSaveEnvValueSecure:
             assert env_values["TENOR_API_KEY"] == "sk-test-secret"
 
     def test_secure_save_returns_metadata_only(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             result = save_env_value_secure("GITHUB_TOKEN", "ghp_test_secret")
             assert result == {
                 "success": True,
@@ -137,7 +137,7 @@ class TestSaveEnvValueSecure:
             assert "secret" not in str(result).lower()
 
     def test_save_env_value_updates_process_environment(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}, clear=False):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}, clear=False):
             os.environ.pop("TENOR_API_KEY", None)
             save_env_value("TENOR_API_KEY", "sk-test-secret")
             assert os.environ["TENOR_API_KEY"] == "sk-test-secret"
@@ -146,7 +146,7 @@ class TestSaveEnvValueSecure:
         if os.name == "nt":
             return
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             save_env_value("TENOR_API_KEY", "sk-test-secret")
             env_mode = (tmp_path / ".env").stat().st_mode & 0o777
             assert env_mode == 0o600
@@ -156,7 +156,7 @@ class TestRemoveEnvValue:
     def test_removes_key_from_env_file(self, tmp_path):
         env_path = tmp_path / ".env"
         env_path.write_text("KEY_A=value_a\nKEY_B=value_b\nKEY_C=value_c\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path), "KEY_B": "value_b"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path), "KEY_B": "value_b"}):
             result = remove_env_value("KEY_B")
             assert result is True
             content = env_path.read_text()
@@ -167,21 +167,21 @@ class TestRemoveEnvValue:
     def test_clears_os_environ(self, tmp_path):
         env_path = tmp_path / ".env"
         env_path.write_text("MY_KEY=my_value\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path), "MY_KEY": "my_value"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path), "MY_KEY": "my_value"}):
             remove_env_value("MY_KEY")
             assert "MY_KEY" not in os.environ
 
     def test_returns_false_when_key_not_found(self, tmp_path):
         env_path = tmp_path / ".env"
         env_path.write_text("OTHER_KEY=value\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             result = remove_env_value("MISSING_KEY")
             assert result is False
             # File should be untouched
             assert env_path.read_text() == "OTHER_KEY=value\n"
 
     def test_handles_missing_env_file(self, tmp_path):
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path), "GHOST_KEY": "ghost"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path), "GHOST_KEY": "ghost"}):
             result = remove_env_value("GHOST_KEY")
             assert result is False
             # os.environ should still be cleared
@@ -190,7 +190,7 @@ class TestRemoveEnvValue:
     def test_clears_os_environ_even_when_not_in_file(self, tmp_path):
         env_path = tmp_path / ".env"
         env_path.write_text("OTHER=stuff\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path), "ORPHAN_KEY": "orphan"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path), "ORPHAN_KEY": "orphan"}):
             remove_env_value("ORPHAN_KEY")
             assert "ORPHAN_KEY" not in os.environ
 
@@ -200,7 +200,7 @@ class TestSaveConfigAtomicity:
 
     def test_no_partial_write_on_crash(self, tmp_path):
         """If save_config crashes mid-write, the previous file stays intact."""
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             # Write an initial config
             config = load_config()
             config["model"] = "original-model"
@@ -224,7 +224,7 @@ class TestSaveConfigAtomicity:
 
     def test_no_leftover_temp_files(self, tmp_path):
         """Failed writes must clean up their temp files."""
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config = load_config()
             save_config(config)
 
@@ -240,7 +240,7 @@ class TestSaveConfigAtomicity:
 
     def test_atomic_write_creates_valid_yaml(self, tmp_path):
         """The written file must be valid YAML matching the input."""
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             config = load_config()
             config["model"] = "test/atomic-model"
             config["agent"]["max_turns"] = 77
@@ -326,7 +326,7 @@ class TestSanitizeEnvLines:
             "ANTHROPIC_API_KEY=sk-antOPENAI_BASE_URL=https://api.openai.com/v1\n"
             "FAL_KEY=existing\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             save_env_value("MESSAGING_CWD", "/tmp")
 
             content = env_file.read_text()
@@ -344,7 +344,7 @@ class TestSanitizeEnvLines:
             "FAL_KEY=good\n"
             "OPENROUTER_API_KEY=valFIRECRAWL_API_KEY=val2\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             fixes = sanitize_env_file()
             assert fixes > 0
 
@@ -357,7 +357,7 @@ class TestSanitizeEnvLines:
         """No changes when file is already clean."""
         env_file = tmp_path / ".env"
         env_file.write_text("GOOD_KEY=good\nOTHER_KEY=other\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             fixes = sanitize_env_file()
             assert fixes == 0
 
@@ -407,7 +407,7 @@ class TestAnthropicTokenMigration:
         self._write_config_version(tmp_path, 8)
         (tmp_path / ".env").write_text("ANTHROPIC_TOKEN=old-token\n")
         with patch.dict(os.environ, {
-            "HERMES_HOME": str(tmp_path),
+            "SINOCLAW_HOME": str(tmp_path),
             "ANTHROPIC_TOKEN": "old-token",
         }):
             migrate_config(interactive=False, quiet=True)
@@ -418,7 +418,7 @@ class TestAnthropicTokenMigration:
         self._write_config_version(tmp_path, 9)
         (tmp_path / ".env").write_text("ANTHROPIC_TOKEN=current-token\n")
         with patch.dict(os.environ, {
-            "HERMES_HOME": str(tmp_path),
+            "SINOCLAW_HOME": str(tmp_path),
             "ANTHROPIC_TOKEN": "current-token",
         }):
             migrate_config(interactive=False, quiet=True)
@@ -455,7 +455,7 @@ class TestCustomProviderCompatibility:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             migrate_config(interactive=False, quiet=True)
             raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
 
@@ -492,7 +492,7 @@ class TestCustomProviderCompatibility:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             compatible = get_compatible_custom_providers()
 
         assert len(compatible) == 1
@@ -520,7 +520,7 @@ class TestCustomProviderCompatibility:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             compatible = get_compatible_custom_providers()
 
         assert compatible == [
@@ -557,7 +557,7 @@ class TestCustomProviderCompatibility:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             compatible = get_compatible_custom_providers()
 
         assert len(compatible) == 1
@@ -581,7 +581,7 @@ class TestCustomProviderCompatibility:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             compatible = get_compatible_custom_providers()
 
         assert len(compatible) == 3
@@ -602,7 +602,7 @@ class TestInterimAssistantMessageConfig:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             migrate_config(interactive=False, quiet=True)
             raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
 
@@ -622,7 +622,7 @@ class TestDiscordChannelPromptsConfig:
             encoding="utf-8",
         )
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path)}):
             migrate_config(interactive=False, quiet=True)
             raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
 

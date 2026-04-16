@@ -56,7 +56,7 @@ class TestPluginDiscovery:
         """Plugins in ~/.sinoclaw/plugins/ are discovered."""
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         _make_plugin_dir(plugins_dir, "hello_plugin")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -69,7 +69,7 @@ class TestPluginDiscovery:
         project_dir = tmp_path / "project"
         project_dir.mkdir()
         monkeypatch.chdir(project_dir)
-        monkeypatch.setenv("HERMES_ENABLE_PROJECT_PLUGINS", "true")
+        monkeypatch.setenv("SINOCLAW_ENABLE_PROJECT_PLUGINS", "true")
         plugins_dir = project_dir / ".sinoclaw" / "plugins"
         _make_plugin_dir(plugins_dir, "proj_plugin")
 
@@ -96,7 +96,7 @@ class TestPluginDiscovery:
         """Calling discover_and_load() twice does not duplicate plugins."""
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         _make_plugin_dir(plugins_dir, "once_plugin")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -108,7 +108,7 @@ class TestPluginDiscovery:
         """Directories without plugin.yaml are silently skipped."""
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         (plugins_dir / "no_manifest").mkdir(parents=True)
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -117,7 +117,7 @@ class TestPluginDiscovery:
 
     def test_entry_points_scanned(self, tmp_path, monkeypatch):
         """Entry-point based plugins are discovered (mocked)."""
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         fake_module = types.ModuleType("fake_ep_plugin")
         fake_module.register = lambda ctx: None  # type: ignore[attr-defined]
@@ -152,7 +152,7 @@ class TestPluginLoading:
         plugin_dir = plugins_dir / "bad_plugin"
         plugin_dir.mkdir(parents=True)
         (plugin_dir / "plugin.yaml").write_text(yaml.dump({"name": "bad_plugin"}))
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -168,7 +168,7 @@ class TestPluginLoading:
         plugin_dir.mkdir(parents=True)
         (plugin_dir / "plugin.yaml").write_text(yaml.dump({"name": "no_reg"}))
         (plugin_dir / "__init__.py").write_text("# no register function\n")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -181,7 +181,7 @@ class TestPluginLoading:
         """Directory plugins are importable under sinoclaw_plugins.<name>."""
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         _make_plugin_dir(plugins_dir, "ns_plugin")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         # Clean up any prior namespace module
         sys.modules.pop("sinoclaw_plugins.ns_plugin", None)
@@ -209,7 +209,7 @@ class TestPluginHooks:
             plugins_dir, "hook_plugin",
             register_body='ctx.register_hook("pre_tool_call", lambda **kw: None)',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -224,7 +224,7 @@ class TestPluginHooks:
             plugins_dir, "bad_hook",
             register_body='ctx.register_hook("post_tool_call", lambda **kw: 1/0)',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -242,7 +242,7 @@ class TestPluginHooks:
                 'lambda **kw: {"context": "memory from plugin"})'
             ),
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -259,7 +259,7 @@ class TestPluginHooks:
             plugins_dir, "none_hook",
             register_body='ctx.register_hook("post_llm_call", lambda **kw: None)',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -278,7 +278,7 @@ class TestPluginHooks:
                 '"mc": kw.get("message_count"), "tc": kw.get("tool_count")})'
             ),
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -304,7 +304,7 @@ class TestPluginHooks:
             plugins_dir, "warn_plugin",
             register_body='ctx.register_hook("on_banana", lambda **kw: None)',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         with caplog.at_level(logging.WARNING, logger="sinoclaw_cli.plugins"):
             mgr = PluginManager()
@@ -378,7 +378,7 @@ class TestPluginContext:
             '        handler=lambda args, **kw: "echo",\n'
             '    )\n'
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -412,7 +412,7 @@ class TestPluginToolVisibility:
             '        handler=lambda args, **kw: "ok",\n'
             '    )\n'
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -452,7 +452,7 @@ class TestPluginManagerList:
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         _make_plugin_dir(plugins_dir, "zulu")
         _make_plugin_dir(plugins_dir, "alpha")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -466,7 +466,7 @@ class TestPluginManagerList:
         plugins_dir = tmp_path / "sinoclaw_test" / "plugins"
         _make_plugin_dir(plugins_dir, "alpha")
         _make_plugin_dir(plugins_dir, "beta")
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -506,7 +506,7 @@ class TestPreLlmCallTargetRouting:
             plugins_dir, "basic_plugin",
             '{"context": "basic context"}',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -526,7 +526,7 @@ class TestPreLlmCallTargetRouting:
             plugins_dir, "str_plugin",
             '"plain string context"',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -549,7 +549,7 @@ class TestPreLlmCallTargetRouting:
             plugins_dir, "bbb_guardrail",
             '{"context": "guardrail text"}',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -582,7 +582,7 @@ class TestPreLlmCallTargetRouting:
             plugins_dir, "ccc_plain",
             '"plain text C"',
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -711,7 +711,7 @@ class TestPluginCommands:
                 'ctx.register_command("mycmd", lambda a: "ok", description="Test")'
             ),
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()
@@ -729,7 +729,7 @@ class TestPluginCommands:
                 'ctx.register_command("mycmd", lambda a: "ok", description="Test")'
             ),
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw_test"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw_test"))
 
         mgr = PluginManager()
         mgr.discover_and_load()

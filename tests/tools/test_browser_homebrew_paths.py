@@ -272,7 +272,7 @@ class TestRunBrowserCommandPathConstruction:
                  {
                      "PATH": "/usr/bin:/bin",
                      "HOME": "/home/test",
-                     "HERMES_HOME": sinoclaw_home,
+                     "SINOCLAW_HOME": sinoclaw_home,
                  },
                  clear=True,
              ):
@@ -323,7 +323,7 @@ class TestRunBrowserCommandPathConstruction:
                  {
                      "PATH": "/usr/bin:/bin",
                      "HOME": "/home/test",
-                     "HERMES_HOME": sinoclaw_home,
+                     "SINOCLAW_HOME": sinoclaw_home,
                  },
                  clear=True,
              ):

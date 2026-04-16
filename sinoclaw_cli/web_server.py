@@ -962,12 +962,12 @@ def _anthropic_oauth_status() -> Dict[str, Any]:
         from agent.anthropic_adapter import (
             read_sinoclaw_oauth_credentials,
             read_claude_code_credentials,
-            _HERMES_OAUTH_FILE,
+            _SINOCLAW_OAUTH_FILE,
         )
     except ImportError:
         read_claude_code_credentials = None  # type: ignore
         read_sinoclaw_oauth_credentials = None  # type: ignore
-        _HERMES_OAUTH_FILE = None  # type: ignore
+        _SINOCLAW_OAUTH_FILE = None  # type: ignore
 
     sinoclaw_creds = None
     if read_sinoclaw_oauth_credentials:
@@ -979,7 +979,7 @@ def _anthropic_oauth_status() -> Dict[str, Any]:
         return {
             "logged_in": True,
             "source": "sinoclaw_pkce",
-            "source_label": f"Sinoclaw PKCE ({_HERMES_OAUTH_FILE})",
+            "source_label": f"Sinoclaw PKCE ({_SINOCLAW_OAUTH_FILE})",
             "token_preview": _truncate_token(sinoclaw_creds.get("accessToken")),
             "expires_at": sinoclaw_creds.get("expiresAt"),
             "has_refresh_token": bool(sinoclaw_creds.get("refreshToken")),
@@ -1185,9 +1185,9 @@ async def disconnect_oauth_provider(provider_id: str, request: Request):
     # want to undo a disconnect.
     if provider_id in ("anthropic", "claude-code"):
         try:
-            from agent.anthropic_adapter import _HERMES_OAUTH_FILE
-            if _HERMES_OAUTH_FILE.exists():
-                _HERMES_OAUTH_FILE.unlink()
+            from agent.anthropic_adapter import _SINOCLAW_OAUTH_FILE
+            if _SINOCLAW_OAUTH_FILE.exists():
+                _SINOCLAW_OAUTH_FILE.unlink()
         except Exception:
             pass
         # Also clear the credential pool entry if present.
@@ -1297,14 +1297,14 @@ def _save_anthropic_oauth_creds(access_token: str, refresh_token: str, expires_a
     Mirrors what auth_commands.add_command does so the dashboard flow leaves
     the system in the same state as ``sinoclaw auth add anthropic``.
     """
-    from agent.anthropic_adapter import _HERMES_OAUTH_FILE
+    from agent.anthropic_adapter import _SINOCLAW_OAUTH_FILE
     payload = {
         "accessToken": access_token,
         "refreshToken": refresh_token,
         "expiresAt": expires_at_ms,
     }
-    _HERMES_OAUTH_FILE.parent.mkdir(parents=True, exist_ok=True)
-    _HERMES_OAUTH_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _SINOCLAW_OAUTH_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _SINOCLAW_OAUTH_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     # Best-effort credential-pool insert. Failure here doesn't invalidate
     # the file write — pool registration only matters for the rotation
     # strategy, not for runtime credential resolution.
@@ -1442,7 +1442,7 @@ async def _start_device_code_flow(provider_id: str) -> Dict[str, Any]:
         import httpx
         pconfig = PROVIDER_REGISTRY["nous"]
         portal_base_url = (
-            os.getenv("HERMES_PORTAL_BASE_URL")
+            os.getenv("SINOCLAW_PORTAL_BASE_URL")
             or os.getenv("NOUS_PORTAL_BASE_URL")
             or pconfig.portal_base_url
         ).rstrip("/")
@@ -1711,7 +1711,7 @@ def _codex_full_login_worker(session_id: str) -> None:
         import uuid as _uuid
         pool = load_pool("openai-codex")
         base_url = (
-            os.getenv("HERMES_CODEX_BASE_URL", "").strip().rstrip("/")
+            os.getenv("SINOCLAW_CODEX_BASE_URL", "").strip().rstrip("/")
             or DEFAULT_CODEX_BASE_URL
         )
         entry = PooledCredential(
@@ -2170,7 +2170,7 @@ def mount_spa(application: FastAPI):
         """Return index.html with the session token injected."""
         html = _index_path.read_text()
         token_script = (
-            f'<script>window.__HERMES_SESSION_TOKEN__="{_SESSION_TOKEN}";</script>'
+            f'<script>window.__SINOCLAW_SESSION_TOKEN__="{_SESSION_TOKEN}";</script>'
         )
         html = html.replace("</head>", f"{token_script}</head>", 1)
         return HTMLResponse(
@@ -2274,7 +2274,7 @@ def _discover_dashboard_plugins() -> list:
     Checks three plugin sources (same as sinoclaw_cli.plugins):
     1. User plugins:    ~/.sinoclaw/plugins/<name>/dashboard/manifest.json
     2. Bundled plugins: <repo>/plugins/<name>/dashboard/manifest.json  (memory/, etc.)
-    3. Project plugins: ./.sinoclaw/plugins/  (only if HERMES_ENABLE_PROJECT_PLUGINS)
+    3. Project plugins: ./.sinoclaw/plugins/  (only if SINOCLAW_ENABLE_PROJECT_PLUGINS)
     """
     plugins = []
     seen_names: set = set()
@@ -2284,7 +2284,7 @@ def _discover_dashboard_plugins() -> list:
         (PROJECT_ROOT / "plugins" / "memory", "bundled"),
         (PROJECT_ROOT / "plugins", "bundled"),
     ]
-    if os.environ.get("HERMES_ENABLE_PROJECT_PLUGINS"):
+    if os.environ.get("SINOCLAW_ENABLE_PROJECT_PLUGINS"):
         search_dirs.append((Path.cwd() / ".sinoclaw" / "plugins", "project"))
 
     for plugins_root, source in search_dirs:

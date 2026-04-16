@@ -978,7 +978,7 @@ class TestSinoclawHomeIsolation:
         from tools.tirith_security import _sinoclaw_bin_dir
         import tempfile
         tmpdir = tempfile.mkdtemp()
-        with patch.dict(os.environ, {"HERMES_HOME": tmpdir}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": tmpdir}):
             result = _sinoclaw_bin_dir()
         assert result == os.path.join(tmpdir, "bin")
         assert os.path.isdir(result)
@@ -986,13 +986,13 @@ class TestSinoclawHomeIsolation:
     def test_failure_marker_respects_sinoclaw_home(self):
         """_failure_marker_path must use HERMES_HOME, not hardcoded ~/.sinoclaw."""
         from tools.tirith_security import _failure_marker_path
-        with patch.dict(os.environ, {"HERMES_HOME": "/custom/sinoclaw"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/sinoclaw"}):
             result = _failure_marker_path()
         assert result == "/custom/sinoclaw/.tirith-install-failed"
 
     def test_conftest_isolation_prevents_real_home_writes(self):
         """The conftest autouse fixture sets HERMES_HOME; verify it's active."""
-        sinoclaw_home = os.getenv("HERMES_HOME")
+        sinoclaw_home = os.getenv("SINOCLAW_HOME")
         assert sinoclaw_home is not None, "HERMES_HOME should be set by conftest"
         assert "sinoclaw_test" in sinoclaw_home, "Should point to test temp dir"
 
@@ -1001,6 +1001,6 @@ class TestSinoclawHomeIsolation:
         from tools.tirith_security import _get_sinoclaw_home
         with patch.dict(os.environ, {}, clear=True):
             # Remove HERMES_HOME entirely
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             result = _get_sinoclaw_home()
         assert result == os.path.join(os.path.expanduser("~"), ".sinoclaw")

@@ -763,18 +763,18 @@ class TestRunJobSessionPersistence:
 
         (tmp_path / ".env").write_text("TELEGRAM_HOME_CHANNEL=-2002\n")
         monkeypatch.delenv("TELEGRAM_HOME_CHANNEL", raising=False)
-        monkeypatch.delenv("HERMES_CRON_AUTO_DELIVER_PLATFORM", raising=False)
-        monkeypatch.delenv("HERMES_CRON_AUTO_DELIVER_CHAT_ID", raising=False)
-        monkeypatch.delenv("HERMES_CRON_AUTO_DELIVER_THREAD_ID", raising=False)
+        monkeypatch.delenv("SINOCLAW_CRON_AUTO_DELIVER_PLATFORM", raising=False)
+        monkeypatch.delenv("SINOCLAW_CRON_AUTO_DELIVER_CHAT_ID", raising=False)
+        monkeypatch.delenv("SINOCLAW_CRON_AUTO_DELIVER_THREAD_ID", raising=False)
 
         class FakeAgent:
             def __init__(self, *args, **kwargs):
                 pass
 
             def run_conversation(self, *args, **kwargs):
-                seen["platform"] = os.getenv("HERMES_CRON_AUTO_DELIVER_PLATFORM")
-                seen["chat_id"] = os.getenv("HERMES_CRON_AUTO_DELIVER_CHAT_ID")
-                seen["thread_id"] = os.getenv("HERMES_CRON_AUTO_DELIVER_THREAD_ID")
+                seen["platform"] = os.getenv("SINOCLAW_CRON_AUTO_DELIVER_PLATFORM")
+                seen["chat_id"] = os.getenv("SINOCLAW_CRON_AUTO_DELIVER_CHAT_ID")
+                seen["thread_id"] = os.getenv("SINOCLAW_CRON_AUTO_DELIVER_THREAD_ID")
                 return {"final_response": "ok"}
 
         with patch("cron.scheduler._sinoclaw_home", tmp_path), \
@@ -800,9 +800,9 @@ class TestRunJobSessionPersistence:
             "chat_id": "-2002",
             "thread_id": None,
         }
-        assert os.getenv("HERMES_CRON_AUTO_DELIVER_PLATFORM") is None
-        assert os.getenv("HERMES_CRON_AUTO_DELIVER_CHAT_ID") is None
-        assert os.getenv("HERMES_CRON_AUTO_DELIVER_THREAD_ID") is None
+        assert os.getenv("SINOCLAW_CRON_AUTO_DELIVER_PLATFORM") is None
+        assert os.getenv("SINOCLAW_CRON_AUTO_DELIVER_CHAT_ID") is None
+        assert os.getenv("SINOCLAW_CRON_AUTO_DELIVER_THREAD_ID") is None
         fake_db.close.assert_called_once()
 
 

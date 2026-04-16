@@ -6,7 +6,7 @@ Discovers, loads, and manages plugins from three sources:
 
 1. **User plugins**   – ``~/.sinoclaw/plugins/<name>/``
 2. **Project plugins** – ``./.sinoclaw/plugins/<name>/`` (opt-in via
-   ``HERMES_ENABLE_PROJECT_PLUGINS``)
+   ``SINOCLAW_ENABLE_PROJECT_PLUGINS``)
 3. **Pip plugins**     – packages that expose the ``sinoclaw_agent.plugins``
    entry-point group.
 
@@ -425,7 +425,7 @@ class PluginManager:
         manifests.extend(self._scan_directory(user_dir, source="user"))
 
         # 2. Project plugins (./.sinoclaw/plugins/)
-        if _env_enabled("HERMES_ENABLE_PROJECT_PLUGINS"):
+        if _env_enabled("SINOCLAW_ENABLE_PROJECT_PLUGINS"):
             project_dir = Path.cwd() / ".sinoclaw" / "plugins"
             manifests.extend(self._scan_directory(project_dir, source="project"))
 

@@ -76,7 +76,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 #
 # Many modules cache HERMES_HOME at import time (module-level constants).
 # We intercept --profile/-p from sys.argv here and set the env var so that
-# every subsequent ``os.getenv("HERMES_HOME", ...)`` resolves correctly.
+# every subsequent ``os.getenv("SINOCLAW_HOME", ...)`` resolves correctly.
 # The flag is stripped from sys.argv so argparse never sees it.
 # Falls back to ~/.sinoclaw/active_profile for sticky default.
 # ---------------------------------------------------------------------------
@@ -122,7 +122,7 @@ def _apply_profile_override() -> None:
             # A bug in profiles.py must NEVER prevent sinoclaw from starting
             print(f"Warning: profile override failed ({exc}), using default", file=sys.stderr)
             return
-        os.environ["HERMES_HOME"] = sinoclaw_home
+        os.environ["SINOCLAW_HOME"] = sinoclaw_home
         # Strip the flag from argv so argparse doesn't choke
         if consume > 0:
             for i, arg in enumerate(argv):
@@ -748,11 +748,11 @@ def cmd_chat(args):
 
     # --yolo: bypass all dangerous command approvals
     if getattr(args, "yolo", False):
-        os.environ["HERMES_YOLO_MODE"] = "1"
+        os.environ["SINOCLAW_YOLO_MODE"] = "1"
 
     # --source: tag session source for filtering (e.g. 'tool' for third-party integrations)
     if getattr(args, "source", None):
-        os.environ["HERMES_SESSION_SOURCE"] = args.source
+        os.environ["SINOCLAW_SESSION_SOURCE"] = args.source
 
     # Import and run the CLI
     from cli import main as cli_main
@@ -1017,7 +1017,7 @@ def select_provider_and_model(args=None):
 
     effective_provider = (
         config_provider
-        or os.getenv("SINOCLAW_INFERENCE_PROVIDER") or os.getenv("HERMES_INFERENCE_PROVIDER")
+        or os.getenv("SINOCLAW_INFERENCE_PROVIDER") or os.getenv("SINOCLAW_INFERENCE_PROVIDER")
         or "auto"
     )
     try:
@@ -2283,7 +2283,7 @@ def _model_flow_copilot_acp(config, current_model=""):
         creds = resolve_external_process_provider_credentials(provider_id)
     except Exception as exc:
         print(f"  ⚠ {exc}")
-        print("  Set HERMES_COPILOT_ACP_COMMAND or COPILOT_CLI_PATH if Copilot CLI is installed elsewhere.")
+        print("  Set SINOCLAW_COPILOT_ACP_COMMAND or COPILOT_CLI_PATH if Copilot CLI is installed elsewhere.")
         return
 
     effective_base = creds.get("base_url") or effective_base

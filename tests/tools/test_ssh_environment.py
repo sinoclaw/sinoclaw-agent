@@ -183,8 +183,8 @@ class TestPersistentSSH:
         assert "hello-persistent" in r["output"]
 
     def test_env_var_persists(self):
-        _run("export HERMES_PERSIST_TEST=works")
-        r = _run("echo $HERMES_PERSIST_TEST")
+        _run("export SINOCLAW_PERSIST_TEST=works")
+        r = _run("echo $SINOCLAW_PERSIST_TEST")
         assert r["output"].strip() == "works"
 
     def test_cwd_persists(self):

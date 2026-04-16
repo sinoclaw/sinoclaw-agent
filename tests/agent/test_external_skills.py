@@ -32,7 +32,7 @@ def sinoclaw_home(tmp_path):
 class TestGetExternalSkillsDirs:
     def test_empty_config(self, sinoclaw_home):
         (sinoclaw_home / "config.yaml").write_text("skills:\n  external_dirs: []\n")
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert result == []
@@ -41,7 +41,7 @@ class TestGetExternalSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             "skills:\n  external_dirs:\n    - /nonexistent/path\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert result == []
@@ -50,7 +50,7 @@ class TestGetExternalSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             f"skills:\n  external_dirs:\n    - {external_skills_dir}\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert len(result) == 1
@@ -60,7 +60,7 @@ class TestGetExternalSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             f"skills:\n  external_dirs:\n    - {external_skills_dir}\n    - {external_skills_dir}\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert len(result) == 1
@@ -70,14 +70,14 @@ class TestGetExternalSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             f"skills:\n  external_dirs:\n    - {local_skills}\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert result == []
 
     def test_no_config_file(self, sinoclaw_home):
         # No config.yaml at all
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert result == []
@@ -86,7 +86,7 @@ class TestGetExternalSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             f"skills:\n  external_dirs: {external_skills_dir}\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_external_skills_dirs
             result = get_external_skills_dirs()
         assert len(result) == 1
@@ -97,7 +97,7 @@ class TestGetAllSkillsDirs:
         (sinoclaw_home / "config.yaml").write_text(
             f"skills:\n  external_dirs:\n    - {external_skills_dir}\n"
         )
-        with patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             from agent.skill_utils import get_all_skills_dirs
             result = get_all_skills_dirs()
         assert result[0] == sinoclaw_home / "skills"
@@ -111,7 +111,7 @@ class TestExternalSkillsInFindAll:
         )
         local_skills = sinoclaw_home / "skills"
         with (
-            patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}),
+            patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}),
             patch("tools.skills_tool.SKILLS_DIR", local_skills),
         ):
             from tools.skills_tool import _find_all_skills
@@ -131,7 +131,7 @@ class TestExternalSkillsInFindAll:
             f"skills:\n  external_dirs:\n    - {external_skills_dir}\n"
         )
         with (
-            patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}),
+            patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}),
             patch("tools.skills_tool.SKILLS_DIR", local_skills),
         ):
             from tools.skills_tool import _find_all_skills
@@ -148,7 +148,7 @@ class TestExternalSkillView:
         )
         local_skills = sinoclaw_home / "skills"
         with (
-            patch.dict(os.environ, {"HERMES_HOME": str(sinoclaw_home)}),
+            patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}),
             patch("tools.skills_tool.SKILLS_DIR", local_skills),
         ):
             from tools.skills_tool import skill_view

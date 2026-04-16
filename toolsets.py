@@ -28,7 +28,7 @@ from typing import List, Dict, Any, Set, Optional
 
 # Shared tool list for CLI and all messaging platform toolsets.
 # Edit this once to update all platforms simultaneously.
-_HERMES_CORE_TOOLS = [
+_SINOCLAW_CORE_TOOLS = [
     # Web
     "web_search", "web_extract",
     # Terminal + process management
@@ -277,115 +277,115 @@ TOOLSETS = {
     
     "sinoclaw-cli": {
         "description": "Full interactive CLI toolset - all default tools plus cronjob management",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
     
     "sinoclaw-telegram": {
         "description": "Telegram bot toolset - full access for personal use (terminal has safety checks)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
     
     "sinoclaw-discord": {
         "description": "Discord bot toolset - full access (terminal has safety checks via dangerous command approval)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
     
     "sinoclaw-whatsapp": {
         "description": "WhatsApp bot toolset - similar to Telegram (personal messaging, more trusted)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
     
     "sinoclaw-slack": {
         "description": "Slack bot toolset - full access for workspace use (terminal has safety checks)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
     
     "sinoclaw-signal": {
         "description": "Signal bot toolset - encrypted messaging platform (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-bluebubbles": {
         "description": "BlueBubbles iMessage bot toolset - Apple iMessage via local BlueBubbles server",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-homeassistant": {
         "description": "Home Assistant bot toolset - smart home event monitoring and control",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-email": {
         "description": "Email bot toolset - interact with Sinoclaw via email (IMAP/SMTP)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-mattermost": {
         "description": "Mattermost bot toolset - self-hosted team messaging (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-matrix": {
         "description": "Matrix bot toolset - decentralized encrypted messaging (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-dingtalk": {
         "description": "DingTalk bot toolset - enterprise messaging platform (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-feishu": {
         "description": "Feishu/Lark bot toolset - enterprise messaging via Feishu/Lark (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-weixin": {
         "description": "Weixin bot toolset - personal WeChat messaging via iLink (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-qqbot": {
         "description": "QQBot toolset - QQ messaging via Official Bot API v2 (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-wecom": {
         "description": "WeCom bot toolset - enterprise WeChat messaging (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-wecom-callback": {
         "description": "WeCom callback toolset - enterprise self-built app messaging (full access)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-sms": {
         "description": "SMS bot toolset - interact with Sinoclaw via SMS (Twilio)",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 
     "sinoclaw-webhook": {
         "description": "Webhook toolset - receive and process external webhook events",
-        "tools": _HERMES_CORE_TOOLS,
+        "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
 

@@ -826,7 +826,7 @@ class TestGatewayModeWritesExitCodeEarly:
         # Point HERMES_HOME at a temp dir so the marker file lands there
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg
         monkeypatch.setattr(_cfg, "get_sinoclaw_home", lambda: sinoclaw_home)
         # Also patch the module-level ref used by cmd_update
@@ -856,7 +856,7 @@ class TestGatewayModeWritesExitCodeEarly:
 
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg
         monkeypatch.setattr(_cfg, "get_sinoclaw_home", lambda: sinoclaw_home)
         import sinoclaw_cli.main as _main_mod
@@ -884,7 +884,7 @@ class TestGatewayModeWritesExitCodeEarly:
 
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg
         monkeypatch.setattr(_cfg, "get_sinoclaw_home", lambda: sinoclaw_home)
         import sinoclaw_cli.main as _main_mod

@@ -41,14 +41,14 @@ class TestResolveVerifyFallback:
         from sinoclaw_cli.auth import _resolve_verify
 
         monkeypatch.setenv("SSL_CERT_FILE", "/nonexistent/ssl-cert.pem")
-        monkeypatch.delenv("HERMES_CA_BUNDLE", raising=False)
+        monkeypatch.delenv("SINOCLAW_CA_BUNDLE", raising=False)
         result = _resolve_verify(auth_state={"tls": {}})
         assert result is True
 
     def test_missing_sinoclaw_ca_bundle_env_falls_back(self, monkeypatch):
         from sinoclaw_cli.auth import _resolve_verify
 
-        monkeypatch.setenv("HERMES_CA_BUNDLE", "/nonexistent/sinoclaw-ca.pem")
+        monkeypatch.setenv("SINOCLAW_CA_BUNDLE", "/nonexistent/sinoclaw-ca.pem")
         monkeypatch.delenv("SSL_CERT_FILE", raising=False)
         result = _resolve_verify(auth_state={"tls": {}})
         assert result is True
@@ -65,7 +65,7 @@ class TestResolveVerifyFallback:
     def test_no_ca_bundle_returns_true(self, monkeypatch):
         from sinoclaw_cli.auth import _resolve_verify
 
-        monkeypatch.delenv("HERMES_CA_BUNDLE", raising=False)
+        monkeypatch.delenv("SINOCLAW_CA_BUNDLE", raising=False)
         monkeypatch.delenv("SSL_CERT_FILE", raising=False)
         result = _resolve_verify(auth_state={"tls": {}})
         assert result is True
@@ -143,7 +143,7 @@ def test_get_nous_auth_status_checks_credential_pool(tmp_path, monkeypatch):
     (sinoclaw_home / "auth.json").write_text(json.dumps({
         "version": 1, "providers": {},
     }))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     # Seed the credential pool with a Nous entry
     from agent.credential_pool import PooledCredential, load_pool
@@ -175,7 +175,7 @@ def test_get_nous_auth_status_auth_store_fallback(tmp_path, monkeypatch):
 
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_nous_auth(sinoclaw_home, access_token="at-123")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     status = get_nous_auth_status()
     assert status["logged_in"] is True
@@ -193,7 +193,7 @@ def test_get_nous_auth_status_empty_returns_not_logged_in(tmp_path, monkeypatch)
     (sinoclaw_home / "auth.json").write_text(json.dumps({
         "version": 1, "providers": {},
     }))
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     status = get_nous_auth_status()
     assert status["logged_in"] is False
@@ -202,7 +202,7 @@ def test_get_nous_auth_status_empty_returns_not_logged_in(tmp_path, monkeypatch)
 def test_refresh_token_persisted_when_mint_returns_insufficient_credits(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_nous_auth(sinoclaw_home, refresh_token="refresh-old")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     refresh_calls = []
     mint_calls = {"count": 0}
@@ -243,7 +243,7 @@ def test_refresh_token_persisted_when_mint_returns_insufficient_credits(tmp_path
 def test_refresh_token_persisted_when_mint_times_out(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_nous_auth(sinoclaw_home, refresh_token="refresh-old")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     def _fake_refresh_access_token(*, client, portal_base_url, client_id, refresh_token):
         return {
@@ -271,7 +271,7 @@ def test_refresh_token_persisted_when_mint_times_out(tmp_path, monkeypatch):
 def test_mint_retry_uses_latest_rotated_refresh_token(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / "sinoclaw"
     _setup_nous_auth(sinoclaw_home, refresh_token="refresh-old")
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     refresh_calls = []
     mint_calls = {"count": 0}

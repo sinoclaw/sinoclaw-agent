@@ -127,7 +127,7 @@ class TestBackup:
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         # get_default_sinoclaw_root needs this
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
@@ -161,7 +161,7 @@ class TestBackup:
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_zip = tmp_path / "backup.zip"
@@ -181,7 +181,7 @@ class TestBackup:
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_zip = tmp_path / "backup.zip"
@@ -201,7 +201,7 @@ class TestBackup:
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_zip = tmp_path / "backup.zip"
@@ -221,7 +221,7 @@ class TestBackup:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         args = Namespace(output=None)
@@ -290,7 +290,7 @@ class TestImport:
         """Import extracts files into sinoclaw home."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -315,7 +315,7 @@ class TestImport:
         """Import strips .sinoclaw/ prefix if all entries share it."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -336,7 +336,7 @@ class TestImport:
         """Import rejects an empty zip."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "empty.zip"
@@ -353,7 +353,7 @@ class TestImport:
         """Import rejects a zip that doesn't look like a sinoclaw backup."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "random.zip"
@@ -372,7 +372,7 @@ class TestImport:
         """Import blocks zip entries with path traversal."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "evil.zip"
@@ -398,7 +398,7 @@ class TestImport:
         sinoclaw_home.mkdir()
         # Pre-existing config triggers the confirmation
         (sinoclaw_home / "config.yaml").write_text("existing: true\n")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -420,7 +420,7 @@ class TestImport:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("existing: true\n")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -439,7 +439,7 @@ class TestImport:
         """Import exits with error for nonexistent file."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         args = Namespace(zipfile=str(tmp_path / "nonexistent.zip"), force=True)
 
@@ -460,7 +460,7 @@ class TestRoundTrip:
         src_home.mkdir(parents=True)
         _make_sinoclaw_tree(src_home)
 
-        monkeypatch.setenv("HERMES_HOME", str(src_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(src_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "source")
 
         # Backup
@@ -473,7 +473,7 @@ class TestRoundTrip:
         # Import into a different location
         dst_home = tmp_path / "dest" / ".sinoclaw"
         dst_home.mkdir(parents=True)
-        monkeypatch.setenv("HERMES_HOME", str(dst_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(dst_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "dest")
 
         run_import(Namespace(zipfile=str(out_zip), force=True))
@@ -609,7 +609,7 @@ class TestBackupEdgeCases:
     def test_nonexistent_sinoclaw_home(self, tmp_path, monkeypatch):
         """Backup exits when sinoclaw home doesn't exist."""
         fake_home = tmp_path / "nonexistent" / ".sinoclaw"
-        monkeypatch.setenv("HERMES_HOME", str(fake_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(fake_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "nonexistent")
 
         args = Namespace(output=str(tmp_path / "out.zip"))
@@ -624,7 +624,7 @@ class TestBackupEdgeCases:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_dir = tmp_path / "backups"
@@ -644,7 +644,7 @@ class TestBackupEdgeCases:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_path = tmp_path / "mybackup.tar"
@@ -664,7 +664,7 @@ class TestBackupEdgeCases:
         (sinoclaw_home / "__pycache__").mkdir()
         (sinoclaw_home / "__pycache__" / "foo.pyc").write_bytes(b"\x00")
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         args = Namespace(output=str(tmp_path / "out.zip"))
@@ -686,7 +686,7 @@ class TestBackupEdgeCases:
         bad_file.write_text("data")
         bad_file.chmod(0o000)
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         out_zip = tmp_path / "out.zip"
@@ -708,7 +708,7 @@ class TestBackupEdgeCases:
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         # Output inside sinoclaw home
@@ -734,7 +734,7 @@ class TestImportEdgeCases:
         """Import rejects a non-zip file."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
         not_zip = tmp_path / "fake.zip"
         not_zip.write_text("this is not a zip")
@@ -750,7 +750,7 @@ class TestImportEdgeCases:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("existing\n")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -768,7 +768,7 @@ class TestImportEdgeCases:
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / ".env").write_text("KEY=val\n")
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
@@ -785,7 +785,7 @@ class TestImportEdgeCases:
         """Import handles permission errors during extraction."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         # Create a read-only directory so extraction fails
@@ -814,7 +814,7 @@ class TestImportEdgeCases:
         """Import shows progress with 500+ files."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "big.zip"
@@ -847,7 +847,7 @@ class TestProfileRestoration:
         """Import auto-creates wrapper scripts for restored profiles."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         # Mock the wrapper dir to be inside tmp_path
@@ -883,7 +883,7 @@ class TestProfileRestoration:
         """Import doesn't create wrappers for profile dirs without config."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         wrapper_dir = tmp_path / ".local" / "bin"
@@ -909,7 +909,7 @@ class TestProfileRestoration:
         """Import gracefully handles missing profiles module (fresh install)."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
-        monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"

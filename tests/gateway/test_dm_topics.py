@@ -231,7 +231,7 @@ def test_persist_dm_topic_thread_id_writes_config(tmp_path):
     adapter = _make_adapter()
 
     with patch.object(Path, "home", return_value=tmp_path), \
-         patch.dict(os.environ, {"HERMES_HOME": str(tmp_path / ".sinoclaw")}):
+         patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path / ".sinoclaw")}):
         adapter._persist_dm_topic_thread_id(111, "General", 999)
 
     with open(config_file) as f:
@@ -371,7 +371,7 @@ def test_get_dm_topic_info_hot_reloads_from_config(tmp_path):
         yaml.dump(config_data, f)
 
     with patch.object(Path, "home", return_value=tmp_path), \
-         patch.dict(os.environ, {"HERMES_HOME": str(tmp_path / ".sinoclaw")}):
+         patch.dict(os.environ, {"SINOCLAW_HOME": str(tmp_path / ".sinoclaw")}):
         result = adapter._get_dm_topic_info("111", "555")
 
     assert result is not None

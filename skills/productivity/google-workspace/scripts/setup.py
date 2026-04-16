@@ -36,7 +36,7 @@ except ModuleNotFoundError:
         sys.path.insert(0, str(HERMES_AGENT_ROOT))
     from sinoclaw_constants import display_sinoclaw_home, get_sinoclaw_home
 
-HERMES_HOME = get_sinoclaw_home()
+SINOCLAW_HOME = get_sinoclaw_home()
 TOKEN_PATH = HERMES_HOME / "google_token.json"
 CLIENT_SECRET_PATH = HERMES_HOME / "google_client_secret.json"
 PENDING_AUTH_PATH = HERMES_HOME / "google_oauth_pending.json"

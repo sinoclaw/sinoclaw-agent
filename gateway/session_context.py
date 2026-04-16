@@ -2,7 +2,7 @@
 Session-scoped context variables for the Sinoclaw gateway.
 
 Replaces the previous ``os.environ``-based session state
-(``HERMES_SESSION_PLATFORM``, ``HERMES_SESSION_CHAT_ID``, etc.) with
+(``SINOCLAW_SESSION_PLATFORM``, ``SINOCLAW_SESSION_CHAT_ID``, etc.) with
 Python's ``contextvars.ContextVar``.
 
 **Why this matters**
@@ -10,7 +10,7 @@ Python's ``contextvars.ContextVar``.
 The gateway processes messages concurrently via ``asyncio``.  When two
 messages arrive at the same time the old code did:
 
-    os.environ["HERMES_SESSION_THREAD_ID"] = str(context.source.thread_id)
+    os.environ["SINOCLAW_SESSION_THREAD_ID"] = str(context.source.thread_id)
 
 Because ``os.environ`` is *process-global*, Message A's value was
 silently overwritten by Message B before Message A's agent finished
@@ -29,11 +29,11 @@ needs to replace the import + call site:
 
     # before
     import os
-    platform = os.getenv("HERMES_SESSION_PLATFORM", "")
+    platform = os.getenv("SINOCLAW_SESSION_PLATFORM", "")
 
     # after
     from gateway.session_context import get_session_env
-    platform = get_session_env("HERMES_SESSION_PLATFORM", "")
+    platform = get_session_env("SINOCLAW_SESSION_PLATFORM", "")
 """
 
 from contextvars import ContextVar
@@ -48,22 +48,22 @@ _UNSET: Any = object()
 # Per-task session variables
 # ---------------------------------------------------------------------------
 
-_SESSION_PLATFORM: ContextVar = ContextVar("HERMES_SESSION_PLATFORM", default=_UNSET)
-_SESSION_CHAT_ID: ContextVar = ContextVar("HERMES_SESSION_CHAT_ID", default=_UNSET)
-_SESSION_CHAT_NAME: ContextVar = ContextVar("HERMES_SESSION_CHAT_NAME", default=_UNSET)
-_SESSION_THREAD_ID: ContextVar = ContextVar("HERMES_SESSION_THREAD_ID", default=_UNSET)
-_SESSION_USER_ID: ContextVar = ContextVar("HERMES_SESSION_USER_ID", default=_UNSET)
-_SESSION_USER_NAME: ContextVar = ContextVar("HERMES_SESSION_USER_NAME", default=_UNSET)
-_SESSION_KEY: ContextVar = ContextVar("HERMES_SESSION_KEY", default=_UNSET)
+_SESSION_PLATFORM: ContextVar = ContextVar("SINOCLAW_SESSION_PLATFORM", default=_UNSET)
+_SESSION_CHAT_ID: ContextVar = ContextVar("SINOCLAW_SESSION_CHAT_ID", default=_UNSET)
+_SESSION_CHAT_NAME: ContextVar = ContextVar("SINOCLAW_SESSION_CHAT_NAME", default=_UNSET)
+_SESSION_THREAD_ID: ContextVar = ContextVar("SINOCLAW_SESSION_THREAD_ID", default=_UNSET)
+_SESSION_USER_ID: ContextVar = ContextVar("SINOCLAW_SESSION_USER_ID", default=_UNSET)
+_SESSION_USER_NAME: ContextVar = ContextVar("SINOCLAW_SESSION_USER_NAME", default=_UNSET)
+_SESSION_KEY: ContextVar = ContextVar("SINOCLAW_SESSION_KEY", default=_UNSET)
 
 _VAR_MAP = {
-    "HERMES_SESSION_PLATFORM": _SESSION_PLATFORM,
-    "HERMES_SESSION_CHAT_ID": _SESSION_CHAT_ID,
-    "HERMES_SESSION_CHAT_NAME": _SESSION_CHAT_NAME,
-    "HERMES_SESSION_THREAD_ID": _SESSION_THREAD_ID,
-    "HERMES_SESSION_USER_ID": _SESSION_USER_ID,
-    "HERMES_SESSION_USER_NAME": _SESSION_USER_NAME,
-    "HERMES_SESSION_KEY": _SESSION_KEY,
+    "SINOCLAW_SESSION_PLATFORM": _SESSION_PLATFORM,
+    "SINOCLAW_SESSION_CHAT_ID": _SESSION_CHAT_ID,
+    "SINOCLAW_SESSION_CHAT_NAME": _SESSION_CHAT_NAME,
+    "SINOCLAW_SESSION_THREAD_ID": _SESSION_THREAD_ID,
+    "SINOCLAW_SESSION_USER_ID": _SESSION_USER_ID,
+    "SINOCLAW_SESSION_USER_NAME": _SESSION_USER_NAME,
+    "SINOCLAW_SESSION_KEY": _SESSION_KEY,
 }
 
 

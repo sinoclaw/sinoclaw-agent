@@ -29,7 +29,7 @@ def _reset_modules(prefixes: tuple[str, ...]):
 
 @pytest.fixture(autouse=True)
 def _restore_tool_modules():
-    original_sinoclaw_home = os.environ.get("HERMES_HOME")
+    original_sinoclaw_home = os.environ.get("SINOCLAW_HOME")
     original_modules = {
         name: module
         for name, module in sys.modules.items()
@@ -44,9 +44,9 @@ def _restore_tool_modules():
         yield
     finally:
         if original_sinoclaw_home is None:
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HOME", None)
         else:
-            os.environ["HERMES_HOME"] = original_sinoclaw_home
+            os.environ["SINOCLAW_HOME"] = original_sinoclaw_home
         _reset_modules(("tools", "sinoclaw_cli", "modal"))
         sys.modules.update(original_modules)
 
@@ -63,7 +63,7 @@ def _install_modal_test_modules(
     sinoclaw_cli.__path__ = []  # type: ignore[attr-defined]
     sys.modules["sinoclaw_cli"] = sinoclaw_cli
     sinoclaw_home = tmp_path / "sinoclaw-home"
-    os.environ["HERMES_HOME"] = str(sinoclaw_home)
+    os.environ["SINOCLAW_HOME"] = str(sinoclaw_home)
     sys.modules["sinoclaw_cli.config"] = types.SimpleNamespace(
         get_sinoclaw_home=lambda: sinoclaw_home,
     )

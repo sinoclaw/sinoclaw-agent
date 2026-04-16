@@ -15,7 +15,7 @@ class TestGetDefaultSinoclawRoot:
 
     def test_no_sinoclaw_home_returns_native(self, tmp_path, monkeypatch):
         """When HERMES_HOME is not set, returns ~/.sinoclaw."""
-        monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("SINOCLAW_HOME", raising=False)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         assert get_default_sinoclaw_root() == tmp_path / ".sinoclaw"
 
@@ -24,7 +24,7 @@ class TestGetDefaultSinoclawRoot:
         native = tmp_path / ".sinoclaw"
         native.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(native))
+        monkeypatch.setenv("SINOCLAW_HOME", str(native))
         assert get_default_sinoclaw_root() == native
 
     def test_sinoclaw_home_is_profile(self, tmp_path, monkeypatch):
@@ -33,7 +33,7 @@ class TestGetDefaultSinoclawRoot:
         profile = native / "profiles" / "coder"
         profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(profile))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile))
         assert get_default_sinoclaw_root() == native
 
     def test_sinoclaw_home_is_docker(self, tmp_path, monkeypatch):
@@ -41,7 +41,7 @@ class TestGetDefaultSinoclawRoot:
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(docker_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(docker_home))
         assert get_default_sinoclaw_root() == docker_home
 
     def test_sinoclaw_home_is_custom_path(self, tmp_path, monkeypatch):
@@ -49,17 +49,17 @@ class TestGetDefaultSinoclawRoot:
         custom = tmp_path / "my-sinoclaw-data"
         custom.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(custom))
+        monkeypatch.setenv("SINOCLAW_HOME", str(custom))
         assert get_default_sinoclaw_root() == custom
 
     def test_docker_profile_active(self, tmp_path, monkeypatch):
-        """When a Docker profile is active (HERMES_HOME=<root>/profiles/<name>),
+        """When a Docker profile is active (SINOCLAW_HOME=<root>/profiles/<name>),
         returns the Docker root, not the profile dir."""
         docker_root = tmp_path / "opt" / "data"
         profile = docker_root / "profiles" / "coder"
         profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("HERMES_HOME", str(profile))
+        monkeypatch.setenv("SINOCLAW_HOME", str(profile))
         assert get_default_sinoclaw_root() == docker_root
 
 

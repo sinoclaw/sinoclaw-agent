@@ -36,7 +36,7 @@ def _clear_provider_env(monkeypatch):
 
 
 def test_auth_add_api_key_persists_manual_entry(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     _write_auth_store(tmp_path, {"version": 1, "providers": {}})
@@ -61,7 +61,7 @@ def test_auth_add_api_key_persists_manual_entry(tmp_path, monkeypatch):
 
 
 def test_auth_add_anthropic_oauth_persists_pool_entry(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_TOKEN", raising=False)
     monkeypatch.delenv("CLAUDE_CODE_OAUTH_TOKEN", raising=False)
@@ -96,7 +96,7 @@ def test_auth_add_anthropic_oauth_persists_pool_entry(tmp_path, monkeypatch):
 
 
 def test_auth_add_nous_oauth_persists_pool_entry(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     _write_auth_store(tmp_path, {"version": 1, "providers": {}})
     token = _jwt_with_email("nous@example.com")
     monkeypatch.setattr(
@@ -150,7 +150,7 @@ def test_auth_add_nous_oauth_persists_pool_entry(tmp_path, monkeypatch):
 
 
 def test_auth_add_codex_oauth_persists_pool_entry(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     _write_auth_store(tmp_path, {"version": 1, "providers": {}})
     token = _jwt_with_email("codex@example.com")
     monkeypatch.setattr(
@@ -185,7 +185,7 @@ def test_auth_add_codex_oauth_persists_pool_entry(tmp_path, monkeypatch):
 
 
 def test_auth_remove_reindexes_priorities(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     # Prevent pool auto-seeding from host env vars and file-backed sources
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_TOKEN", raising=False)
@@ -237,7 +237,7 @@ def test_auth_remove_reindexes_priorities(tmp_path, monkeypatch):
 
 
 def test_auth_remove_accepts_label_target(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     monkeypatch.setattr(
         "agent.credential_pool._seed_from_singletons",
         lambda provider, entries: (False, set()),
@@ -284,7 +284,7 @@ def test_auth_remove_accepts_label_target(tmp_path, monkeypatch):
 
 
 def test_auth_remove_prefers_exact_numeric_label_over_index(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     monkeypatch.setattr(
         "agent.credential_pool._seed_from_singletons",
         lambda provider, entries: (False, set()),
@@ -338,7 +338,7 @@ def test_auth_remove_prefers_exact_numeric_label_over_index(tmp_path, monkeypatc
 
 
 def test_auth_reset_clears_provider_statuses(tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     _write_auth_store(
         tmp_path,
         {
@@ -379,7 +379,7 @@ def test_auth_reset_clears_provider_statuses(tmp_path, monkeypatch, capsys):
 
 
 def test_clear_provider_auth_removes_provider_pool_entries(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     _write_auth_store(
         tmp_path,
         {
@@ -536,7 +536,7 @@ def test_auth_remove_env_seeded_clears_env_var(tmp_path, monkeypatch):
     so the entry doesn't get re-seeded on the next load_pool() call."""
     sinoclaw_home = tmp_path / "sinoclaw"
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     # Write a .env with an OpenRouter key
     env_path = sinoclaw_home / ".env"
@@ -586,7 +586,7 @@ def test_auth_remove_env_seeded_does_not_resurrect(tmp_path, monkeypatch):
     """After removing an env-seeded credential, load_pool should NOT re-create it."""
     sinoclaw_home = tmp_path / "sinoclaw"
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
     # Write .env with an OpenRouter key
     env_path = sinoclaw_home / ".env"
@@ -630,7 +630,7 @@ def test_auth_remove_manual_entry_does_not_touch_env(tmp_path, monkeypatch):
     """Removing a manually-added credential should NOT touch .env."""
     sinoclaw_home = tmp_path / "sinoclaw"
     sinoclaw_home.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
 
     env_path = sinoclaw_home / ".env"
@@ -669,7 +669,7 @@ def test_auth_remove_manual_entry_does_not_touch_env(tmp_path, monkeypatch):
 
 def test_auth_remove_claude_code_suppresses_reseed(tmp_path, monkeypatch):
     """Removing a claude_code credential must prevent it from being re-seeded."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "sinoclaw"))
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_TOKEN", raising=False)
     monkeypatch.delenv("CLAUDE_CODE_OAUTH_TOKEN", raising=False)

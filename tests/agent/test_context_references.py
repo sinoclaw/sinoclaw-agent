@@ -287,7 +287,7 @@ async def test_blocks_sensitive_home_and_sinoclaw_paths(tmp_path: Path, monkeypa
     from agent.context_references import preprocess_context_references_async
 
     monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / ".sinoclaw"))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
 
     sinoclaw_env = tmp_path / ".sinoclaw" / ".env"
     sinoclaw_env.parent.mkdir(parents=True)

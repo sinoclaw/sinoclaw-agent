@@ -100,7 +100,7 @@ def _get_token_dir() -> Path:
         from sinoclaw_constants import get_sinoclaw_home
         base = Path(get_sinoclaw_home())
     except ImportError:
-        base = Path(os.environ.get("HERMES_HOME", str(Path.home() / ".sinoclaw")))
+        base = Path(os.environ.get("SINOCLAW_HOME", str(Path.home() / ".sinoclaw")))
     return base / "mcp-tokens"
 
 

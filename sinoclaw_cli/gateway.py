@@ -190,12 +190,12 @@ def find_gateway_pids(exclude_pids: set | None = None, all_profiles: bool = Fals
             return (
                 f"--profile {current_profile_name}" in command
                 or f"-p {current_profile_name}" in command
-                or f"HERMES_HOME={current_home}" in command
+                or f"SINOCLAW_HOME={current_home}" in command
             )
 
         if "--profile " in command or " -p " in command:
             return False
-        if "HERMES_HOME=" in command and f"HERMES_HOME={current_home}" not in command:
+        if "SINOCLAW_HOME=" in command and f"SINOCLAW_HOME={current_home}" not in command:
             return False
         return True
 
@@ -382,7 +382,7 @@ def _profile_suffix() -> str:
 
     Returns ``""`` for the default root, the profile name for
     ``<root>/profiles/<name>``, or a short hash for any other path.
-    Works correctly in Docker (HERMES_HOME=/opt/data) and standard deployments.
+    Works correctly in Docker (SINOCLAW_HOME=/opt/data) and standard deployments.
     """
     import hashlib
     import re
@@ -875,7 +875,7 @@ Environment="USER={username}"
 Environment="LOGNAME={username}"
 Environment="PATH={sane_path}"
 Environment="VIRTUAL_ENV={venv_dir}"
-Environment="HERMES_HOME={sinoclaw_home}"
+Environment="SINOCLAW_HOME={sinoclaw_home}"
 Restart=on-failure
 RestartSec=30
 RestartForceExitStatus={GATEWAY_SERVICE_RESTART_EXIT_CODE}
@@ -907,7 +907,7 @@ ExecStart={python_path} -m sinoclaw_cli.main{f" {profile_arg}" if profile_arg el
 WorkingDirectory={working_dir}
 Environment="PATH={sane_path}"
 Environment="VIRTUAL_ENV={venv_dir}"
-Environment="HERMES_HOME={sinoclaw_home}"
+Environment="SINOCLAW_HOME={sinoclaw_home}"
 Restart=on-failure
 RestartSec=30
 RestartForceExitStatus={GATEWAY_SERVICE_RESTART_EXIT_CODE}
@@ -939,7 +939,7 @@ def _normalize_launchd_plist_for_comparison(text: str) -> str:
     normalized = _normalize_service_definition(text)
     return re.sub(
         r'(<key>PATH</key>\s*<string>)(.*?)(</string>)',
-        r'\1__HERMES_PATH__\3',
+        r'\1__SINOCLAW_PATH__\3',
         normalized,
         flags=re.S,
     )
@@ -1038,7 +1038,7 @@ def _select_systemd_scope(system: bool = False) -> bool:
 
 def _get_restart_drain_timeout() -> float:
     """Return the configured gateway restart drain timeout in seconds."""
-    raw = os.getenv("HERMES_RESTART_DRAIN_TIMEOUT", "").strip()
+    raw = os.getenv("SINOCLAW_RESTART_DRAIN_TIMEOUT", "").strip()
     if not raw:
         cfg = read_raw_config()
         agent_cfg = cfg.get("agent", {}) if isinstance(cfg, dict) else {}

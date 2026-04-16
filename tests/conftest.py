@@ -25,7 +25,7 @@ def _isolate_sinoclaw_home(tmp_path, monkeypatch):
     (fake_home / "cron").mkdir()
     (fake_home / "memories").mkdir()
     (fake_home / "skills").mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(fake_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(fake_home))
     # Reset plugin singleton so tests don't leak plugins from ~/.sinoclaw/plugins/
     try:
         import sinoclaw_cli.plugins as _plugins_mod
@@ -34,10 +34,10 @@ def _isolate_sinoclaw_home(tmp_path, monkeypatch):
         pass
     # Tests should not inherit the agent's current gateway/messaging surface.
     # Individual tests that need gateway behavior set these explicitly.
-    monkeypatch.delenv("HERMES_SESSION_PLATFORM", raising=False)
-    monkeypatch.delenv("HERMES_SESSION_CHAT_ID", raising=False)
-    monkeypatch.delenv("HERMES_SESSION_CHAT_NAME", raising=False)
-    monkeypatch.delenv("HERMES_GATEWAY_SESSION", raising=False)
+    monkeypatch.delenv("SINOCLAW_SESSION_PLATFORM", raising=False)
+    monkeypatch.delenv("SINOCLAW_SESSION_CHAT_ID", raising=False)
+    monkeypatch.delenv("SINOCLAW_SESSION_CHAT_NAME", raising=False)
+    monkeypatch.delenv("SINOCLAW_GATEWAY_SESSION", raising=False)
     # Avoid making real calls during tests if this key is set in the env files
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
 

@@ -14,7 +14,7 @@ from sinoclaw_cli.config import get_project_root, get_sinoclaw_home, get_env_pat
 from sinoclaw_constants import display_sinoclaw_home
 
 PROJECT_ROOT = get_project_root()
-HERMES_HOME = get_sinoclaw_home()
+SINOCLAW_HOME = get_sinoclaw_home()
 _DHH = display_sinoclaw_home()  # user-facing display path (e.g. ~/.sinoclaw or ~/.sinoclaw/profiles/coder)
 
 # Load environment variables from ~/.sinoclaw/.env so API key checks work
@@ -167,7 +167,7 @@ def run_doctor(args):
 
     # Doctor runs from the interactive CLI, so CLI-gated tool availability
     # checks (like cronjob management) should see the same context as `sinoclaw`.
-    os.environ.setdefault("HERMES_INTERACTIVE", "1")
+    os.environ.setdefault("SINOCLAW_INTERACTIVE", "1")
     
     issues = []
     manual_issues = []  # issues that can't be auto-fixed

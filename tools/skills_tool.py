@@ -84,8 +84,8 @@ logger = logging.getLogger(__name__)
 # All skills live in ~/.sinoclaw/skills/ (seeded from bundled skills/ on install).
 # This is the single source of truth -- agent edits, hub installs, and bundled
 # skills all coexist here without polluting the git repo.
-HERMES_HOME = get_sinoclaw_home()
-SKILLS_DIR = HERMES_HOME / "skills"
+SINOCLAW_HOME = get_sinoclaw_home()
+SKILLS_DIR = SINOCLAW_HOME / "skills"
 
 # Anthropic-recommended limits for progressive disclosure efficiency
 MAX_NAME_LENGTH = 64
@@ -362,10 +362,10 @@ def _capture_required_environment_variables(
 
 
 def _is_gateway_surface() -> bool:
-    if os.getenv("HERMES_GATEWAY_SESSION"):
+    if os.getenv("SINOCLAW_GATEWAY_SESSION"):
         return True
     from gateway.session_context import get_session_env
-    return bool(get_session_env("HERMES_SESSION_PLATFORM"))
+    return bool(get_session_env("SINOCLAW_SESSION_PLATFORM"))
 
 
 def _get_terminal_backend_name() -> str:
@@ -514,7 +514,7 @@ def _is_skill_disabled(name: str, platform: str = None) -> bool:
         from sinoclaw_cli.config import load_config
         config = load_config()
         skills_cfg = config.get("skills", {})
-        resolved_platform = platform or os.getenv("HERMES_PLATFORM")
+        resolved_platform = platform or os.getenv("SINOCLAW_PLATFORM")
         if resolved_platform:
             platform_disabled = skills_cfg.get("platform_disabled", {}).get(resolved_platform)
             if platform_disabled is not None:

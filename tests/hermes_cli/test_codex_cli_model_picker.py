@@ -40,7 +40,7 @@ def codex_cli_only_env(tmp_path, monkeypatch):
     codex_home = tmp_path / ".codex"
     codex_home.mkdir()
 
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.setenv("CODEX_HOME", str(codex_home))
 
     # Empty Sinoclaw auth store
@@ -114,7 +114,7 @@ def sinoclaw_auth_only_env(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     # Point CODEX_HOME to nonexistent dir to prove it's not needed
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "no_codex"))
 
@@ -160,7 +160,7 @@ def claude_code_only_env(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     # No Codex CLI
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "no_codex"))
 
@@ -215,7 +215,7 @@ def test_no_codex_when_no_credentials(tmp_path, monkeypatch):
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "no_codex"))
 
     (sinoclaw_home / "auth.json").write_text(

@@ -69,7 +69,7 @@ class OwnedTwilioNumber:
 
 
 def _sinoclaw_home() -> Path:
-    return Path(os.environ.get("HERMES_HOME", "~/.sinoclaw")).expanduser()
+    return Path(os.environ.get("SINOCLAW_HOME", "~/.sinoclaw")).expanduser()
 
 
 def _env_path() -> Path:

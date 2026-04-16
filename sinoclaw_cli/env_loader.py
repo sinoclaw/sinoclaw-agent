@@ -104,7 +104,7 @@ def load_sinoclaw_dotenv(
     """
     loaded: list[Path] = []
 
-    home_path = Path(sinoclaw_home or os.getenv("HERMES_HOME", Path.home() / ".sinoclaw"))
+    home_path = Path(sinoclaw_home or os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
     user_env = home_path / ".env"
     project_env_path = Path(project_env) if project_env else None
 

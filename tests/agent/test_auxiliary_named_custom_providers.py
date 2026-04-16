@@ -11,7 +11,7 @@ def _isolate(tmp_path, monkeypatch):
     """Redirect HERMES_HOME and clear module caches."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(sinoclaw_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     # Write a minimal config so load_config doesn't fail
     (sinoclaw_home / "config.yaml").write_text("model:\n  default: test-model\n")
 

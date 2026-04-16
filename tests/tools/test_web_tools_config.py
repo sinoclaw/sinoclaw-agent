@@ -26,7 +26,7 @@ class TestFirecrawlClientConfig:
         tools.web_tools._firecrawl_client = None
         tools.web_tools._firecrawl_client_config = None
         for key in (
-            "HERMES_ENABLE_NOUS_MANAGED_TOOLS",
+            "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS",
             "FIRECRAWL_API_KEY",
             "FIRECRAWL_API_URL",
             "FIRECRAWL_GATEWAY_URL",
@@ -35,7 +35,7 @@ class TestFirecrawlClientConfig:
             "TOOL_GATEWAY_USER_TOKEN",
         ):
             os.environ.pop(key, None)
-        os.environ["HERMES_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
+        os.environ["SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
 
     def teardown_method(self):
         """Reset client after each test."""
@@ -43,7 +43,7 @@ class TestFirecrawlClientConfig:
         tools.web_tools._firecrawl_client = None
         tools.web_tools._firecrawl_client_config = None
         for key in (
-            "HERMES_ENABLE_NOUS_MANAGED_TOOLS",
+            "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS",
             "FIRECRAWL_API_KEY",
             "FIRECRAWL_API_URL",
             "FIRECRAWL_GATEWAY_URL",
@@ -190,7 +190,7 @@ class TestFirecrawlClientConfig:
 
         with patch.dict(os.environ, {
             "HOME": str(real_home),
-            "HERMES_HOME": str(sinoclaw_home),
+            "SINOCLAW_HOME": str(sinoclaw_home),
         }, clear=False):
             import tools.web_tools
             importlib.reload(tools.web_tools)
@@ -298,7 +298,7 @@ class TestBackendSelection:
     """
 
     _ENV_KEYS = (
-        "HERMES_ENABLE_NOUS_MANAGED_TOOLS",
+        "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS",
         "EXA_API_KEY",
         "PARALLEL_API_KEY",
         "FIRECRAWL_API_KEY",
@@ -311,9 +311,9 @@ class TestBackendSelection:
     )
 
     def setup_method(self):
-        os.environ["HERMES_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
+        os.environ["SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
         for key in self._ENV_KEYS:
-            if key != "HERMES_ENABLE_NOUS_MANAGED_TOOLS":
+            if key != "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS":
                 os.environ.pop(key, None)
 
     def teardown_method(self):
@@ -523,7 +523,7 @@ class TestCheckWebApiKey:
     """Test suite for check_web_api_key() unified availability check."""
 
     _ENV_KEYS = (
-        "HERMES_ENABLE_NOUS_MANAGED_TOOLS",
+        "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS",
         "EXA_API_KEY",
         "PARALLEL_API_KEY",
         "FIRECRAWL_API_KEY",
@@ -536,9 +536,9 @@ class TestCheckWebApiKey:
     )
 
     def setup_method(self):
-        os.environ["HERMES_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
+        os.environ["SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS"] = "1"
         for key in self._ENV_KEYS:
-            if key != "HERMES_ENABLE_NOUS_MANAGED_TOOLS":
+            if key != "SINOCLAW_ENABLE_NOUS_MANAGED_TOOLS":
                 os.environ.pop(key, None)
 
     def teardown_method(self):

@@ -27,7 +27,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def _isolate_sinoclaw_home(tmp_path, monkeypatch):
     """Redirect HERMES_HOME to a temp directory."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     try:
         import sinoclaw_constants
         monkeypatch.setattr(sinoclaw_constants, "get_sinoclaw_home", lambda: tmp_path)
@@ -877,7 +877,7 @@ class TestCliIntegration:
         assert args.verbose is True
 
     def test_dispatcher_routes_serve(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
         mock_run = MagicMock()
         monkeypatch.setattr("mcp_serve.run_mcp_server", mock_run)
 
