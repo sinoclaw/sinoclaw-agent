@@ -45,12 +45,12 @@ export const zh: Translations = {
   },
 
   app: {
-    brand: "Hermes Agent",
-    brandShort: "HA",
+    brand: "Sinoclaw Agent",
+    brandShort: "SC",
     webUi: "管理面板",
     footer: {
-      name: "Hermes Agent",
-      org: "Nous Research",
+      name: "Sinoclaw Agent",
+      org: "Sinoclaw",
     },
     nav: {
       status: "状态",
