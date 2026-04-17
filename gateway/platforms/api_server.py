@@ -2574,17 +2574,127 @@ class APIServerAdapter(BasePlatformAdapter):
         })
 
     # Security config stubs --------------------------------------------------
+    # Security: tool guard builtin rules
+    BUILTIN_TOOL_GUARD_RULES = [
+        {"id": "shell_cmd", "tools": ["bash", "exec", "run"], "params": [], "category": "shell",
+         "severity": "high", "patterns": ["rm -rf", "drop table", "delete from"], "exclude_patterns": [],
+         "description": "Guard dangerous shell commands", "remediation": "Review command before execution"},
+        {"id": "file_write", "tools": ["write", "write_file", "edit"], "params": [], "category": "filesystem",
+         "severity": "medium", "patterns": [], "exclude_patterns": [],
+         "description": "Monitor file writes", "remediation": "Confirm file path is correct"},
+        {"id": "network_request", "tools": ["web_fetch", "http_request"], "params": [], "category": "network",
+         "severity": "medium", "patterns": [], "exclude_patterns": [],
+         "description": "Monitor network requests", "remediation": "Verify URL is trusted"},
+    ]
+
+    def _security_config_file(self) -> Path:
+        return Path.home() / ".sinoclaw" / "security.json"
+
+    def _load_security_config(self) -> dict:
+        f = self._security_config_file()
+        if f.exists():
+            import json as _json
+            return _json.loads(f.read_text(encoding="utf-8"))
+        return {
+            "tool_guard": {"enabled": False, "guarded_tools": None, "denied_tools": [], "custom_rules": [], "disabled_rules": []},
+            "file_guard": {"enabled": False, "paths": []},
+            "skill_scanner": {"mode": "off", "timeout": 30, "whitelist": []},
+            "blocked_history": [],
+        }
+
+    def _save_security_config(self, cfg: dict) -> None:
+        import json as _json
+        f = self._security_config_file()
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(_json.dumps(cfg, indent=2), encoding="utf-8")
+
     async def _handle_tool_guard_config(self, request: "web.Request") -> "web.Response":
         """GET/PUT /config/security/tool-guard"""
-        return web.json_response({
-            "enabled": False,
-            "guarded_tools": None,
-            "denied_tools": [],
-            "custom_rules": [],
-            "disabled_rules": [],
-        })
+        cfg = self._load_security_config()
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg["tool_guard"] = body
+                self._save_security_config(cfg)
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response(cfg.get("tool_guard", {
+            "enabled": False, "guarded_tools": None, "denied_tools": [],
+            "custom_rules": [], "disabled_rules": [],
+        }))
+
+    async def _handle_tool_guard_builtin_rules(self, request: "web.Request") -> "web.Response":
+        """GET /config/security/tool-guard/builtin-rules"""
+        return web.json_response(self.BUILTIN_TOOL_GUARD_RULES)
 
     async def _handle_file_guard_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/security/file-guard"""
+        cfg = self._load_security_config()
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg["file_guard"] = body
+                self._save_security_config(cfg)
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response(cfg.get("file_guard", {"enabled": False, "paths": []}))
+
+    async def _handle_skill_scanner_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/security/skill-scanner"""
+        cfg = self._load_security_config()
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg["skill_scanner"] = body
+                self._save_security_config(cfg)
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response(cfg.get("skill_scanner", {"mode": "off", "timeout": 30, "whitelist": []}))
+
+    async def _handle_skill_scanner_blocked_history(self, request: "web.Request") -> "web.Response":
+        """GET/DELETE /config/security/skill-scanner/blocked-history"""
+        cfg = self._load_security_config()
+        if request.method == "DELETE":
+            cfg["blocked_history"] = []
+            self._save_security_config(cfg)
+            return web.json_response({"cleared": True})
+        return web.json_response(cfg.get("blocked_history", []))
+
+    async def _handle_skill_scanner_blocked_history_delete(self, request: "web.Request") -> "web.Response":
+        """DELETE /config/security/skill-scanner/blocked-history/{index}"""
+        idx = int(request.match_info.get("index", 0))
+        cfg = self._load_security_config()
+        if 0 <= idx < len(cfg.get("blocked_history", [])):
+            cfg["blocked_history"].pop(idx)
+            self._save_security_config(cfg)
+        return web.json_response({"removed": True})
+
+    async def _handle_skill_scanner_whitelist_add(self, request: "web.Request") -> "web.Response":
+        """POST /config/security/skill-scanner/whitelist"""
+        try:
+            body = await request.json()
+            skill_name = body.get("skill_name", "")
+            cfg = self._load_security_config()
+            wl = cfg.get("skill_scanner", {}).get("whitelist", [])
+            if not any(e.get("skill_name") == skill_name for e in wl):
+                wl.append({"skill_name": skill_name, "content_hash": body.get("content_hash", ""), "added_at": ""})
+                cfg["skill_scanner"]["whitelist"] = wl
+                self._save_security_config(cfg)
+            return web.json_response({"whitelisted": True, "skill_name": skill_name})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_skill_scanner_whitelist_remove(self, request: "web.Request") -> "web.Response":
+        """DELETE /config/security/skill-scanner/whitelist/{skill_name}"""
+        skill_name = request.match_info.get("skill_name", "")
+        cfg = self._load_security_config()
+        wl = cfg.get("skill_scanner", {}).get("whitelist", [])
+        cfg["skill_scanner"]["whitelist"] = [e for e in wl if e.get("skill_name") != skill_name]
+        self._save_security_config(cfg)
+        return web.json_response({"removed": True, "skill_name": skill_name})
         """GET/PUT /config/security/file-guard"""
         return web.json_response({"enabled": False, "paths": []})
 
@@ -2593,9 +2703,169 @@ class APIServerAdapter(BasePlatformAdapter):
         return web.json_response({"enabled": False, "blocked_history": [], "whitelist": []})
 
     # Config channels stub ---------------------------------------------------
+    def _load_channel_config(self) -> dict:
+        """Build a full ChannelConfig object from config.yaml and .env."""
+        import os as _os, yaml
+        config_file = Path.home() / ".sinoclaw" / "config.yaml"
+        cfg = {}
+        if config_file.exists():
+            with open(config_file) as f:
+                cfg = yaml.safe_load(f) or {}
+        # Read .env for channel credentials
+        env_file = Path.home() / ".sinoclaw" / ".env"
+        env_vars = {}
+        if env_file.exists():
+            for line in env_file.read_text().splitlines():
+                line = line.strip()
+                if "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    env_vars[k.strip()] = v.strip()
+        # Build full channel config (all channel types, even if not enabled)
+        enabled = cfg.get("weixin", {}).get("enabled", True)
+        wx_account = env_vars.get("WEIXIN_ACCOUNT_ID", "")
+        result = {
+            "console": {"enabled": True, "bot_prefix": ""},
+            "weixin": {
+                "enabled": enabled,
+                "account_id": wx_account,
+                "bot_prefix": "",
+            },
+            "qq": {
+                "enabled": False,
+                "app_id": env_vars.get("QQ_APP_ID", ""),
+                "client_secret": env_vars.get("QQ_CLIENT_SECRET", ""),
+                "ack_message": "",
+            },
+            "feishu": {
+                "enabled": False,
+                "app_id": "",
+                "app_secret": "",
+                "encrypt_key": "",
+                "verification_token": "",
+                "media_dir": "",
+            },
+            "dingtalk": {
+                "enabled": False,
+                "client_id": "",
+                "client_secret": "",
+                "message_type": "",
+                "card_template_id": "",
+                "card_template_key": "",
+                "robot_code": "",
+            },
+            "telegram": {
+                "enabled": False,
+                "bot_token": env_vars.get("TELEGRAM_BOT_TOKEN", ""),
+                "http_proxy": "",
+                "http_proxy_auth": "",
+                "show_typing": False,
+            },
+            "discord": {
+                "enabled": False,
+                "bot_token": "",
+                "http_proxy": "",
+                "http_proxy_auth": "",
+                "accept_bot_messages": False,
+            },
+            "wecom": {
+                "enabled": False,
+                "bot_id": "",
+                "secret": "",
+            },
+            "xiaoyi": {"enabled": False, "ak": "", "sk": "", "agent_id": ""},
+            "matrix": {"enabled": False, "homeserver": "", "user_id": "", "access_token": ""},
+            "imessage": {"enabled": False, "db_path": "", "poll_sec": 5},
+            "onebot": {"enabled": False, "ws_host": "", "ws_port": 3000, "access_token": "", "share_session_in_group": False},
+        }
+        return result
+
+    def _save_channel_config(self, channels: dict) -> None:
+        """Persist channel config changes to config.yaml and .env."""
+        import os as _os, yaml
+        config_file = Path.home() / ".sinoclaw" / "config.yaml"
+        cfg = {}
+        if config_file.exists():
+            with open(config_file) as f:
+                cfg = yaml.safe_load(f) or {}
+        # Update weixin enabled
+        if "weixin" in channels:
+            cfg["weixin"] = cfg.get("weixin", {})
+            cfg["weixin"]["enabled"] = channels["weixin"].get("enabled", True)
+        # Save credentials to .env
+        env_file = Path.home() / ".sinoclaw" / ".env"
+        env_vars = {}
+        if env_file.exists():
+            for line in env_file.read_text().splitlines():
+                line = line.strip()
+                if "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    env_vars[k.strip()] = v.strip()
+        # Map channel creds to env vars
+        if channels.get("qq", {}).get("app_id"):
+            env_vars["QQ_APP_ID"] = channels["qq"]["app_id"]
+        if channels.get("qq", {}).get("client_secret"):
+            env_vars["QQ_CLIENT_SECRET"] = channels["qq"]["client_secret"]
+        if channels.get("telegram", {}).get("bot_token"):
+            env_vars["TELEGRAM_BOT_TOKEN"] = channels["telegram"]["bot_token"]
+        # Write .env
+        lines = [f"{k}={v}" for k, v in env_vars.items()]
+        env_file.write_text("\n".join(lines) + "\n")
+        # Write config.yaml
+        cfg["platforms"] = cfg.get("platforms", {})
+        with open(config_file, "w") as f:
+            yaml.dump(cfg, f)
+
     async def _handle_config_channels(self, request: "web.Request") -> "web.Response":
         """GET /config/channels"""
-        return web.json_response([])
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                self._save_channel_config(body)
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response(self._load_channel_config())
+
+    async def _handle_config_channel_types(self, request: "web.Request") -> "web.Response":
+        """GET /config/channels/types"""
+        return web.json_response([
+            "console", "weixin", "dingtalk", "feishu",
+            "telegram", "discord", "qq", "wecom", "xiaoyi", "matrix", "imessage", "onebot",
+        ])
+
+    async def _handle_config_channel(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/channels/{channel}"""
+        channel = request.match_info.get("channel", "")
+        cfg = self._load_channel_config()
+        if channel not in cfg:
+            return web.json_response({"error": "channel not found"}, status=404)
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg[channel] = body
+                self._save_channel_config(cfg)
+                return web.json_response(cfg[channel])
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response(cfg.get(channel, {}))
+
+    async def _handle_config_channel_qrcode(self, request: "web.Request") -> "web.Response":
+        """GET /config/channels/{channel}/qrcode"""
+        channel = request.match_info.get("channel", "")
+        # WeChat doesn't use QR code login - return not supported
+        return web.json_response({
+            "qrcode_img": "",
+            "poll_token": "",
+            "error": "QR code not supported for this channel",
+        }, status=501)
+
+    async def _handle_config_channel_qrcode_status(self, request: "web.Request") -> "web.Response":
+        """GET /config/channels/{channel}/qrcode/status"""
+        channel = request.match_info.get("channel", "")
+        return web.json_response({
+            "status": "not_supported",
+            "credentials": {},
+        })
 
     async def _handle_list_chats(self, request: "web.Request") -> "web.Response":
         """GET /chats — List all chat sessions, most recent first."""
@@ -4033,13 +4303,35 @@ class APIServerAdapter(BasePlatformAdapter):
             # Token usage
             self._app.router.add_get("/token-usage", self._handle_token_usage)
             # Security config
+            # Security: tool guard
             self._app.router.add_get("/config/security/tool-guard", self._handle_tool_guard_config)
+            self._app.router.add_put("/config/security/tool-guard", self._handle_tool_guard_config)
+            self._app.router.add_get("/config/security/tool-guard/builtin-rules", self._handle_tool_guard_builtin_rules)
+            # Security: file guard
+            self._app.router.add_get("/config/security/file-guard", self._handle_file_guard_config)
+            self._app.router.add_put("/config/security/file-guard", self._handle_file_guard_config)
+            # Security: skill scanner
+            self._app.router.add_get("/config/security/skill-scanner", self._handle_skill_scanner_config)
+            self._app.router.add_put("/config/security/skill-scanner", self._handle_skill_scanner_config)
+            self._app.router.add_get("/config/security/skill-scanner/blocked-history", self._handle_skill_scanner_blocked_history)
+            self._app.router.add_delete("/config/security/skill-scanner/blocked-history", self._handle_skill_scanner_blocked_history)
+            self._app.router.add_delete("/config/security/skill-scanner/blocked-history/{index}", self._handle_skill_scanner_blocked_history_delete)
+            self._app.router.add_post("/config/security/skill-scanner/whitelist", self._handle_skill_scanner_whitelist_add)
+            self._app.router.add_delete("/config/security/skill-scanner/whitelist/{skill_name}", self._handle_skill_scanner_whitelist_remove)
+            # Security: combined (for Settings page overview)
+            self._app.router.add_get("/config/security", self._handle_tool_guard_config)
             self._app.router.add_put("/config/security/tool-guard", self._handle_tool_guard_config)
             self._app.router.add_get("/config/security/file-guard", self._handle_file_guard_config)
             self._app.router.add_put("/config/security/file-guard", self._handle_file_guard_config)
             self._app.router.add_get("/config/security/skill-scanner", self._handle_skill_scanner_config)
             self._app.router.add_put("/config/security/skill-scanner", self._handle_skill_scanner_config)
             self._app.router.add_get("/config/channels", self._handle_config_channels)
+            self._app.router.add_put("/config/channels", self._handle_config_channels)
+            self._app.router.add_get("/config/channels/types", self._handle_config_channel_types)
+            self._app.router.add_get("/config/channels/{channel}", self._handle_config_channel)
+            self._app.router.add_put("/config/channels/{channel}", self._handle_config_channel)
+            self._app.router.add_get("/config/channels/{channel}/qrcode", self._handle_config_channel_qrcode)
+            self._app.router.add_get("/config/channels/{channel}/qrcode/status", self._handle_config_channel_qrcode_status)
             # Chats
             self._app.router.add_get("/chats", self._handle_list_chats)
             self._app.router.add_post("/chats", self._handle_create_chat)
