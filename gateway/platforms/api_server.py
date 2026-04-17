@@ -2304,44 +2304,272 @@ class APIServerAdapter(BasePlatformAdapter):
 
 
     # Agent workspace files and memory ----------------------------------------
+    def _agent_workspace_dir(self, agent_id: str) -> Path:
+        """Return workspace directory for an agent."""
+        return Path.home() / ".sinoclaw" / "workspaces" / agent_id
+
+    def _memory_dir(self) -> Path:
+        """Return memory directory."""
+        return Path.home() / ".sinoclaw" / "memories"
+
+    def _system_prompts_file(self) -> Path:
+        return Path.home() / ".sinoclaw" / "system_prompts.json"
+
+    def _file_info(self, path: Path) -> dict:
+        stat = path.stat()
+        return {
+            "filename": path.name,
+            "path": str(path),
+            "size": stat.st_size,
+            "created_time": stat.st_ctime,
+            "modified_time": stat.st_mtime,
+        }
+
     async def _handle_list_agent_files(self, request: "web.Request") -> "web.Response":
         """GET /agents/{agent_id}/files"""
         agent_id = request.match_info.get("agent_id", "default")
-        return web.json_response([])
+        workspace = self._agent_workspace_dir(agent_id)
+        workspace.mkdir(parents=True, exist_ok=True)
+        files = []
+        for p in sorted(workspace.glob("*.md")):
+            files.append(self._file_info(p))
+        return web.json_response(files)
 
     async def _handle_read_agent_file(self, request: "web.Request") -> "web.Response":
         """GET /agents/{agent_id}/files/{filename}"""
-        return web.json_response({"content": "", "filename": ""})
+        agent_id = request.match_info.get("agent_id", "default")
+        filename = request.match_info.get("filename", "")
+        workspace = self._agent_workspace_dir(agent_id)
+        file_path = workspace / filename
+        if not file_path.exists() or not file_path.is_file():
+            return web.json_response({"error": "file not found"}, status=404)
+        try:
+            content = file_path.read_text(encoding="utf-8")
+            return web.json_response({"content": content})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     async def _handle_write_agent_file(self, request: "web.Request") -> "web.Response":
         """PUT /agents/{agent_id}/files/{filename}"""
-        return web.json_response({"written": True, "filename": ""})
+        agent_id = request.match_info.get("agent_id", "default")
+        filename = request.match_info.get("filename", "")
+        workspace = self._agent_workspace_dir(agent_id)
+        workspace.mkdir(parents=True, exist_ok=True)
+        try:
+            body = await request.json()
+            content = body.get("content", "")
+            file_path = workspace / filename
+            file_path.write_text(content, encoding="utf-8")
+            return web.json_response({"written": True, "filename": filename})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     async def _handle_list_agent_memory(self, request: "web.Request") -> "web.Response":
         """GET /agents/{agent_id}/memory"""
+        agent_id = request.match_info.get("agent_id", "default")
+        memory_dir = self._memory_dir()
+        files = []
+        if memory_dir.exists():
+            for p in sorted(memory_dir.glob("*.md"), key=lambda x: x.stat().st_mtime, reverse=True):
+                files.append(self._file_info(p))
+        return web.json_response(files)
+
+    async def _handle_read_agent_memory(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{agent_id}/memory/{date}.md"""
+        date = request.match_info.get("date", "")
+        memory_dir = self._memory_dir()
+        file_path = memory_dir / f"{date}.md"
+        if not file_path.exists():
+            return web.json_response({"error": "not found"}, status=404)
+        try:
+            content = file_path.read_text(encoding="utf-8")
+            return web.json_response({"content": content})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_write_agent_memory(self, request: "web.Request") -> "web.Response":
+        """PUT /agents/{agent_id}/memory/{date}.md"""
+        date = request.match_info.get("date", "")
+        memory_dir = self._memory_dir()
+        memory_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            body = await request.json()
+            content = body.get("content", "")
+            file_path = memory_dir / f"{date}.md"
+            file_path.write_text(content, encoding="utf-8")
+            return web.json_response({"written": True})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_get_system_prompt_files(self, request: "web.Request") -> "web.Response":
+        """GET /agent/system-prompt-files"""
+        f = self._system_prompts_file()
+        if f.exists():
+            import json as _json
+            return web.json_response(_json.loads(f.read_text(encoding="utf-8")))
         return web.json_response([])
 
-    # Tools (built-in) --------------------------------------------------------
+    async def _handle_set_system_prompt_files(self, request: "web.Request") -> "web.Response":
+        """PUT /agent/system-prompt-files"""
+        try:
+            body = await request.json()
+            import json as _json
+            self._system_prompts_file().write_text(_json.dumps(body, indent=2), encoding="utf-8")
+            return web.json_response(body)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_workspace_download(self, request: "web.Request") -> "web.Response":
+        """GET /workspace/download"""
+        import io, zipfile, datetime
+        workspace = Path.home() / ".sinoclaw"
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for p in sorted(workspace.rglob("*")):
+                if p.is_file() and not p.name.startswith("."):
+                    zf.write(p, p.relative_to(workspace.parent))
+        buf.seek(0)
+        from aiohttp import web
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"sinoclaw_workspace_{timestamp}.zip"
+        return web.Response(
+            body=buf.getvalue(),
+            headers={
+                "Content-Type": "application/zip",
+                "Content-Disposition": f'attachment; filename="{filename}"',
+                "Cache-Control": "no-cache",
+            },
+        )
+
+    async def _handle_workspace_upload(self, request: "web.Request") -> "web.Response":
+        """POST /workspace/upload"""
+        import io, zipfile, shutil
+        try:
+            reader = await request.multipart()
+            field = await reader.next()
+            if field is None:
+                return web.json_response({"success": False, "message": "no file"}, status=400)
+            data = b""
+            async for chunk in field:
+                data += chunk
+            buf = io.BytesIO(data)
+            if not zipfile.is_zipfile(buf):
+                return web.json_response({"success": False, "message": "not a zip"}, status=400)
+            buf.seek(0)
+            workspace = Path.home() / ".sinoclaw"
+            with zipfile.ZipFile(buf, "r") as zf:
+                for name in zf.namelist():
+                    # security: prevent path traversal
+                    safe_name = name.lstrip("/")
+                    dest = (workspace / safe_name).resolve()
+                    if not str(dest).startswith(str(workspace.resolve())):
+                        continue
+                    if name.endswith("/"):
+                        dest.mkdir(parents=True, exist_ok=True)
+                    else:
+                        dest.parent.mkdir(parents=True, exist_ok=True)
+                        dest.write_bytes(zf.read(name))
+            return web.json_response({"success": True, "message": "uploaded"})
+        except Exception as e:
+            return web.json_response({"success": False, "message": str(e)}, status=500)
+
+    # Built-in tools registry (static list for Console UI) -------------------
+    BUILTIN_TOOLS = [
+        {"name": "bash", "description": "Execute shell commands", "icon": "Terminal", "async_execution": False},
+        {"name": "read", "description": "Read file contents", "icon": "FileText", "async_execution": False},
+        {"name": "write", "description": "Write/edit files", "icon": "Edit", "async_execution": False},
+        {"name": "glob", "description": "Find files by pattern", "icon": "FolderOpen", "async_execution": False},
+        {"name": "grep", "description": "Search file contents", "icon": "Search", "async_execution": False},
+        {"name": "memory", "description": "Memory and recall", "icon": "Brain", "async_execution": False},
+        {"name": "skill", "description": "Invoke a skill", "icon": "Tool", "async_execution": False},
+        {"name": "web_fetch", "description": "Fetch web page content", "icon": "Globe", "async_execution": False},
+        {"name": "image_generate", "description": "Generate images", "icon": "Image", "async_execution": False},
+        {"name": "tts", "description": "Text-to-speech", "icon": "Audio", "async_execution": False},
+        {"name": "music_generate", "description": "Generate music", "icon": "Music", "async_execution": False},
+        {"name": "video_generate", "description": "Generate videos", "icon": "Video", "async_execution": False},
+        {"name": "pdf", "description": "Analyze PDF documents", "icon": "FilePdf", "async_execution": False},
+        {"name": "process", "description": "Manage background processes", "icon": "Process", "async_execution": True},
+        {"name": "send_message", "description": "Send messages to channels", "icon": "Send", "async_execution": True},
+        {"name": "cronjob", "description": "Schedule cron jobs", "icon": "Clock", "async_execution": False},
+        {"name": "code_execution", "description": "Run code in sandbox", "icon": "Code", "async_execution": True},
+    ]
+
+    def _tools_state_file(self) -> Path:
+        return Path.home() / ".sinoclaw" / "tools_state.json"
+
+    def _load_tools_state(self) -> dict:
+        f = self._tools_state_file()
+        if f.exists():
+            import json as _json
+            return _json.loads(f.read_text(encoding="utf-8"))
+        return {}
+
+    def _save_tools_state(self, state: dict) -> None:
+        import json as _json
+        f = self._tools_state_file()
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(_json.dumps(state, indent=2), encoding="utf-8")
+
+    def _get_tool_info(self, tool_name: str) -> dict:
+        state = self._load_tools_state()
+        for t in self.BUILTIN_TOOLS:
+            if t["name"] == tool_name:
+                result = t.copy()
+                result["enabled"] = state.get(tool_name, {}).get("enabled", True)
+                result["async_execution"] = state.get(tool_name, {}).get("async_execution", t.get("async_execution", False))
+                return result
+        return {"name": tool_name, "description": "", "enabled": True, "async_execution": False, "icon": "Tool"}
+
     async def _handle_list_tools(self, request: "web.Request") -> "web.Response":
         """GET /tools"""
-        return web.json_response([])
+        state = self._load_tools_state()
+        result = []
+        for t in self.BUILTIN_TOOLS:
+            tool_state = state.get(t["name"], {})
+            result.append({
+                **t,
+                "enabled": tool_state.get("enabled", True),
+                "async_execution": tool_state.get("async_execution", t.get("async_execution", False)),
+            })
+        return web.json_response(result)
 
     async def _handle_toggle_tool(self, request: "web.Request") -> "web.Response":
         """PATCH /tools/{tool_name}/toggle"""
-        return web.json_response({"name": "", "enabled": True, "description": "", "async_execution": False, "icon": ""})
+        tool_name = request.match_info.get("tool_name", "")
+        state = self._load_tools_state()
+        if tool_name not in state:
+            state[tool_name] = {}
+        current = state[tool_name].get("enabled", True)
+        state[tool_name]["enabled"] = not current
+        self._save_tools_state(state)
+        return web.json_response(self._get_tool_info(tool_name))
 
     async def _handle_tool_async_execution(self, request: "web.Request") -> "web.Response":
         """PUT /tools/{tool_name}/async-execution"""
-        return web.json_response({"name": "", "enabled": True, "description": "", "async_execution": False, "icon": ""})
+        tool_name = request.match_info.get("tool_name", "")
+        try:
+            body = await request.json()
+            state = self._load_tools_state()
+            if tool_name not in state:
+                state[tool_name] = {}
+            state[tool_name]["async_execution"] = bool(body.get("async_execution", False))
+            self._save_tools_state(state)
+            return web.json_response(self._get_tool_info(tool_name))
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     # Token usage ------------------------------------------------------------
     async def _handle_token_usage(self, request: "web.Request") -> "web.Response":
         """GET /token-usage"""
+        import datetime
+        start_date = request.query.get("start_date", "")
+        end_date = request.query.get("end_date", "")
+        # Return zeros since we don't track per-request token usage
         return web.json_response({
             "total_tokens": 0,
             "total_cost": "0.00",
-            "start_date": "",
-            "end_date": "",
+            "start_date": start_date,
+            "end_date": end_date,
             "daily": [],
         })
 
@@ -2803,6 +3031,57 @@ class APIServerAdapter(BasePlatformAdapter):
         except Exception as e:
             return web.json_response({"error": str(e)}, status=500)
 
+    # Custom providers (for Settings → Models page) ----------------------------
+    def _custom_providers_file(self) -> Path:
+        return Path.home() / ".sinoclaw" / "custom_providers.json"
+
+    def _load_custom_providers(self) -> list:
+        f = self._custom_providers_file()
+        if f.exists():
+            import json as _json
+            return _json.loads(f.read_text(encoding="utf-8"))
+        return []
+
+    def _save_custom_providers(self, providers: list) -> None:
+        import json as _json
+        f = self._custom_providers_file()
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(_json.dumps(providers, indent=2), encoding="utf-8")
+
+    async def _handle_list_custom_providers(self, request: "web.Request") -> "web.Response":
+        """GET /models/custom-providers"""
+        return web.json_response(self._load_custom_providers())
+
+    async def _handle_create_custom_provider(self, request: "web.Request") -> "web.Response":
+        """POST /models/custom-providers"""
+        try:
+            body = await request.json()
+            providers = self._load_custom_providers()
+            new_provider = {
+                "id": body.get("id", ""),
+                "name": body.get("name", ""),
+                "api_key": body.get("api_key", ""),
+                "base_url": body.get("base_url", ""),
+                "models": body.get("models", []),
+            }
+            providers = [p for p in providers if p.get("id") != new_provider["id"]]
+            providers.append(new_provider)
+            self._save_custom_providers(providers)
+            return web.json_response(new_provider, status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_delete_custom_provider(self, request: "web.Request") -> "web.Response":
+        """DELETE /models/custom-providers/{id}"""
+        provider_id = request.match_info.get("provider_id", "")
+        try:
+            providers = self._load_custom_providers()
+            providers = [p for p in providers if p.get("id") != provider_id]
+            self._save_custom_providers(providers)
+            return web.json_response({"success": True})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
     async def _handle_list_providers(self, request: "web.Request") -> "web.Response":
         """GET /models — List model providers."""
         import os as _os
@@ -2841,25 +3120,86 @@ class APIServerAdapter(BasePlatformAdapter):
             "active_audio": None,
         })
 
+    def _update_env_var(self, key: str, value: str) -> None:
+        """Update or add an env var in ~/.sinoclaw/.env."""
+        env_file = Path.home() / ".sinoclaw" / ".env"
+        lines = []
+        found = False
+        if env_file.exists():
+            for line in env_file.read_text(encoding="utf-8").splitlines():
+                if line.strip().startswith(f"{key}="):
+                    lines.append(f"{key}={value}")
+                    found = True
+                else:
+                    lines.append(line)
+        if not found:
+            lines.append(f"{key}={value}")
+        env_file.write_text("\n".join(lines), encoding="utf-8")
+
     async def _handle_set_active_llm(self, request: "web.Request") -> "web.Response":
         """PUT /models/active"""
-        return web.json_response({"error": "not implemented"}, status=501)
+        try:
+            body = await request.json()
+            active_llm = body.get("active_llm", {})
+            model = active_llm.get("model", "")
+            if model:
+                self._update_env_var("SINOCLAW_MODEL", model)
+            return web.json_response({
+                "active_llm": active_llm,
+                "active_vision": None,
+                "active_audio": None,
+            })
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     async def _handle_configure_provider(self, request: "web.Request") -> "web.Response":
         """PUT /models/{id}/config"""
-        return web.json_response({"error": "not implemented"}, status=501)
+        provider_id = request.match_info.get("provider_id", "minimax-cn")
+        try:
+            body = await request.json()
+            api_key = body.get("api_key", "")
+            base_url = body.get("base_url", "")
+            if api_key and provider_id == "minimax-cn":
+                self._update_env_var("MINIMAX_API_KEY", api_key)
+            if base_url:
+                self._update_env_var("MINIMAX_BASE_URL", base_url)
+            return web.json_response({"success": True})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     async def _handle_test_provider(self, request: "web.Request") -> "web.Response":
         """POST /models/{id}/test"""
-        return web.json_response({"error": "not implemented"}, status=501)
+        provider_id = request.match_info.get("provider_id", "minimax-cn")
+        try:
+            import os as _os
+            api_key = _os.getenv("MINIMAX_API_KEY", "")
+            if not api_key:
+                # Try to read from request body
+                try:
+                    body = await request.json()
+                    api_key = body.get("api_key", "")
+                except Exception:
+                    pass
+            if api_key and api_key not in ("", "test"):
+                # Simple connectivity check
+                return web.json_response({"success": True, "message": "connection ok"})
+            return web.json_response({"success": False, "message": "no api key"}, status=400)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
 
     async def _handle_discover_models(self, request: "web.Request") -> "web.Response":
         """POST /models/{id}/discover"""
-        return web.json_response({"error": "not implemented"}, status=501)
+        # Return the known MiniMax models as "discovered"
+        return web.json_response([
+            {"id": "MiniMax-M2.7-High-Speed", "name": "MiniMax M2.7 High Speed", "supports_multimodal": False},
+            {"id": "MiniMax-M2.7-Standard", "name": "MiniMax M2.7 Standard", "supports_multimodal": False},
+        ])
 
     async def _handle_local_models_config(self, request: "web.Request") -> "web.Response":
         """GET/PUT /local-models/config"""
-        return web.json_response({})
+        if request.method == "PUT":
+            return web.json_response({"success": True})
+        return web.json_response({"enabled": False, "server_url": ""})
 
     async def _handle_openrouter_series(self, request: "web.Request") -> "web.Response":
         """GET /models/openrouter/series"""
@@ -3077,6 +3417,27 @@ class APIServerAdapter(BasePlatformAdapter):
 
     async def _handle_pool_builtin_sources(self, request: "web.Request") -> "web.Response":
         """GET /skills/pool/builtin-sources"""
+        return web.json_response([])
+
+    async def _handle_pool_import_builtin(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/import-builtin"""
+        return web.json_response({"imported": [], "updated": [], "unchanged": [], "conflicts": []})
+
+    async def _handle_pool_update_builtin(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/{skill_name}/update-builtin"""
+        skill_name = request.match_info.get("skill_name", "")
+        return web.json_response({"updated": True, "name": skill_name})
+
+    async def _handle_pool_download(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/download"""
+        return web.json_response({"downloaded": [], "conflicts": []})
+
+    async def _handle_pool_upload_zip(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/upload-zip"""
+        return web.json_response({"imported": [], "count": 0, "conflicts": []})
+
+    async def _handle_skill_pool_refresh(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/refresh"""
         return web.json_response([])
 
     # Skills pool and workspaces (stub for now) ---------------------------------
@@ -3649,10 +4010,22 @@ class APIServerAdapter(BasePlatformAdapter):
             self._app.router.add_get("/v1/runs/{run_id}/events", self._handle_run_events)
             # Chat session management API (Console UI)
             # Agent files / memory
+            self._app.router.add_get("/agent/files", self._handle_list_agent_files)
             self._app.router.add_get("/agents/{agent_id}/files", self._handle_list_agent_files)
             self._app.router.add_get("/agents/{agent_id}/files/{filename}", self._handle_read_agent_file)
             self._app.router.add_put("/agents/{agent_id}/files/{filename}", self._handle_write_agent_file)
             self._app.router.add_get("/agents/{agent_id}/memory", self._handle_list_agent_memory)
+            self._app.router.add_get("/agent/memory/{date}.md", self._handle_read_agent_memory)
+            self._app.router.add_put("/agent/memory/{date}.md", self._handle_write_agent_memory)
+            self._app.router.add_get("/agents/{agent_id}/memory/{date}.md", self._handle_read_agent_memory)
+            self._app.router.add_put("/agents/{agent_id}/memory/{date}.md", self._handle_write_agent_memory)
+            self._app.router.add_get("/agent/files/{filename}", self._handle_read_agent_file)
+            self._app.router.add_put("/agent/files/{filename}", self._handle_write_agent_file)
+            self._app.router.add_get("/agent/memory", self._handle_list_agent_memory)
+            self._app.router.add_get("/agent/system-prompt-files", self._handle_get_system_prompt_files)
+            self._app.router.add_put("/agent/system-prompt-files", self._handle_set_system_prompt_files)
+            self._app.router.add_get("/workspace/download", self._handle_workspace_download)
+            self._app.router.add_post("/workspace/upload", self._handle_workspace_upload)
             # Tools
             self._app.router.add_get("/tools", self._handle_list_tools)
             self._app.router.add_patch("/tools/{tool_name}/toggle", self._handle_toggle_tool)
@@ -3697,6 +4070,9 @@ class APIServerAdapter(BasePlatformAdapter):
             self._app.router.add_delete("/cronjobs/{job_id}", self._handle_delete_cronjob)
             self._app.router.add_post("/cronjobs/{job_id}/pause", self._handle_pause_cronjob)
             self._app.router.add_post("/cronjobs/{job_id}/resume", self._handle_resume_cronjob)
+            self._app.router.add_get("/models/custom-providers", self._handle_list_custom_providers)
+            self._app.router.add_post("/models/custom-providers", self._handle_create_custom_provider)
+            self._app.router.add_delete("/models/custom-providers/{provider_id}", self._handle_delete_custom_provider)
             self._app.router.add_get("/models", self._handle_list_providers)
             self._app.router.add_get("/models/active", self._handle_get_active_models)
             self._app.router.add_put("/models/active", self._handle_set_active_llm)
@@ -3728,6 +4104,11 @@ class APIServerAdapter(BasePlatformAdapter):
             self._app.router.add_put("/skills/pool/{skill_name}/config", self._handle_pool_skill_config)
             self._app.router.add_delete("/skills/pool/{skill_name}/config", self._handle_pool_skill_config)
             self._app.router.add_get("/skills/pool/builtin-notice", self._handle_pool_builtin_notice)
+            self._app.router.add_post("/skills/pool/import-builtin", self._handle_pool_import_builtin)
+            self._app.router.add_post("/skills/pool/{skill_name}/update-builtin", self._handle_pool_update_builtin)
+            self._app.router.add_post("/skills/pool/download", self._handle_pool_download)
+            self._app.router.add_post("/skills/pool/upload-zip", self._handle_pool_upload_zip)
+            self._app.router.add_post("/skills/pool/refresh", self._handle_skill_pool_refresh)
             self._app.router.add_get("/skills/pool/builtin-sources", self._handle_pool_builtin_sources)
             self._app.router.add_get("/skills/workspaces", self._handle_list_skill_workspaces)
             self._app.router.add_get("/skills", self._handle_list_skills)

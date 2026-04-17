@@ -55,6 +55,10 @@ export default defineConfig(({ mode }) => {
           target: "http://127.0.0.1:8642",
           changeOrigin: true,
         },
+        "/agent": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
         "/agents": {
           target: "http://127.0.0.1:8642",
           changeOrigin: true,
@@ -88,6 +92,10 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
         },
         "/envs": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/workspace": {
           target: "http://127.0.0.1:8642",
           changeOrigin: true,
         },
