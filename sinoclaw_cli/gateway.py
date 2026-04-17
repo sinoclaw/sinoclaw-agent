@@ -291,7 +291,7 @@ def kill_gateway_processes(force: bool = False, exclude_pids: set | None = None,
 
 
 def stop_profile_gateway() -> bool:
-    """Stop only the gateway for the current profile (HERMES_HOME-scoped).
+    """Stop only the gateway for the current profile (SINOCLAW_HOME-scoped).
 
     Uses the PID file written by start_gateway(), so it only kills the
     gateway belonging to this profile — not gateways from other profiles.
@@ -378,7 +378,7 @@ SERVICE_DESCRIPTION = "Sinoclaw Agent Gateway - Messaging Platform Integration"
 
 
 def _profile_suffix() -> str:
-    """Derive a service-name suffix from the current HERMES_HOME.
+    """Derive a service-name suffix from the current SINOCLAW_HOME.
 
     Returns ``""`` for the default root, the profile name for
     ``<root>/profiles/<name>``, or a short hash for any other path.
@@ -400,18 +400,18 @@ def _profile_suffix() -> str:
             return parts[0]
     except ValueError:
         pass
-    # Fallback: short hash for arbitrary HERMES_HOME paths
+    # Fallback: short hash for arbitrary SINOCLAW_HOME paths
     return hashlib.sha256(str(home).encode()).hexdigest()[:8]
 
 
 def _profile_arg(sinoclaw_home: str | None = None) -> str:
-    """Return ``--profile <name>`` only when HERMES_HOME is a named profile.
+    """Return ``--profile <name>`` only when SINOCLAW_HOME is a named profile.
 
     For ``~/.sinoclaw/profiles/<name>``, returns ``"--profile <name>"``.
     For the default profile or hash-based custom paths, returns the empty string.
 
     Args:
-        sinoclaw_home: Optional explicit HERMES_HOME path. Defaults to the current
+        sinoclaw_home: Optional explicit SINOCLAW_HOME path. Defaults to the current
             ``get_sinoclaw_home()`` value. Should be passed when generating a
             service definition for a different user (e.g. system service).
     """
@@ -433,11 +433,11 @@ def _profile_arg(sinoclaw_home: str | None = None) -> str:
 
 
 def get_service_name() -> str:
-    """Derive a systemd service name scoped to this HERMES_HOME.
+    """Derive a systemd service name scoped to this SINOCLAW_HOME.
 
     Default ``~/.sinoclaw`` returns ``sinoclaw-gateway`` (backward compatible).
     Profile ``~/.sinoclaw/profiles/coder`` returns ``sinoclaw-gateway-coder``.
-    Any other HERMES_HOME appends a short hash for uniqueness.
+    Any other SINOCLAW_HOME appends a short hash for uniqueness.
     """
     suffix = _profile_suffix()
     if not suffix:
@@ -798,7 +798,7 @@ def _remap_path_for_user(path: str, target_home_dir: str) -> str:
 
 
 def _sinoclaw_home_for_target_user(target_home_dir: str) -> str:
-    """Remap the current HERMES_HOME to the equivalent under a target user's home.
+    """Remap the current SINOCLAW_HOME to the equivalent under a target user's home.
 
     When installing a system service via sudo, get_sinoclaw_home() resolves to
     root's home.  This translates it to the target user's equivalent path:
@@ -1353,7 +1353,7 @@ def generate_launchd_plist() -> str:
         <string>{sane_path}</string>
         <key>VIRTUAL_ENV</key>
         <string>{venv_dir}</string>
-        <key>HERMES_HOME</key>
+        <key>SINOCLAW_HOME</key>
         <string>{sinoclaw_home}</string>
     </dict>
     
@@ -1491,7 +1491,7 @@ def _wait_for_gateway_exit(timeout: float = 10.0, force_after: float | None = 5.
 
     Uses the PID from the gateway.pid file — not launchd labels — so this
     works correctly when multiple gateway instances run under separate
-    HERMES_HOME directories.
+    SINOCLAW_HOME directories.
 
     Args:
         timeout: Total seconds to wait before giving up.

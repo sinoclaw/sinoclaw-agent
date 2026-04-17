@@ -2,7 +2,7 @@
 # Docker/Podman entrypoint: bootstrap config files into the mounted volume, then run sinoclaw.
 set -e
 
-HERMES_HOME="${HERMES_HOME:-/opt/data}"
+SINOCLAW_HOME="${SINOCLAW_HOME:-/opt/data}"
 INSTALL_DIR="/opt/sinoclaw"
 
 # --- Privilege dropping via gosu ---
@@ -23,12 +23,12 @@ if [ "$(id -u)" = "0" ]; then
     fi
 
     actual_sinoclaw_uid=$(id -u sinoclaw)
-    if [ "$(stat -c %u "$HERMES_HOME" 2>/dev/null)" != "$actual_sinoclaw_uid" ]; then
-        echo "$HERMES_HOME is not owned by $actual_sinoclaw_uid, fixing"
+    if [ "$(stat -c %u "$SINOCLAW_HOME" 2>/dev/null)" != "$actual_sinoclaw_uid" ]; then
+        echo "$SINOCLAW_HOME is not owned by $actual_sinoclaw_uid, fixing"
         # In rootless Podman the container's "root" is mapped to an unprivileged
         # host UID — chown will fail.  That's fine: the volume is already owned
         # by the mapped user on the host side.
-        chown -R sinoclaw:sinoclaw "$HERMES_HOME" 2>/dev/null || \
+        chown -R sinoclaw:sinoclaw "$SINOCLAW_HOME" 2>/dev/null || \
             echo "Warning: chown failed (rootless container?) — continuing anyway"
     fi
 
@@ -46,21 +46,21 @@ source "${INSTALL_DIR}/.venv/bin/activate"
 # The "home/" subdirectory is a per-profile HOME for subprocesses (git,
 # ssh, gh, npm …).  Without it those tools write to /root which is
 # ephemeral and shared across profiles.  See issue #4426.
-mkdir -p "$HERMES_HOME"/{cron,sessions,logs,hooks,memories,skills,skins,plans,workspace,home}
+mkdir -p "$SINOCLAW_HOME"/{cron,sessions,logs,hooks,memories,skills,skins,plans,workspace,home}
 
 # .env
-if [ ! -f "$HERMES_HOME/.env" ]; then
-    cp "$INSTALL_DIR/.env.example" "$HERMES_HOME/.env"
+if [ ! -f "$SINOCLAW_HOME/.env" ]; then
+    cp "$INSTALL_DIR/.env.example" "$SINOCLAW_HOME/.env"
 fi
 
 # config.yaml
-if [ ! -f "$HERMES_HOME/config.yaml" ]; then
-    cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+if [ ! -f "$SINOCLAW_HOME/config.yaml" ]; then
+    cp "$INSTALL_DIR/cli-config.yaml.example" "$SINOCLAW_HOME/config.yaml"
 fi
 
 # SOUL.md
-if [ ! -f "$HERMES_HOME/SOUL.md" ]; then
-    cp "$INSTALL_DIR/docker/SOUL.md" "$HERMES_HOME/SOUL.md"
+if [ ! -f "$SINOCLAW_HOME/SOUL.md" ]; then
+    cp "$INSTALL_DIR/docker/SOUL.md" "$SINOCLAW_HOME/SOUL.md"
 fi
 
 # Sync bundled skills (manifest-based so user edits are preserved)

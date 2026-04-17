@@ -15,7 +15,7 @@ class TestDiscordThreadPersistence:
     """Thread IDs are saved to disk and reloaded on init."""
 
     def _make_adapter(self, tmp_path):
-        """Build a minimal DiscordAdapter with HERMES_HOME pointed at tmp_path."""
+        """Build a minimal DiscordAdapter with SINOCLAW_HOME pointed at tmp_path."""
         from gateway.config import PlatformConfig
         from gateway.platforms.discord import DiscordAdapter
 

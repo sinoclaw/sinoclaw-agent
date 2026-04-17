@@ -57,9 +57,9 @@ if _race_path.exists():
 # Sinoclaw config paths
 # ═══════════════════════════════════════════════════════════════════
 
-HERMES_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
-CONFIG_PATH = HERMES_HOME / "config.yaml"
-PREFILL_PATH = HERMES_HOME / "prefill.json"
+SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
+CONFIG_PATH = SINOCLAW_HOME / "config.yaml"
+PREFILL_PATH = SINOCLAW_HOME / "prefill.json"
 
 # ═══════════════════════════════════════════════════════════════════
 # Canary queries — questions that typically trigger safety filters

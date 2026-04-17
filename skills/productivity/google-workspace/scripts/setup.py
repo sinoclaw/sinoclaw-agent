@@ -37,9 +37,9 @@ except ModuleNotFoundError:
     from sinoclaw_constants import display_sinoclaw_home, get_sinoclaw_home
 
 SINOCLAW_HOME = get_sinoclaw_home()
-TOKEN_PATH = HERMES_HOME / "google_token.json"
-CLIENT_SECRET_PATH = HERMES_HOME / "google_client_secret.json"
-PENDING_AUTH_PATH = HERMES_HOME / "google_oauth_pending.json"
+TOKEN_PATH = SINOCLAW_HOME / "google_token.json"
+CLIENT_SECRET_PATH = SINOCLAW_HOME / "google_client_secret.json"
+PENDING_AUTH_PATH = SINOCLAW_HOME / "google_oauth_pending.json"
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",

@@ -41,7 +41,7 @@ def _setup_logging() -> None:
 
 
 def _load_env() -> None:
-    """Load .env from HERMES_HOME (default ``~/.sinoclaw``)."""
+    """Load .env from SINOCLAW_HOME (default ``~/.sinoclaw``)."""
     from sinoclaw_cli.env_loader import load_sinoclaw_dotenv
 
     sinoclaw_home = get_sinoclaw_home()

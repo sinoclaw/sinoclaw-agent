@@ -14,7 +14,7 @@ import pytest
 
 @pytest.fixture
 def config_home(tmp_path, monkeypatch):
-    """Isolated HERMES_HOME with a minimal string-format config."""
+    """Isolated SINOCLAW_HOME with a minimal string-format config."""
     home = tmp_path / "sinoclaw"
     home.mkdir()
     config_yaml = home / "config.yaml"

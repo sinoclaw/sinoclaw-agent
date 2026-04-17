@@ -203,7 +203,7 @@ def _make_run_env(env: dict) -> dict:
         run_env["PATH"] = f"{existing_path}:{_SANE_PATH}" if existing_path else _SANE_PATH
 
     # Per-profile HOME isolation: redirect system tool configs (git, ssh, gh,
-    # npm …) into {HERMES_HOME}/home/ when that directory exists.  Only the
+    # npm …) into {SINOCLAW_HOME}/home/ when that directory exists.  Only the
     # subprocess sees the override — the Python process keeps the real HOME.
     from sinoclaw_constants import get_subprocess_home
     _profile_home = get_subprocess_home()

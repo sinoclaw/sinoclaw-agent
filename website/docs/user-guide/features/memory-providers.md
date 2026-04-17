@@ -68,7 +68,7 @@ hermes honcho setup        # (legacy command)
 hermes memory setup        # select "honcho"
 ```
 
-**Config:** `$HERMES_HOME/honcho.json` (profile-local) or `~/.honcho/config.json` (global). Resolution order: `$HERMES_HOME/honcho.json` > `~/.hermes/honcho.json` > `~/.honcho/config.json`. See the [config reference](https://github.com/hermes-ai/hermes-agent/blob/main/plugins/memory/honcho/README.md) and the [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/hermes).
+**Config:** `$SINOCLAW_HOME/honcho.json` (profile-local) or `~/.honcho/config.json` (global). Resolution order: `$SINOCLAW_HOME/honcho.json` > `~/.hermes/honcho.json` > `~/.honcho/config.json`. See the [config reference](https://github.com/hermes-ai/hermes-agent/blob/main/plugins/memory/honcho/README.md) and the [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/hermes).
 
 <details>
 <summary>Full config reference</summary>
@@ -273,7 +273,7 @@ hermes config set memory.provider mem0
 echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
-**Config:** `$HERMES_HOME/mem0.json`
+**Config:** `$SINOCLAW_HOME/mem0.json`
 
 | Key | Default | Description |
 |-----|---------|-------------|
@@ -307,7 +307,7 @@ The setup wizard installs dependencies automatically and only installs what's ne
 
 **Local mode UI:** `hindsight-embed -p hermes ui start`
 
-**Config:** `$HERMES_HOME/hindsight/config.json`
+**Config:** `$SINOCLAW_HOME/hindsight/config.json`
 
 | Key | Default | Description |
 |-----|---------|-------------|
@@ -349,7 +349,7 @@ hermes config set memory.provider holographic
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `db_path` | `$HERMES_HOME/memory_store.db` | SQLite database path |
+| `db_path` | `$SINOCLAW_HOME/memory_store.db` | SQLite database path |
 | `auto_extract` | `false` | Auto-extract facts at session end |
 | `default_trust` | `0.5` | Default trust score (0.0–1.0) |
 
@@ -410,7 +410,7 @@ hermes config set memory.provider byterover
 
 **Key features:**
 - Automatic pre-compression extraction (saves insights before context compression discards them)
-- Knowledge tree stored at `$HERMES_HOME/byterover/` (profile-scoped)
+- Knowledge tree stored at `$SINOCLAW_HOME/byterover/` (profile-scoped)
 - SOC2 Type II certified cloud sync (optional)
 
 ---
@@ -436,7 +436,7 @@ hermes config set memory.provider supermemory
 echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
 ```
 
-**Config:** `$HERMES_HOME/supermemory.json`
+**Config:** `$SINOCLAW_HOME/supermemory.json`
 
 | Key | Default | Description |
 |-----|---------|-------------|
@@ -494,8 +494,8 @@ echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
 
 Each provider's data is isolated per [profile](/docs/user-guide/profiles):
 
-- **Local storage providers** (Holographic, ByteRover) use `$HERMES_HOME/` paths which differ per profile
-- **Config file providers** (Honcho, Mem0, Hindsight, Supermemory) store config in `$HERMES_HOME/` so each profile has its own credentials
+- **Local storage providers** (Holographic, ByteRover) use `$SINOCLAW_HOME/` paths which differ per profile
+- **Config file providers** (Honcho, Mem0, Hindsight, Supermemory) store config in `$SINOCLAW_HOME/` so each profile has its own credentials
 - **Cloud providers** (RetainDB) auto-derive profile-scoped project names
 - **Env var providers** (OpenViking) are configured via each profile's `.env` file
 

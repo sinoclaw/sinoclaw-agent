@@ -36,7 +36,7 @@ from sinoclaw_cli.profiles import (
 
 
 # ---------------------------------------------------------------------------
-# Shared fixture: redirect Path.home() and HERMES_HOME for profile tests
+# Shared fixture: redirect Path.home() and SINOCLAW_HOME for profile tests
 # ---------------------------------------------------------------------------
 
 @pytest.fixture()
@@ -44,7 +44,7 @@ def profile_env(tmp_path, monkeypatch):
     """Set up an isolated environment for profile tests.
 
     * Path.home() -> tmp_path  (so _get_profiles_root() = tmp_path/.sinoclaw/profiles)
-    * HERMES_HOME  -> tmp_path/.sinoclaw  (so get_sinoclaw_home() agrees)
+    * SINOCLAW_HOME  -> tmp_path/.sinoclaw  (so get_sinoclaw_home() agrees)
     * Creates the bare-minimum ~/.sinoclaw directory.
     """
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -284,7 +284,7 @@ class TestGetActiveProfileName:
     """Tests for get_active_profile_name()."""
 
     def test_default_sinoclaw_home_returns_default(self, profile_env):
-        # HERMES_HOME points to tmp_path/.sinoclaw which is the default
+        # SINOCLAW_HOME points to tmp_path/.sinoclaw which is the default
         assert get_active_profile_name() == "default"
 
     def test_profile_path_returns_profile_name(self, profile_env, monkeypatch):
@@ -295,12 +295,12 @@ class TestGetActiveProfileName:
         assert get_active_profile_name() == "coder"
 
     def test_custom_path_returns_default(self, profile_env, monkeypatch):
-        """A custom HERMES_HOME (Docker, etc.) IS the default root."""
+        """A custom SINOCLAW_HOME (Docker, etc.) IS the default root."""
         tmp_path = profile_env
         custom = tmp_path / "some" / "other" / "path"
         custom.mkdir(parents=True)
         monkeypatch.setenv("SINOCLAW_HOME", str(custom))
-        # With Docker-aware roots, a custom HERMES_HOME is the default —
+        # With Docker-aware roots, a custom SINOCLAW_HOME is the default —
         # not "custom".  The user is on the default profile of their
         # custom deployment.
         assert get_active_profile_name() == "default"
@@ -712,7 +712,7 @@ class TestInternalHelpers:
         assert home == tmp_path / ".sinoclaw"
 
     def test_profiles_root_docker_deployment(self, tmp_path, monkeypatch):
-        """In Docker (HERMES_HOME outside ~/.sinoclaw), profiles go under HERMES_HOME."""
+        """In Docker (SINOCLAW_HOME outside ~/.sinoclaw), profiles go under SINOCLAW_HOME."""
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -721,7 +721,7 @@ class TestInternalHelpers:
         assert root == docker_home / "profiles"
 
     def test_default_sinoclaw_home_docker(self, tmp_path, monkeypatch):
-        """In Docker, _get_default_sinoclaw_home() returns HERMES_HOME itself."""
+        """In Docker, _get_default_sinoclaw_home() returns SINOCLAW_HOME itself."""
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -730,7 +730,7 @@ class TestInternalHelpers:
         assert home == docker_home
 
     def test_profiles_root_profile_mode(self, tmp_path, monkeypatch):
-        """In profile mode (HERMES_HOME under ~/.sinoclaw), profiles root is still ~/.sinoclaw/profiles."""
+        """In profile mode (SINOCLAW_HOME under ~/.sinoclaw), profiles root is still ~/.sinoclaw/profiles."""
         native = tmp_path / ".sinoclaw"
         profile_dir = native / "profiles" / "coder"
         profile_dir.mkdir(parents=True)
@@ -740,7 +740,7 @@ class TestInternalHelpers:
         assert root == native / "profiles"
 
     def test_active_profile_path_docker(self, tmp_path, monkeypatch):
-        """In Docker, active_profile file lives under HERMES_HOME."""
+        """In Docker, active_profile file lives under SINOCLAW_HOME."""
         from sinoclaw_cli.profiles import _get_active_profile_path
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
@@ -750,7 +750,7 @@ class TestInternalHelpers:
         assert path == docker_home / "active_profile"
 
     def test_create_profile_docker(self, tmp_path, monkeypatch):
-        """Profile created in Docker lands under HERMES_HOME/profiles/."""
+        """Profile created in Docker lands under SINOCLAW_HOME/profiles/."""
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)

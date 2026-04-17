@@ -60,7 +60,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 
 def _get_sessions_dir() -> Path:
-    """Return the sessions directory using HERMES_HOME."""
+    """Return the sessions directory using SINOCLAW_HOME."""
     try:
         from sinoclaw_constants import get_sinoclaw_home
         return get_sinoclaw_home() / "sessions"

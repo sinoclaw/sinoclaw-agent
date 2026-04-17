@@ -11,10 +11,11 @@ from pathlib import Path
 def get_sinoclaw_home() -> Path:
     """Return the Sinoclaw home directory (default: ~/.sinoclaw).
 
-    Reads HERMES_HOME env var, falls back to ~/.sinoclaw.
-    This is the single source of truth — all other copies should import this.
+    Reads SINOCLAW_HOME env var, falls back to HERMES_HOME (backward compat),
+    then to ~/.sinoclaw. This is the single source of truth — all other
+    copies should import this.
     """
-    return Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
+    return Path(os.getenv("SINOCLAW_HOME") or os.getenv("HERMES_HOME") or str(Path.home() / ".sinoclaw"))
 
 
 def get_default_sinoclaw_root() -> Path:
@@ -22,11 +23,11 @@ def get_default_sinoclaw_root() -> Path:
 
     In standard deployments this is ``~/.sinoclaw``.
 
-    In Docker or custom deployments where ``HERMES_HOME`` points outside
-    ``~/.sinoclaw`` (e.g. ``/opt/data``), returns ``HERMES_HOME`` directly
+    In Docker or custom deployments where ``SINOCLAW_HOME`` points outside
+    ``~/.sinoclaw`` (e.g. ``/opt/data``), returns ``SINOCLAW_HOME`` directly
     — that IS the root.
 
-    In profile mode where ``HERMES_HOME`` is ``<root>/profiles/<name>``,
+    In profile mode where ``SINOCLAW_HOME`` is ``<root>/profiles/<name>``,
     returns ``<root>`` so that ``profile list`` can see all profiles.
     Works both for standard (``~/.sinoclaw/profiles/coder``) and Docker
     (``/opt/data/profiles/coder``) layouts.
@@ -34,13 +35,13 @@ def get_default_sinoclaw_root() -> Path:
     Import-safe — no dependencies beyond stdlib.
     """
     native_home = Path.home() / ".sinoclaw"
-    env_home = os.environ.get("SINOCLAW_HOME", "")
+    env_home = os.environ.get("SINOCLAW_HOME") or os.environ.get("HERMES_HOME") or ""
     if not env_home:
         return native_home
     env_path = Path(env_home)
     try:
         env_path.resolve().relative_to(native_home.resolve())
-        # HERMES_HOME is under ~/.sinoclaw (normal or profile mode)
+        # SINOCLAW_HOME is under ~/.sinoclaw (normal or profile mode)
         return native_home
     except ValueError:
         pass
@@ -52,7 +53,7 @@ def get_default_sinoclaw_root() -> Path:
     if env_path.parent.name == "profiles":
         return env_path.parent.parent
 
-    # Not a profile path — HERMES_HOME itself is the root
+    # Not a profile path — SINOCLAW_HOME itself is the root
     return env_path
 
 
@@ -78,8 +79,8 @@ def get_sinoclaw_dir(new_subpath: str, old_name: str) -> Path:
     keep using it — no migration required.
 
     Args:
-        new_subpath: Preferred path relative to HERMES_HOME (e.g. ``"cache/images"``).
-        old_name: Legacy path relative to HERMES_HOME (e.g. ``"image_cache"``).
+        new_subpath: Preferred path relative to SINOCLAW_HOME (e.g. ``"cache/images"``).
+        old_name: Legacy path relative to SINOCLAW_HOME (e.g. ``"image_cache"``).
 
     Returns:
         Absolute ``Path`` — old location if it exists on disk, otherwise the new one.
@@ -92,7 +93,7 @@ def get_sinoclaw_dir(new_subpath: str, old_name: str) -> Path:
 
 
 def display_sinoclaw_home() -> str:
-    """Return a user-friendly display string for the current HERMES_HOME.
+    """Return a user-friendly display string for the current SINOCLAW_HOME.
 
     Uses ``~/`` shorthand for readability::
 
@@ -114,7 +115,7 @@ def display_sinoclaw_home() -> str:
 def get_subprocess_home() -> str | None:
     """Return a per-profile HOME directory for subprocesses, or None.
 
-    When ``{HERMES_HOME}/home/`` exists on disk, subprocesses should use it
+    When ``{SINOCLAW_HOME}/home/`` exists on disk, subprocesses should use it
     as ``HOME`` so system tools (git, ssh, gh, npm …) write their configs
     inside the Sinoclaw data directory instead of the OS-level ``/root`` or
     ``~/``.  This provides:
@@ -224,7 +225,7 @@ def is_container() -> bool:
 
 
 def get_config_path() -> Path:
-    """Return the path to ``config.yaml`` under HERMES_HOME.
+    """Return the path to ``config.yaml`` under SINOCLAW_HOME.
 
     Replaces the ``get_sinoclaw_home() / "config.yaml"`` pattern repeated
     in 7+ files (skill_utils.py, sinoclaw_logging.py, sinoclaw_time.py, etc.).
@@ -233,13 +234,13 @@ def get_config_path() -> Path:
 
 
 def get_skills_dir() -> Path:
-    """Return the path to the skills directory under HERMES_HOME."""
+    """Return the path to the skills directory under SINOCLAW_HOME."""
     return get_sinoclaw_home() / "skills"
 
 
 
 def get_env_path() -> Path:
-    """Return the path to the ``.env`` file under HERMES_HOME."""
+    """Return the path to the ``.env`` file under SINOCLAW_HOME."""
     return get_sinoclaw_home() / ".env"
 
 

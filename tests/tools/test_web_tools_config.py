@@ -174,7 +174,7 @@ class TestFirecrawlClientConfig:
                 mock_fc.assert_called_once_with(api_key="fc-test")
 
     def test_nous_auth_token_respects_sinoclaw_home_override(self, tmp_path):
-        """Auth lookup should read from HERMES_HOME/auth.json, not ~/.sinoclaw/auth.json."""
+        """Auth lookup should read from SINOCLAW_HOME/auth.json, not ~/.sinoclaw/auth.json."""
         real_home = tmp_path / "real-home"
         (real_home / ".sinoclaw").mkdir(parents=True)
 

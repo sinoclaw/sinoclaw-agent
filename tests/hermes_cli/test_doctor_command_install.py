@@ -12,7 +12,7 @@ import sinoclaw_cli.doctor as doctor_mod
 
 
 def _setup_doctor_env(monkeypatch, tmp_path, venv_name="venv"):
-    """Create a minimal HERMES_HOME + PROJECT_ROOT for doctor tests."""
+    """Create a minimal SINOCLAW_HOME + PROJECT_ROOT for doctor tests."""
     home = tmp_path / ".sinoclaw"
     home.mkdir(parents=True, exist_ok=True)
     (home / "config.yaml").write_text("memory: {}\n", encoding="utf-8")

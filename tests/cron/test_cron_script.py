@@ -4,7 +4,7 @@ Tests cover:
 - Script field in job creation / storage / update
 - Script execution and output injection into prompts
 - Error handling (missing script, timeout, non-zero exit)
-- Path resolution (absolute, relative to HERMES_HOME/scripts/)
+- Path resolution (absolute, relative to SINOCLAW_HOME/scripts/)
 """
 
 import json
@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 @pytest.fixture
 def cron_env(tmp_path, monkeypatch):
-    """Isolated cron environment with temp HERMES_HOME."""
+    """Isolated cron environment with temp SINOCLAW_HOME."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     (sinoclaw_home / "cron").mkdir()

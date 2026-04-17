@@ -1036,7 +1036,7 @@ def execute_code(
         child_env.pop("SINOCLAW_TIMEZONE", None)
 
         # Per-profile HOME isolation: redirect system tool configs into
-        # {HERMES_HOME}/home/ when that directory exists.
+        # {SINOCLAW_HOME}/home/ when that directory exists.
         from sinoclaw_constants import get_subprocess_home
         _profile_home = get_subprocess_home()
         if _profile_home:

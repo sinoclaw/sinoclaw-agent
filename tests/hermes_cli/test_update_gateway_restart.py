@@ -134,7 +134,7 @@ class TestLaunchdPlistPath:
         assert "<key>EnvironmentVariables</key>" in plist
         assert "<key>PATH</key>" in plist
         assert "<key>VIRTUAL_ENV</key>" in plist
-        assert "<key>HERMES_HOME</key>" in plist
+        assert "<key>SINOCLAW_HOME</key>" in plist
 
     def test_plist_path_includes_venv_bin(self):
         plist = gateway_cli.generate_launchd_plist()
@@ -823,7 +823,7 @@ class TestGatewayModeWritesExitCodeEarly:
         monkeypatch.setattr(gateway_cli, "supports_systemd_services", lambda: False)
         monkeypatch.setattr(gateway_cli, "is_termux", lambda: False)
 
-        # Point HERMES_HOME at a temp dir so the marker file lands there
+        # Point SINOCLAW_HOME at a temp dir so the marker file lands there
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

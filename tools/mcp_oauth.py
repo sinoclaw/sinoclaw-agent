@@ -93,8 +93,8 @@ _oauth_port: int | None = None
 def _get_token_dir() -> Path:
     """Return the directory for MCP OAuth token files.
 
-    Uses HERMES_HOME so each profile gets its own OAuth tokens.
-    Layout: ``HERMES_HOME/mcp-tokens/``
+    Uses SINOCLAW_HOME so each profile gets its own OAuth tokens.
+    Layout: ``SINOCLAW_HOME/mcp-tokens/``
     """
     try:
         from sinoclaw_constants import get_sinoclaw_home
@@ -177,8 +177,8 @@ class SinoclawTokenStorage:
 
     File layout::
 
-        HERMES_HOME/mcp-tokens/<server_name>.json         -- tokens
-        HERMES_HOME/mcp-tokens/<server_name>.client.json   -- client info
+        SINOCLAW_HOME/mcp-tokens/<server_name>.json         -- tokens
+        SINOCLAW_HOME/mcp-tokens/<server_name>.client.json   -- client info
     """
 
     def __init__(self, server_name: str):

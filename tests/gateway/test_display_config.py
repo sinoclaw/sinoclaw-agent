@@ -244,7 +244,7 @@ class TestConfigMigration:
         config_path.write_text(yaml.dump(config))
 
         monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
-        # Re-import to pick up the new HERMES_HOME
+        # Re-import to pick up the new SINOCLAW_HOME
         import importlib
         import sinoclaw_cli.config as cfg_mod
         importlib.reload(cfg_mod)

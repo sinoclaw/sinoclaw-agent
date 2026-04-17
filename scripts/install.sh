@@ -31,8 +31,8 @@ REPO_URL_HTTPS="https://github.com/sinoclaw/sinoclaw-agent.git"
 REPO_URL_GITEE_SSH="git@gitee.com:sinoclaw/sinoclaw-agent.git"
 REPO_URL_GITEE_HTTPS="https://gitee.com/sinoclaw/sinoclaw-agent.git"
 USE_GITEE=false
-HERMES_HOME="${HERMES_HOME:-$HOME/.sinoclaw}"
-INSTALL_DIR="${HERMES_INSTALL_DIR:-$HERMES_HOME/sinoclaw-agent}"
+SINOCLAW_HOME="${SINOCLAW_HOME:-$HOME/.sinoclaw}"
+INSTALL_DIR="${HERMES_INSTALL_DIR:-$SINOCLAW_HOME/sinoclaw-agent}"
 PYTHON_VERSION="3.11"
 NODE_VERSION="22"
 
@@ -70,7 +70,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --sinoclaw-home)
-            HERMES_HOME="$2"
+            SINOCLAW_HOME="$2"
             shift 2
             ;;
         --gitee)
@@ -91,7 +91,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --skip-setup   Skip interactive setup wizard"
             echo "  --branch NAME  Git branch to install (default: main)"
             echo "  --dir PATH     Installation directory (default: ~/.sinoclaw/sinoclaw-agent)"
-            echo "  --sinoclaw-home PATH  Data directory (default: ~/.sinoclaw, or \$HERMES_HOME)"
+            echo "  --sinoclaw-home PATH  Data directory (default: ~/.sinoclaw, or \$SINOCLAW_HOME)"
             echo "  --gitee        Use Gitee mirror instead of GitHub (recommended in China)"
             echo "  -h, --help     Show this help"
             exit 0
@@ -373,9 +373,9 @@ check_node() {
     fi
 
     # Check our own managed install from a previous run
-    if [ -x "$HERMES_HOME/node/bin/node" ]; then
-        export PATH="$HERMES_HOME/node/bin:$PATH"
-        local found_ver=$("$HERMES_HOME/node/bin/node" --version)
+    if [ -x "$SINOCLAW_HOME/node/bin/node" ]; then
+        export PATH="$SINOCLAW_HOME/node/bin:$PATH"
+        local found_ver=$("$SINOCLAW_HOME/node/bin/node" --version)
         log_success "Node.js $found_ver found (Sinoclaw-managed)"
         HAS_NODE=true
         return 0
@@ -480,20 +480,20 @@ install_node() {
     fi
 
     # Place into ~/.sinoclaw/node/ and symlink binaries to ~/.local/bin/
-    rm -rf "$HERMES_HOME/node"
-    mkdir -p "$HERMES_HOME"
-    mv "$extracted_dir" "$HERMES_HOME/node"
+    rm -rf "$SINOCLAW_HOME/node"
+    mkdir -p "$SINOCLAW_HOME"
+    mv "$extracted_dir" "$SINOCLAW_HOME/node"
     rm -rf "$tmp_dir"
 
     mkdir -p "$HOME/.local/bin"
-    ln -sf "$HERMES_HOME/node/bin/node" "$HOME/.local/bin/node"
-    ln -sf "$HERMES_HOME/node/bin/npm"  "$HOME/.local/bin/npm"
-    ln -sf "$HERMES_HOME/node/bin/npx"  "$HOME/.local/bin/npx"
+    ln -sf "$SINOCLAW_HOME/node/bin/node" "$HOME/.local/bin/node"
+    ln -sf "$SINOCLAW_HOME/node/bin/npm"  "$HOME/.local/bin/npm"
+    ln -sf "$SINOCLAW_HOME/node/bin/npx"  "$HOME/.local/bin/npx"
 
-    export PATH="$HERMES_HOME/node/bin:$PATH"
+    export PATH="$SINOCLAW_HOME/node/bin:$PATH"
 
     local installed_ver
-    installed_ver=$("$HERMES_HOME/node/bin/node" --version 2>/dev/null)
+    installed_ver=$("$SINOCLAW_HOME/node/bin/node" --version 2>/dev/null)
     log_success "Node.js $installed_ver installed to ~/.sinoclaw/node/"
     HAS_NODE=true
 }
@@ -1044,15 +1044,15 @@ copy_config_templates() {
     log_info "Setting up configuration files..."
 
     # Create ~/.sinoclaw directory structure (config at top level, code in subdir)
-    mkdir -p "$HERMES_HOME"/{cron,sessions,logs,pairing,hooks,image_cache,audio_cache,memories,skills,whatsapp/session}
+    mkdir -p "$SINOCLAW_HOME"/{cron,sessions,logs,pairing,hooks,image_cache,audio_cache,memories,skills,whatsapp/session}
 
     # Create .env at ~/.sinoclaw/.env (top level, easy to find)
-    if [ ! -f "$HERMES_HOME/.env" ]; then
+    if [ ! -f "$SINOCLAW_HOME/.env" ]; then
         if [ -f "$INSTALL_DIR/.env.example" ]; then
-            cp "$INSTALL_DIR/.env.example" "$HERMES_HOME/.env"
+            cp "$INSTALL_DIR/.env.example" "$SINOCLAW_HOME/.env"
             log_success "Created ~/.sinoclaw/.env from template"
         else
-            touch "$HERMES_HOME/.env"
+            touch "$SINOCLAW_HOME/.env"
             log_success "Created ~/.sinoclaw/.env"
         fi
     else
@@ -1060,9 +1060,9 @@ copy_config_templates() {
     fi
 
     # Create config.yaml at ~/.sinoclaw/config.yaml (top level, easy to find)
-    if [ ! -f "$HERMES_HOME/config.yaml" ]; then
+    if [ ! -f "$SINOCLAW_HOME/config.yaml" ]; then
         if [ -f "$INSTALL_DIR/cli-config.yaml.example" ]; then
-            cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+            cp "$INSTALL_DIR/cli-config.yaml.example" "$SINOCLAW_HOME/config.yaml"
             log_success "Created ~/.sinoclaw/config.yaml from template"
         fi
     else
@@ -1070,8 +1070,8 @@ copy_config_templates() {
     fi
 
     # Create SOUL.md if it doesn't exist (global persona file)
-    if [ ! -f "$HERMES_HOME/SOUL.md" ]; then
-        cat > "$HERMES_HOME/SOUL.md" << 'SOUL_EOF'
+    if [ ! -f "$SINOCLAW_HOME/SOUL.md" ]; then
+        cat > "$SINOCLAW_HOME/SOUL.md" << 'SOUL_EOF'
 # Sinoclaw Agent Persona
 
 <!--
@@ -1099,8 +1099,8 @@ SOUL_EOF
         log_success "Skills synced to ~/.sinoclaw/skills/"
     else
         # Fallback: simple directory copy if Python sync fails
-        if [ -d "$INSTALL_DIR/skills" ] && [ ! "$(ls -A "$HERMES_HOME/skills/" 2>/dev/null | grep -v '.bundled_manifest')" ]; then
-            cp -r "$INSTALL_DIR/skills/"* "$HERMES_HOME/skills/" 2>/dev/null || true
+        if [ -d "$INSTALL_DIR/skills" ] && [ ! "$(ls -A "$SINOCLAW_HOME/skills/" 2>/dev/null | grep -v '.bundled_manifest')" ]; then
+            cp -r "$INSTALL_DIR/skills/"* "$SINOCLAW_HOME/skills/" 2>/dev/null || true
             log_success "Skills copied to ~/.sinoclaw/skills/"
         fi
     fi
@@ -1228,7 +1228,7 @@ run_setup_wizard() {
 
 maybe_start_gateway() {
     # Check if any messaging platform tokens were configured
-    ENV_FILE="$HERMES_HOME/.env"
+    ENV_FILE="$SINOCLAW_HOME/.env"
     if [ ! -f "$ENV_FILE" ]; then
         return 0
     fi
@@ -1252,7 +1252,7 @@ maybe_start_gateway() {
 
     # If WhatsApp is enabled and no session exists yet, run foreground first for QR scan
     WHATSAPP_VAL=$(grep "^WHATSAPP_ENABLED=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2-)
-    WHATSAPP_SESSION="$HERMES_HOME/whatsapp/session/creds.json"
+    WHATSAPP_SESSION="$SINOCLAW_HOME/whatsapp/session/creds.json"
     if [ "$WHATSAPP_VAL" = "true" ] && [ ! -f "$WHATSAPP_SESSION" ]; then
         if [ "$IS_INTERACTIVE" = true ]; then
             echo ""
@@ -1304,7 +1304,7 @@ maybe_start_gateway() {
             else
                 log_info "systemd not available — starting gateway in background..."
             fi
-            nohup $HERMES_CMD gateway > "$HERMES_HOME/logs/gateway.log" 2>&1 &
+            nohup $HERMES_CMD gateway > "$SINOCLAW_HOME/logs/gateway.log" 2>&1 &
             GATEWAY_PID=$!
             log_success "Gateway started (PID $GATEWAY_PID). Logs: ~/.sinoclaw/logs/gateway.log"
             log_info "To stop: kill $GATEWAY_PID"
@@ -1466,7 +1466,7 @@ install_console() {
     fi
 
     # Generate API key if not set
-    local api_key_file="$HERMES_HOME/.env"
+    local api_key_file="$SINOCLAW_HOME/.env"
     if [ -f "$api_key_file" ] && grep -q "API_SERVER_KEY=" "$api_key_file" 2>/dev/null; then
         log_info "API_SERVER_KEY already set"
     else

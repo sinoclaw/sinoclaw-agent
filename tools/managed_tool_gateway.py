@@ -28,7 +28,7 @@ class ManagedToolGatewayConfig:
 
 
 def auth_json_path():
-    """Return the Sinoclaw auth store path, respecting HERMES_HOME overrides."""
+    """Return the Sinoclaw auth store path, respecting SINOCLAW_HOME overrides."""
     return get_sinoclaw_home() / "auth.json"
 
 

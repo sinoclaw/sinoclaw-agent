@@ -54,7 +54,7 @@ def get_current_session_key(default: str = "default") -> str:
     return get_session_env("SINOCLAW_SESSION_KEY", default)
 
 # Sensitive write targets that should trigger approval even when referenced
-# via shell expansions like $HOME or $HERMES_HOME.
+# via shell expansions like $HOME or $SINOCLAW_HOME.
 _SSH_SENSITIVE_PATH = r'(?:~|\$home|\$\{home\})/\.ssh(?:/|$)'
 _SINOCLAW_ENV_PATH = (
     r'(?:~\/\.sinoclaw/|'

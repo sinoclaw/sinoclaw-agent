@@ -26,7 +26,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate_sinoclaw_home(tmp_path, monkeypatch):
-    """Redirect HERMES_HOME to a temp directory."""
+    """Redirect SINOCLAW_HOME to a temp directory."""
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     try:
         import sinoclaw_constants

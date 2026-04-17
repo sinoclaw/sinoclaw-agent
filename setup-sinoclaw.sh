@@ -336,7 +336,7 @@ fi
 # Seed bundled skills into ~/.sinoclaw/skills/
 # ============================================================================
 
-HERMES_SKILLS_DIR="${HERMES_HOME:-$HOME/.sinoclaw}/skills"
+HERMES_SKILLS_DIR="${SINOCLAW_HOME:-$HOME/.sinoclaw}/skills"
 mkdir -p "$HERMES_SKILLS_DIR"
 
 echo ""

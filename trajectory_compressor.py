@@ -46,7 +46,7 @@ from rich.console import Console
 from sinoclaw_constants import OPENROUTER_BASE_URL, get_sinoclaw_home
 from agent.retry_utils import jittered_backoff
 
-# Load .env from HERMES_HOME first, then project root as a dev fallback.
+# Load .env from SINOCLAW_HOME first, then project root as a dev fallback.
 from sinoclaw_cli.env_loader import load_sinoclaw_dotenv
 
 _sinoclaw_home = get_sinoclaw_home()

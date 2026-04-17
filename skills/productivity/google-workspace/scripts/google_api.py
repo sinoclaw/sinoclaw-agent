@@ -31,9 +31,9 @@ from datetime import datetime, timedelta, timezone
 from email.mime.text import MIMEText
 from pathlib import Path
 
-HERMES_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
-TOKEN_PATH = HERMES_HOME / "google_token.json"
-CLIENT_SECRET_PATH = HERMES_HOME / "google_client_secret.json"
+SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
+TOKEN_PATH = SINOCLAW_HOME / "google_token.json"
+CLIENT_SECRET_PATH = SINOCLAW_HOME / "google_client_secret.json"
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",

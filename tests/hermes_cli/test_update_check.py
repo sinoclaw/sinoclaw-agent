@@ -76,14 +76,14 @@ def test_check_for_updates_no_git_dir(tmp_path, monkeypatch):
 
 
 def test_check_for_updates_fallback_to_project_root(tmp_path, monkeypatch):
-    """Dev install: falls back to Path(__file__).parent.parent when HERMES_HOME has no git repo."""
+    """Dev install: falls back to Path(__file__).parent.parent when SINOCLAW_HOME has no git repo."""
     import sinoclaw_cli.banner as banner
 
     project_root = Path(banner.__file__).parent.parent.resolve()
     if not (project_root / ".git").exists():
         pytest.skip("Not running from a git checkout")
 
-    # Point HERMES_HOME at a temp dir with no sinoclaw-agent/.git
+    # Point SINOCLAW_HOME at a temp dir with no sinoclaw-agent/.git
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     with patch("sinoclaw_cli.banner.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(returncode=0, stdout="0\n")

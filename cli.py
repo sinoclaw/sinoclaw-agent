@@ -200,7 +200,7 @@ def load_cli_config() -> Dict[str, Any]:
     Environment variables take precedence over config file values.
     Returns default values if no config file exists.
     """
-    # Check user config first ({HERMES_HOME}/config.yaml)
+    # Check user config first ({SINOCLAW_HOME}/config.yaml)
     user_config_path = _sinoclaw_home / 'config.yaml'
     project_config_path = Path(__file__).parent / 'cli-config.yaml'
 

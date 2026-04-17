@@ -22,7 +22,7 @@ def external_skills_dir(tmp_path):
 
 @pytest.fixture
 def sinoclaw_home(tmp_path):
-    """Create a minimal HERMES_HOME with config."""
+    """Create a minimal SINOCLAW_HOME with config."""
     home = tmp_path / ".sinoclaw"
     home.mkdir()
     (home / "skills").mkdir()

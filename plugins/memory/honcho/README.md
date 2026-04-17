@@ -105,7 +105,7 @@ Config is read from the first file that exists:
 
 | Priority | Path | Scope |
 |----------|------|-------|
-| 1 | `$HERMES_HOME/honcho.json` | Profile-local (isolated Sinoclaw instances) |
+| 1 | `$SINOCLAW_HOME/honcho.json` | Profile-local (isolated Sinoclaw instances) |
 | 2 | `~/.sinoclaw/honcho.json` | Default profile (shared host blocks) |
 | 3 | `~/.honcho/config.json` | Global (cross-app interop) |
 

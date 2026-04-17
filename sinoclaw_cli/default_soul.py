@@ -1,4 +1,4 @@
-"""Default SOUL.md template seeded into HERMES_HOME on first run."""
+"""Default SOUL.md template seeded into SINOCLAW_HOME on first run."""
 
 DEFAULT_SOUL_MD = (
     "You are Sinoclaw Agent, an intelligent AI assistant developed by Sinoclaw Team. "

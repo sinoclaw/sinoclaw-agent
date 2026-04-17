@@ -313,7 +313,7 @@ Type these during an interactive chat session.
 ```
 ~/.sinoclaw/config.yaml       Main configuration
 ~/.sinoclaw/.env              API keys and secrets
-$HERMES_HOME/skills/        Installed skills
+$SINOCLAW_HOME/skills/        Installed skills
 ~/.sinoclaw/sessions/         Session transcripts
 ~/.sinoclaw/logs/             Gateway and error logs
 ~/.sinoclaw/auth.json         OAuth tokens and credential pools
@@ -683,7 +683,7 @@ python -m pytest tests/ -o 'addopts=' -q   # Full suite
 python -m pytest tests/tools/ -q            # Specific area
 ```
 
-- Tests auto-redirect `HERMES_HOME` to temp dirs — never touch real `~/.sinoclaw/`
+- Tests auto-redirect `SINOCLAW_HOME` to temp dirs — never touch real `~/.sinoclaw/`
 - Run full suite before pushing any change
 - Use `-o 'addopts='` to clear any baked-in pytest flags
 

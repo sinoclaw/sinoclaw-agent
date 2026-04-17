@@ -74,14 +74,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # ---------------------------------------------------------------------------
 # Profile override — MUST happen before any sinoclaw module import.
 #
-# Many modules cache HERMES_HOME at import time (module-level constants).
+# Many modules cache SINOCLAW_HOME at import time (module-level constants).
 # We intercept --profile/-p from sys.argv here and set the env var so that
 # every subsequent ``os.getenv("SINOCLAW_HOME", ...)`` resolves correctly.
 # The flag is stripped from sys.argv so argparse never sees it.
 # Falls back to ~/.sinoclaw/active_profile for sticky default.
 # ---------------------------------------------------------------------------
 def _apply_profile_override() -> None:
-    """Pre-parse --profile/-p and set HERMES_HOME before module imports."""
+    """Pre-parse --profile/-p and set SINOCLAW_HOME before module imports."""
     argv = sys.argv[1:]
     profile_name = None
     consume = 0
@@ -110,7 +110,7 @@ def _apply_profile_override() -> None:
         except (UnicodeDecodeError, OSError):
             pass  # corrupted file, skip
 
-    # 3. If we found a profile, resolve and set HERMES_HOME
+    # 3. If we found a profile, resolve and set SINOCLAW_HOME
     if profile_name is not None:
         try:
             from sinoclaw_cli.profiles import resolve_profile_env

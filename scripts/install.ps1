@@ -603,15 +603,15 @@ function Set-PathVariable {
         Write-Info "PATH already configured"
     }
     
-    # Set HERMES_HOME so the Python code finds config/data in the right place.
+    # Set SINOCLAW_HOME so the Python code finds config/data in the right place.
     # Only needed on Windows where we install to %LOCALAPPDATA%\sinoclaw instead
     # of the Unix default ~/.$HOME.sinoclaw
-    $currentSinoclawHome = [Environment]::GetEnvironmentVariable("HERMES_HOME", "User")
+    $currentSinoclawHome = [Environment]::GetEnvironmentVariable("SINOCLAW_HOME", "User")
     if (-not $currentSinoclawHome -or $currentSinoclawHome -ne $SinoclawHome) {
-        [Environment]::SetEnvironmentVariable("HERMES_HOME", $SinoclawHome, "User")
-        Write-Success "Set HERMES_HOME=$SinoclawHome"
+        [Environment]::SetEnvironmentVariable("SINOCLAW_HOME", $SinoclawHome, "User")
+        Write-Success "Set SINOCLAW_HOME=$SinoclawHome"
     }
-    $env:HERMES_HOME = $SinoclawHome
+    $env:SINOCLAW_HOME = $SinoclawHome
     
     # Update current session
     $env:Path = "$sinoclawBin;$env:Path"

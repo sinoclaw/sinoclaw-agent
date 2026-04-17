@@ -245,7 +245,7 @@ def run_doctor(args):
     print(color("◆ Configuration Files", Colors.CYAN, Colors.BOLD))
     
     # Check ~/.sinoclaw/.env (primary location for user config)
-    env_path = HERMES_HOME / '.env'
+    env_path = SINOCLAW_HOME / '.env'
     if env_path.exists():
         check_ok(f"{_DHH}/.env file exists")
         
@@ -274,7 +274,7 @@ def run_doctor(args):
                 issues.append("Run 'sinoclaw setup' to create .env")
     
     # Check ~/.sinoclaw/config.yaml (primary) or project cli-config.yaml (fallback)
-    config_path = HERMES_HOME / 'config.yaml'
+    config_path = SINOCLAW_HOME / 'config.yaml'
     if config_path.exists():
         check_ok(f"{_DHH}/config.yaml exists")
     else:
@@ -295,7 +295,7 @@ def run_doctor(args):
                 check_warn("config.yaml not found", "(using defaults)")
 
     # Check config version and stale keys
-    config_path = HERMES_HOME / 'config.yaml'
+    config_path = SINOCLAW_HOME / 'config.yaml'
     if config_path.exists():
         try:
             from sinoclaw_cli.config import check_config_version, migrate_config
@@ -402,7 +402,7 @@ def run_doctor(args):
     print()
     print(color("◆ Directory Structure", Colors.CYAN, Colors.BOLD))
     
-    sinoclaw_home = HERMES_HOME
+    sinoclaw_home = SINOCLAW_HOME
     if sinoclaw_home.exists():
         check_ok(f"{_DHH} directory exists")
     else:
@@ -946,7 +946,7 @@ def run_doctor(args):
     print()
     print(color("◆ Skills Hub", Colors.CYAN, Colors.BOLD))
 
-    hub_dir = HERMES_HOME / "skills" / ".hub"
+    hub_dir = SINOCLAW_HOME / "skills" / ".hub"
     if hub_dir.exists():
         check_ok("Skills Hub directory exists")
         lock_file = hub_dir / "lock.json"
@@ -981,7 +981,7 @@ def run_doctor(args):
     _active_memory_provider = ""
     try:
         import yaml as _yaml
-        _mem_cfg_path = HERMES_HOME / "config.yaml"
+        _mem_cfg_path = SINOCLAW_HOME / "config.yaml"
         if _mem_cfg_path.exists():
             with open(_mem_cfg_path) as _f:
                 _raw_cfg = _yaml.safe_load(_f) or {}

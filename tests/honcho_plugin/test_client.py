@@ -352,7 +352,7 @@ class TestResolveConfigPath:
     def test_falls_back_to_global_when_no_local(self, tmp_path):
         sinoclaw_home = tmp_path / "sinoclaw"
         sinoclaw_home.mkdir()
-        # No honcho.json in HERMES_HOME — also isolate ~/.sinoclaw so
+        # No honcho.json in SINOCLAW_HOME — also isolate ~/.sinoclaw so
         # the default-profile fallback doesn't hit the real filesystem.
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()

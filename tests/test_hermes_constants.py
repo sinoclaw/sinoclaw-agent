@@ -14,13 +14,13 @@ class TestGetDefaultSinoclawRoot:
     """Tests for get_default_sinoclaw_root() — Docker/custom deployment awareness."""
 
     def test_no_sinoclaw_home_returns_native(self, tmp_path, monkeypatch):
-        """When HERMES_HOME is not set, returns ~/.sinoclaw."""
+        """When SINOCLAW_HOME is not set, returns ~/.sinoclaw."""
         monkeypatch.delenv("SINOCLAW_HOME", raising=False)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         assert get_default_sinoclaw_root() == tmp_path / ".sinoclaw"
 
     def test_sinoclaw_home_is_native(self, tmp_path, monkeypatch):
-        """When HERMES_HOME = ~/.sinoclaw, returns ~/.sinoclaw."""
+        """When SINOCLAW_HOME = ~/.sinoclaw, returns ~/.sinoclaw."""
         native = tmp_path / ".sinoclaw"
         native.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -28,7 +28,7 @@ class TestGetDefaultSinoclawRoot:
         assert get_default_sinoclaw_root() == native
 
     def test_sinoclaw_home_is_profile(self, tmp_path, monkeypatch):
-        """When HERMES_HOME is a profile under ~/.sinoclaw, returns ~/.sinoclaw."""
+        """When SINOCLAW_HOME is a profile under ~/.sinoclaw, returns ~/.sinoclaw."""
         native = tmp_path / ".sinoclaw"
         profile = native / "profiles" / "coder"
         profile.mkdir(parents=True)
@@ -37,7 +37,7 @@ class TestGetDefaultSinoclawRoot:
         assert get_default_sinoclaw_root() == native
 
     def test_sinoclaw_home_is_docker(self, tmp_path, monkeypatch):
-        """When HERMES_HOME points outside ~/.sinoclaw (Docker), returns HERMES_HOME."""
+        """When SINOCLAW_HOME points outside ~/.sinoclaw (Docker), returns SINOCLAW_HOME."""
         docker_home = tmp_path / "opt" / "data"
         docker_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -45,7 +45,7 @@ class TestGetDefaultSinoclawRoot:
         assert get_default_sinoclaw_root() == docker_home
 
     def test_sinoclaw_home_is_custom_path(self, tmp_path, monkeypatch):
-        """Any HERMES_HOME outside ~/.sinoclaw is treated as the root."""
+        """Any SINOCLAW_HOME outside ~/.sinoclaw is treated as the root."""
         custom = tmp_path / "my-sinoclaw-data"
         custom.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)

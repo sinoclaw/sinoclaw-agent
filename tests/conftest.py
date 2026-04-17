@@ -18,7 +18,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 @pytest.fixture(autouse=True)
 def _isolate_sinoclaw_home(tmp_path, monkeypatch):
-    """Redirect HERMES_HOME to a temp dir so tests never write to ~/.sinoclaw/."""
+    """Redirect SINOCLAW_HOME to a temp dir so tests never write to ~/.sinoclaw/."""
     fake_home = tmp_path / "sinoclaw_test"
     fake_home.mkdir()
     (fake_home / "sessions").mkdir()

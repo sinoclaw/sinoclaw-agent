@@ -22,7 +22,7 @@ echo 'SUPERMEMORY_API_KEY=***' >> ~/.sinoclaw/.env
 
 ## Config
 
-Config file: `$HERMES_HOME/supermemory.json`
+Config file: `$SINOCLAW_HOME/supermemory.json`
 
 | Key | Default | Description |
 |-----|---------|-------------|

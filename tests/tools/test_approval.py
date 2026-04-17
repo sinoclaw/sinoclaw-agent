@@ -350,12 +350,12 @@ class TestTeePattern:
         assert key is not None
 
     def test_tee_custom_sinoclaw_home_env(self):
-        dangerous, key, desc = detect_dangerous_command("echo x | tee $HERMES_HOME/.env")
+        dangerous, key, desc = detect_dangerous_command("echo x | tee $SINOCLAW_HOME/.env")
         assert dangerous is True
         assert key is not None
 
     def test_tee_quoted_custom_sinoclaw_home_env(self):
-        dangerous, key, desc = detect_dangerous_command('echo x | tee "$HERMES_HOME/.env"')
+        dangerous, key, desc = detect_dangerous_command('echo x | tee "$SINOCLAW_HOME/.env"')
         assert dangerous is True
         assert key is not None
 
@@ -398,7 +398,7 @@ class TestSensitiveRedirectPattern:
     """Detect shell redirection writes to sensitive user-managed paths."""
 
     def test_redirect_to_custom_sinoclaw_home_env(self):
-        dangerous, key, desc = detect_dangerous_command("echo x > $HERMES_HOME/.env")
+        dangerous, key, desc = detect_dangerous_command("echo x > $SINOCLAW_HOME/.env")
         assert dangerous is True
         assert key is not None
 

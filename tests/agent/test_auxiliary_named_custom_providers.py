@@ -8,7 +8,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate(tmp_path, monkeypatch):
-    """Redirect HERMES_HOME and clear module caches."""
+    """Redirect SINOCLAW_HOME and clear module caches."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -17,7 +17,7 @@ def _isolate(tmp_path, monkeypatch):
 
 
 def _write_config(tmp_path, config_dict):
-    """Write a config.yaml to the test HERMES_HOME."""
+    """Write a config.yaml to the test SINOCLAW_HOME."""
     import yaml
     config_path = tmp_path / ".sinoclaw" / "config.yaml"
     config_path.write_text(yaml.dump(config_dict))

@@ -313,7 +313,7 @@ async def _ssrf_redirect_guard(response):
 # (e.g. Telegram file URLs expire after ~1 hour).
 # ---------------------------------------------------------------------------
 
-# Default location: {HERMES_HOME}/cache/images/ (legacy: image_cache/)
+# Default location: {SINOCLAW_HOME}/cache/images/ (legacy: image_cache/)
 IMAGE_CACHE_DIR = get_sinoclaw_dir("cache/images", "image_cache")
 
 

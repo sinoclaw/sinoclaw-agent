@@ -1,7 +1,7 @@
 """Honcho client initialization and configuration.
 
 Resolution order for config file:
-  1. $HERMES_HOME/honcho.json  (instance-local, enables isolated Sinoclaw instances)
+  1. $SINOCLAW_HOME/honcho.json  (instance-local, enables isolated Sinoclaw instances)
   2. ~/.honcho/config.json     (global, shared across all Honcho-enabled apps)
   3. Environment variables     (HONCHO_API_KEY, HONCHO_ENVIRONMENT)
 
@@ -57,7 +57,7 @@ def resolve_config_path() -> Path:
     """Return the active Honcho config path.
 
     Resolution order:
-      1. $HERMES_HOME/honcho.json      (profile-local, if it exists)
+      1. $SINOCLAW_HOME/honcho.json      (profile-local, if it exists)
       2. ~/.sinoclaw/honcho.json          (default profile — shared host blocks live here)
       3. ~/.honcho/config.json          (global, cross-app interop)
 
@@ -314,7 +314,7 @@ class HonchoClientConfig:
     ) -> HonchoClientConfig:
         """Create config from the resolved Honcho config path.
 
-        Resolution: $HERMES_HOME/honcho.json -> ~/.honcho/config.json -> env vars.
+        Resolution: $SINOCLAW_HOME/honcho.json -> ~/.honcho/config.json -> env vars.
         When host is None, derives it from the active Sinoclaw profile.
         """
         resolved_host = host or resolve_active_host()

@@ -93,7 +93,7 @@ def is_managed() -> bool:
     """Check if Sinoclaw is running in package-manager-managed mode.
 
     Two signals: the SINOCLAW_MANAGED env var (set by the systemd service),
-    or a .managed marker file in HERMES_HOME (set by the NixOS activation
+    or a .managed marker file in SINOCLAW_HOME (set by the NixOS activation
     script, so interactive shells also see it).
     """
     return get_managed_system() is not None
@@ -152,7 +152,7 @@ def managed_error(action: str = "modify configuration"):
 # =============================================================================
 
 def get_container_exec_info() -> Optional[dict]:
-    """Read container mode metadata from HERMES_HOME/.container-mode.
+    """Read container mode metadata from SINOCLAW_HOME/.container-mode.
 
     Returns a dict with keys: backend, container_name, exec_user, sinoclaw_bin
     or None if container mode is not active, we're already inside the
@@ -224,7 +224,7 @@ def _secure_dir(path):
 
     The mode can be overridden via the SINOCLAW_HOME_MODE environment variable
     (e.g. SINOCLAW_HOME_MODE=0701) for deployments where a web server (nginx,
-    caddy, etc.) needs to traverse HERMES_HOME to reach a served subdirectory.
+    caddy, etc.) needs to traverse SINOCLAW_HOME to reach a served subdirectory.
     The execute-only bit on a directory permits cd-through without exposing
     directory listings.
     """
@@ -285,7 +285,7 @@ def _secure_file(path):
 
 
 def _ensure_default_soul_md(home: Path) -> None:
-    """Seed a default SOUL.md into HERMES_HOME if the user doesn't have one yet."""
+    """Seed a default SOUL.md into SINOCLAW_HOME if the user doesn't have one yet."""
     soul_path = home / "SOUL.md"
     if soul_path.exists():
         return
@@ -321,7 +321,7 @@ def _ensure_sinoclaw_home_managed(home: Path):
     """Managed-mode variant: verify dirs exist (activation creates them), seed SOUL.md."""
     if not home.is_dir():
         raise RuntimeError(
-            f"HERMES_HOME {home} does not exist. "
+            f"SINOCLAW_HOME {home} does not exist. "
             "Run 'sudo nixos-rebuild switch' first."
         )
     for subdir in ("cron", "sessions", "logs", "memories"):

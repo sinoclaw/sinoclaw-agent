@@ -65,7 +65,7 @@ class MemoryProvider(ABC):
         establish connections, start background threads, etc.
 
         kwargs always include:
-          - sinoclaw_home (str): The active HERMES_HOME directory path. Use this
+          - sinoclaw_home (str): The active SINOCLAW_HOME directory path. Use this
             for profile-scoped storage instead of hardcoding ``~/.sinoclaw``.
           - platform (str): "cli", "telegram", "discord", "cron", etc.
 
@@ -208,7 +208,7 @@ class MemoryProvider(ABC):
 
         Called by 'sinoclaw memory setup' after collecting user inputs.
         ``values`` contains only non-secret fields (secrets go to .env).
-        ``sinoclaw_home`` is the active HERMES_HOME directory path.
+        ``sinoclaw_home`` is the active SINOCLAW_HOME directory path.
 
         Providers with native config files (JSON, YAML) should override
         this to write to their expected location. Providers that use only

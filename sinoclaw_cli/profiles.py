@@ -1,7 +1,7 @@
 """
 Profile management for multiple isolated Sinoclaw instances.
 
-Each profile is a fully independent HERMES_HOME directory with its own
+Each profile is a fully independent SINOCLAW_HOME directory with its own
 config.yaml, .env, memory, sessions, skills, gateway, cron, and logs.
 Profiles live under ``~/.sinoclaw/profiles/<name>/`` by default.
 
@@ -120,23 +120,23 @@ _SINOCLAW_SUBCOMMANDS = frozenset({
 def _get_profiles_root() -> Path:
     """Return the directory where named profiles are stored.
 
-    Anchored to the sinoclaw root, NOT to the current HERMES_HOME
+    Anchored to the sinoclaw root, NOT to the current SINOCLAW_HOME
     (which may itself be a profile).  This ensures ``coder profile list``
     can see all profiles.
 
-    In Docker/custom deployments where HERMES_HOME points outside
-    ``~/.sinoclaw``, profiles live under ``HERMES_HOME/profiles/`` so
+    In Docker/custom deployments where SINOCLAW_HOME points outside
+    ``~/.sinoclaw``, profiles live under ``SINOCLAW_HOME/profiles/`` so
     they persist on the mounted volume.
     """
     return _get_default_sinoclaw_home() / "profiles"
 
 
 def _get_default_sinoclaw_home() -> Path:
-    """Return the default (pre-profile) HERMES_HOME path.
+    """Return the default (pre-profile) SINOCLAW_HOME path.
 
     In standard deployments this is ``~/.sinoclaw``.
-    In Docker/custom deployments where HERMES_HOME is outside ``~/.sinoclaw``
-    (e.g. ``/opt/data``), returns HERMES_HOME directly.
+    In Docker/custom deployments where SINOCLAW_HOME is outside ``~/.sinoclaw``
+    (e.g. ``/opt/data``), returns SINOCLAW_HOME directly.
     """
     from sinoclaw_constants import get_default_sinoclaw_root
     return get_default_sinoclaw_root()
@@ -168,7 +168,7 @@ def validate_profile_name(name: str) -> None:
 
 
 def get_profile_dir(name: str) -> Path:
-    """Resolve a profile name to its HERMES_HOME directory."""
+    """Resolve a profile name to its SINOCLAW_HOME directory."""
     if name == "default":
         return _get_default_sinoclaw_home()
     return _get_profiles_root() / name
@@ -475,7 +475,7 @@ def create_profile(
 def seed_profile_skills(profile_dir: Path, quiet: bool = False) -> Optional[dict]:
     """Seed bundled skills into a profile via subprocess.
 
-    Uses subprocess because sync_skills() caches HERMES_HOME at module level.
+    Uses subprocess because sync_skills() caches SINOCLAW_HOME at module level.
     Returns the sync result dict, or None on failure.
     """
     project_root = Path(__file__).parent.parent.resolve()
@@ -602,7 +602,7 @@ def _cleanup_gateway_service(name: str, profile_dir: Path) -> None:
     import platform as _platform
 
     # Derive service name for this profile
-    # Temporarily set HERMES_HOME so _profile_suffix resolves correctly
+    # Temporarily set SINOCLAW_HOME so _profile_suffix resolves correctly
     old_home = os.environ.get("SINOCLAW_HOME")
     try:
         os.environ["SINOCLAW_HOME"] = str(profile_dir)
@@ -723,11 +723,11 @@ def set_active_profile(name: str) -> None:
 
 
 def get_active_profile_name() -> str:
-    """Infer the current profile name from HERMES_HOME.
+    """Infer the current profile name from SINOCLAW_HOME.
 
-    Returns ``"default"`` if HERMES_HOME is not set or points to ``~/.sinoclaw``.
-    Returns the profile name if HERMES_HOME points into ``~/.sinoclaw/profiles/<name>``.
-    Returns ``"custom"`` if HERMES_HOME is set to an unrecognized path.
+    Returns ``"default"`` if SINOCLAW_HOME is not set or points to ``~/.sinoclaw``.
+    Returns the profile name if SINOCLAW_HOME points into ``~/.sinoclaw/profiles/<name>``.
+    Returns ``"custom"`` if SINOCLAW_HOME is set to an unrecognized path.
     """
     from sinoclaw_constants import get_sinoclaw_home
     sinoclaw_home = get_sinoclaw_home()
@@ -1077,10 +1077,10 @@ _sinoclaw "$@"
 # ---------------------------------------------------------------------------
 
 def resolve_profile_env(profile_name: str) -> str:
-    """Resolve a profile name to a HERMES_HOME path string.
+    """Resolve a profile name to a SINOCLAW_HOME path string.
 
     Called early in the CLI entry point, before any sinoclaw modules
-    are imported, to set the HERMES_HOME environment variable.
+    are imported, to set the SINOCLAW_HOME environment variable.
     """
     validate_profile_name(profile_name)
     profile_dir = get_profile_dir(profile_name)

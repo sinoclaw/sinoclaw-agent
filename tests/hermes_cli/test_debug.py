@@ -14,7 +14,7 @@ import pytest
 
 @pytest.fixture
 def sinoclaw_home(tmp_path, monkeypatch):
-    """Set up an isolated HERMES_HOME with minimal logs."""
+    """Set up an isolated SINOCLAW_HOME with minimal logs."""
     home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))

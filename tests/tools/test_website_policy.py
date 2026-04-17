@@ -259,9 +259,9 @@ def test_check_website_access_uses_dynamic_sinoclaw_home(monkeypatch, tmp_path):
 
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
-    # Invalidate the module-level cache so the new HERMES_HOME is picked up.
+    # Invalidate the module-level cache so the new SINOCLAW_HOME is picked up.
     # A prior test may have cached a default policy (enabled=False) under the
-    # old HERMES_HOME set by the autouse _isolate_sinoclaw_home fixture.
+    # old SINOCLAW_HOME set by the autouse _isolate_sinoclaw_home fixture.
     from tools.website_policy import invalidate_cache
     invalidate_cache()
 
@@ -385,7 +385,7 @@ def test_check_website_access_fails_open_on_malformed_config(tmp_path, monkeypat
     with pytest.raises(WebsitePolicyError):
         check_website_access("https://example.com", config_path=config_path)
 
-    # Simulate default path by pointing HERMES_HOME to tmp_path
+    # Simulate default path by pointing SINOCLAW_HOME to tmp_path
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     from tools import website_policy
     website_policy.invalidate_cache()

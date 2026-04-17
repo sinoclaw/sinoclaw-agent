@@ -989,7 +989,7 @@ class TestSafeCopyDb:
 class TestQuickSnapshot:
     @pytest.fixture
     def sinoclaw_home(self, tmp_path):
-        """Create a fake HERMES_HOME with critical state files."""
+        """Create a fake SINOCLAW_HOME with critical state files."""
         home = tmp_path / ".sinoclaw"
         home.mkdir()
         (home / "config.yaml").write_text("model:\n  provider: openrouter\n")

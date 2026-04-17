@@ -22,7 +22,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate_env(tmp_path, monkeypatch):
-    """Ensure HERMES_HOME and RETAINDB vars are isolated."""
+    """Ensure SINOCLAW_HOME and RETAINDB vars are isolated."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

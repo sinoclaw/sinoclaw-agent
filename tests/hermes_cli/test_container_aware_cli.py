@@ -23,7 +23,7 @@ from sinoclaw_cli.config import (
 
 @pytest.fixture
 def container_env(tmp_path, monkeypatch):
-    """Set up a fake HERMES_HOME with .container-mode file."""
+    """Set up a fake SINOCLAW_HOME with .container-mode file."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

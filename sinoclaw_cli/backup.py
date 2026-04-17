@@ -5,7 +5,7 @@ Backup and import commands for sinoclaw CLI.
 (excluding the sinoclaw-agent repo and transient files).
 
 `sinoclaw import` restores from a backup zip, overlaying onto the current
-HERMES_HOME root.
+SINOCLAW_HOME root.
 """
 
 import json
@@ -451,7 +451,7 @@ def run_import(args) -> None:
 # Quick state snapshots (used by /snapshot slash command and sinoclaw backup --quick)
 # ---------------------------------------------------------------------------
 
-# Critical state files to include in quick snapshots (relative to HERMES_HOME).
+# Critical state files to include in quick snapshots (relative to SINOCLAW_HOME).
 # Everything else is either regeneratable (logs, cache) or managed separately
 # (skills, repo, sessions/).
 _QUICK_STATE_FILES = (

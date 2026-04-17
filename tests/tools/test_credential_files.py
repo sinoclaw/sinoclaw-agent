@@ -216,7 +216,7 @@ class TestPathTraversalSecurity:
     """
 
     def test_dotdot_traversal_rejected(self, tmp_path, monkeypatch):
-        """'../sensitive' must not escape HERMES_HOME."""
+        """'../sensitive' must not escape SINOCLAW_HOME."""
         monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         (tmp_path / ".sinoclaw").mkdir()
 
@@ -261,7 +261,7 @@ class TestPathTraversalSecurity:
         assert get_credential_file_mounts() == []
 
     def test_legitimate_file_still_works(self, tmp_path, monkeypatch):
-        """Normal files inside HERMES_HOME must still be registered."""
+        """Normal files inside SINOCLAW_HOME must still be registered."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -275,7 +275,7 @@ class TestPathTraversalSecurity:
         assert "token.json" in mounts[0]["container_path"]
 
     def test_nested_subdir_inside_sinoclaw_home_allowed(self, tmp_path, monkeypatch):
-        """Files in subdirectories of HERMES_HOME must be allowed."""
+        """Files in subdirectories of SINOCLAW_HOME must be allowed."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         subdir = sinoclaw_home / "creds"
@@ -288,7 +288,7 @@ class TestPathTraversalSecurity:
         assert result is True
 
     def test_symlink_traversal_rejected(self, tmp_path, monkeypatch):
-        """A symlink inside HERMES_HOME pointing outside must be rejected."""
+        """A symlink inside SINOCLAW_HOME pointing outside must be rejected."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -306,7 +306,7 @@ class TestPathTraversalSecurity:
 
         result = register_credential_file("evil_link.json")
 
-        # The resolved path escapes HERMES_HOME — must be rejected
+        # The resolved path escapes SINOCLAW_HOME — must be rejected
         assert result is False
         assert get_credential_file_mounts() == []
 
@@ -324,7 +324,7 @@ class TestConfigPathTraversal:
         config_path.write_text(yaml.dump({"terminal": {"credential_files": cred_files}}))
 
     def test_config_traversal_rejected(self, tmp_path, monkeypatch):
-        """'../secret' in config.yaml must not escape HERMES_HOME."""
+        """'../secret' in config.yaml must not escape SINOCLAW_HOME."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -352,7 +352,7 @@ class TestConfigPathTraversal:
         assert mounts == []
 
     def test_config_legitimate_file_works(self, tmp_path, monkeypatch):
-        """Normal files inside HERMES_HOME via config must still mount."""
+        """Normal files inside SINOCLAW_HOME via config must still mount."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

@@ -5,7 +5,7 @@ Covers:
 - Reset individual stores (--target memory / --target user)
 - Skip confirmation with --yes
 - Graceful handling when no memory files exist
-- Profile-scoped reset (uses HERMES_HOME)
+- Profile-scoped reset (uses SINOCLAW_HOME)
 """
 
 import os
@@ -16,7 +16,7 @@ from pathlib import Path
 
 @pytest.fixture
 def memory_env(tmp_path, monkeypatch):
-    """Set up a fake HERMES_HOME with memory files."""
+    """Set up a fake SINOCLAW_HOME with memory files."""
     sinoclaw_home = tmp_path / ".sinoclaw"
     memories = sinoclaw_home / "memories"
     memories.mkdir(parents=True)
@@ -123,7 +123,7 @@ class TestMemoryReset:
         assert not (memories / "USER.md").exists()
 
     def test_reset_profile_scoped(self, tmp_path, monkeypatch):
-        """Reset should work on the active profile's HERMES_HOME."""
+        """Reset should work on the active profile's SINOCLAW_HOME."""
         profile_home = tmp_path / "profiles" / "myprofile"
         memories = profile_home / "memories"
         memories.mkdir(parents=True)

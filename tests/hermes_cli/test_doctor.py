@@ -166,7 +166,7 @@ class TestDoctorMemoryProviderSection:
     """The ◆ Memory Provider section should respect memory.provider config."""
 
     def _make_sinoclaw_home(self, tmp_path, provider=""):
-        """Create a minimal HERMES_HOME with config.yaml."""
+        """Create a minimal SINOCLAW_HOME with config.yaml."""
         home = tmp_path / ".sinoclaw"
         home.mkdir(parents=True, exist_ok=True)
         import yaml

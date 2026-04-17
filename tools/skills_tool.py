@@ -105,7 +105,7 @@ _secret_capture_callback = None
 
 
 def load_env() -> Dict[str, str]:
-    """Load profile-scoped environment variables from HERMES_HOME/.env."""
+    """Load profile-scoped environment variables from SINOCLAW_HOME/.env."""
     env_path = get_sinoclaw_home() / ".env"
     env_vars: Dict[str, str] = {}
     if not env_path.exists():

@@ -56,7 +56,7 @@ from cron.jobs import get_due_jobs, mark_job_run, save_job_output, advance_next_
 # locally for audit.
 SILENT_MARKER = "[SILENT]"
 
-# Resolve Sinoclaw home directory (respects HERMES_HOME override)
+# Resolve Sinoclaw home directory (respects SINOCLAW_HOME override)
 _sinoclaw_home = get_sinoclaw_home()
 
 # File-based lock prevents concurrent ticks from gateway + daemon + systemd timer
@@ -409,14 +409,14 @@ def _get_script_timeout() -> int:
 def _run_job_script(script_path: str) -> tuple[bool, str]:
     """Execute a cron job's data-collection script and capture its output.
 
-    Scripts must reside within HERMES_HOME/scripts/.  Both relative and
+    Scripts must reside within SINOCLAW_HOME/scripts/.  Both relative and
     absolute paths are resolved and validated against this directory to
     prevent arbitrary script execution via path traversal or absolute
     path injection.
 
     Args:
         script_path: Path to a Python script.  Relative paths are resolved
-            against HERMES_HOME/scripts/.  Absolute and ~-prefixed paths
+            against SINOCLAW_HOME/scripts/.  Absolute and ~-prefixed paths
             are also validated to ensure they stay within the scripts dir.
 
     Returns:
@@ -436,7 +436,7 @@ def _run_job_script(script_path: str) -> tuple[bool, str]:
         path = (scripts_dir / raw).resolve()
 
     # Guard against path traversal, absolute path injection, and symlink
-    # escape — scripts MUST reside within HERMES_HOME/scripts/.
+    # escape — scripts MUST reside within SINOCLAW_HOME/scripts/.
     try:
         path.relative_to(scripts_dir_resolved)
     except ValueError:

@@ -657,7 +657,7 @@ class TestDetectVenvDir:
 
 
 class TestSystemUnitSinoclawHome:
-    """HERMES_HOME in system units must reference the target user, not root."""
+    """SINOCLAW_HOME in system units must reference the target user, not root."""
 
     def test_system_unit_uses_target_user_home_not_calling_user(self, monkeypatch):
         # Simulate sudo: Path.home() returns /root, target user is alice
@@ -678,7 +678,7 @@ class TestSystemUnitSinoclawHome:
         assert '/root/.sinoclaw' not in unit
 
     def test_system_unit_remaps_profile_to_target_user(self, monkeypatch):
-        # Simulate sudo with a profile: HERMES_HOME was resolved under root
+        # Simulate sudo with a profile: SINOCLAW_HOME was resolved under root
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
         monkeypatch.setenv("SINOCLAW_HOME", "/root/.sinoclaw/profiles/coder")
         monkeypatch.setattr(
@@ -696,7 +696,7 @@ class TestSystemUnitSinoclawHome:
         assert '/root/' not in unit
 
     def test_system_unit_preserves_custom_sinoclaw_home(self, monkeypatch):
-        # Custom HERMES_HOME not under any user's home — keep as-is
+        # Custom SINOCLAW_HOME not under any user's home — keep as-is
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
         monkeypatch.setenv("SINOCLAW_HOME", "/opt/sinoclaw-shared")
         monkeypatch.setattr(
@@ -713,7 +713,7 @@ class TestSystemUnitSinoclawHome:
         assert 'SINOCLAW_HOME=/opt/sinoclaw-shared' in unit
 
     def test_user_unit_unaffected_by_change(self):
-        # User-scope units should still use the calling user's HERMES_HOME
+        # User-scope units should still use the calling user's SINOCLAW_HOME
         unit = gateway_cli.generate_systemd_unit(system=False)
 
         sinoclaw_home = str(gateway_cli.get_sinoclaw_home().resolve())
@@ -934,7 +934,7 @@ class TestProfileArg:
         assert result == "--profile mybot"
 
     def test_hash_path_returns_empty(self, tmp_path, monkeypatch):
-        """Arbitrary non-profile HERMES_HOME should return empty string."""
+        """Arbitrary non-profile SINOCLAW_HOME should return empty string."""
         custom_home = tmp_path / "custom" / "sinoclaw"
         custom_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
