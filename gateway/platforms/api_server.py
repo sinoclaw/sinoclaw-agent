@@ -26,6 +26,7 @@ import hmac
 import json
 import logging
 import os
+from pathlib import Path
 import socket as _socket
 import re
 import sqlite3
@@ -2299,7 +2300,1320 @@ class APIServerAdapter(BasePlatformAdapter):
                 self._run_streams.pop(run_id, None)
                 self._run_streams_created.pop(run_id, None)
 
+    # ── Chat Session Management (Console UI) ──────────────────────────────────
+
+
+    # Agent workspace files and memory ----------------------------------------
+    async def _handle_list_agent_files(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{agent_id}/files"""
+        agent_id = request.match_info.get("agent_id", "default")
+        return web.json_response([])
+
+    async def _handle_read_agent_file(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{agent_id}/files/{filename}"""
+        return web.json_response({"content": "", "filename": ""})
+
+    async def _handle_write_agent_file(self, request: "web.Request") -> "web.Response":
+        """PUT /agents/{agent_id}/files/{filename}"""
+        return web.json_response({"written": True, "filename": ""})
+
+    async def _handle_list_agent_memory(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{agent_id}/memory"""
+        return web.json_response([])
+
+    # Tools (built-in) --------------------------------------------------------
+    async def _handle_list_tools(self, request: "web.Request") -> "web.Response":
+        """GET /tools"""
+        return web.json_response([])
+
+    async def _handle_toggle_tool(self, request: "web.Request") -> "web.Response":
+        """PATCH /tools/{tool_name}/toggle"""
+        return web.json_response({"name": "", "enabled": True, "description": "", "async_execution": False, "icon": ""})
+
+    async def _handle_tool_async_execution(self, request: "web.Request") -> "web.Response":
+        """PUT /tools/{tool_name}/async-execution"""
+        return web.json_response({"name": "", "enabled": True, "description": "", "async_execution": False, "icon": ""})
+
+    # Token usage ------------------------------------------------------------
+    async def _handle_token_usage(self, request: "web.Request") -> "web.Response":
+        """GET /token-usage"""
+        return web.json_response({
+            "total_tokens": 0,
+            "total_cost": "0.00",
+            "start_date": "",
+            "end_date": "",
+            "daily": [],
+        })
+
+    # Security config stubs --------------------------------------------------
+    async def _handle_tool_guard_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/security/tool-guard"""
+        return web.json_response({
+            "enabled": False,
+            "guarded_tools": None,
+            "denied_tools": [],
+            "custom_rules": [],
+            "disabled_rules": [],
+        })
+
+    async def _handle_file_guard_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/security/file-guard"""
+        return web.json_response({"enabled": False, "paths": []})
+
+    async def _handle_skill_scanner_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/security/skill-scanner"""
+        return web.json_response({"enabled": False, "blocked_history": [], "whitelist": []})
+
+    # Config channels stub ---------------------------------------------------
+    async def _handle_config_channels(self, request: "web.Request") -> "web.Response":
+        """GET /config/channels"""
+        return web.json_response([])
+
+    async def _handle_list_chats(self, request: "web.Request") -> "web.Response":
+        """GET /chats — List all chat sessions, most recent first."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            # Support filtering by user_id and channel via query params
+            user_id = request.query.get("user_id")
+            channel = request.query.get("channel")
+            limit = int(request.query.get("limit", 50))
+            offset = int(request.query.get("offset", 0))
+
+            # Build exclude list: exclude all non-console/non-api sources unless specified
+            exclude_sources = []
+            if not channel and not user_id:
+                # Default: only show console sessions
+                exclude_sources = ["api", "slack", "telegram", "discord", "feishu", "wecom", "weixin", "whatsapp", "signal", "sms", "email", "dingtalk", "matrix", "mattermost", "bluebubbles", "zalo", "zalouser", "nostr", "msteams", "nextcloud-talk", "webhook"]
+
+            sessions = db.list_sessions_rich(
+                source=channel or None,
+                exclude_sources=exclude_sources if not channel else None,
+                limit=limit,
+                offset=offset,
+            )
+
+            # Format for console
+            result = []
+            for s in sessions:
+                result.append({
+                    "id": s["id"],
+                    "name": s.get("title") or s.get("id", "")[:8],
+                    "session_id": s["id"],
+                    "user_id": user_id or "default",
+                    "channel": channel or s.get("source", "console"),
+                    "status": "idle",
+                    "pinned": False,
+                    "created_at": s.get("started_at"),
+                    "updated_at": s.get("last_active"),
+                    "message_count": s.get("message_count", 0),
+                    "preview": s.get("preview", ""),
+                })
+
+            return web.json_response(result)
+        except Exception as e:
+            logger.exception("[api_server] _handle_list_chats failed")
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_create_chat(self, request: "web.Request") -> "web.Response":
+        """POST /chats — Create a new chat session."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            body = await request.json()
+        except Exception:
+            body = {}
+
+        user_id = body.get("user_id", "default")
+        channel = body.get("channel", "console")
+        name = body.get("name") or body.get("title")
+
+        # Generate session_id like SessionStore does: timestamp_uuid8
+        import time as _time, uuid as _uuid
+        session_id = f"{_time.strftime('%Y%m%d_%H%M%S')}_{_uuid.uuid4().hex[:8]}"
+        db.create_session(session_id=session_id, source=channel, user_id=user_id)
+        if name:
+            db.set_session_title(session_id, name)
+
+        return web.json_response({
+            "id": session_id,
+            "name": name or session_id[:8],
+            "session_id": session_id,
+            "user_id": user_id,
+            "channel": channel,
+            "status": "idle",
+            "pinned": False,
+            "created_at": None,
+        }, status=201)
+    async def _handle_get_chat(self, request: "web.Request") -> "web.Response":
+        """GET /chats/{chat_id} — Get chat history and metadata."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        chat_id = request.match_info.get("chat_id", "")
+        if not chat_id:
+            return web.json_response({"error": "Missing chat_id"}, status=400)
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            session = db.get_session(chat_id)
+            if not session:
+                return web.json_response({"error": "Chat not found"}, status=404)
+
+            messages = db.get_messages_as_conversation(chat_id)
+            title = db.get_session_title(chat_id)
+
+            return web.json_response({
+                "id": chat_id,
+                "name": title or chat_id[:8],
+                "session_id": chat_id,
+                "user_id": session.get("user_id", "default"),
+                "channel": session.get("source", "console"),
+                "status": "idle",
+                "pinned": False,
+                "created_at": session.get("started_at"),
+                "messages": messages,
+            })
+        except Exception as e:
+            logger.exception("[api_server] _handle_get_chat failed")
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_update_chat(self, request: "web.Request") -> "web.Response":
+        """PUT /chats/{chat_id} — Update chat metadata (title, pinned)."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        chat_id = request.match_info.get("chat_id", "")
+        if not chat_id:
+            return web.json_response({"error": "Missing chat_id"}, status=400)
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            body = await request.json()
+        except Exception:
+            body = {}
+
+        name = body.get("name") or body.get("title")
+        if name:
+            db.set_session_title(chat_id, name)
+
+        return web.json_response({"id": chat_id, "name": name or chat_id[:8]})
+    async def _handle_delete_chat(self, request: "web.Request") -> "web.Response":
+        """DELETE /chats/{chat_id} — Delete a chat session."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        chat_id = request.match_info.get("chat_id", "")
+        if not chat_id:
+            return web.json_response({"error": "Missing chat_id"}, status=400)
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            db.delete_session(chat_id)
+            return web.json_response({"success": True, "deleted_count": 1})
+        except Exception as e:
+            logger.exception("[api_server] _handle_delete_chat failed")
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_batch_delete_chats(self, request: "web.Request") -> "web.Response":
+        """POST /chats/batch-delete — Delete multiple chat sessions."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        db = self._ensure_session_db()
+        if db is None:
+            return web.json_response({"error": "Session database not available"}, status=500)
+
+        try:
+            body = await request.json()
+            chat_ids = body if isinstance(body, list) else body.get("chat_ids", [])
+        except Exception:
+            return web.json_response({"error": "Invalid JSON"}, status=400)
+
+        deleted = 0
+        for chat_id in chat_ids:
+            if db.delete_session(chat_id):
+                deleted += 1
+
+        return web.json_response({"success": True, "deleted_count": deleted})
+
+
     # ------------------------------------------------------------------
+    # ── Console stub handlers (prevent 404 errors) ─────────────────────────────
+
+    async def _handle_console_chat_stop(self, request: "web.Request") -> "web.Response":
+        """POST /console/chat/stop — Stop ongoing generation."""
+        return web.json_response({"success": True, "message": "stopped"})
+
+    async def _handle_console_upload(self, request: "web.Request") -> "web.Response":
+        """POST /console/upload — File upload."""
+        try:
+            import uuid as _uuid, os as _os
+            reader = await request.multipart()
+            field = await reader.next()
+            if field is None:
+                return web.json_response({"error": "no file provided"}, status=400)
+            filename = field.name or "upload"
+            original_name = getattr(field, "filename", filename)
+            # Generate unique stored name
+            ext = _os.path.splitext(original_name)[1]
+            stored_name = f"{_uuid.uuid4().hex[:16]}{ext}"
+            upload_dir = Path.home() / ".sinoclaw" / "uploads"
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            file_path = upload_dir / stored_name
+            with open(file_path, "wb") as f:
+                async for chunk in field:
+                    f.write(chunk)
+            url = f"/files/preview/{stored_name}"
+            return web.json_response({
+                "url": url,
+                "file_name": original_name,
+                "stored_name": stored_name,
+            })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_files_preview(self, request: "web.Request") -> "web.Response":
+        """GET /files/preview/{name} — Serve uploaded file."""
+        name = request.match_info.get("name", "")
+        if not name:
+            return web.Response(status=404)
+        upload_dir = Path.home() / ".sinoclaw" / "uploads"
+        file_path = upload_dir / name
+        if not file_path.exists():
+            return web.json_response({"error": "file not found"}, status=404)
+        import mimetypes
+        mime_type, _ = mimetypes.guess_type(str(file_path))
+        return web.FileResponse(file_path, headers={"Cache-Control": "max-age=86400"})
+
+    async def _handle_list_agents(self, request: "web.Request") -> "web.Response":
+        """GET /agents — List agents (single-agent mode, returns default)."""
+        return web.json_response({
+            "agents": [{
+                "id": "default",
+                "name": "Sinoclaw Agent",
+                "description": "Default Sinoclaw AI agent",
+                "workspace_dir": "/data/sinoclaw",
+                "enabled": True,
+            }],
+            "agent_ids": ["default"]
+        })
+
+    async def _handle_get_agent(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{agent_id}"""
+        agent_id = request.match_info.get("agent_id", "default")
+        if agent_id == "default":
+            return web.json_response({
+                "id": "default",
+                "name": "Sinoclaw Agent",
+                "description": "Default Sinoclaw AI agent",
+                "workspace_dir": "/data/sinoclaw",
+                "channels": {},
+                "mcp": {},
+                "heartbeat": {},
+                "running": {},
+                "llm_routing": {},
+                "system_prompt_files": [],
+                "tools": {},
+                "security": {},
+            })
+        return web.json_response({"error": "agent not found"}, status=404)
+
+    async def _handle_create_agent(self, request: "web.Request") -> "web.Response":
+        """POST /agents"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_update_agent(self, request: "web.Request") -> "web.Response":
+        """PUT /agents/{id}"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_delete_agent(self, request: "web.Request") -> "web.Response":
+        """DELETE /agents/{id}"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_reorder_agents(self, request: "web.Request") -> "web.Response":
+        """PUT /agents/order"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_toggle_agent(self, request: "web.Request") -> "web.Response":
+        """PATCH /agents/{id}/toggle"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_agent_files(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{id}/files"""
+        return web.json_response([])
+
+    async def _handle_agent_memory(self, request: "web.Request") -> "web.Response":
+        """GET /agents/{id}/memory"""
+        return web.json_response([])
+
+    async def _handle_list_channels(self, request: "web.Request") -> "web.Response":
+        """GET /channels — List messaging channels."""
+        # WeChat is hardcoded as we know it's configured
+        return web.json_response([
+            {"id": "weixin", "name": "WeChat", "type": "weixin",
+             "enabled": True, "status": "connected", "account": "5947ba72"},
+        ])
+
+    async def _handle_get_channel(self, request: "web.Request") -> "web.Response":
+        """GET /channels/{channel_id}"""
+        channel_id = request.match_info.get("channel_id", "")
+        if channel_id == "weixin":
+            return web.json_response({"id": "weixin", "name": "WeChat", "type": "weixin",
+                                     "enabled": True, "status": "connected", "account": "5947ba72"})
+        return web.json_response({"error": "channel not found"}, status=404)
+
+    async def _handle_list_cronjobs(self, request: "web.Request") -> "web.Response":
+        """GET /cronjobs — List cron jobs."""
+        if not self._CRON_AVAILABLE:
+            return web.json_response([])
+        try:
+            jobs = self._cron_list(include_disabled=False)
+            return web.json_response(jobs)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_get_cronjob(self, request: "web.Request") -> "web.Response":
+        """GET /cronjobs/{job_id}"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        job_id = request.match_info.get("job_id", "")
+        try:
+            job = self._cron_get(job_id)
+            if job:
+                return web.json_response(job)
+            return web.json_response({"error": "Job not found"}, status=404)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_create_cronjob(self, request: "web.Request") -> "web.Response":
+        """POST /cronjobs"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        try:
+            body = await request.json()
+            # Adapt CronJobSpecInput to create_job kwargs
+            name = body.get("name", "")
+            schedule = body.get("schedule", {})
+            cron_expr = schedule.get("cron", "") if isinstance(schedule, dict) else ""
+            timezone = schedule.get("timezone", "Asia/Shanghai") if isinstance(schedule, dict) else "Asia/Shanghai"
+            dispatch = body.get("dispatch", {})
+            request_body = dispatch.get("target", {})
+            session_id = request_body.get("session_id")
+            user_id = request_body.get("user_id", "default")
+            task_type = body.get("task_type", "agent")
+            text = body.get("text", "")
+            runtime = body.get("runtime", {})
+            timeout = runtime.get("timeout_seconds", 120)
+
+            job = self._cron_create(
+                prompt=text,
+                schedule=cron_expr,
+                name=name,
+            )
+            return web.json_response(job, status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_update_cronjob(self, request: "web.Request") -> "web.Response":
+        """PATCH /cronjobs/{job_id}"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        job_id = request.match_info.get("job_id", "")
+        try:
+            body = await request.json()
+            job = self._cron_get(job_id)
+            if not job:
+                return web.json_response({"error": "Job not found"}, status=404)
+            # Partial update
+            if "schedule" in body:
+                job["schedule"] = body["schedule"]
+            if "name" in body:
+                job["name"] = body["name"]
+            if "enabled" in body:
+                job["enabled"] = body["enabled"]
+            if "text" in body:
+                job["text"] = body["text"]
+            updated = self._cron_update(job_id, job)
+            return web.json_response(updated)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_delete_cronjob(self, request: "web.Request") -> "web.Response":
+        """DELETE /cronjobs/{job_id}"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        job_id = request.match_info.get("job_id", "")
+        try:
+            success = self._cron_remove(job_id)
+            return web.json_response({"success": bool(success)})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_pause_cronjob(self, request: "web.Request") -> "web.Response":
+        """POST /cronjobs/{id}/pause"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        job_id = request.match_info.get("job_id", "")
+        try:
+            job = self._cron_pause(job_id)
+            if job:
+                return web.json_response(job)
+            return web.json_response({"error": "Job not found"}, status=404)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_resume_cronjob(self, request: "web.Request") -> "web.Response":
+        """POST /cronjobs/{id}/resume"""
+        if not self._CRON_AVAILABLE:
+            return web.json_response({"error": "Cron not available"}, status=501)
+        job_id = request.match_info.get("job_id", "")
+        try:
+            job = self._cron_resume(job_id)
+            if job:
+                return web.json_response(job)
+            return web.json_response({"error": "Job not found"}, status=404)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_list_providers(self, request: "web.Request") -> "web.Response":
+        """GET /models — List model providers."""
+        import os as _os
+        api_key = _os.getenv("MINIMAX_API_KEY", "")
+        prefix = api_key[:8] + "..." if api_key else ""
+        return web.json_response([{
+            "id": "minimax-cn",
+            "name": "MiniMax",
+            "api_key_prefix": "sk-cp-",
+            "chat_model": "MiniMax-M2.7-High-Speed",
+            "models": [
+                {"id": "MiniMax-M2.7-High-Speed", "name": "MiniMax M2.7 High Speed",
+                 "supports_multimodal": False, "supports_image": False, "supports_video": False,
+                 "is_free": False, "generate_kwargs": {}},
+                {"id": "MiniMax-M2.7-Standard", "name": "MiniMax M2.7 Standard",
+                 "supports_multimodal": False, "supports_image": False, "supports_video": False,
+                 "is_free": False, "generate_kwargs": {}},
+            ],
+            "extra_models": [],
+            "is_custom": False,
+            "is_local": False,
+            "support_model_discovery": False,
+            "support_connection_check": True,
+            "freeze_url": True,
+            "require_api_key": True,
+            "api_key": prefix,
+            "base_url": "https://api.minimaxi.com",
+            "generate_kwargs": {}
+        }])
+
+    async def _handle_get_active_models(self, request: "web.Request") -> "web.Response":
+        """GET /models/active — Get active model config."""
+        return web.json_response({
+            "active_llm": {"provider_id": "minimax-cn", "model": "MiniMax-M2.7-High-Speed"},
+            "active_vision": None,
+            "active_audio": None,
+        })
+
+    async def _handle_set_active_llm(self, request: "web.Request") -> "web.Response":
+        """PUT /models/active"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_configure_provider(self, request: "web.Request") -> "web.Response":
+        """PUT /models/{id}/config"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_test_provider(self, request: "web.Request") -> "web.Response":
+        """POST /models/{id}/test"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_discover_models(self, request: "web.Request") -> "web.Response":
+        """POST /models/{id}/discover"""
+        return web.json_response({"error": "not implemented"}, status=501)
+
+    async def _handle_local_models_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /local-models/config"""
+        return web.json_response({})
+
+    async def _handle_openrouter_series(self, request: "web.Request") -> "web.Response":
+        """GET /models/openrouter/series"""
+        return web.json_response([])
+
+    async def _handle_settings_language(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /settings/language"""
+        return web.json_response({"language": "zh-CN"})
+
+    # Environment variables (for Settings → Environment Variables page) ---------
+    def _read_env_file(self) -> dict:
+        """Read ~/.sinoclaw/.env and return as dict."""
+        env_file = Path.home() / ".sinoclaw" / ".env"
+        env_file.parent.mkdir(parents=True, exist_ok=True)
+        if not env_file.exists():
+            return {}
+        result = {}
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                k, v = line.split("=", 1)
+                result[k.strip()] = v.strip()
+        return result
+
+    def _write_env_file(self, vars: dict) -> None:
+        """Write dict to ~/.sinoclaw/.env."""
+        env_file = Path.home() / ".sinoclaw" / ".env"
+        lines = []
+        for k, v in vars.items():
+            lines.append(f"{k}={v}")
+        env_file.write_text("\n".join(lines), encoding="utf-8")
+
+    async def _handle_list_envs(self, request: "web.Request") -> "web.Response":
+        """GET /envs"""
+        try:
+            envs = self._read_env_file()
+            result = [{"key": k, "value": v} for k, v in envs.items()]
+            return web.json_response(result)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_save_envs(self, request: "web.Request") -> "web.Response":
+        """PUT /envs — full replacement of all env vars."""
+        try:
+            body = await request.json()
+            if isinstance(body, dict):
+                env_vars = body
+            else:
+                env_vars = {item["key"]: item["value"] for item in body if item.get("key")}
+            self._write_env_file(env_vars)
+            result = [{"key": k, "value": v} for k, v in env_vars.items()]
+            return web.json_response(result)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_delete_env(self, request: "web.Request") -> "web.Response":
+        """DELETE /envs/{key}"""
+        key = request.match_info.get("key", "")
+        if not key:
+            return web.json_response({"error": "key required"}, status=400)
+        try:
+            envs = self._read_env_file()
+            if key in envs:
+                del envs[key]
+                self._write_env_file(envs)
+            result = [{"key": k, "value": v} for k, v in envs.items()]
+            return web.json_response(result)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_console_push_messages(self, request: "web.Request") -> "web.Response":
+        """GET /console/push-messages"""
+        return web.json_response({"messages": []})
+
+
+    async def _handle_refresh_skills(self, request: "web.Request") -> "web.Response":
+        """POST /skills/refresh"""
+        return web.json_response([])
+
+    async def _handle_batch_enable_skills(self, request: "web.Request") -> "web.Response":
+        """POST /skills/batch-enable"""
+        return web.json_response({})
+
+    async def _handle_batch_delete_skills(self, request: "web.Request") -> "web.Response":
+        """POST /skills/batch-delete"""
+        try:
+            body = await request.json()
+            results = {}
+            for name in body:
+                results[name] = {"success": True}
+            return web.json_response({"results": results})
+        except Exception:
+            return web.json_response({"results": {}})
+
+    async def _handle_upload_skill(self, request: "web.Request") -> "web.Response":
+        return web.json_response({"imported": [], "count": 0, "enabled": False})
+
+    async def _handle_save_pool_skill(self, request: "web.Request") -> "web.Response":
+        """PUT /skills/pool/save"""
+        try:
+            body = await request.json()
+            name = (body.get("name") or "").strip()
+            content = body.get("content", "")
+            desc = body.get("description", "")
+            if not name:
+                return web.json_response({"error": "name required"}, status=400)
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / name
+            skills_dir.mkdir(parents=True, exist_ok=True)
+            if desc is not None:
+                (skills_dir / "DESCRIPTION.md").write_text("---\ndescription: " + (desc or "") + "\n---\n", encoding="utf-8")
+            if content is not None:
+                (skills_dir / "SKILL.md").write_text(content, encoding="utf-8")
+            return web.json_response({"success": True, "mode": "edit", "name": name})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_create_pool_skill(self, request: "web.Request") -> "web.Response":
+        """POST /skills/pool/create"""
+        try:
+            body = await request.json()
+            name = (body.get("name") or "").strip()
+            content = body.get("content", "# " + name + "\n")
+            desc = body.get("description", "")
+            if not name:
+                return web.json_response({"error": "name required"}, status=400)
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / name
+            if skills_dir.exists():
+                return web.json_response({"error": "Skill already exists"}, status=409)
+            skills_dir.mkdir(parents=True, exist_ok=True)
+            (skills_dir / "DESCRIPTION.md").write_text("---\ndescription: " + (desc or "") + "\n---\n", encoding="utf-8")
+            (skills_dir / "SKILL.md").write_text(content, encoding="utf-8")
+            return web.json_response({"created": True, "name": name}, status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_delete_pool_skill(self, request: "web.Request") -> "web.Response":
+        """DELETE /skills/pool/{skill_name}"""
+        skill_name = request.match_info.get("skill_name", "")
+        if not skill_name:
+            return web.json_response({"error": "name required"}, status=400)
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+            # Don't delete protected skills
+            if skills_dir.as_posix().startswith("/data/sinoclaw/skills"):
+                return web.json_response({"error": "Cannot delete protected skill"}, status=403)
+            if skills_dir.exists():
+                import shutil as _shutil
+                _shutil.rmtree(skills_dir)
+            return web.json_response({"deleted": True})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_pool_skill_tags(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /skills/pool/{skill_name}/tags"""
+        skill_name = request.match_info.get("skill_name", "")
+        skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+        tags_file = skills_dir / "tags.json"
+        if request.method == "GET":
+            if tags_file.exists():
+                import json as _json
+                return web.json_response({"tags": _json.loads(tags_file.read_text(encoding="utf-8"))})
+            return web.json_response({"tags": []})
+        elif request.method == "PUT":
+            try:
+                body = await request.json()
+                tags = body if isinstance(body, list) else body.get("tags", [])
+                import json as _json
+                tags_file.write_text(_json.dumps(tags, indent=2), encoding="utf-8")
+                return web.json_response({"updated": True, "tags": tags})
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        return web.json_response({"error": "method not allowed"}, status=405)
+
+    async def _handle_pool_skill_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT/DELETE /skills/pool/{skill_name}/config"""
+        skill_name = request.match_info.get("skill_name", "")
+        skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+        config_file = skills_dir / "config.json"
+        if request.method == "GET":
+            if config_file.exists():
+                import json as _json
+                cfg = _json.loads(config_file.read_text(encoding="utf-8"))
+                return web.json_response({"config": cfg})
+            return web.json_response({"config": {}})
+        elif request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg = body.get("config", {})
+                import json as _json
+                skills_dir.mkdir(parents=True, exist_ok=True)
+                config_file.write_text(_json.dumps(cfg, indent=2), encoding="utf-8")
+                return web.json_response({"updated": True})
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        elif request.method == "DELETE":
+            if config_file.exists():
+                config_file.unlink()
+            return web.json_response({"cleared": True})
+        return web.json_response({"error": "method not allowed"}, status=405)
+
+    async def _handle_pool_builtin_notice(self, request: "web.Request") -> "web.Response":
+        """GET /skills/pool/builtin-notice"""
+        return web.json_response({
+            "fingerprint": "",
+            "has_updates": False,
+            "total_changes": 0,
+            "actionable_skill_names": [],
+            "added": [],
+            "missing": [],
+            "updated": [],
+            "removed": [],
+        })
+
+    async def _handle_pool_builtin_sources(self, request: "web.Request") -> "web.Response":
+        """GET /skills/pool/builtin-sources"""
+        return web.json_response([])
+
+    # Skills pool and workspaces (stub for now) ---------------------------------
+    async def _handle_list_skill_pool(self, request: "web.Request") -> "web.Response":
+        """GET /skills/pool — List all available pool skills."""
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills"
+            if not skills_dir.exists():
+                return web.json_response([])
+            pool = []
+            for skill_path in sorted(skills_dir.iterdir()):
+                if not skill_path.is_dir():
+                    continue
+                desc_file = skill_path / "DESCRIPTION.md"
+                desc = ""
+                if desc_file.exists():
+                    desc = desc_file.read_text(encoding="utf-8").strip()
+                # Check if enabled (has SKILL.md)
+                skill_md = skill_path / "SKILL.md"
+                # Get first sub-skill's content if no root SKILL.md
+                content = ""
+                if skill_md.exists():
+                    content = skill_md.read_text(encoding="utf-8").strip()
+                else:
+                    sub_skills = [d for d in skill_path.iterdir() if d.is_dir() and (d / "SKILL.md").exists()]
+                    if sub_skills:
+                        content = (sub_skills[0] / "SKILL.md").read_text(encoding="utf-8").strip()
+                # Check config
+                config_file = skill_path / "config.json"
+                config = {}
+                if config_file.exists():
+                    import json as _json
+                    config = _json.loads(config_file.read_text(encoding="utf-8"))
+                # Check tags
+                tags_file = skill_path / "tags.json"
+                tags = []
+                if tags_file.exists():
+                    import json as _json
+                    tags = _json.loads(tags_file.read_text(encoding="utf-8"))
+                # Protected = bundled with sinoclaw (in /data/sinoclaw/skills)
+                protected = skill_path.as_posix().startswith("/data/sinoclaw/skills")
+                pool.append({
+                    "name": skill_path.name,
+                    "description": desc,
+                    "content": content,
+                    "source": "local",
+                    "protected": protected,
+                    "enabled": skill_md.exists(),
+                    "tags": tags,
+                    "config": config,
+                    "sync_status": "synced" if not protected else "-",
+                })
+            return web.json_response(pool)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_list_skill_workspaces(self, request: "web.Request") -> "web.Response":
+        """GET /skills/workspaces"""
+        # Return the single local workspace
+        return web.json_response([{
+            "agent_id": "default",
+            "workspace_dir": "/root/.sinoclaw",
+            "skills": [],
+        }])
+
+    # Skills management -------------------------------------------------------
+    async def _handle_list_skills(self, request: "web.Request") -> "web.Response":
+        """GET /skills — List all installed skills."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills"
+            if not skills_dir.exists():
+                return web.json_response([])
+            skills = []
+            for skill_path in sorted(skills_dir.iterdir()):
+                if not skill_path.is_dir():
+                    continue
+                desc_file = skill_path / "DESCRIPTION.md"
+                desc = ""
+                if desc_file.exists():
+                    try:
+                        desc = desc_file.read_text(encoding="utf-8").strip()
+                    except Exception:
+                        pass
+                # Check if skill has a SKILL.md (enabled indicator)
+                skill_md = skill_path / "SKILL.md"
+                enabled = skill_md.exists()
+                skills.append({
+                    "name": skill_path.name,
+                    "description": desc,
+                    "enabled": enabled,
+                    "source": "local",
+                    "channels": [],
+                    "tags": [],
+                })
+            return web.json_response(skills)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_get_skill(self, request: "web.Request") -> "web.Response":
+        """GET /skills/{skill_name}"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        skill_name = request.match_info.get("skill_name", "")
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+            if not skills_dir.exists():
+                return web.json_response({"error": "Skill not found"}, status=404)
+            desc_file = skills_dir / "DESCRIPTION.md"
+            desc = ""
+            if desc_file.exists():
+                desc = desc_file.read_text(encoding="utf-8").strip()
+            skill_md = skills_dir / "SKILL.md"
+            content = ""
+            if skill_md.exists():
+                content = skill_md.read_text(encoding="utf-8").strip()
+            return web.json_response({
+                "name": skill_name,
+                "description": desc,
+                "content": content,
+                "enabled": skill_md.exists(),
+                "source": "local",
+            })
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_create_skill(self, request: "web.Request") -> "web.Response":
+        """POST /skills"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        try:
+            body = await request.json()
+            name = (body.get("name") or "").strip()
+            content = body.get("content", "")
+            config = body.get("config")
+            enable = body.get("enable", True)
+            if not name:
+                return web.json_response({"error": "Skill name required"}, status=400)
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / name
+            skills_dir.mkdir(parents=True, exist_ok=True)
+            _desc = body.get("description", "")
+            desc_content = "---\ndescription: " + _desc + "\n---"
+            (skills_dir / "DESCRIPTION.md").write_text(desc_content, encoding="utf-8")
+            if content and enable:
+                (skills_dir / "SKILL.md").write_text(content, encoding="utf-8")
+            return web.json_response({"created": True, "name": name}, status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_save_skill(self, request: "web.Request") -> "web.Response":
+        """PUT /skills/save"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        try:
+            body = await request.json()
+            name = (body.get("name") or "").strip()
+            content = body.get("content", "")
+            desc = body.get("description", "")
+            if not name:
+                return web.json_response({"error": "Skill name required"}, status=400)
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / name
+            skills_dir.mkdir(parents=True, exist_ok=True)
+            if desc is not None:
+                desc_content = "---\ndescription: " + (desc or "") + "\n---"
+                (skills_dir / "DESCRIPTION.md").write_text(desc_content, encoding="utf-8")
+            if content is not None:
+                (skills_dir / "SKILL.md").write_text(content, encoding="utf-8")
+            return web.json_response({"success": True, "mode": "edit", "name": name})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_delete_skill(self, request: "web.Request") -> "web.Response":
+        """DELETE /skills/{skill_name}"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        skill_name = request.match_info.get("skill_name", "")
+        if not skill_name:
+            return web.json_response({"error": "Skill name required"}, status=400)
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+            if skills_dir.exists():
+                import shutil as _shutil
+                _shutil.rmtree(skills_dir)
+            return web.json_response({"deleted": True})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_enable_skill(self, request: "web.Request") -> "web.Response":
+        """POST /skills/{skill_name}/enable"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        skill_name = request.match_info.get("skill_name", "")
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+            if not skills_dir.exists():
+                return web.json_response({"error": "Skill not found"}, status=404)
+            skill_md = skills_dir / "SKILL.md"
+            if not skill_md.exists():
+                # Try to find content from sub-skills
+                sub_dirs = [d for d in skills_dir.iterdir() if d.is_dir() and (d / "SKILL.md").exists()]
+                if sub_dirs:
+                    first_skill = sub_dirs[0] / "SKILL.md"
+                    content = first_skill.read_text(encoding="utf-8")
+                    skill_md.write_text(content, encoding="utf-8")
+                else:
+                    skill_md.write_text("# " + skill_name + "\n", encoding="utf-8")
+            return web.json_response({"enabled": True, "name": skill_name})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_disable_skill(self, request: "web.Request") -> "web.Response":
+        """POST /skills/{skill_name}/disable"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        skill_name = request.match_info.get("skill_name", "")
+        try:
+            skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+            if not skills_dir.exists():
+                return web.json_response({"error": "Skill not found"}, status=404)
+            skill_md = skills_dir / "SKILL.md"
+            if skill_md.exists():
+                skill_md.unlink()
+            return web.json_response({"disabled": True, "name": skill_name})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_skill_config(self, request: "web.Request") -> "web.Response":
+        """GET/PUT/DELETE /skills/{skill_name}/config"""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+        skill_name = request.match_info.get("skill_name", "")
+        skills_dir = Path.home() / ".sinoclaw" / "skills" / skill_name
+        config_file = skills_dir / "config.json"
+        if request.method == "GET":
+            if not skills_dir.exists():
+                return web.json_response({"error": "Skill not found"}, status=404)
+            if config_file.exists():
+                import json as _json
+                cfg = _json.loads(config_file.read_text(encoding="utf-8"))
+                return web.json_response({"config": cfg})
+            return web.json_response({"config": {}})
+        elif request.method == "PUT":
+            try:
+                body = await request.json()
+                cfg = body.get("config", {})
+                skills_dir.mkdir(parents=True, exist_ok=True)
+                import json as _json
+                config_file.write_text(_json.dumps(cfg, indent=2), encoding="utf-8")
+                return web.json_response({"updated": True})
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        elif request.method == "DELETE":
+            if config_file.exists():
+                config_file.unlink()
+            return web.json_response({"cleared": True})
+        return web.json_response({"error": "Method not allowed"}, status=405)
+
+    def _load_mcp_clients(self) -> dict:
+        """Load MCP clients from JSON file."""
+        try:
+            f = open(str(Path.home() / ".sinoclaw" / "mcp_clients.json"), "r")
+            import json as _json
+            return _json.load(f)
+        except Exception:
+            return {}
+
+    def _save_mcp_clients(self, clients: dict) -> None:
+        """Save MCP clients to JSON file."""
+        try:
+            import json as _json
+            path = Path.home() / ".sinoclaw" / "mcp_clients.json"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(str(path), "w") as f:
+                _json.dump(clients, f, indent=2)
+        except Exception:
+            pass
+
+    async def _handle_mcp_list(self, request: "web.Request") -> "web.Response":
+        """GET /mcp — List all MCP clients."""
+        clients = self._load_mcp_clients()
+        result = []
+        for key, cfg in clients.items():
+            result.append({
+                "key": key,
+                "name": cfg.get("name", key),
+                "description": cfg.get("description", ""),
+                "enabled": cfg.get("enabled", True),
+                "transport": cfg.get("transport", "stdio"),
+                "url": cfg.get("url", ""),
+                "headers": cfg.get("headers", {}),
+                "command": cfg.get("command", ""),
+                "args": cfg.get("args", []),
+                "env": cfg.get("env", {}),
+                "cwd": cfg.get("cwd", ""),
+            })
+        return web.json_response(result)
+
+    async def _handle_mcp_create(self, request: "web.Request") -> "web.Response":
+        """POST /mcp — Create MCP client."""
+        try:
+            body = await request.json()
+            client_key = body.get("client_key", "")
+            client_cfg = body.get("client", {})
+            if not client_key:
+                return web.json_response({"error": "client_key required"}, status=400)
+            clients = self._load_mcp_clients()
+            if client_key in clients:
+                return web.json_response({"error": "client already exists"}, status=409)
+            clients[client_key] = {
+                "name": client_cfg.get("name", client_key),
+                "description": client_cfg.get("description", ""),
+                "enabled": client_cfg.get("enabled", True),
+                "transport": client_cfg.get("transport", "stdio"),
+                "url": client_cfg.get("url", ""),
+                "headers": client_cfg.get("headers", {}),
+                "command": client_cfg.get("command", ""),
+                "args": client_cfg.get("args", []),
+                "env": client_cfg.get("env", {}),
+                "cwd": client_cfg.get("cwd", ""),
+            }
+            self._save_mcp_clients(clients)
+            result = clients[client_key].copy()
+            result["key"] = client_key
+            return web.json_response(result, status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_mcp_get(self, request: "web.Request") -> "web.Response":
+        """GET /mcp/{clientKey}"""
+        client_key = request.match_info.get("clientKey", "")
+        clients = self._load_mcp_clients()
+        if client_key not in clients:
+            return web.json_response({"error": "not found"}, status=404)
+        result = clients[client_key].copy()
+        result["key"] = client_key
+        return web.json_response(result)
+
+    async def _handle_mcp_update(self, request: "web.Request") -> "web.Response":
+        """PUT /mcp/{clientKey}"""
+        client_key = request.match_info.get("clientKey", "")
+        clients = self._load_mcp_clients()
+        if client_key not in clients:
+            return web.json_response({"error": "not found"}, status=404)
+        try:
+            body = await request.json()
+            cfg = clients[client_key]
+            for field in ("name", "description", "enabled", "transport", "url", "headers", "command", "args", "env", "cwd"):
+                if field in body:
+                    cfg[field] = body[field]
+            self._save_mcp_clients(clients)
+            result = cfg.copy()
+            result["key"] = client_key
+            return web.json_response(result)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_mcp_delete(self, request: "web.Request") -> "web.Response":
+        """DELETE /mcp/{clientKey}"""
+        client_key = request.match_info.get("clientKey", "")
+        clients = self._load_mcp_clients()
+        if client_key in clients:
+            del clients[client_key]
+            self._save_mcp_clients(clients)
+        return web.json_response({"message": "deleted"})
+
+    async def _handle_mcp_toggle(self, request: "web.Request") -> "web.Response":
+        """PATCH /mcp/{clientKey}/toggle"""
+        client_key = request.match_info.get("clientKey", "")
+        clients = self._load_mcp_clients()
+        if client_key not in clients:
+            return web.json_response({"error": "not found"}, status=404)
+        clients[client_key]["enabled"] = not clients[client_key].get("enabled", True)
+        self._save_mcp_clients(clients)
+        result = clients[client_key].copy()
+        result["key"] = client_key
+        return web.json_response(result)
+
+    async def _handle_mcp_tools(self, request: "web.Request") -> "web.Response":
+        """GET /mcp/{clientKey}/tools — List tools from MCP server."""
+        # Return empty list — actual MCP tool discovery requires server connection
+        return web.json_response([])
+
+    async def _handle_health_detailed(self, request: "web.Request") -> "web.Response":
+        """GET /health/detailed"""
+        return web.json_response({"status": "ok", "platform": "sinoclaw-agent"})
+
+
+
+    async def _handle_console_chat(self, request: "web.Request") -> "web.Response":
+        """POST /console/chat — Streaming chat endpoint used by Console UI."""
+        auth_err = self._check_auth(request)
+        if auth_err:
+            return auth_err
+
+        try:
+            body = await request.json()
+        except Exception:
+            return web.json_response({"error": "Invalid JSON"}, status=400)
+
+        input_messages = body.get("input", [])
+        session_id = body.get("session_id", "")
+        user_id = body.get("user_id", "default")
+        channel = body.get("channel", "console")
+        stream = body.get("stream", True)
+
+        # Convert input messages to conversation format
+        conversation_messages = []
+        system_prompt = None
+        for msg in input_messages:
+            role = msg.get("role", "user")
+            content = ""
+            if isinstance(msg.get("content"), str):
+                content = msg.get("content", "")
+            elif isinstance(msg.get("content"), list):
+                # Handle multimodal content blocks
+                parts = []
+                for block in msg.get("content", []):
+                    if isinstance(block, dict):
+                        if block.get("type") == "text":
+                            parts.append(block.get("text", ""))
+                        elif block.get("type") == "image_url":
+                            parts.append("[image]")
+                    elif isinstance(block, str):
+                        parts.append(block)
+                content = "\n".join(parts)
+            if role == "system":
+                system_prompt = content
+            elif role in ("user", "assistant"):
+                conversation_messages.append({"role": role, "content": content})
+
+        # Get last user message
+        user_message = ""
+        history = []
+        if conversation_messages:
+            user_message = conversation_messages[-1].get("content", "")
+            history = conversation_messages[:-1]
+
+        if not user_message:
+            return web.json_response({"error": "No user message found"}, status=400)
+
+        # Generate session_id if not provided
+        if not session_id:
+            import time as _time, uuid as _uuid
+            session_id = f"{_time.strftime('%Y%m%d_%H%M%S')}_{_uuid.uuid4().hex[:8]}"
+        else:
+            # Load existing session history from DB
+            db = self._ensure_session_db()
+            if db is not None:
+                try:
+                    existing = db.get_messages_as_conversation(session_id)
+                    if existing:
+                        history = existing
+                except Exception:
+                    pass
+
+        completion_id = f"chatcmpl-{uuid.uuid4().hex[:29]}"
+        created = int(time.time())
+        model_name = self._model_name
+
+        if stream:
+            import queue as _q
+            _stream_q: _q.Queue = _q.Queue()
+
+            def _on_delta(delta):
+                if delta is not None:
+                    _stream_q.put(delta)
+
+            def _on_tool_progress(event_type, name, preview, args, **kwargs):
+                if event_type != "tool.started":
+                    return
+                if name.startswith("_"):
+                    return
+                try:
+                    from agent.display import get_tool_emoji
+                    emoji = get_tool_emoji(name)
+                except Exception:
+                    emoji = "🔧"
+                label = preview or name
+                _stream_q.put(("__tool_progress__", {
+                    "tool": name,
+                    "emoji": emoji,
+                    "label": label,
+                }))
+
+            agent_ref = [None]
+            agent_task = asyncio.ensure_future(self._run_agent(
+                user_message=user_message,
+                conversation_history=history,
+                ephemeral_system_prompt=system_prompt,
+                session_id=session_id,
+                stream_delta_callback=_on_delta,
+                tool_progress_callback=_on_tool_progress,
+                agent_ref=agent_ref,
+            ))
+
+            return await self._write_sse_chat_completion(
+                request, completion_id, model_name, created, _stream_q,
+                agent_task, agent_ref, session_id=session_id,
+            )
+
+        # Non-streaming
+        result, usage = await self._run_agent(
+            user_message=user_message,
+            conversation_history=history,
+            ephemeral_system_prompt=system_prompt,
+            session_id=session_id,
+        )
+        # Unwrap final_response from the agent result dict
+        if isinstance(result, dict):
+            final_text = result.get("final_response", str(result))
+        else:
+            final_text = str(result) if result else ""
+        return web.json_response({
+            "id": completion_id,
+            "object": "chat.completion",
+            "created": created,
+            "model": model_name,
+            "choices": [{
+                "index": 0,
+                "message": {"role": "assistant", "content": final_text},
+                "finish_reason": "stop",
+            }],
+            "usage": usage,
+        })
+
+
     # BasePlatformAdapter interface
     # ------------------------------------------------------------------
 
@@ -2333,6 +3647,106 @@ class APIServerAdapter(BasePlatformAdapter):
             # Structured event streaming
             self._app.router.add_post("/v1/runs", self._handle_runs)
             self._app.router.add_get("/v1/runs/{run_id}/events", self._handle_run_events)
+            # Chat session management API (Console UI)
+            # Agent files / memory
+            self._app.router.add_get("/agents/{agent_id}/files", self._handle_list_agent_files)
+            self._app.router.add_get("/agents/{agent_id}/files/{filename}", self._handle_read_agent_file)
+            self._app.router.add_put("/agents/{agent_id}/files/{filename}", self._handle_write_agent_file)
+            self._app.router.add_get("/agents/{agent_id}/memory", self._handle_list_agent_memory)
+            # Tools
+            self._app.router.add_get("/tools", self._handle_list_tools)
+            self._app.router.add_patch("/tools/{tool_name}/toggle", self._handle_toggle_tool)
+            self._app.router.add_put("/tools/{tool_name}/async-execution", self._handle_tool_async_execution)
+            # Token usage
+            self._app.router.add_get("/token-usage", self._handle_token_usage)
+            # Security config
+            self._app.router.add_get("/config/security/tool-guard", self._handle_tool_guard_config)
+            self._app.router.add_put("/config/security/tool-guard", self._handle_tool_guard_config)
+            self._app.router.add_get("/config/security/file-guard", self._handle_file_guard_config)
+            self._app.router.add_put("/config/security/file-guard", self._handle_file_guard_config)
+            self._app.router.add_get("/config/security/skill-scanner", self._handle_skill_scanner_config)
+            self._app.router.add_put("/config/security/skill-scanner", self._handle_skill_scanner_config)
+            self._app.router.add_get("/config/channels", self._handle_config_channels)
+            # Chats
+            self._app.router.add_get("/chats", self._handle_list_chats)
+            self._app.router.add_post("/chats", self._handle_create_chat)
+            self._app.router.add_get("/chats/{chat_id}", self._handle_get_chat)
+            self._app.router.add_put("/chats/{chat_id}", self._handle_update_chat)
+            self._app.router.add_delete("/chats/{chat_id}", self._handle_delete_chat)
+            self._app.router.add_post("/chats/batch-delete", self._handle_batch_delete_chats)
+            # Console UI stub endpoints
+            self._app.router.add_post("/console/chat", self._handle_console_chat)
+            self._app.router.add_post("/console/chat/stop", self._handle_console_chat_stop)
+            self._app.router.add_post("/console/upload", self._handle_console_upload)
+            self._app.router.add_get("/files/preview/{name}", self._handle_files_preview)
+            self._app.router.add_get("/agents", self._handle_list_agents)
+            self._app.router.add_post("/agents", self._handle_create_agent)
+            self._app.router.add_get("/agents/{agent_id}", self._handle_get_agent)
+            self._app.router.add_put("/agents/{agent_id}", self._handle_update_agent)
+            self._app.router.add_delete("/agents/{agent_id}", self._handle_delete_agent)
+            self._app.router.add_put("/agents/order", self._handle_reorder_agents)
+            self._app.router.add_patch("/agents/{agent_id}/toggle", self._handle_toggle_agent)
+            self._app.router.add_get("/agents/{agent_id}/files", self._handle_agent_files)
+            self._app.router.add_get("/agents/{agent_id}/memory", self._handle_agent_memory)
+            self._app.router.add_get("/channels", self._handle_list_channels)
+            self._app.router.add_get("/channels/{channel_id}", self._handle_get_channel)
+            self._app.router.add_get("/cronjobs/{job_id}", self._handle_get_cronjob)
+            self._app.router.add_get("/cronjobs", self._handle_list_cronjobs)
+            self._app.router.add_post("/cronjobs", self._handle_create_cronjob)
+            self._app.router.add_patch("/cronjobs/{job_id}", self._handle_update_cronjob)
+            self._app.router.add_delete("/cronjobs/{job_id}", self._handle_delete_cronjob)
+            self._app.router.add_post("/cronjobs/{job_id}/pause", self._handle_pause_cronjob)
+            self._app.router.add_post("/cronjobs/{job_id}/resume", self._handle_resume_cronjob)
+            self._app.router.add_get("/models", self._handle_list_providers)
+            self._app.router.add_get("/models/active", self._handle_get_active_models)
+            self._app.router.add_put("/models/active", self._handle_set_active_llm)
+            self._app.router.add_put("/models/{provider_id}/config", self._handle_configure_provider)
+            self._app.router.add_post("/models/{provider_id}/test", self._handle_test_provider)
+            self._app.router.add_post("/models/{provider_id}/discover", self._handle_discover_models)
+            self._app.router.add_get("/local-models/config", self._handle_local_models_config)
+            self._app.router.add_put("/local-models/config", self._handle_local_models_config)
+            self._app.router.add_get("/models/openrouter/series", self._handle_openrouter_series)
+            self._app.router.add_get("/settings/language", self._handle_settings_language)
+            self._app.router.add_get("/envs", self._handle_list_envs)
+            self._app.router.add_put("/envs", self._handle_save_envs)
+            self._app.router.add_delete("/envs/{key}", self._handle_delete_env)
+            self._app.router.add_put("/settings/language", self._handle_settings_language)
+            self._app.router.add_get("/console/push-messages", self._handle_console_push_messages)
+            # Skills routes
+            self._app.router.add_post("/skills/refresh", self._handle_refresh_skills)
+            self._app.router.add_post("/skills/batch-enable", self._handle_batch_enable_skills)
+            self._app.router.add_post("/skills/batch-delete", self._handle_batch_delete_skills)
+            self._app.router.add_post("/skills/upload", self._handle_upload_skill)
+            self._app.router.add_get("/skills/pool", self._handle_list_skill_pool)
+            self._app.router.add_post("/skills/pool/refresh", self._handle_list_skill_pool)
+            self._app.router.add_post("/skills/pool/create", self._handle_create_pool_skill)
+            self._app.router.add_put("/skills/pool/save", self._handle_save_pool_skill)
+            self._app.router.add_delete("/skills/pool/{skill_name}", self._handle_delete_pool_skill)
+            self._app.router.add_get("/skills/pool/{skill_name}/tags", self._handle_pool_skill_tags)
+            self._app.router.add_put("/skills/pool/{skill_name}/tags", self._handle_pool_skill_tags)
+            self._app.router.add_get("/skills/pool/{skill_name}/config", self._handle_pool_skill_config)
+            self._app.router.add_put("/skills/pool/{skill_name}/config", self._handle_pool_skill_config)
+            self._app.router.add_delete("/skills/pool/{skill_name}/config", self._handle_pool_skill_config)
+            self._app.router.add_get("/skills/pool/builtin-notice", self._handle_pool_builtin_notice)
+            self._app.router.add_get("/skills/pool/builtin-sources", self._handle_pool_builtin_sources)
+            self._app.router.add_get("/skills/workspaces", self._handle_list_skill_workspaces)
+            self._app.router.add_get("/skills", self._handle_list_skills)
+            self._app.router.add_post("/skills", self._handle_create_skill)
+            self._app.router.add_put("/skills/save", self._handle_save_skill)
+            self._app.router.add_get("/skills/{skill_name}", self._handle_get_skill)
+            self._app.router.add_delete("/skills/{skill_name}", self._handle_delete_skill)
+            self._app.router.add_post("/skills/{skill_name}/enable", self._handle_enable_skill)
+            self._app.router.add_post("/skills/{skill_name}/disable", self._handle_disable_skill)
+            self._app.router.add_get("/skills/{skill_name}/config", self._handle_skill_config)
+            self._app.router.add_put("/skills/{skill_name}/config", self._handle_skill_config)
+            self._app.router.add_delete("/skills/{skill_name}/config", self._handle_skill_config)
+            self._app.router.add_get("/mcp", self._handle_mcp_list)
+            self._app.router.add_post("/mcp", self._handle_mcp_create)
+            self._app.router.add_get("/mcp/{clientKey}", self._handle_mcp_get)
+            self._app.router.add_put("/mcp/{clientKey}", self._handle_mcp_update)
+            self._app.router.add_delete("/mcp/{clientKey}", self._handle_mcp_delete)
+            self._app.router.add_patch("/mcp/{clientKey}/toggle", self._handle_mcp_toggle)
+            self._app.router.add_get("/mcp/{clientKey}/tools", self._handle_mcp_tools)
             # Start background sweep to clean up orphaned (unconsumed) run streams
             sweep_task = asyncio.create_task(self._sweep_orphaned_runs())
             try:

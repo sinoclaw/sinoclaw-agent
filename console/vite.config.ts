@@ -34,6 +34,80 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "0.0.0.0",
       port: 5173,
+      proxy: {
+        "/chats": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/v1": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/api": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/health": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/models": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/agents": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/channels": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/cronjobs": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/console": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/files": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/settings": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/mcp": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/skills": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/envs": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/tools": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/token-usage": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/config": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+        "/local-models": {
+          target: "http://127.0.0.1:8642",
+          changeOrigin: true,
+        },
+      },
     },
     optimizeDeps: {
       include: ["diff"],
