@@ -28,6 +28,9 @@ BOLD='\033[1m'
 # Configuration
 REPO_URL_SSH="git@github.com:sinoclaw/sinoclaw-agent.git"
 REPO_URL_HTTPS="https://github.com/sinoclaw/sinoclaw-agent.git"
+REPO_URL_GITEE_SSH="git@gitee.com:sinoclaw/sinoclaw-agent.git"
+REPO_URL_GITEE_HTTPS="https://gitee.com/sinoclaw/sinoclaw-agent.git"
+USE_GITEE=false
 HERMES_HOME="${HERMES_HOME:-$HOME/.sinoclaw}"
 INSTALL_DIR="${HERMES_INSTALL_DIR:-$HERMES_HOME/sinoclaw-agent}"
 PYTHON_VERSION="3.11"
@@ -70,6 +73,10 @@ while [[ $# -gt 0 ]]; do
             HERMES_HOME="$2"
             shift 2
             ;;
+        --gitee)
+            USE_GITEE=true
+            shift
+            ;;
         -h|--help)
             echo "Sinoclaw Agent Installer"
             echo ""
@@ -81,6 +88,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --branch NAME  Git branch to install (default: main)"
             echo "  --dir PATH     Installation directory (default: ~/.sinoclaw/sinoclaw-agent)"
             echo "  --sinoclaw-home PATH  Data directory (default: ~/.sinoclaw, or \$HERMES_HOME)"
+            echo "  --gitee        Use Gitee mirror instead of GitHub (recommended in China)"
             echo "  -h, --help     Show this help"
             exit 0
             ;;
@@ -740,21 +748,32 @@ clone_repo() {
             exit 1
         fi
     else
-        # Try SSH first (for private repo access), fall back to HTTPS
-        # GIT_SSH_COMMAND disables interactive prompts and sets a short timeout
-        # so SSH fails fast instead of hanging when no key is configured.
-        log_info "Trying SSH clone..."
-        if GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=5" \
-           git clone --branch "$BRANCH" "$REPO_URL_SSH" "$INSTALL_DIR" 2>/dev/null; then
-            log_success "Cloned via SSH"
-        else
-            rm -rf "$INSTALL_DIR" 2>/dev/null  # Clean up partial SSH clone
-            log_info "SSH failed, trying HTTPS..."
-            if git clone --branch "$BRANCH" "$REPO_URL_HTTPS" "$INSTALL_DIR"; then
-                log_success "Cloned via HTTPS"
+        if [ "$USE_GITEE" = true ]; then
+            log_info "Using Gitee mirror..."
+            log_info "Cloning via HTTPS..."
+            if git clone --branch "$BRANCH" "$REPO_URL_GITEE_HTTPS" "$INSTALL_DIR"; then
+                log_success "Cloned from Gitee"
             else
-                log_error "Failed to clone repository"
+                log_error "Failed to clone from Gitee"
                 exit 1
+            fi
+        else
+            # Try SSH first (for private repo access), fall back to HTTPS
+            # GIT_SSH_COMMAND disables interactive prompts and sets a short timeout
+            # so SSH fails fast instead of hanging when no key is configured.
+            log_info "Trying SSH clone..."
+            if GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=5" \
+               git clone --branch "$BRANCH" "$REPO_URL_SSH" "$INSTALL_DIR" 2>/dev/null; then
+                log_success "Cloned via SSH"
+            else
+                rm -rf "$INSTALL_DIR" 2>/dev/null  # Clean up partial SSH clone
+                log_info "SSH failed, trying HTTPS..."
+                if git clone --branch "$BRANCH" "$REPO_URL_HTTPS" "$INSTALL_DIR"; then
+                    log_success "Cloned via HTTPS"
+                else
+                    log_error "Failed to clone repository"
+                    exit 1
+                fi
             fi
         fi
     fi
