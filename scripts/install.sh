@@ -77,6 +77,10 @@ while [[ $# -gt 0 ]]; do
             USE_GITEE=true
             shift
             ;;
+        --skip-console)
+            SKIP_CONSOLE=true
+            shift
+            ;;
         -h|--help)
             echo "Sinoclaw Agent Installer"
             echo ""
@@ -1392,6 +1396,181 @@ print_success() {
     fi
 }
 
+install_console() {
+    if [ "$SKIP_CONSOLE" = true ]; then
+        log_info "Skipping Console deployment (--skip-console)"
+        return 0
+    fi
+
+    if [ "$DISTRO" = "termux" ]; then
+        log_info "Skipping Console on Termux (not supported)"
+        return 0
+    fi
+
+    if [ "$HAS_NODE" = false ]; then
+        log_info "Skipping Console (Node.js not installed)"
+        return 0
+    fi
+
+    local console_dir="$INSTALL_DIR/console"
+    if [ ! -f "$console_dir/package.json" ]; then
+        log_info "Console source not found at $console_dir, skipping"
+        return 0
+    fi
+
+    log_info "Building Sinoclaw Console..."
+    cd "$console_dir"
+
+    # npm install + build
+    npm install --silent 2>/dev/null || {
+        log_warn "Console npm install failed"
+        return 0
+    }
+
+    npm run build 2>/dev/null || {
+        log_warn "Console build failed"
+        return 0
+    }
+
+    log_success "Console built"
+
+    # Install nginx
+    if ! command -v nginx &> /dev/null; then
+        log_info "Installing nginx..."
+        case "$DISTRO" in
+            ubuntu|debian|raspbian|pop|linuxmint|elementary|zorin|kali|parrot)
+                export DEBIAN_FRONTEND=noninteractive
+                apt-get install -y -qq nginx >/dev/null 2>&1 || {
+                    log_warn "nginx install failed"
+                    return 0
+                }
+                ;;
+            arch|manjaro)
+                pacman -S --noconfirm nginx >/dev/null 2>&1 || {
+                    log_warn "nginx install failed"
+                    return 0
+                }
+                ;;
+            fedora|rhel|centos|rocky|alma)
+                dnf install -y nginx >/dev/null 2>&1 || {
+                    log_warn "nginx install failed"
+                    return 0
+                }
+                ;;
+            *)
+                log_warn "nginx install not supported on $DISTRO, skipping"
+                return 0
+                ;;
+        esac
+        log_success "nginx installed"
+    fi
+
+    # Generate API key if not set
+    local api_key_file="$HERMES_HOME/.env"
+    if [ -f "$api_key_file" ] && grep -q "API_SERVER_KEY=" "$api_key_file" 2>/dev/null; then
+        log_info "API_SERVER_KEY already set"
+    else
+        # Generate a random API key
+        local new_key
+        new_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))" 2>/dev/null || echo "dev-key-$(date +%s)")
+        if [ -n "$new_key" ]; then
+            if [ -f "$api_key_file" ]; then
+                if ! grep -q "API_SERVER_KEY=" "$api_key_file" 2>/dev/null; then
+                    echo "API_SERVER_KEY=$new_key" >> "$api_key_file"
+                fi
+            else
+                echo "API_SERVER_KEY=$new_key" > "$api_key_file"
+            fi
+            log_info "API_SERVER_KEY generated"
+        fi
+    fi
+
+    # Read API key for nginx config
+    local api_key
+    api_key=$(grep "API_SERVER_KEY=" "$api_key_file" 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d '"' | tr -d "'" | xargs || echo "")
+
+    # Create nginx config
+    local nginx_site="/etc/nginx/sites-available/sinoclaw-console"
+    local nginx_enabled="/etc/nginx/sites-enabled/sinoclaw-console"
+    local console_port=5174
+
+    cat > "$nginx_site" << NGINX_EOF
+server {
+    listen $console_port;
+    server_name _;
+
+    root $console_dir/dist;
+    index index.html;
+
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+
+    # Inject API key into all API requests
+    location ~ ^(/chats|/skills|/models|/config|/tools|/envs|/agent|/workspace|/mcp|/cronjobs|/files|/token-usage|/local-models|/console|/v1) {
+        proxy_pass http://127.0.0.1:8642;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+NGINX_EOF
+
+    if [ -n "$api_key" ]; then
+        cat >> "$nginx_site" << NGINX_KEY_EOF
+        proxy_set_header Authorization "Bearer $api_key";
+NGINX_KEY_EOF
+    fi
+
+    cat >> "$nginx_site" << NGINX_EOF2
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
+    }
+}
+NGINX_EOF2
+
+    ln -sf "$nginx_site" "$nginx_enabled"
+    rm -f /etc/nginx/sites-enabled/default
+    nginx -t 2>/dev/null || {
+        log_warn "nginx config test failed"
+        return 0
+    }
+
+    # Start/restart nginx
+    if systemctl is-active nginx-sinoclaw &>/dev/null; then
+        nginx -s reload 2>/dev/null || true
+    else
+        # Create systemd service for nginx
+        cat > /etc/systemd/system/nginx-sinoclaw.service << SYSTEMD_EOF
+[Unit]
+Description=nginx for Sinoclaw Console
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx-sinoclaw.pid
+ExecStartPre=/usr/sbin/nginx -t
+ExecStart=/usr/sbin/nginx
+ExecReload=/usr/sbin/nginx -s reload
+ExecStop=/usr/sbin/nginx -s stop
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+SYSTEMD_EOF
+
+        systemctl daemon-reload 2>/dev/null || true
+        systemctl enable nginx-sinoclaw 2>/dev/null || true
+        systemctl start nginx-sinoclaw 2>/dev/null || true
+    fi
+
+    log_success "Sinoclaw Console deployed at http://localhost:$console_port"
+    echo ""
+    echo -e "   ${YELLOW}Console:${NC}  http://localhost:$console_port"
+    echo ""
+}
+
 # ============================================================================
 # Main
 # ============================================================================
@@ -1410,6 +1589,7 @@ main() {
     setup_venv
     install_deps
     install_node_deps
+    install_console
     setup_path
     copy_config_templates
     run_setup_wizard
