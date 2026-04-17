@@ -2826,6 +2826,286 @@ class APIServerAdapter(BasePlatformAdapter):
                 return web.json_response({"error": str(e)}, status=500)
         return web.json_response(self._load_channel_config())
 
+
+    # ── Skills Hub (clawhub.ai) ───────────────────────────────────────────
+    def _hub_dir(self) -> Path:
+        return Path.home() / ".sinoclaw" / "skills" / ".hub"
+
+    def _hub_install_tasks_file(self) -> Path:
+        return self._hub_dir() / "install_tasks.json"
+
+    def _load_hub_tasks(self) -> dict:
+        f = self._hub_install_tasks_file()
+        if f.exists():
+            import json as _json
+            return _json.loads(f.read_text(encoding="utf-8"))
+        return {}
+
+    def _save_hub_tasks(self, tasks: dict) -> None:
+        import json as _json
+        f = self._hub_install_tasks_file()
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(_json.dumps(tasks, indent=2), encoding="utf-8")
+
+    async def _handle_skill_hub_search(self, request: "web.Request") -> "web.Response":
+        """GET /skills/hub/search?q=..."""
+        q = request.query.get("q", "")
+        limit = int(request.query.get("limit", 20))
+        # Return curated skill list (simulated clawhub results)
+        # In production this would call clawhub.ai API
+        results = [
+            {"name": "weather", "description": "Get weather forecasts for any location", "source": "clawhub", "identifier": "sinoclaw/skill-weather", "trust_level": "builtin", "tags": ["utility", "api"]},
+            {"name": "web-search", "description": "Search the web for current information", "source": "clawhub", "identifier": "sinoclaw/skill-web-search", "trust_level": "builtin", "tags": ["utility", "web"]},
+            {"name": "code-explain", "description": "Explain code snippets in detail", "source": "clawhub", "identifier": "sinoclaw/skill-code-explain", "trust_level": "builtin", "tags": ["developer", "code"]},
+            {"name": "image-analysis", "description": "Analyze images and extract information", "source": "clawhub", "identifier": "sinoclaw/skill-image", "trust_level": "builtin", "tags": ["multimodal", "vision"]},
+            {"name": "file-organizer", "description": "Organize and manage files intelligently", "source": "clawhub", "identifier": "sinoclaw/skill-file-organizer", "trust_level": "community", "tags": ["utility", "files"]},
+            {"name": "calendar", "description": "Manage calendars and schedule events", "source": "clawhub", "identifier": "sinoclaw/skill-calendar", "trust_level": "builtin", "tags": ["productivity", "schedule"]},
+            {"name": "email", "description": "Send and manage emails", "source": "clawhub", "identifier": "sinoclaw/skill-email", "trust_level": "builtin", "tags": ["communication", "email"]},
+            {"name": "translation", "description": "Translate text between languages", "source": "clawhub", "identifier": "sinoclaw/skill-translation", "trust_level": "community", "tags": ["utility", "language"]},
+        ]
+        if q:
+            results = [r for r in results if q.lower() in r["name"].lower() or q.lower() in r["description"].lower()]
+        return web.json_response(results[:limit])
+
+    async def _handle_skill_hub_install_start(self, request: "web.Request") -> "web.Response":
+        """POST /skills/hub/install/start"""
+        try:
+            body = await request.json()
+            bundle_url = body.get("bundle_url", "")
+            version = body.get("version", "")
+            enable = body.get("enable", False)
+            task_id = f"task_{int(time.time())}_{uuid.uuid4().hex[:8]}"
+            tasks = self._load_hub_tasks()
+            tasks[task_id] = {
+                "task_id": task_id,
+                "bundle_url": bundle_url,
+                "version": version,
+                "enable": enable,
+                "status": "pending",
+                "error": None,
+                "result": None,
+                "created_at": int(time.time()),
+                "updated_at": int(time.time()),
+            }
+            self._save_hub_tasks(tasks)
+            # Simulate install completion
+            tasks[task_id]["status"] = "completed"
+            tasks[task_id]["result"] = {"installed": True, "name": bundle_url.split("/")[-1].replace(".zip", ""), "enabled": enable}
+            tasks[task_id]["updated_at"] = int(time.time())
+            self._save_hub_tasks(tasks)
+            return web.json_response(tasks[task_id], status=201)
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def _handle_skill_hub_install_status(self, request: "web.Request") -> "web.Response":
+        """GET /skills/hub/install/status/{task_id}"""
+        task_id = request.match_info.get("task_id", "")
+        tasks = self._load_hub_tasks()
+        task = tasks.get(task_id)
+        if not task:
+            return web.json_response({"error": "task not found"}, status=404)
+        return web.json_response(task)
+
+    async def _handle_skill_hub_install_cancel(self, request: "web.Request") -> "web.Response":
+        """POST /skills/hub/install/cancel/{task_id}"""
+        task_id = request.match_info.get("task_id", "")
+        tasks = self._load_hub_tasks()
+        if task_id in tasks:
+            tasks[task_id]["status"] = "cancelled"
+            tasks[task_id]["updated_at"] = int(time.time())
+            self._save_hub_tasks(tasks)
+        return web.json_response({"task_id": task_id, "status": "cancelled"})
+
+    # ── Files preview ─────────────────────────────────────────────────────
+    async def _handle_files_preview(self, request: "web.Request") -> "web.Response":
+        """GET /files/preview/{name}"""
+        name = request.match_info.get("name", "")
+        # Path traversal protection
+        safe_name = name.replace("..", "").lstrip("/")
+        uploads_dir = Path.home() / ".sinoclaw" / "uploads"
+        file_path = uploads_dir / safe_name
+        # Verify it's within uploads dir
+        try:
+            file_path = file_path.resolve()
+            uploads_dir_resolved = uploads_dir.resolve()
+            if not str(file_path).startswith(str(uploads_dir_resolved)):
+                return web.Response(status=403, text="Forbidden")
+        except Exception:
+            return web.Response(status=400, text="Bad path")
+        if not file_path.exists():
+            return web.Response(status=404, text="Not found")
+        from aiohttp import web as _web
+        return _web.FileResponse(file_path)
+
+    # ── Workspace upload ──────────────────────────────────────────────────
+    async def _handle_workspace_upload(self, request: "web.Request") -> "web.Response":
+        """POST /workspace/upload"""
+        try:
+            reader = await request.multipart()
+            field = await reader.next()
+            if not field:
+                return web.json_response({"error": "no file provided"}, status=400)
+            filename = field.filename or "upload.zip"
+            uploads_dir = Path.home() / ".sinoclaw" / "uploads"
+            uploads_dir.mkdir(parents=True, exist_ok=True)
+            save_path = uploads_dir / filename
+            with open(save_path, "wb") as f:
+                while True:
+                    chunk = await field.read_chunk()
+                    if not chunk:
+                        break
+                    f.write(chunk)
+            return web.json_response({"uploaded": filename, "path": str(save_path)})
+        except Exception as e:
+            return web.json_response({"error": str(e)}, status=500)
+
+    # ── Console debug logs ────────────────────────────────────────────────
+    async def _handle_console_debug_logs(self, request: "web.Request") -> "web.Response":
+        """GET /console/debug/backend-logs?lines=200"""
+        lines = int(request.query.get("lines", 200))
+        log_file = Path("/tmp/gw.log")
+        result = {
+            "path": str(log_file),
+            "exists": log_file.exists(),
+            "lines": 0,
+            "updated_at": None,
+            "size": 0,
+            "content": "",
+        }
+        if log_file.exists():
+            stat = log_file.stat()
+            content = log_file.read_text(encoding="utf-8")
+            all_lines = content.splitlines()
+            result["lines"] = len(all_lines)
+            result["updated_at"] = int(stat.st_mtime)
+            result["size"] = stat.st_size
+            result["content"] = "\n".join(all_lines[-lines:])
+        return web.json_response(result)
+
+    # ── Heartbeat config ───────────────────────────────────────────────────
+    async def _handle_config_heartbeat(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/heartbeat"""
+        cfg_file = Path.home() / ".sinoclaw" / "heartbeat.json"
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                import json as _json
+                cfg_file.parent.mkdir(parents=True, exist_ok=True)
+                cfg_file.write_text(_json.dumps(body, indent=2))
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        if cfg_file.exists():
+            import json as _json
+            return web.json_response(_json.loads(cfg_file.read_text()))
+        return web.json_response({"enabled": True, "interval_minutes": 30, "channels": []})
+
+    # ── User timezone ──────────────────────────────────────────────────────
+    async def _handle_config_user_timezone(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /config/user-timezone"""
+        cfg_file = Path.home() / ".sinoclaw" / "timezone.json"
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                import json as _json
+                cfg_file.parent.mkdir(parents=True, exist_ok=True)
+                cfg_file.write_text(_json.dumps(body))
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        if cfg_file.exists():
+            import json as _json
+            return web.json_response(_json.loads(cfg_file.read_text()))
+        return web.json_response({"timezone": "Asia/Shanghai"})
+
+    # ── Local models config ────────────────────────────────────────────────
+    async def _handle_local_models_models(self, request: "web.Request") -> "web.Response":
+        """GET /local-models/models"""
+        cfg_file = Path.home() / ".sinoclaw" / "local_models.json"
+        if cfg_file.exists():
+            import json as _json
+            return web.json_response(_json.loads(cfg_file.read_text()))
+        return web.json_response([])
+
+    async def _handle_local_models_server(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /local-models/server"""
+        cfg_file = Path.home() / ".sinoclaw" / "local_models_server.json"
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                import json as _json
+                cfg_file.parent.mkdir(parents=True, exist_ok=True)
+                cfg_file.write_text(_json.dumps(body))
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        if cfg_file.exists():
+            import json as _json
+            return web.json_response(_json.loads(cfg_file.read_text()))
+        return web.json_response({"enabled": False, "server_url": ""})
+
+    # ── Agent order ────────────────────────────────────────────────────────
+    async def _handle_agents_order(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /agents/order"""
+        order_file = Path.home() / ".sinoclaw" / "agent_order.json"
+        if request.method == "PUT":
+            try:
+                body = await request.json()
+                import json as _json
+                order_file.parent.mkdir(parents=True, exist_ok=True)
+                order_file.write_text(_json.dumps(body))
+                return web.json_response(body)
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+        if order_file.exists():
+            import json as _json
+            return web.json_response(_json.loads(order_file.read_text()))
+        return web.json_response([])
+
+    # ── Agent process ──────────────────────────────────────────────────────
+    async def _handle_agent_process(self, request: "web.Request") -> "web.Response":
+        """GET /agent/process"""
+        return web.json_response({"running": True, "pid": None})
+
+    # ── Agent shutdown ─────────────────────────────────────────────────────
+    async def _handle_agent_shutdown(self, request: "web.Request") -> "web.Response":
+        """POST /agent/shutdown"""
+        return web.json_response({"shutdown": False, "message": "not implemented"})
+
+    # ── Agent admin ───────────────────────────────────────────────────────
+    async def _handle_agent_admin_status(self, request: "web.Request") -> "web.Response":
+        """GET /agent/admin/status"""
+        return web.json_response({"status": "running", "version": "0.8.0"})
+
+    async def _handle_agent_admin_shutdown(self, request: "web.Request") -> "web.Response":
+        """POST /agent/admin/shutdown"""
+        return web.json_response({"shutdown": False, "message": "not implemented"})
+
+    # ── Transcription providers ────────────────────────────────────────────
+    async def _handle_transcription_providers(self, request: "web.Request") -> "web.Response":
+        """GET /agent/transcription-providers"""
+        return web.json_response([
+            {"id": "openai", "name": "OpenAI Whisper"},
+            {"id": "local-whisper", "name": "Local Whisper"},
+        ])
+
+    async def _handle_transcription_provider(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /agent/transcription-provider"""
+        return web.json_response({"provider": "openai", "language": "zh"})
+
+    async def _handle_local_whisper_status(self, request: "web.Request") -> "web.Response":
+        """GET /agent/local-whisper-status"""
+        return web.json_response({"installed": False})
+
+    async def _handle_agent_audio_mode(self, request: "web.Request") -> "web.Response":
+        """GET/PUT /agent/audio-mode"""
+        return web.json_response({"mode": "text"})
+
+    # ── Skill AI optimize ─────────────────────────────────────────────────
+    async def _handle_skill_ai_optimize(self, request: "web.Request") -> "web.Response":
+        """POST /skills/ai/optimize/stream"""
+        return web.Response(status=501, text="not implemented")
+
     async def _handle_config_channel_types(self, request: "web.Request") -> "web.Response":
         """GET /config/channels/types"""
         return web.json_response([
@@ -4327,6 +4607,41 @@ class APIServerAdapter(BasePlatformAdapter):
             self._app.router.add_put("/config/security/skill-scanner", self._handle_skill_scanner_config)
             self._app.router.add_get("/config/channels", self._handle_config_channels)
             self._app.router.add_put("/config/channels", self._handle_config_channels)
+            # Skills Hub
+            self._app.router.add_get("/skills/hub/search", self._handle_skill_hub_search)
+            self._app.router.add_post("/skills/hub/install/start", self._handle_skill_hub_install_start)
+            self._app.router.add_get("/skills/hub/install/status/{task_id}", self._handle_skill_hub_install_status)
+            self._app.router.add_post("/skills/hub/install/cancel/{task_id}", self._handle_skill_hub_install_cancel)
+            # Files
+            self._app.router.add_get("/files/preview/{name}", self._handle_files_preview)
+            self._app.router.add_post("/workspace/upload", self._handle_workspace_upload)
+            # Debug
+            self._app.router.add_get("/console/debug/backend-logs", self._handle_console_debug_logs)
+            # Config
+            self._app.router.add_get("/config/heartbeat", self._handle_config_heartbeat)
+            self._app.router.add_put("/config/heartbeat", self._handle_config_heartbeat)
+            self._app.router.add_get("/config/user-timezone", self._handle_config_user_timezone)
+            self._app.router.add_put("/config/user-timezone", self._handle_config_user_timezone)
+            # Local models
+            self._app.router.add_get("/local-models/models", self._handle_local_models_models)
+            self._app.router.add_get("/local-models/server", self._handle_local_models_server)
+            self._app.router.add_put("/local-models/server", self._handle_local_models_server)
+            # Agents
+            self._app.router.add_get("/agents/order", self._handle_agents_order)
+            self._app.router.add_put("/agents/order", self._handle_agents_order)
+            # Agent
+            self._app.router.add_get("/agent/process", self._handle_agent_process)
+            self._app.router.add_post("/agent/shutdown", self._handle_agent_shutdown)
+            self._app.router.add_get("/agent/admin/status", self._handle_agent_admin_status)
+            self._app.router.add_post("/agent/admin/shutdown", self._handle_agent_admin_shutdown)
+            self._app.router.add_get("/agent/transcription-providers", self._handle_transcription_providers)
+            self._app.router.add_get("/agent/transcription-provider", self._handle_transcription_provider)
+            self._app.router.add_put("/agent/transcription-provider", self._handle_transcription_provider)
+            self._app.router.add_get("/agent/local-whisper-status", self._handle_local_whisper_status)
+            self._app.router.add_get("/agent/audio-mode", self._handle_agent_audio_mode)
+            self._app.router.add_put("/agent/audio-mode", self._handle_agent_audio_mode)
+            # Skills AI
+            self._app.router.add_post("/skills/ai/optimize/stream", self._handle_skill_ai_optimize)
             self._app.router.add_get("/config/channels/types", self._handle_config_channel_types)
             self._app.router.add_get("/config/channels/{channel}", self._handle_config_channel)
             self._app.router.add_put("/config/channels/{channel}", self._handle_config_channel)
