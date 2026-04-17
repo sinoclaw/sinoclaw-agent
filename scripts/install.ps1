@@ -15,6 +15,7 @@
 param(
     [switch]$NoVenv,
     [switch]$SkipSetup,
+    [switch]$SkipConsole,
     [string]$Branch = "main",
     [string]$SinoclawHome = "$env:LOCALAPPDATA\hermes",
     [string]$InstallDir = "$env:LOCALAPPDATA\hermes\sinoclaw-agent"
@@ -882,6 +883,53 @@ function Write-Completion {
 # Main
 # ============================================================================
 
+function Install-Console {
+    if ($SkipConsole) {
+        Write-Info "Skipping Console (-SkipConsole)"
+        return
+    }
+
+    if (-not $HasNode) {
+        Write-Info "Skipping Console (Node.js not installed)"
+        return
+    }
+
+    $consoleDir = "$InstallDir\console"
+    if (-not (Test-Path "$consoleDir\package.json")) {
+        Write-Info "Console source not found, skipping"
+        return
+    }
+
+    Write-Info "Building Sinoclaw Console..."
+    Push-Location $consoleDir
+    try {
+        npm install --silent 2>&1 | Out-Null
+        Write-Success "Console npm dependencies installed"
+
+        Write-Info "Compiling Console (npm run build)..."
+        npm run build 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warn "Console build failed — Console will not be available"
+            return
+        }
+        Write-Success "Console built"
+    } catch {
+        Write-Warn "Console build failed: $_"
+        return
+    } finally {
+        Pop-Location
+    }
+
+    Write-Host ""
+    Write-Host "  Console build complete. To serve on Windows:" -ForegroundColor Cyan
+    Write-Host "  Run: npx serve $consoleDir\dist -l 5174" -ForegroundColor Yellow
+    Write-Host "  Or set up IIS with URL Rewrite to proxy /api/* to localhost:8642" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  NOTE: Windows does not support systemd/nginx service." -ForegroundColor Yellow
+    Write-Host "  For automated deployment, use Linux instead." -ForegroundColor Yellow
+    Write-Host ""
+}
+
 function Main {
     Write-Banner
     
@@ -895,6 +943,7 @@ function Main {
     Install-Venv
     Install-Dependencies
     Install-NodeDeps
+    Install-Console
     Set-PathVariable
     Copy-ConfigTemplates
     Invoke-SetupWizard
