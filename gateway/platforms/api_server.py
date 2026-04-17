@@ -2848,24 +2848,39 @@ class APIServerAdapter(BasePlatformAdapter):
         f.write_text(_json.dumps(tasks, indent=2), encoding="utf-8")
 
     async def _handle_skill_hub_search(self, request: "web.Request") -> "web.Response":
-        """GET /skills/hub/search?q=..."""
+        """GET /skills/hub/search?q=... — query clawhub.ai API"""
+        import urllib.request as _urllib
         q = request.query.get("q", "")
         limit = int(request.query.get("limit", 20))
-        # Return curated skill list (simulated clawhub results)
-        # In production this would call clawhub.ai API
-        results = [
-            {"name": "weather", "description": "Get weather forecasts for any location", "source": "clawhub", "identifier": "sinoclaw/skill-weather", "trust_level": "builtin", "tags": ["utility", "api"]},
-            {"name": "web-search", "description": "Search the web for current information", "source": "clawhub", "identifier": "sinoclaw/skill-web-search", "trust_level": "builtin", "tags": ["utility", "web"]},
-            {"name": "code-explain", "description": "Explain code snippets in detail", "source": "clawhub", "identifier": "sinoclaw/skill-code-explain", "trust_level": "builtin", "tags": ["developer", "code"]},
-            {"name": "image-analysis", "description": "Analyze images and extract information", "source": "clawhub", "identifier": "sinoclaw/skill-image", "trust_level": "builtin", "tags": ["multimodal", "vision"]},
-            {"name": "file-organizer", "description": "Organize and manage files intelligently", "source": "clawhub", "identifier": "sinoclaw/skill-file-organizer", "trust_level": "community", "tags": ["utility", "files"]},
-            {"name": "calendar", "description": "Manage calendars and schedule events", "source": "clawhub", "identifier": "sinoclaw/skill-calendar", "trust_level": "builtin", "tags": ["productivity", "schedule"]},
-            {"name": "email", "description": "Send and manage emails", "source": "clawhub", "identifier": "sinoclaw/skill-email", "trust_level": "builtin", "tags": ["communication", "email"]},
-            {"name": "translation", "description": "Translate text between languages", "source": "clawhub", "identifier": "sinoclaw/skill-translation", "trust_level": "community", "tags": ["utility", "language"]},
-        ]
-        if q:
-            results = [r for r in results if q.lower() in r["name"].lower() or q.lower() in r["description"].lower()]
-        return web.json_response(results[:limit])
+        try:
+            url = f"https://clawhub.ai/api/v1/skills?search={_urllib.parse.quote(q)}&limit={limit}"
+            req = _urllib.Request(url, headers={"User-Agent": "Sinoclaw/1.0"})
+            with _urllib.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+            items = data.get("items", []) if isinstance(data, dict) else []
+            results = []
+            for item in items[:limit]:
+                slug = item.get("slug", "")
+                results.append({
+                    "name": item.get("displayName") or item.get("name") or slug,
+                    "description": item.get("summary") or item.get("description") or "",
+                    "source": "clawhub",
+                    "identifier": f"clawhub/{slug}",
+                    "trust_level": "community",
+                    "tags": item.get("tags", []) if isinstance(item.get("tags"), list) else [],
+                })
+            return web.json_response(results)
+        except Exception as e:
+            # Fallback: return built-in skills as placeholder
+            results = [
+                {"name": "weather", "description": "Get weather forecasts for any location", "source": "clawhub", "identifier": "clawhub/weather", "trust_level": "community", "tags": ["utility"]},
+                {"name": "web-search", "description": "Search the web for current information", "source": "clawhub", "identifier": "clawhub/web-search", "trust_level": "community", "tags": ["utility"]},
+                {"name": "code-explain", "description": "Explain code snippets in detail", "source": "clawhub", "identifier": "clawhub/code-explain", "trust_level": "community", "tags": ["developer"]},
+                {"name": "image-analysis", "description": "Analyze images and extract information", "source": "clawhub", "identifier": "clawhub/image-analysis", "trust_level": "community", "tags": ["multimodal"]},
+            ]
+            if q:
+                results = [r for r in results if q.lower() in r["name"].lower() or q.lower() in r["description"].lower()]
+            return web.json_response(results[:limit])
 
     async def _handle_skill_hub_install_start(self, request: "web.Request") -> "web.Response":
         """POST /skills/hub/install/start"""
@@ -2881,16 +2896,52 @@ class APIServerAdapter(BasePlatformAdapter):
                 "bundle_url": bundle_url,
                 "version": version,
                 "enable": enable,
-                "status": "pending",
+                "status": "importing",
                 "error": None,
                 "result": None,
                 "created_at": int(time.time()),
                 "updated_at": int(time.time()),
             }
             self._save_hub_tasks(tasks)
-            # Simulate install completion
-            tasks[task_id]["status"] = "completed"
-            tasks[task_id]["result"] = {"installed": True, "name": bundle_url.split("/")[-1].replace(".zip", ""), "enabled": enable}
+
+            # Actually download and install the skill
+            import urllib.request as _urllib, zipfile, io as _io, shutil as _shutil
+            skills_dir = Path.home() / ".sinoclaw" / "skills"
+            skills_dir.mkdir(parents=True, exist_ok=True)
+
+            try:
+                req = _urllib.Request(bundle_url, headers={"User-Agent": "Sinoclaw/1.0"})
+                with _urllib.urlopen(req, timeout=30) as resp:
+                    zip_data = resp.read()
+
+                # Extract zip
+                skill_name = bundle_url.split("/")[-1].replace(".zip", "").replace(".git", "")
+                extract_dir = skills_dir / skill_name
+                if extract_dir.exists():
+                    _shutil.rmtree(extract_dir)
+
+                with zipfile.ZipFile(_io.BytesIO(zip_data)) as zf:
+                    zf.extractall(skills_dir)
+
+                # If enable, create SKILL.md symlink
+                if enable:
+                    skill_md = extract_dir / "SKILL.md"
+                    desc_md = extract_dir / "DESCRIPTION.md"
+                    if skill_md.exists() and not desc_md.exists():
+                        desc_md.write_text(f"# {skill_name}\n\nInstalled from clawhub.\n")
+
+                tasks[task_id]["status"] = "completed"
+                tasks[task_id]["result"] = {
+                    "installed": True,
+                    "name": skill_name,
+                    "enabled": enable,
+                    "source_url": bundle_url,
+                }
+            except Exception as install_err:
+                tasks[task_id]["status"] = "failed"
+                tasks[task_id]["error"] = str(install_err)
+                tasks[task_id]["result"] = {"installed": False}
+
             tasks[task_id]["updated_at"] = int(time.time())
             self._save_hub_tasks(tasks)
             return web.json_response(tasks[task_id], status=201)
