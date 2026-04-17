@@ -484,7 +484,10 @@
     "misfireGraceSecondsTooltip": "実行漏れの許容時間。スケジュール時刻をこの時間以上過ぎた場合は実行されません。",
     "executeNowTitle": "タスクを今すぐ実行",
     "executeNowContent": "\"{{name}}\" を今すぐ実行してもよろしいですか？",
-    "executeNowConfirm": "今すぐ実行"
+    "executeNowConfirm": "今すぐ実行",
+    "selectAtLeastOneDay": "1日以上を選択してください",
+    "cronExpression": "Cron式",
+    "cronFormat": "形式: 分 時 日 月 曜日"
   },
   "channels": {
     "title": "チャンネル",

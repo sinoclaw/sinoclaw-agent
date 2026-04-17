@@ -489,7 +489,10 @@
     "misfireGraceSecondsTooltip": "Льготный период для пропущенных запусков. Если задача пропустила время запуска больше чем на это значение, она не будет выполнена.",
     "executeNowTitle": "Выполнить задачу сейчас",
     "executeNowContent": "Вы уверены, что хотите выполнить «{{name}}» прямо сейчас?",
-    "executeNowConfirm": "Выполнить сейчас"
+    "executeNowConfirm": "Выполнить сейчас",
+    "selectAtLeastOneDay": "Выберите хотя бы один день",
+    "cronExpression": "Cron выражение",
+    "cronFormat": "Формат: минута час день месяц день_недели"
   },
   "channels": {
     "title": "Каналы",

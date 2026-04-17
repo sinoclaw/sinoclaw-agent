@@ -137,12 +137,12 @@ export const createColumns = (
           <Tooltip
             title={
               <div>
-                <div>Cron 表达式：{cron}</div>
+                <div>{handlers.t("cronJobs.cronExpression")}: {cron}</div>
                 <div
                   className={styles.tableText}
                   style={{ opacity: 0.8, marginTop: 4 }}
                 >
-                  格式：分钟 小时 日 月 星期
+                  {handlers.t("cronJobs.cronFormat")}
                 </div>
               </div>
             }
