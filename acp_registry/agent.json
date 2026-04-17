@@ -2,11 +2,13 @@
   "schema_version": 1,
   "name": "sinoclaw-agent",
   "display_name": "Sinoclaw Agent",
-  "description": "AI agent by Nous Research with 90+ tools, persistent memory, and multi-platform support",
+  "description": "AI agent by Sinoclaw Team with 90+ tools, persistent memory, and multi-platform support",
   "icon": "icon.svg",
   "distribution": {
     "type": "command",
     "command": "sinoclaw",
-    "args": ["acp"]
+    "args": [
+      "acp"
+    ]
   }
 }

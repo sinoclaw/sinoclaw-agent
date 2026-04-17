@@ -157,4 +157,4 @@ GitHub: [github.com/NousResearch/sinoclaw-agent](https://github.com/NousResearch
 
 ---
 
-*Sinoclaw Agent is built by [Nous Research](https://nousresearch.com). Open source, model-agnostic, runs on your infrastructure.*
+*Sinoclaw Agent is built by [Sinoclaw](https://sinoclaw.ai). Open source, model-agnostic, runs on your infrastructure.*

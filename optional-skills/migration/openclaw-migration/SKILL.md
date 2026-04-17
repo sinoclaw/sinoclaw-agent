@@ -2,7 +2,7 @@
 name: openclaw-migration
 description: Migrate a user's OpenClaw customization footprint into Sinoclaw Agent. Imports Sinoclaw-compatible memories, SOUL.md, command allowlists, user skills, and selected workspace assets from ~/.openclaw, then reports exactly what could not be migrated and why.
 version: 1.0.0
-author: Sinoclaw Agent (Nous Research)
+author: Sinoclaw Agent (Sinoclaw Team)
 license: MIT
 metadata:
   sinoclaw:

@@ -17,8 +17,8 @@ param(
     [switch]$SkipSetup,
     [switch]$SkipConsole,
     [string]$Branch = "main",
-    [string]$SinoclawHome = "$env:LOCALAPPDATA\hermes",
-    [string]$InstallDir = "$env:LOCALAPPDATA\hermes\sinoclaw-agent"
+    [string]$SinoclawHome = "$env:LOCALAPPDATA\sinoclaw",
+    [string]$InstallDir = "$env:LOCALAPPDATA\sinoclaw\sinoclaw-agent"
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,7 +42,7 @@ function Write-Banner {
     Write-Host "┌─────────────────────────────────────────────────────────┐" -ForegroundColor Magenta
     Write-Host "│             ⚕ Sinoclaw Agent Installer                    │" -ForegroundColor Magenta
     Write-Host "├─────────────────────────────────────────────────────────┤" -ForegroundColor Magenta
-    Write-Host "│  An open source AI agent by Nous Research.              │" -ForegroundColor Magenta
+    Write-Host "│  An open source AI agent by Sinoclaw Team.              │" -ForegroundColor Magenta
     Write-Host "└─────────────────────────────────────────────────────────┘" -ForegroundColor Magenta
     Write-Host ""
 }
@@ -777,7 +777,7 @@ function Start-GatewayIfConfigured {
 
     $sinoclawCmd = "$InstallDir\venv\Scripts\sinoclaw.exe"
     if (-not (Test-Path $sinoclawCmd)) {
-        $sinoclawCmd = "hermes"
+        $sinoclawCmd = "sinoclaw"
     }
 
     # If WhatsApp is enabled but not yet paired, run foreground for QR scan

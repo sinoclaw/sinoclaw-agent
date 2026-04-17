@@ -113,7 +113,7 @@ print_banner() {
     echo "┌─────────────────────────────────────────────────────────┐"
     echo "│             ⚕ Sinoclaw Agent Installer                    │"
     echo "├─────────────────────────────────────────────────────────┤"
-    echo "│  An open source AI agent by Nous Research.              │"
+    echo "│  An open source AI agent by Sinoclaw Team.              │"
     echo "└─────────────────────────────────────────────────────────┘"
     echo -e "${NC}"
 }

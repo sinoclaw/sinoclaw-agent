@@ -147,7 +147,7 @@ Add a named toolset for your platform:
 ```python
 "sinoclaw-your-platform": {
     "description": "Your Platform bot toolset",
-    "tools": _HERMES_CORE_TOOLS,
+    "tools": _SINOCLAW_CORE_TOOLS,
     "includes": []
 },
 ```
