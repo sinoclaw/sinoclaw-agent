@@ -22,6 +22,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$script:NssmExe = $null
 
 # ============================================================================
 # Configuration
@@ -883,6 +884,38 @@ function Write-Completion {
 # Main
 # ============================================================================
 
+function Install-Nssm {
+    # nssm (Non-Sucking Service Manager) — used to run any program as a Windows service
+    $nssmUrl = "https://github.com/nssm/nssm/releases/download/2.24/nssm-2.24.zip"
+    $nssmZip = "$env:TEMP\nssm.zip"
+    $nssmDir = "$InstallDir\nssm"
+
+    if (Test-Path "$InstallDir\nssm\nssm.exe") {
+        $script:NssmExe = "$InstallDir\nssm\nssm.exe"
+        Write-Success "nssm found"
+        return $true
+    }
+
+    Write-Info "Installing nssm (Non-Sucking Service Manager)..."
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri $nssmUrl -OutFile $nssmZip -UseBasicParsing 2>$null
+        Expand-Archive -Path $nssmZip -DestinationPath $nssmDir -Force 2>$null
+        $winDir = if ([Environment]::Is64BitOperatingSystem) { "win64" } else { "win32" }
+        $found = Get-ChildItem -Path "$nssmDir\nssm-$winDir" -Filter "nssm.exe" -Recurse 2>$null | Select-Object -First 1
+        if ($found) {
+            Copy-Item -Path $found.FullName -Destination "$InstallDir\nssm\nssm.exe" -Force
+            Remove-Item $nssmZip -Force -EA SilentlyContinue
+            $script:NssmExe = "$InstallDir\nssm\nssm.exe"
+            Write-Success "nssm installed"
+            return $true
+        }
+    } catch {
+        Write-Warn "nssm install failed: $_"
+    }
+    return $false
+}
+
 function Install-Console {
     if ($SkipConsole) {
         Write-Info "Skipping Console (-SkipConsole)"
@@ -910,24 +943,127 @@ function Install-Console {
         npm run build 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
             Write-Warn "Console build failed — Console will not be available"
+            Pop-Location
             return
         }
         Write-Success "Console built"
     } catch {
         Write-Warn "Console build failed: $_"
+        Pop-Location
         return
     } finally {
         Pop-Location
     }
 
-    Write-Host ""
-    Write-Host "  Console build complete. To serve on Windows:" -ForegroundColor Cyan
-    Write-Host "  Run: npx serve $consoleDir\dist -l 5174" -ForegroundColor Yellow
-    Write-Host "  Or set up IIS with URL Rewrite to proxy /api/* to localhost:8642" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "  NOTE: Windows does not support systemd/nginx service." -ForegroundColor Yellow
-    Write-Host "  For automated deployment, use Linux instead." -ForegroundColor Yellow
-    Write-Host ""
+    # Install nginx for Windows
+    $nginxUrl = "https://nginx.org/download/nginx-1.26.0.zip"
+    $nginxZip = "$env:TEMP\nginx.zip"
+    $nginxDir = "$InstallDir\nginx"
+
+    if (Test-Path "$nginxDir\nginx.exe") {
+        Write-Success "nginx already installed"
+    } else {
+        Write-Info "Downloading nginx for Windows..."
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest -Uri $nginxUrl -OutFile $nginxZip -UseBasicParsing 2>$null
+            Expand-Archive -Path $nginxZip -DestinationPath $nginxDir -Force 2>$null
+            # Rename folder if extracted with version suffix
+            $extracted = Get-ChildItem -Path $nginxDir -Directory | Where-Object { $_.Name -like "nginx-*" } | Select-Object -First 1
+            if ($extracted) {
+                Get-ChildItem -Path $extracted.FullName | Move-Item -Destination "$nginxDir\" -Force
+                Remove-Item $extracted.FullName -Force -Recurse -EA SilentlyContinue
+            }
+            Write-Success "nginx installed"
+            Remove-Item $nginxZip -Force -EA SilentlyContinue
+        } catch {
+            Write-Warn "nginx download failed: $_"
+            Write-Info "Trying to use IIS instead..."
+        }
+    }
+
+    # Generate API key if missing
+    $apiKeyFile = "$SinoclawHome\.env"
+    $apiKey = $null
+    if (Test-Path $apiKeyFile) {
+        $apiKey = (Get-Content $apiKeyFile -Raw -EA SilentlyContinue) -split "`n" | Where-Object { $_ -match "^API_SERVER_KEY=" } | ForEach-Object { $_ -replace "^API_SERVER_KEY=", "" } | Select-Object -First 1
+    }
+    if (-not $apiKey) {
+        Add-Content -Path $apiKeyFile -Value "API_SERVER_KEY=$([Convert]::ToBase64String([byte[]]::new(24) | ForEach-Object { Get-Random -Maximum 256 }))" -EA SilentlyContinue
+        $apiKey = (Get-Content $apiKeyFile -Raw) -split "`n" | Where-Object { $_ -match "^API_SERVER_KEY=" } | ForEach-Object { $_ -replace "^API_SERVER_KEY=", "" } | Select-Object -First 1
+        Write-Info "API_SERVER_KEY generated"
+    }
+
+    # Configure nginx
+    $nginxConf = "$nginxDir\conf\nginx.conf"
+    $backupConf = "$nginxDir\conf\nginx.conf.backup"
+    if (-not (Test-Path $backupConf)) {
+        Copy-Item -Path $nginxConf -Destination $backupConf -Force
+    }
+
+    $consolePort = 5174
+    $apiKeyHeader = if ($apiKey) { "proxy_set_header Authorization `"Bearer $apiKey`";" } else { "" }
+
+@"
+worker_processes  1;
+events { worker_connections 1024; }
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen       $consolePort;
+        server_name  localhost;
+        root `"$consoleDir\dist`";
+        index index.html;
+
+        location / {
+            try_files `$uri `$uri/ /index.html;
+        }
+
+        location ~ ^(/chats|/skills|/models|/config|/tools|/envs|/agent|/workspace|/mcp|/cronjobs|/files|/token-usage|/local-models|/console|/v1) {
+            proxy_pass   http://127.0.0.1:8642;
+            proxy_http_version 1.1;
+            proxy_set_header Host `$host;
+            proxy_set_header X-Real-IP `$remote_addr;
+            proxy_set_header X-Forwarded-For `$proxy_add_x_forwarded_for;
+            $apiKeyHeader
+            proxy_buffering off;
+            proxy_read_timeout 300s;
+        }
+    }
+}
+"@ | Set-Content -Path $nginxConf -Encoding ASCII
+
+    # Install nssm and register nginx as service
+    if (Install-Nssm) {
+        Write-Info "Registering nginx as Windows service (SinoclawConsole)..."
+        try {
+            $existing = Get-Service -Name "SinoclawConsole" -EA SilentlyContinue
+            if ($existing) {
+                Stop-Service -Name "SinoclawConsole" -Force -EA SilentlyContinue
+                & $NssmExe remove SinoclawConsole confirm 2>$null
+            }
+            & $NssmExe install SinoclawConsole "$nginxDir\nginx.exe" "-c" "$nginxConf" 2>$null
+            Start-Service -Name "SinoclawConsole" -EA SilentlyContinue
+            Write-Success "nginx service registered and started"
+            Write-Host ""
+            Write-Host "  Console URL: http://localhost:$consolePort" -ForegroundColor Green
+            Write-Host "  (On Windows Firewall prompt, allow nginx to access networks)" -ForegroundColor Cyan
+        } catch {
+            Write-Warn "Could not register nginx as service: $_"
+            Write-Host ""
+            Write-Host "  To run Console manually:" -ForegroundColor Yellow
+            Write-Host "  cd $consoleDir" -ForegroundColor Yellow
+            Write-Host "  npx serve dist -l $consolePort" -ForegroundColor Yellow
+            Write-Host ""
+        }
+    } else {
+        Write-Host ""
+        Write-Host "  To run Console manually after install:" -ForegroundColor Yellow
+        Write-Host "  npx serve $consoleDir\dist -l $consolePort" -ForegroundColor Yellow
+    }
 }
 
 function Main {
