@@ -3031,7 +3031,7 @@ class SinoclawCLI:
         if is_nous_sinoclaw_non_agentic(model_name):
             self.console.print()
             self.console.print(
-                "[bold yellow]⚠  Nous Research Sinoclaw 3 & 4 models are NOT agentic and are not "
+                "[bold yellow]⚠  Sinoclaw 3 & 4 models are NOT agentic and are not "
                 "designed for use with Sinoclaw Agent.[/]"
             )
             self.console.print(

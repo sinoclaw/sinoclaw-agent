@@ -1,6 +1,6 @@
 # Optional Skills
 
-Official skills maintained by Nous Research that are **not activated by default**.
+Skills maintained by Sinoclaw Team that are **not activated by default**.
 
 These skills ship with the sinoclaw-agent repository but are not copied to
 `~/.sinoclaw/skills/` during setup. They are discoverable via the Skills Hub:
