@@ -3272,11 +3272,14 @@ def _build_web_ui(web_dir: Path, *, fatal: bool = False) -> bool:
     return True
 
 
-def _update_via_zip(args):
+def _update_via_zip(args, origin_url: str):
     """Update Sinoclaw Agent by downloading a ZIP archive.
     
     Used on Windows when git file I/O is broken (antivirus, NTFS filter 
     drivers causing 'Invalid argument' errors on file creation).
+    
+    origin_url is used to derive the ZIP URL so we download from the user's
+    own fork (origin), not from the upstream repository.
     """
     import shutil
     import tempfile
@@ -3284,7 +3287,18 @@ def _update_via_zip(args):
     from urllib.request import urlretrieve
     
     branch = "main"
-    zip_url = f"https://github.com/nousresearch/hermes-agent/archive/refs/heads/{branch}.zip"
+    # Derive ZIP URL from origin URL (works for both GitHub and Gitee)
+    # https://github.com/user/repo.git -> https://github.com/user/repo/archive/refs/heads/main.zip
+    # https://gitee.com/user/repo.git -> https://gitee.com/user/repo/repository/archive.zip?ref=main
+    origin_norm = origin_url.rstrip("/")
+    if origin_norm.endswith(".git"):
+        origin_norm = origin_norm[:-4]
+    if "gitee.com" in origin_norm:
+        # Gitee format
+        zip_url = f"{origin_norm}/repository/archive.zip?ref={branch}"
+    else:
+        # GitHub format
+        zip_url = f"{origin_norm}/archive/refs/heads/{branch}.zip"
     
     print("→ Downloading latest version...")
     try:
@@ -3942,7 +3956,7 @@ def cmd_update(args):
 
     if use_zip_update:
         # ZIP-based update for Windows when git is broken
-        _update_via_zip(args)
+        _update_via_zip(args, origin_url)
         return
 
     # Fetch and pull
@@ -4413,7 +4427,7 @@ def cmd_update(args):
             print(f"⚠ Git update failed: {e}")
             print("→ Falling back to ZIP download...")
             print()
-            _update_via_zip(args)
+            _update_via_zip(args, origin_url)
         else:
             print(f"✗ Update failed: {e}")
             sys.exit(1)
