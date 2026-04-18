@@ -457,7 +457,7 @@ def _resolve_fal_model() -> tuple:
     """
     model_id = ""
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         cfg = load_config()
         img_cfg = cfg.get("image_gen") if isinstance(cfg, dict) else None
         if isinstance(img_cfg, dict):

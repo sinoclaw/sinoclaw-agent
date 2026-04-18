@@ -87,3 +87,18 @@ def resolve_openai_audio_api_key() -> str:
         os.getenv("VOICE_TOOLS_OPENAI_KEY", "")
         or os.getenv("OPENAI_API_KEY", "")
     ).strip()
+
+
+def prefers_gateway(config_section: str) -> bool:
+    """Return True when the user opted into the Tool Gateway for this tool.
+
+    Reads ``<section>.use_gateway`` from config.yaml.  Never raises.
+    """
+    try:
+        from sinoclaw_cli.config import load_config
+        section = (load_config() or {}).get(config_section)
+        if isinstance(section, dict):
+            return bool(section.get("use_gateway"))
+    except Exception:
+        pass
+    return False
