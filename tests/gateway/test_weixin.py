@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 from gateway.config import PlatformConfig
@@ -23,17 +24,14 @@ def _make_adapter() -> WeixinAdapter:
 
 
 class TestWeixinFormatting:
-    def test_format_message_preserves_markdown_and_rewrites_headers(self):
+    def test_format_message_preserves_markdown(self):
         adapter = _make_adapter()
 
         content = "# Title\n\n## Plan\n\nUse **bold** and [docs](https://example.com)."
 
-        assert (
-            adapter.format_message(content)
-            == "【Title】\n\n**Plan**\n\nUse **bold** and docs (https://example.com)."
-        )
+        assert adapter.format_message(content) == content
 
-    def test_format_message_rewrites_markdown_tables(self):
+    def test_format_message_preserves_markdown_tables(self):
         adapter = _make_adapter()
 
         content = (
@@ -43,19 +41,14 @@ class TestWeixinFormatting:
             "| Retries | 3 |\n"
         )
 
-        assert adapter.format_message(content) == (
-            "- Setting: Timeout\n"
-            "  Value: 30s\n"
-            "- Setting: Retries\n"
-            "  Value: 3"
-        )
+        assert adapter.format_message(content) == content.strip()
 
     def test_format_message_preserves_fenced_code_blocks(self):
         adapter = _make_adapter()
 
         content = "## Snippet\n\n```python\nprint('hi')\n```"
 
-        assert adapter.format_message(content) == "**Snippet**\n\n```python\nprint('hi')\n```"
+        assert adapter.format_message(content) == content
 
     def test_format_message_returns_empty_string_for_none(self):
         adapter = _make_adapter()
@@ -101,7 +94,7 @@ class TestWeixinChunking:
         content = adapter.format_message("## 结论\n这是正文")
         chunks = adapter._split_text(content)
 
-        assert chunks == ["**结论**\n这是正文"]
+        assert chunks == ["## 结论\n这是正文"]
 
     def test_split_text_keeps_short_reformatted_table_in_single_chunk(self):
         adapter = _make_adapter()
@@ -377,16 +370,13 @@ class TestWeixinRemoteMediaSafety:
 
 
 class TestWeixinMarkdownLinks:
-    """Markdown links should be converted to plaintext since WeChat can't render them."""
+    """Markdown links should be preserved so WeChat can render them natively."""
 
-    def test_format_message_converts_markdown_links_to_plain_text(self):
+    def test_format_message_preserves_markdown_links(self):
         adapter = _make_adapter()
 
         content = "Check [the docs](https://example.com) and [GitHub](https://github.com) for details"
-        assert (
-            adapter.format_message(content)
-            == "Check the docs (https://example.com) and GitHub (https://github.com) for details"
-        )
+        assert adapter.format_message(content) == content
 
     def test_format_message_preserves_links_inside_code_blocks(self):
         adapter = _make_adapter()
@@ -500,10 +490,10 @@ class TestWeixinMediaBuilder:
         )
         assert item["video_item"]["video_md5"] == "deadbeef"
 
-    def test_voice_builder_for_audio_files(self):
+    def test_voice_builder_for_audio_files_uses_file_attachment_type(self):
         adapter = _make_adapter()
         media_type, builder = adapter._outbound_media_builder("note.mp3")
-        assert media_type == weixin.MEDIA_VOICE
+        assert media_type == weixin.MEDIA_FILE
 
         item = builder(
             encrypt_query_param="eq",
@@ -513,10 +503,142 @@ class TestWeixinMediaBuilder:
             filename="note.mp3",
             rawfilemd5="abc",
         )
-        assert item["type"] == weixin.ITEM_VOICE
-        assert "voice_item" in item
+        assert item["type"] == weixin.ITEM_FILE
+        assert item["file_item"]["file_name"] == "note.mp3"
 
     def test_voice_builder_for_silk_files(self):
         adapter = _make_adapter()
         media_type, builder = adapter._outbound_media_builder("recording.silk")
         assert media_type == weixin.MEDIA_VOICE
+
+
+class TestWeixinSendImageFileParameterName:
+    """Regression test for send_image_file parameter name mismatch.
+
+    The gateway calls send_image_file(chat_id=..., image_path=...) but the
+    WeixinAdapter previously used 'path' as the parameter name, causing
+    image sending to fail. This test ensures the interface stays correct.
+    """
+
+    @patch.object(WeixinAdapter, "send_document", new_callable=AsyncMock)
+    def test_send_image_file_uses_image_path_parameter(self, send_document_mock):
+        """Verify send_image_file accepts image_path and forwards to send_document."""
+        adapter = _make_adapter()
+        adapter._session = object()
+        adapter._token = "test-token"
+
+        send_document_mock.return_value = weixin.SendResult(success=True, message_id="test-id")
+
+        # This is the call pattern used by gateway/run.py extract_media
+        result = asyncio.run(
+            adapter.send_image_file(
+                chat_id="wxid_test123",
+                image_path="/tmp/test_image.png",
+                caption="Test caption",
+                metadata={"thread_id": "thread-123"},
+            )
+        )
+
+        assert result.success is True
+        send_document_mock.assert_awaited_once_with(
+            "wxid_test123",
+            file_path="/tmp/test_image.png",
+            caption="Test caption",
+            metadata={"thread_id": "thread-123"},
+        )
+
+    @patch.object(WeixinAdapter, "send_document", new_callable=AsyncMock)
+    def test_send_image_file_works_without_optional_params(self, send_document_mock):
+        """Verify send_image_file works with minimal required params."""
+        adapter = _make_adapter()
+        adapter._session = object()
+        adapter._token = "test-token"
+
+        send_document_mock.return_value = weixin.SendResult(success=True, message_id="test-id")
+
+        result = asyncio.run(
+            adapter.send_image_file(
+                chat_id="wxid_test123",
+                image_path="/tmp/test_image.jpg",
+            )
+        )
+
+        assert result.success is True
+        send_document_mock.assert_awaited_once_with(
+            "wxid_test123",
+            file_path="/tmp/test_image.jpg",
+            caption="",
+            metadata=None,
+        )
+
+
+class TestWeixinVoiceSending:
+    def _connected_adapter(self) -> WeixinAdapter:
+        adapter = _make_adapter()
+        adapter._session = object()
+        adapter._token = "test-token"
+        adapter._base_url = "https://weixin.example.com"
+        adapter._token_store.get = lambda account_id, chat_id: "ctx-token"
+        return adapter
+
+    @patch.object(WeixinAdapter, "_send_file", new_callable=AsyncMock)
+    def test_send_voice_downgrades_to_document_attachment(self, send_file_mock, tmp_path):
+        adapter = self._connected_adapter()
+        source = tmp_path / "voice.ogg"
+        source.write_bytes(b"ogg")
+        send_file_mock.return_value = "msg-1"
+
+        result = asyncio.run(adapter.send_voice("wxid_test123", str(source)))
+
+        assert result.success is True
+        send_file_mock.assert_awaited_once_with(
+            "wxid_test123",
+            str(source),
+            "[voice message as attachment]",
+            force_file_attachment=True,
+        )
+
+    def test_voice_builder_for_silk_files_can_be_forced_to_file_attachment(self):
+        adapter = _make_adapter()
+        media_type, builder = adapter._outbound_media_builder(
+            "recording.silk",
+            force_file_attachment=True,
+        )
+        assert media_type == weixin.MEDIA_FILE
+
+        item = builder(
+            encrypt_query_param="eq",
+            aes_key_for_api="fakekey",
+            ciphertext_size=512,
+            plaintext_size=500,
+            filename="recording.silk",
+            rawfilemd5="abc",
+        )
+        assert item["type"] == weixin.ITEM_FILE
+        assert item["file_item"]["file_name"] == "recording.silk"
+
+    @patch.object(weixin, "_api_post", new_callable=AsyncMock)
+    @patch.object(weixin, "_upload_ciphertext", new_callable=AsyncMock)
+    @patch.object(weixin, "_get_upload_url", new_callable=AsyncMock)
+    def test_send_file_sets_voice_metadata_for_silk_payload(
+        self,
+        get_upload_url_mock,
+        upload_ciphertext_mock,
+        api_post_mock,
+        tmp_path,
+    ):
+        adapter = self._connected_adapter()
+        silk = tmp_path / "voice.silk"
+        silk.write_bytes(b"\x02#!SILK_V3\x01\x00")
+        get_upload_url_mock.return_value = {"upload_full_url": "https://cdn.example.com/upload"}
+        upload_ciphertext_mock.return_value = "enc-q"
+        api_post_mock.return_value = {"success": True}
+
+        asyncio.run(adapter._send_file("wxid_test123", str(silk), ""))
+
+        payload = api_post_mock.await_args.kwargs["payload"]
+        voice_item = payload["msg"]["item_list"][0]["voice_item"]
+        assert voice_item.get("playtime", 0) == 0
+        assert voice_item["encode_type"] == 6
+        assert voice_item["sample_rate"] == 24000
+        assert voice_item["bits_per_sample"] == 16
