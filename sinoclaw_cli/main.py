@@ -3284,7 +3284,7 @@ def _update_via_zip(args):
     from urllib.request import urlretrieve
     
     branch = "main"
-    zip_url = f"https://github.com/NousResearch/sinoclaw-agent/archive/refs/heads/{branch}.zip"
+    zip_url = f"https://github.com/nousresearch/hermes-agent/archive/refs/heads/{branch}.zip"
     
     print("→ Downloading latest version...")
     try:
@@ -3565,12 +3565,12 @@ def _restore_stashed_changes(
 # =========================================================================
 
 OFFICIAL_REPO_URLS = {
-    "https://github.com/NousResearch/sinoclaw-agent.git",
-    "git@github.com:NousResearch/sinoclaw-agent.git",
-    "https://github.com/NousResearch/sinoclaw-agent",
-    "git@github.com:NousResearch/sinoclaw-agent",
+    "https://github.com/nousresearch/hermes-agent.git",
+    "git@github.com:nousresearch/hermes-agent.git",
+    "https://github.com/nousresearch/hermes-agent",
+    "git@github.com:nousresearch/hermes-agent",
 }
-OFFICIAL_REPO_URL = "https://github.com/NousResearch/sinoclaw-agent.git"
+OFFICIAL_REPO_URL = "https://github.com/nousresearch/hermes-agent.git"
 SKIP_UPSTREAM_PROMPT_FILE = ".skip_upstream_prompt"
 
 
@@ -3702,7 +3702,7 @@ def _sync_with_upstream_if_needed(git_cmd: list[str], cwd: Path) -> None:
         # Ask user if they want to add upstream
         print()
         print("ℹ Your fork is not tracking the official Sinoclaw repository.")
-        print("  This means you may miss updates from NousResearch/sinoclaw-agent.")
+        print("  This means you may miss updates from nousresearch/hermes-agent.")
         print()
         try:
             response = input("Add official repo as 'upstream' remote? [Y/n]: ").strip().lower()
@@ -3713,13 +3713,13 @@ def _sync_with_upstream_if_needed(git_cmd: list[str], cwd: Path) -> None:
         if response in ("", "y", "yes"):
             print("→ Adding upstream remote...")
             if _add_upstream_remote(git_cmd, cwd):
-                print("  ✓ Added upstream: https://github.com/NousResearch/sinoclaw-agent.git")
+                print("  ✓ Added upstream: https://github.com/nousresearch/hermes-agent.git")
                 has_upstream = True
             else:
                 print("  ✗ Failed to add upstream remote. Skipping upstream sync.")
                 return
         else:
-            print("  Skipped. Run 'git remote add upstream https://github.com/NousResearch/sinoclaw-agent.git' to add later.")
+            print("  Skipped. Run 'git remote add upstream https://github.com/nousresearch/hermes-agent.git' to add later.")
             _mark_skip_upstream_prompt()
             return
 
@@ -3915,7 +3915,7 @@ def cmd_update(args):
             use_zip_update = True
         else:
             print("✗ Not a git repository. Please reinstall:")
-            print("  curl -fsSL https://raw.githubusercontent.com/NousResearch/sinoclaw-agent/main/scripts/install.sh | bash")
+            print("  curl -fsSL https://raw.githubusercontent.com/nousresearch/hermes-agent/main/scripts/install.sh | bash")
             sys.exit(1)
     
     # On Windows, git can fail with "unable to write loose object file: Invalid argument"
