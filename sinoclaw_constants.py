@@ -11,11 +11,10 @@ from pathlib import Path
 def get_sinoclaw_home() -> Path:
     """Return the Sinoclaw home directory (default: ~/.sinoclaw).
 
-    Reads SINOCLAW_HOME env var, falls back to HERMES_HOME (backward compat),
-    then to ~/.sinoclaw. This is the single source of truth — all other
-    copies should import this.
+    Reads SINOCLAW_HOME env var, falls back to ~/.sinoclaw.
+    This is the single source of truth — all other copies should import this.
     """
-    return Path(os.getenv("SINOCLAW_HOME") or os.getenv("HERMES_HOME") or str(Path.home() / ".sinoclaw"))
+    return Path(os.getenv("SINOCLAW_HOME") or str(Path.home() / ".sinoclaw"))
 
 
 
@@ -36,7 +35,7 @@ def get_default_sinoclaw_root() -> Path:
     Import-safe — no dependencies beyond stdlib.
     """
     native_home = Path.home() / ".sinoclaw"
-    env_home = os.environ.get("SINOCLAW_HOME") or os.environ.get("HERMES_HOME") or ""
+    env_home = os.environ.get("SINOCLAW_HOME") or ""
     if not env_home:
         return native_home
     env_path = Path(env_home)
