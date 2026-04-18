@@ -32,7 +32,7 @@ REPO_URL_GITEE_SSH="git@gitee.com:sinoclaw/sinoclaw-agent.git"
 REPO_URL_GITEE_HTTPS="https://gitee.com/sinoclaw/sinoclaw-agent.git"
 USE_GITEE=true
 SINOCLAW_HOME="${SINOCLAW_HOME:-$HOME/.sinoclaw}"
-INSTALL_DIR="${HERMES_INSTALL_DIR:-$SINOCLAW_HOME/sinoclaw-agent}"
+INSTALL_DIR="${SINOCLAW_INSTALL_DIR:-$SINOCLAW_HOME/sinoclaw-agent}"
 PYTHON_VERSION="3.11"
 NODE_VERSION="22"
 
@@ -930,18 +930,18 @@ setup_path() {
     log_info "Setting up sinoclaw command..."
 
     if [ "$USE_VENV" = true ]; then
-        HERMES_BIN="$INSTALL_DIR/venv/bin/sinoclaw"
+        SINOCLAW_BIN="$INSTALL_DIR/venv/bin/sinoclaw"
     else
-        HERMES_BIN="$(which sinoclaw 2>/dev/null || echo "")"
-        if [ -z "$HERMES_BIN" ]; then
+        SINOCLAW_BIN="$(which sinoclaw 2>/dev/null || echo "")"
+        if [ -z "$SINOCLAW_BIN" ]; then
             log_warn "sinoclaw not found on PATH after install"
             return 0
         fi
     fi
 
     # Verify the entry point script was actually generated
-    if [ ! -x "$HERMES_BIN" ]; then
-        log_warn "sinoclaw entry point not found at $HERMES_BIN"
+    if [ ! -x "$SINOCLAW_BIN" ]; then
+        log_warn "sinoclaw entry point not found at $SINOCLAW_BIN"
         log_info "This usually means the pip install didn't complete successfully."
         if [ "$DISTRO" = "termux" ]; then
             log_info "Try: cd $INSTALL_DIR && python -m pip install -e '.[termux]' -c constraints-termux.txt"
@@ -958,7 +958,7 @@ setup_path() {
 
     # Create a user-facing shim for the sinoclaw command.
     mkdir -p "$command_link_dir"
-    ln -sf "$HERMES_BIN" "$command_link_dir/sinoclaw"
+    ln -sf "$SINOCLAW_BIN" "$command_link_dir/sinoclaw"
     log_success "Symlinked sinoclaw → $command_link_display_dir/sinoclaw"
 
     if [ "$DISTRO" = "termux" ]; then
@@ -1262,8 +1262,8 @@ maybe_start_gateway() {
             read -p "Pair WhatsApp now? [Y/n] " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-                HERMES_CMD="$(get_sinoclaw_command_path)"
-                $HERMES_CMD whatsapp || true
+                SINOCLAW_CMD="$(get_sinoclaw_command_path)"
+                $SINOCLAW_CMD whatsapp || true
             fi
         else
             log_info "WhatsApp pairing skipped (non-interactive). Run 'sinoclaw whatsapp' to pair."
@@ -1284,13 +1284,13 @@ maybe_start_gateway() {
     echo
 
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-        HERMES_CMD="$(get_sinoclaw_command_path)"
+        SINOCLAW_CMD="$(get_sinoclaw_command_path)"
 
         if [ "$DISTRO" != "termux" ] && command -v systemctl &> /dev/null; then
             log_info "Installing systemd service..."
-            if $HERMES_CMD gateway install 2>/dev/null; then
+            if $SINOCLAW_CMD gateway install 2>/dev/null; then
                 log_success "Gateway service installed"
-                if $HERMES_CMD gateway start 2>/dev/null; then
+                if $SINOCLAW_CMD gateway start 2>/dev/null; then
                     log_success "Gateway started! Your bot is now online."
                 else
                     log_warn "Service installed but failed to start. Try: sinoclaw gateway start"
@@ -1304,7 +1304,7 @@ maybe_start_gateway() {
             else
                 log_info "systemd not available — starting gateway in background..."
             fi
-            nohup $HERMES_CMD gateway > "$SINOCLAW_HOME/logs/gateway.log" 2>&1 &
+            nohup $SINOCLAW_CMD gateway > "$SINOCLAW_HOME/logs/gateway.log" 2>&1 &
             GATEWAY_PID=$!
             log_success "Gateway started (PID $GATEWAY_PID). Logs: ~/.sinoclaw/logs/gateway.log"
             log_info "To stop: kill $GATEWAY_PID"
