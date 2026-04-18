@@ -18,6 +18,10 @@ def get_sinoclaw_home() -> Path:
     return Path(os.getenv("SINOCLAW_HOME") or os.getenv("HERMES_HOME") or str(Path.home() / ".sinoclaw"))
 
 
+# Backward-compatibility alias (upstream used get_hermes_home)
+get_hermes_home = get_sinoclaw_home
+
+
 def get_default_sinoclaw_root() -> Path:
     """Return the root Sinoclaw directory for profile-level operations.
 
