@@ -2212,7 +2212,7 @@ def _setup_sms():
 
 def _setup_dingtalk():
     """Configure DingTalk — QR scan (recommended) or manual credential entry."""
-    from hermes_cli.setup import (
+    from sinoclaw_cli.setup import (
         prompt_choice, prompt_yes_no, print_info, print_success, print_warning,
     )
 
@@ -2243,7 +2243,7 @@ def _setup_dingtalk():
     if method == 0:
         # ── QR-code device-flow authorization ──
         try:
-            from hermes_cli.dingtalk_auth import dingtalk_qr_auth
+            from sinoclaw_cli.dingtalk_auth import dingtalk_qr_auth
         except ImportError as exc:
             print_warning(f"  QR auth module failed to load ({exc}), falling back to manual input.")
             _setup_standard_platform(dingtalk_platform)

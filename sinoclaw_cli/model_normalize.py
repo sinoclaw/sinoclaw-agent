@@ -382,7 +382,7 @@ def normalize_model_for_provider(model_input: str, target_provider: str) -> str:
     #     HTTP 400 "model_not_supported".  See issue #6879.
     if provider in {"copilot", "copilot-acp"}:
         try:
-            from hermes_cli.models import normalize_copilot_model_id
+            from sinoclaw_cli.models import normalize_copilot_model_id
 
             normalized = normalize_copilot_model_id(name)
             if normalized:

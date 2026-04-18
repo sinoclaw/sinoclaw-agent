@@ -1214,7 +1214,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         # gate the removal is instantly undone on the next load_pool() call.
         codex_suppressed = False
         try:
-            from hermes_cli.auth import is_source_suppressed
+            from sinoclaw_cli.auth import is_source_suppressed
             codex_suppressed = is_source_suppressed(provider, "device_code")
         except ImportError:
             pass
