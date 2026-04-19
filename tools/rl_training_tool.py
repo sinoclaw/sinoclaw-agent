@@ -883,7 +883,7 @@ async def rl_check_status(run_id: str) -> str:
         import wandb
         api = wandb.Api()
         runs = api.runs(
-            f"{os.getenv('WANDB_ENTITY', 'nousresearch')}/{run_state.wandb_project}",
+            f"{os.getenv('WANDB_ENTITY', 'sinoclaw')}/{run_state.wandb_project}",
             filters={"display_name": run_state.wandb_run_name}
         )
         if runs:
@@ -963,7 +963,7 @@ async def rl_get_results(run_id: str) -> str:
         import wandb
         api = wandb.Api()
         runs = api.runs(
-            f"{os.getenv('WANDB_ENTITY', 'nousresearch')}/{run_state.wandb_project}",
+            f"{os.getenv('WANDB_ENTITY', 'sinoclaw')}/{run_state.wandb_project}",
             filters={"display_name": run_state.wandb_run_name}
         )
         if runs:
