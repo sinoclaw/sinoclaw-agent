@@ -317,7 +317,7 @@ def show_status(args):
         "WeCom Callback": ("WECOM_CALLBACK_CORP_ID", None),
         "Weixin": ("WEIXIN_ACCOUNT_ID", "WEIXIN_HOME_CHANNEL"),
         "BlueBubbles": ("BLUEBUBBLES_SERVER_URL", "BLUEBUBBLES_HOME_CHANNEL"),
-        "QQBot": ("QQ_APP_ID", "QQ_HOME_CHANNEL"),
+        "QQBot": ("QQ_APP_ID", "QQBOT_HOME_CHANNEL"),
     }
     
     for name, (token_var, home_var) in platforms.items():
@@ -327,6 +327,9 @@ def show_status(args):
         home_channel = ""
         if home_var:
             home_channel = os.getenv(home_var, "")
+        # Back-compat: QQBot home channel was renamed from QQ_HOME_CHANNEL to QQBOT_HOME_CHANNEL
+        if not home_channel and home_var == "QQBOT_HOME_CHANNEL":
+            home_channel = os.getenv("QQ_HOME_CHANNEL", "")
         
         status = "configured" if has_token else "not configured"
         if home_channel:
@@ -339,6 +342,7 @@ def show_status(args):
     # =========================================================================
     print()
     print(color("◆ Gateway Service", Colors.CYAN, Colors.BOLD))
+<<<<<<< HEAD:sinoclaw_cli/status.py
     
     if _is_termux():
         try:
@@ -406,6 +410,38 @@ def show_status(args):
     else:
         print(f"  Status:       {color('N/A', Colors.DIM)}")
         print("  Manager:      (not supported on this platform)")
+=======
+
+    try:
+        from hermes_cli.gateway import get_gateway_runtime_snapshot, _format_gateway_pids
+
+        snapshot = get_gateway_runtime_snapshot()
+        is_running = snapshot.running
+        print(f"  Status:       {check_mark(is_running)} {'running' if is_running else 'stopped'}")
+        print(f"  Manager:      {snapshot.manager}")
+        if snapshot.gateway_pids:
+            print(f"  PID(s):       {_format_gateway_pids(snapshot.gateway_pids)}")
+        if snapshot.has_process_service_mismatch:
+            print("  Service:      installed but not managing the current running gateway")
+        elif _is_termux() and not snapshot.gateway_pids:
+            print("  Start with:   hermes gateway")
+            print("  Note:         Android may stop background jobs when Termux is suspended")
+        elif snapshot.service_installed and not snapshot.service_running:
+            print("  Service:      installed but stopped")
+    except Exception:
+        if _is_termux():
+            print(f"  Status:       {color('unknown', Colors.DIM)}")
+            print("  Manager:      Termux / manual process")
+        elif sys.platform.startswith('linux'):
+            print(f"  Status:       {color('unknown', Colors.DIM)}")
+            print("  Manager:      systemd/manual")
+        elif sys.platform == 'darwin':
+            print(f"  Status:       {color('unknown', Colors.DIM)}")
+            print("  Manager:      launchd")
+        else:
+            print(f"  Status:       {color('N/A', Colors.DIM)}")
+            print("  Manager:      (not supported on this platform)")
+>>>>>>> upstream/main:hermes_cli/status.py
     
     # =========================================================================
     # Cron Jobs

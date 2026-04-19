@@ -401,6 +401,8 @@ async def test_auto_create_thread_uses_message_content_as_name(adapter):
     message = SimpleNamespace(
         content="Hello world, how are you?",
         create_thread=AsyncMock(return_value=thread),
+        channel=SimpleNamespace(send=AsyncMock()),
+        author=SimpleNamespace(display_name="Jezza"),
     )
 
     result = await adapter._auto_create_thread(message)
@@ -413,12 +415,56 @@ async def test_auto_create_thread_uses_message_content_as_name(adapter):
 
 
 @pytest.mark.asyncio
+async def test_auto_create_thread_strips_mention_syntax_from_name(adapter):
+    """Thread names must not contain raw <@id>, <@&id>, or <#id> markers.
+
+    Regression guard for #6336 — previously a message like
+    ``<@&1490963422786093149> help`` would spawn a thread literally
+    named ``<@&1490963422786093149> help``.
+    """
+    thread = SimpleNamespace(id=999, name="help")
+    message = SimpleNamespace(
+        content="<@&1490963422786093149> <@555> please help <#123>",
+        create_thread=AsyncMock(return_value=thread),
+        channel=SimpleNamespace(send=AsyncMock()),
+        author=SimpleNamespace(display_name="Jezza"),
+    )
+
+    await adapter._auto_create_thread(message)
+
+    name = message.create_thread.await_args[1]["name"]
+    assert "<@" not in name, f"role/user mention leaked: {name!r}"
+    assert "<#" not in name, f"channel mention leaked: {name!r}"
+    assert name == "please help"
+
+
+@pytest.mark.asyncio
+async def test_auto_create_thread_falls_back_to_hermes_when_only_mentions(adapter):
+    """If a message contains only mention syntax, the stripped content is
+    empty — fall back to the 'Hermes' default rather than ''."""
+    thread = SimpleNamespace(id=999, name="Hermes")
+    message = SimpleNamespace(
+        content="<@&1490963422786093149>",
+        create_thread=AsyncMock(return_value=thread),
+        channel=SimpleNamespace(send=AsyncMock()),
+        author=SimpleNamespace(display_name="Jezza"),
+    )
+
+    await adapter._auto_create_thread(message)
+
+    name = message.create_thread.await_args[1]["name"]
+    assert name == "Hermes"
+
+
+@pytest.mark.asyncio
 async def test_auto_create_thread_truncates_long_names(adapter):
     long_text = "a" * 200
     thread = SimpleNamespace(id=999, name="truncated")
     message = SimpleNamespace(
         content=long_text,
         create_thread=AsyncMock(return_value=thread),
+        channel=SimpleNamespace(send=AsyncMock()),
+        author=SimpleNamespace(display_name="Jezza"),
     )
 
     result = await adapter._auto_create_thread(message)
@@ -430,10 +476,33 @@ async def test_auto_create_thread_truncates_long_names(adapter):
 
 
 @pytest.mark.asyncio
-async def test_auto_create_thread_returns_none_on_failure(adapter):
+async def test_auto_create_thread_falls_back_to_seed_message(adapter):
+    thread = SimpleNamespace(id=555, name="Hello")
+    seed_message = SimpleNamespace(create_thread=AsyncMock(return_value=thread))
     message = SimpleNamespace(
         content="Hello",
         create_thread=AsyncMock(side_effect=RuntimeError("no perms")),
+        channel=SimpleNamespace(send=AsyncMock(return_value=seed_message)),
+        author=SimpleNamespace(display_name="Jezza"),
+    )
+
+    result = await adapter._auto_create_thread(message)
+    assert result is thread
+    message.channel.send.assert_awaited_once_with("🧵 Thread created by Hermes: **Hello**")
+    seed_message.create_thread.assert_awaited_once_with(
+        name="Hello",
+        auto_archive_duration=1440,
+        reason="Auto-threaded from mention by Jezza",
+    )
+
+
+@pytest.mark.asyncio
+async def test_auto_create_thread_returns_none_when_direct_and_fallback_fail(adapter):
+    message = SimpleNamespace(
+        content="Hello",
+        create_thread=AsyncMock(side_effect=RuntimeError("no perms")),
+        channel=SimpleNamespace(send=AsyncMock(side_effect=RuntimeError("send failed"))),
+        author=SimpleNamespace(display_name="Jezza"),
     )
 
     result = await adapter._auto_create_thread(message)

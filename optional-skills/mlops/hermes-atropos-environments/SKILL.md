@@ -7,7 +7,7 @@ license: MIT
 metadata:
   sinoclaw:
     tags: [atropos, rl, environments, training, reinforcement-learning, reward-functions]
-    related_skills: [axolotl, grpo-rl-training, trl-fine-tuning, lm-evaluation-harness]
+    related_skills: [axolotl, fine-tuning-with-trl, lm-evaluation-harness]
 ---
 
 # Sinoclaw Agent Atropos Environments

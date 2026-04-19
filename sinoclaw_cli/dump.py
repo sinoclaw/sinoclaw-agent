@@ -43,6 +43,7 @@ def _redact(value: str) -> str:
 
 def _gateway_status() -> str:
     """Return a short gateway status string."""
+<<<<<<< HEAD:sinoclaw_cli/dump.py
     if sys.platform.startswith("linux"):
         from sinoclaw_constants import is_container
         if is_container():
@@ -78,6 +79,22 @@ def _gateway_status() -> str:
         except Exception:
             return "unknown"
     return "N/A"
+=======
+    try:
+        from hermes_cli.gateway import get_gateway_runtime_snapshot
+
+        snapshot = get_gateway_runtime_snapshot()
+        if snapshot.running:
+            mode = snapshot.manager
+            if snapshot.has_process_service_mismatch:
+                mode = "manual"
+            return f"running ({mode}, pid {snapshot.gateway_pids[0]})"
+        if snapshot.service_installed and not snapshot.service_running:
+            return f"stopped ({snapshot.manager})"
+        return f"stopped ({snapshot.manager})"
+    except Exception:
+        return "unknown" if sys.platform.startswith(("linux", "darwin")) else "N/A"
+>>>>>>> upstream/main:hermes_cli/dump.py
 
 
 def _count_skills(sinoclaw_home: Path) -> int:
@@ -296,6 +313,7 @@ def run_dump(args):
         ("DEEPSEEK_API_KEY", "deepseek"),
         ("DASHSCOPE_API_KEY", "dashscope"),
         ("HF_TOKEN", "huggingface"),
+        ("NVIDIA_API_KEY", "nvidia"),
         ("AI_GATEWAY_API_KEY", "ai_gateway"),
         ("OPENCODE_ZEN_API_KEY", "opencode_zen"),
         ("OPENCODE_GO_API_KEY", "opencode_go"),
