@@ -41,7 +41,7 @@ class SinoclawOverlay:
     base_url_env_var: str = ""            # env var for user-custom base URL
 
 
-HERMES_OVERLAYS: Dict[str, SinoclawOverlay] = {
+SINOCLAW_OVERLAYS: Dict[str, SinoclawOverlay] = {
     "openrouter": SinoclawOverlay(
         transport="openai_chat",
         is_aggregator=True,
@@ -319,7 +319,7 @@ def get_provider(name: str) -> Optional[ProviderDef]:
     except Exception:
         mdev_info = None
 
-    overlay = HERMES_OVERLAYS.get(canonical)
+    overlay = SINOCLAW_OVERLAYS.get(canonical)
 
     if mdev_info is not None:
         # Merge models.dev + overlay
@@ -402,7 +402,7 @@ def determine_api_mode(provider: str, base_url: str = "") -> str:
     if pdef is not None:
         return TRANSPORT_TO_API_MODE.get(pdef.transport, "chat_completions")
 
-    # Direct provider checks for providers not in HERMES_OVERLAYS
+    # Direct provider checks for providers not in SINOCLAW_OVERLAYS
     if provider == "bedrock":
         return "bedrock_converse"
 

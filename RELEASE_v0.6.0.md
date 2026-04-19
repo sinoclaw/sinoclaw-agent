@@ -50,10 +50,10 @@
 - **Omit empty tools param** — sends no `tools` parameter when empty instead of `None`, fixing compatibility with strict providers ([#3820](https://github.com/NousResearch/sinoclaw-agent/pull/3820))
 
 ### Profiles & Multi-Instance
-- **Profiles system** — `sinoclaw profile create/list/switch/delete/export/import/rename`. Each profile gets isolated HERMES_HOME, gateway service, CLI wrapper. Token locks prevent credential collisions. Tab completion for profile names. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
+- **Profiles system** — `sinoclaw profile create/list/switch/delete/export/import/rename`. Each profile gets isolated SINOCLAW_HOME, gateway service, CLI wrapper. Token locks prevent credential collisions. Tab completion for profile names. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
 - **Profile-aware display paths** — all user-facing `~/.sinoclaw` paths replaced with `display_sinoclaw_home()` to show the correct profile directory ([#3623](https://github.com/NousResearch/sinoclaw-agent/pull/3623))
 - **Lazy display_sinoclaw_home imports** — prevents `ImportError` during `sinoclaw update` when modules cache stale bytecode ([#3776](https://github.com/NousResearch/sinoclaw-agent/pull/3776))
-- **HERMES_HOME for protected paths** — `.env` write-deny path now respects HERMES_HOME instead of hardcoded `~/.sinoclaw` ([#3840](https://github.com/NousResearch/sinoclaw-agent/pull/3840))
+- **SINOCLAW_HOME for protected paths** — `.env` write-deny path now respects SINOCLAW_HOME instead of hardcoded `~/.sinoclaw` ([#3840](https://github.com/NousResearch/sinoclaw-agent/pull/3840))
 
 ---
 

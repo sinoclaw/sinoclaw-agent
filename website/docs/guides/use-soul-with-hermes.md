@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 title: "Use SOUL.md with Hermes"
-description: "How to use SOUL.md to shape Hermes Agent's default voice, what belongs there, and how it differs from AGENTS.md and /personality"
+description: "How to use SOUL.md to shape Sinoclaw Agent's default voice, what belongs there, and how it differs from AGENTS.md and /personality"
 ---
 
 # Use SOUL.md with Hermes
@@ -44,7 +44,7 @@ A good rule:
 Hermes now uses only the global SOUL file for the current instance:
 
 ```text
-~/.hermes/SOUL.md
+~/.sinoclaw/SOUL.md
 ```
 
 If you run Hermes with a custom home directory, it becomes:
@@ -212,13 +212,13 @@ This is the most common mistake.
 ## How to edit it
 
 ```bash
-nano ~/.hermes/SOUL.md
+nano ~/.sinoclaw/SOUL.md
 ```
 
 or
 
 ```bash
-vim ~/.hermes/SOUL.md
+vim ~/.sinoclaw/SOUL.md
 ```
 
 Then restart Hermes or start a new session.
@@ -238,7 +238,7 @@ That iterative approach works better than trying to design the perfect personali
 ### I edited SOUL.md but Hermes still sounds the same
 
 Check:
-- you edited `~/.hermes/SOUL.md` or `$SINOCLAW_HOME/SOUL.md`
+- you edited `~/.sinoclaw/SOUL.md` or `$SINOCLAW_HOME/SOUL.md`
 - not some repo-local `SOUL.md`
 - the file is not empty
 - your session was restarted after the edit

@@ -31,7 +31,7 @@ The Tool Gateway is available to **paid** [Nous Portal](https://portal.nousresea
 To check your status:
 
 ```bash
-hermes status
+sinoclaw status
 ```
 
 Look for the **Nous Tool Gateway** section. It shows which tools are active via the gateway, which use direct keys, and which aren't configured.
@@ -40,7 +40,7 @@ Look for the **Nous Tool Gateway** section. It shows which tools are active via 
 
 ### During model setup
 
-When you run `hermes model` and select Nous Portal as your provider, Hermes automatically offers to enable the Tool Gateway:
+When you run `sinoclaw model` and select Nous Portal as your provider, Hermes automatically offers to enable the Tool Gateway:
 
 ```
 Your Nous subscription includes the Tool Gateway.
@@ -62,19 +62,19 @@ Select **Enable Tool Gateway** and you're done.
 
 If you already have direct API keys for some tools, the prompt adapts — you can enable the gateway for all tools (your existing keys are kept in `.env` but not used at runtime), enable only for unconfigured tools, or skip entirely.
 
-### Via `hermes tools`
+### Via `sinoclaw tools`
 
 You can also enable the gateway tool-by-tool through the interactive tool configuration:
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 Select a tool category (Web, Browser, Image Generation, or TTS), then choose **Nous Subscription** as the provider. This sets `use_gateway: true` for that tool in your config.
 
 ### Manual configuration
 
-Set the `use_gateway` flag directly in `~/.hermes/config.yaml`:
+Set the `use_gateway` flag directly in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 web:
@@ -102,7 +102,7 @@ When `use_gateway: true` is set for a tool, the runtime routes API calls through
 3. **TTS** — `text_to_speech` uses the gateway's OpenAI Audio endpoint
 4. **Browser** — `browser_navigate` and other browser tools use the gateway's Browser Use endpoint
 
-The gateway authenticates using your Nous Portal credentials (stored in `~/.hermes/auth.json` after `hermes model`).
+The gateway authenticates using your Nous Portal credentials (stored in `~/.sinoclaw/auth.json` after `sinoclaw model`).
 
 ### Precedence
 
@@ -118,7 +118,7 @@ This means you can switch between gateway and direct keys at any time without de
 To stop using the gateway for a specific tool:
 
 ```bash
-hermes tools    # Select the tool → choose a direct provider
+sinoclaw tools    # Select the tool → choose a direct provider
 ```
 
 Or set `use_gateway: false` in config:
@@ -129,12 +129,12 @@ web:
   use_gateway: false  # Now uses FIRECRAWL_API_KEY from .env
 ```
 
-When you select a non-gateway provider in `hermes tools`, the `use_gateway` flag is automatically set to `false` to prevent contradictory config.
+When you select a non-gateway provider in `sinoclaw tools`, the `use_gateway` flag is automatically set to `false` to prevent contradictory config.
 
 ## Checking Status
 
 ```bash
-hermes status
+sinoclaw status
 ```
 
 The **Nous Tool Gateway** section shows:
@@ -153,7 +153,7 @@ Tools marked "active via Nous subscription" are routed through the gateway. Tool
 
 ## Advanced: Self-Hosted Gateway
 
-For self-hosted or custom gateway deployments, you can override the gateway endpoints via environment variables in `~/.hermes/.env`:
+For self-hosted or custom gateway deployments, you can override the gateway endpoints via environment variables in `~/.sinoclaw/.env`:
 
 ```bash
 TOOL_GATEWAY_DOMAIN=nousresearch.com     # Base domain for gateway routing
@@ -176,7 +176,7 @@ Yes. The `use_gateway` flag is per-tool. You can mix and match — for example, 
 
 ### What if my subscription expires?
 
-Tools that were routed through the gateway will stop working until you [renew your subscription](https://portal.nousresearch.com/manage-subscription) or switch to direct API keys via `hermes tools`.
+Tools that were routed through the gateway will stop working until you [renew your subscription](https://portal.nousresearch.com/manage-subscription) or switch to direct API keys via `sinoclaw tools`.
 
 ### Does the gateway work with the messaging gateway?
 
@@ -184,4 +184,4 @@ Yes. The Tool Gateway routes tool API calls regardless of whether you're using t
 
 ### Is Modal included?
 
-Modal (serverless terminal backend) is available as an optional add-on through the Nous subscription. It's not enabled by the Tool Gateway prompt — configure it separately via `hermes setup terminal` or in `config.yaml`.
+Modal (serverless terminal backend) is available as an optional add-on through the Nous subscription. It's not enabled by the Tool Gateway prompt — configure it separately via `sinoclaw setup terminal` or in `config.yaml`.

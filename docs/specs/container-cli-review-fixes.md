@@ -26,7 +26,7 @@ The mechanical fixes are in place but the overall design needs revision. The ret
 
 ### Design Principles
 
-1. **Let it crash.** No silent fallbacks. If `.container-mode` exists but something goes wrong, the error propagates naturally (Python traceback). The only case where container routing is skipped is when `.container-mode` doesn't exist or `HERMES_DEV=1`.
+1. **Let it crash.** No silent fallbacks. If `.container-mode` exists but something goes wrong, the error propagates naturally (Python traceback). The only case where container routing is skipped is when `.container-mode` doesn't exist or `SINOCLAW_DEV=1`.
 2. **No retries.** Probe once for sudo, exec once. If it fails, docker/podman's stderr reaches the user verbatim.
 3. **Completely transparent.** No error wrapping, no prefixes, no spinners. Docker's output goes straight through.
 4. **`os.execvp` on the happy path.** Replace the Python process entirely so there's no idle parent during interactive sessions. Note: `execvp` never returns on success (process is replaced) and raises `OSError` on failure (it does not return a value). The container process's exit code becomes the process exit code by definition — no explicit propagation needed.
@@ -36,7 +36,7 @@ The mechanical fixes are in place but the overall design needs revision. The ret
 
 ```
 1. get_container_exec_info()
-   - HERMES_DEV=1 → return None (skip routing)
+   - SINOCLAW_DEV=1 → return None (skip routing)
    - Inside container → return None (skip routing)
    - .container-mode doesn't exist → return None (skip routing)
    - .container-mode exists → parse and return dict
@@ -227,11 +227,11 @@ Note: `sys.exit(1)` after `_exec_in_container` is dead code in all paths — `os
 
 Current code catches `(OSError, IOError)` and returns `None`. This silently hides permission errors, corrupt files, etc.
 
-Change: Remove the try/except around file reading. Keep the early returns for `HERMES_DEV=1` and `_is_inside_container()`. The `FileNotFoundError` from `open()` when `.container-mode` doesn't exist should still return `None` (this is the "container mode not enabled" case). All other exceptions propagate.
+Change: Remove the try/except around file reading. Keep the early returns for `SINOCLAW_DEV=1` and `_is_inside_container()`. The `FileNotFoundError` from `open()` when `.container-mode` doesn't exist should still return `None` (this is the "container mode not enabled" case). All other exceptions propagate.
 
 ```python
 def get_container_exec_info() -> Optional[dict]:
-    if os.environ.get("HERMES_DEV") == "1":
+    if os.environ.get("SINOCLAW_DEV") == "1":
         return None
     if _is_inside_container():
         return None
@@ -325,5 +325,5 @@ The existing test file (`tests/sinoclaw_cli/test_container_aware_cli.py`) has 16
 - Auto-configuring sudoers rules in the NixOS module
 - Any changes to `get_container_exec_info` parsing logic beyond the try/except narrowing
 - Changes to `.container-mode` file format
-- Changes to the `HERMES_DEV=1` bypass
+- Changes to the `SINOCLAW_DEV=1` bypass
 - Changes to container detection logic (`_is_inside_container`)

@@ -7,7 +7,7 @@ description: "Run multiple Hermes agents safely on the same repository using git
 
 # Git Worktrees
 
-Hermes Agent is often used on large, long‑lived repositories. When you want to:
+Sinoclaw Agent is often used on large, long‑lived repositories. When you want to:
 
 - Run **multiple agents in parallel** on the same project, or
 - Keep experimental refactors isolated from your main branch,
@@ -20,7 +20,7 @@ This page shows how to combine worktrees with Hermes so each session has a clean
 
 Hermes treats the **current working directory** as the project root:
 
-- CLI: the directory where you run `hermes` or `hermes chat`
+- CLI: the directory where you run `sinoclaw` or `sinoclaw chat`
 - Messaging gateways: the directory set by `MESSAGING_CWD`
 
 If you run multiple agents in the **same checkout**, their changes can interfere with each other:
@@ -44,13 +44,13 @@ From your main repository (containing `.git/`), create a new worktree for a feat
 cd /path/to/your/repo
 
 # Create a new branch and worktree in ../repo-feature
-git worktree add ../repo-feature feature/hermes-experiment
+git worktree add ../repo-feature feature/sinoclaw-experiment
 ```
 
 This creates:
 
 - A new directory: `../repo-feature`
-- A new branch: `feature/hermes-experiment` checked out in that directory
+- A new branch: `feature/sinoclaw-experiment` checked out in that directory
 
 Now you can `cd` into the new worktree and run Hermes there:
 
@@ -58,7 +58,7 @@ Now you can `cd` into the new worktree and run Hermes there:
 cd ../repo-feature
 
 # Start Hermes in the worktree
-hermes
+sinoclaw
 ```
 
 Hermes will:
@@ -74,8 +74,8 @@ You can create multiple worktrees, each with its own branch:
 ```bash
 cd /path/to/your/repo
 
-git worktree add ../repo-experiment-a feature/hermes-a
-git worktree add ../repo-experiment-b feature/hermes-b
+git worktree add ../repo-experiment-a feature/sinoclaw-a
+git worktree add ../repo-experiment-b feature/sinoclaw-b
 ```
 
 In separate terminals:
@@ -83,16 +83,16 @@ In separate terminals:
 ```bash
 # Terminal 1
 cd ../repo-experiment-a
-hermes
+sinoclaw
 
 # Terminal 2
 cd ../repo-experiment-b
-hermes
+sinoclaw
 ```
 
 Each Hermes process:
 
-- Works on its own branch (`feature/hermes-a` vs `feature/hermes-b`).
+- Works on its own branch (`feature/sinoclaw-a` vs `feature/sinoclaw-b`).
 - Writes checkpoints under a different shadow repo hash (derived from the worktree path).
 - Can use `/rollback` independently without affecting the other.
 
@@ -122,7 +122,7 @@ Notes:
 
 - `git worktree remove` will refuse to remove a worktree with uncommitted changes unless you force it.
 - Removing a worktree does **not** automatically delete the branch; you can delete or keep the branch using normal `git branch` commands.
-- Hermes checkpoint data under `~/.hermes/checkpoints/` is not automatically pruned when you remove a worktree, but it is usually very small.
+- Hermes checkpoint data under `~/.sinoclaw/checkpoints/` is not automatically pruned when you remove a worktree, but it is usually very small.
 
 ## Best Practices
 
@@ -130,35 +130,35 @@ Notes:
   - Create a dedicated branch/worktree for each substantial change.
   - This keeps diffs focused and PRs small and reviewable.
 - **Name branches after the experiment**
-  - e.g. `feature/hermes-checkpoints-docs`, `feature/hermes-refactor-tests`.
+  - e.g. `feature/sinoclaw-checkpoints-docs`, `feature/sinoclaw-refactor-tests`.
 - **Commit frequently**
   - Use git commits for high‑level milestones.
   - Use [checkpoints and /rollback](./checkpoints-and-rollback.md) as a safety net for tool‑driven edits in between.
 - **Avoid running Hermes from the bare repo root when using worktrees**
   - Prefer the worktree directories instead, so each agent has a clear scope.
 
-## Using `hermes -w` (Automatic Worktree Mode)
+## Using `sinoclaw -w` (Automatic Worktree Mode)
 
 Hermes has a built‑in `-w` flag that **automatically creates a disposable git worktree** with its own branch. You don't need to set up worktrees manually — just `cd` into your repo and run:
 
 ```bash
 cd /path/to/your/repo
-hermes -w
+sinoclaw -w
 ```
 
 Hermes will:
 
 - Create a temporary worktree under `.worktrees/` inside your repo.
-- Check out an isolated branch (e.g. `hermes/hermes-<hash>`).
+- Check out an isolated branch (e.g. `sinoclaw/sinoclaw-<hash>`).
 - Run the full CLI session inside that worktree.
 
 This is the easiest way to get worktree isolation. You can also combine it with a single query:
 
 ```bash
-hermes -w -q "Fix issue #123"
+sinoclaw -w -q "Fix issue #123"
 ```
 
-For parallel agents, open multiple terminals and run `hermes -w` in each — every invocation gets its own worktree and branch automatically.
+For parallel agents, open multiple terminals and run `sinoclaw -w` in each — every invocation gets its own worktree and branch automatically.
 
 ## Putting It All Together
 

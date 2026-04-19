@@ -1,12 +1,12 @@
 ---
 sidebar_position: 11
 title: "Feishu / Lark"
-description: "Set up Hermes Agent as a Feishu or Lark bot"
+description: "Set up Sinoclaw Agent as a Feishu or Lark bot"
 ---
 
 # Feishu / Lark Setup
 
-Hermes Agent integrates with Feishu and Lark as a full-featured bot. Once connected, you can chat with the agent in direct messages or group chats, receive cron job results in a home chat, and send text, images, audio, and file attachments through the normal gateway flow.
+Sinoclaw Agent integrates with Feishu and Lark as a full-featured bot. Once connected, you can chat with the agent in direct messages or group chats, receive cron job results in a home chat, and send text, images, audio, and file attachments through the normal gateway flow.
 
 The integration supports both connection modes:
 
@@ -34,7 +34,7 @@ Set it to `false` only if you explicitly want one shared conversation per chat.
 ### Recommended: Scan-to-Create (one command)
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 Select **Feishu / Lark** and scan the QR code with your Feishu or Lark mobile app. Hermes will automatically create a bot application with the correct permissions and save the credentials.
@@ -49,7 +49,7 @@ If scan-to-create is not available, the wizard falls back to manual input:
 2. Create a new app.
 3. In **Credentials & Basic Info**, copy the **App ID** and **App Secret**.
 4. Enable the **Bot** capability for the app.
-5. Run `hermes gateway setup`, select **Feishu / Lark**, and enter the credentials when prompted.
+5. Run `sinoclaw gateway setup`, select **Feishu / Lark**, and enter the credentials when prompted.
 
 :::warning
 Keep the App Secret private. Anyone with it can impersonate your app.
@@ -100,14 +100,14 @@ When Feishu sends a URL verification challenge (`type: url_verification`), the w
 ### Option A: Interactive Setup
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 Select **Feishu / Lark** and fill in the prompts.
 
 ### Option B: Manual Configuration
 
-Add the following to `~/.hermes/.env`:
+Add the following to `~/.sinoclaw/.env`:
 
 ```bash
 FEISHU_APP_ID=cli_xxx
@@ -128,7 +128,7 @@ FEISHU_HOME_CHANNEL=oc_xxx
 ## Step 4: Start the Gateway
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 Then message the bot from Feishu/Lark to confirm that the connection is live.
@@ -305,9 +305,9 @@ When a user sends multiple text messages in quick succession, they are merged in
 
 | Setting | Env Var | Default |
 |---------|---------|---------|
-| Quiet period | `HERMES_FEISHU_TEXT_BATCH_DELAY_SECONDS` | 0.6s |
-| Max messages per batch | `HERMES_FEISHU_TEXT_BATCH_MAX_MESSAGES` | 8 |
-| Max characters per batch | `HERMES_FEISHU_TEXT_BATCH_MAX_CHARS` | 4000 |
+| Quiet period | `SINOCLAW_FEISHU_TEXT_BATCH_DELAY_SECONDS` | 0.6s |
+| Max messages per batch | `SINOCLAW_FEISHU_TEXT_BATCH_MAX_MESSAGES` | 8 |
+| Max characters per batch | `SINOCLAW_FEISHU_TEXT_BATCH_MAX_CHARS` | 4000 |
 
 ### Media Batching
 
@@ -315,7 +315,7 @@ Multiple media attachments sent in quick succession (e.g., dragging several imag
 
 | Setting | Env Var | Default |
 |---------|---------|---------|
-| Quiet period | `HERMES_FEISHU_MEDIA_BATCH_DELAY_SECONDS` | 0.8s |
+| Quiet period | `SINOCLAW_FEISHU_MEDIA_BATCH_DELAY_SECONDS` | 0.8s |
 
 ### Per-Chat Serialization
 
@@ -394,11 +394,11 @@ Groups not listed in `group_rules` fall back to `default_group_policy` (defaults
 
 ## Deduplication
 
-Inbound messages are deduplicated using message IDs with a 24-hour TTL. The dedup state is persisted across restarts to `~/.hermes/feishu_seen_message_ids.json`.
+Inbound messages are deduplicated using message IDs with a 24-hour TTL. The dedup state is persisted across restarts to `~/.sinoclaw/feishu_seen_message_ids.json`.
 
 | Setting | Env Var | Default |
 |---------|---------|---------|
-| Cache size | `HERMES_FEISHU_DEDUP_CACHE_SIZE` | 2048 entries |
+| Cache size | `SINOCLAW_FEISHU_DEDUP_CACHE_SIZE` | 2048 entries |
 
 ## All Environment Variables
 
@@ -419,11 +419,11 @@ Inbound messages are deduplicated using message IDs with a 24-hour TTL. The dedu
 | `FEISHU_WEBHOOK_HOST` | — | `127.0.0.1` | Webhook server bind address |
 | `FEISHU_WEBHOOK_PORT` | — | `8765` | Webhook server port |
 | `FEISHU_WEBHOOK_PATH` | — | `/feishu/webhook` | Webhook endpoint path |
-| `HERMES_FEISHU_DEDUP_CACHE_SIZE` | — | `2048` | Max deduplicated message IDs to track |
-| `HERMES_FEISHU_TEXT_BATCH_DELAY_SECONDS` | — | `0.6` | Text burst debounce quiet period |
-| `HERMES_FEISHU_TEXT_BATCH_MAX_MESSAGES` | — | `8` | Max messages merged per text batch |
-| `HERMES_FEISHU_TEXT_BATCH_MAX_CHARS` | — | `4000` | Max characters merged per text batch |
-| `HERMES_FEISHU_MEDIA_BATCH_DELAY_SECONDS` | — | `0.8` | Media burst debounce quiet period |
+| `SINOCLAW_FEISHU_DEDUP_CACHE_SIZE` | — | `2048` | Max deduplicated message IDs to track |
+| `SINOCLAW_FEISHU_TEXT_BATCH_DELAY_SECONDS` | — | `0.6` | Text burst debounce quiet period |
+| `SINOCLAW_FEISHU_TEXT_BATCH_MAX_MESSAGES` | — | `8` | Max messages merged per text batch |
+| `SINOCLAW_FEISHU_TEXT_BATCH_MAX_CHARS` | — | `4000` | Max characters merged per text batch |
+| `SINOCLAW_FEISHU_MEDIA_BATCH_DELAY_SECONDS` | — | `0.8` | Media burst debounce quiet period |
 
 WebSocket and per-group ACL settings are configured via `config.yaml` under `platforms.feishu.extra` (see [WebSocket Tuning](#websocket-tuning) and [Per-Group Access Control](#per-group-access-control) above).
 
@@ -434,7 +434,7 @@ WebSocket and per-group ACL settings are configured via `config.yaml` under `pla
 | `lark-oapi not installed` | Install the SDK: `pip install lark-oapi` |
 | `websockets not installed; websocket mode unavailable` | Install websockets: `pip install websockets` |
 | `aiohttp not installed; webhook mode unavailable` | Install aiohttp: `pip install aiohttp` |
-| `FEISHU_APP_ID or FEISHU_APP_SECRET not set` | Set both env vars or configure via `hermes gateway setup` |
+| `FEISHU_APP_ID or FEISHU_APP_SECRET not set` | Set both env vars or configure via `sinoclaw gateway setup` |
 | `Another local Hermes gateway is already using this Feishu app_id` | Only one Hermes instance can use the same app_id at a time. Stop the other gateway first. |
 | Bot doesn't respond in groups | Ensure the bot is @mentioned, check `FEISHU_GROUP_POLICY`, and verify the sender is in `FEISHU_ALLOWED_USERS` if policy is `allowlist` |
 | `Webhook rejected: invalid verification token` | Ensure `FEISHU_VERIFICATION_TOKEN` matches the token in your Feishu app's Event Subscriptions config |
@@ -447,4 +447,4 @@ WebSocket and per-group ACL settings are configured via `config.yaml` under `pla
 
 ## Toolset
 
-Feishu / Lark uses the `hermes-feishu` platform preset, which includes the same core tools as Telegram and other gateway-based messaging platforms.
+Feishu / Lark uses the `sinoclaw-feishu` platform preset, which includes the same core tools as Telegram and other gateway-based messaging platforms.

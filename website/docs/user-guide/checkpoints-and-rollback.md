@@ -7,9 +7,9 @@ description: "Filesystem safety nets for destructive operations using shadow git
 
 # Checkpoints and `/rollback`
 
-Hermes Agent automatically snapshots your project before **destructive operations** and lets you restore it with a single command. Checkpoints are **enabled by default** — there's zero cost when no file-mutating tools fire.
+Sinoclaw Agent automatically snapshots your project before **destructive operations** and lets you restore it with a single command. Checkpoints are **enabled by default** — there's zero cost when no file-mutating tools fire.
 
-This safety net is powered by an internal **Checkpoint Manager** that keeps a separate shadow git repository under `~/.hermes/checkpoints/` — your real project `.git` is never touched.
+This safety net is powered by an internal **Checkpoint Manager** that keeps a separate shadow git repository under `~/.sinoclaw/checkpoints/` — your real project `.git` is never touched.
 
 ## What Triggers a Checkpoint
 
@@ -42,11 +42,11 @@ At a high level:
 
 ```mermaid
 flowchart LR
-  user["User command\n(hermes, gateway)"]
+  user["User command\n(sinoclaw, gateway)"]
   agent["AIAgent\n(run_agent.py)"]
   tools["File & terminal tools"]
   cpMgr["CheckpointManager"]
-  shadowRepo["Shadow git repo\n~/.hermes/checkpoints/<hash>"]
+  shadowRepo["Shadow git repo\n~/.sinoclaw/checkpoints/<hash>"]
 
   user --> agent
   agent -->|"tool call"| tools
@@ -58,7 +58,7 @@ flowchart LR
 
 ## Configuration
 
-Checkpoints are enabled by default. Configure in `~/.hermes/config.yaml`:
+Checkpoints are enabled by default. Configure in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 checkpoints:
@@ -180,7 +180,7 @@ To keep checkpointing safe and fast, Hermes applies several guardrails:
 All shadow repos live under:
 
 ```text
-~/.hermes/checkpoints/
+~/.sinoclaw/checkpoints/
   ├── <hash1>/   # shadow git repo for one working directory
   ├── <hash2>/
   └── ...
@@ -190,7 +190,7 @@ Each `<hash>` is derived from the absolute path of the working directory. Inside
 
 - Standard git internals (`HEAD`, `refs/`, `objects/`)
 - An `info/exclude` file containing a curated ignore list
-- A `HERMES_WORKDIR` file pointing back to the original project root
+- A `SINOCLAW_WORKDIR` file pointing back to the original project root
 
 You normally never need to touch these manually.
 

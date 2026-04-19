@@ -33,19 +33,19 @@ Honcho is integrated into the [Memory Providers](./memory-providers.md) system. 
 ## Setup
 
 ```bash
-hermes memory setup    # select "honcho" from the provider list
+sinoclaw memory setup    # select "honcho" from the provider list
 ```
 
 Or configure manually:
 
 ```yaml
-# ~/.hermes/config.yaml
+# ~/.sinoclaw/config.yaml
 memory:
   provider: honcho
 ```
 
 ```bash
-echo "HONCHO_API_KEY=*** >> ~/.hermes/.env
+echo "HONCHO_API_KEY=*** >> ~/.sinoclaw/.env
 ```
 
 Get an API key at [honcho.dev](https://honcho.dev).
@@ -119,7 +119,7 @@ Honcho is configured in `~/.honcho/config.json` (global) or `$SINOCLAW_HOME/honc
 | `sessionStrategy` | `'per-directory'` | `per-directory`, `per-repo`, `per-session`, or `global` |
 
 **Session strategy** controls how Honcho sessions map to your work:
-- `per-session` — each `hermes` run gets a fresh session. Clean starts, memory via tools. Recommended for new users.
+- `per-session` — each `sinoclaw` run gets a fresh session. Clean starts, memory via tools. Recommended for new users.
 - `per-directory` — one Honcho session per working directory. Context accumulates across runs.
 - `per-repo` — one session per git repository.
 - `global` — single session across all directories.
@@ -157,27 +157,27 @@ When Honcho is active as the memory provider, five tools become available:
 ## CLI Commands
 
 ```bash
-hermes honcho status          # Connection status, config, and key settings
-hermes honcho setup           # Interactive setup wizard
-hermes honcho strategy        # Show or set session strategy
-hermes honcho peer            # Update peer names for multi-agent setups
-hermes honcho mode            # Show or set recall mode
-hermes honcho tokens          # Show or set context token budget
-hermes honcho identity        # Show Honcho peer identity
-hermes honcho sync            # Sync host blocks for all profiles
-hermes honcho enable          # Enable Honcho
-hermes honcho disable         # Disable Honcho
+sinoclaw honcho status          # Connection status, config, and key settings
+sinoclaw honcho setup           # Interactive setup wizard
+sinoclaw honcho strategy        # Show or set session strategy
+sinoclaw honcho peer            # Update peer names for multi-agent setups
+sinoclaw honcho mode            # Show or set recall mode
+sinoclaw honcho tokens          # Show or set context token budget
+sinoclaw honcho identity        # Show Honcho peer identity
+sinoclaw honcho sync            # Sync host blocks for all profiles
+sinoclaw honcho enable          # Enable Honcho
+sinoclaw honcho disable         # Disable Honcho
 ```
 
-## Migrating from `hermes honcho`
+## Migrating from `sinoclaw honcho`
 
-If you previously used the standalone `hermes honcho setup`:
+If you previously used the standalone `sinoclaw honcho setup`:
 
 1. Your existing configuration (`honcho.json` or `~/.honcho/config.json`) is preserved
 2. Your server-side data (memories, conclusions, user profiles) is intact
 3. Set `memory.provider: honcho` in config.yaml to reactivate
 
-No re-login or re-setup needed. Run `hermes memory setup` and select "honcho" — the wizard detects your existing config.
+No re-login or re-setup needed. Run `sinoclaw memory setup` and select "honcho" — the wizard detects your existing config.
 
 ## Full Documentation
 

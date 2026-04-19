@@ -157,7 +157,7 @@
 - Show update-available notice in CLI banner
 - Multiple named custom providers
 - Shell config detection improvement for PATH setup ([#317](https://github.com/NousResearch/sinoclaw-agent/pull/317)) — @mehmetkr-31
-- Consistent HERMES_HOME and .env path resolution ([#51](https://github.com/NousResearch/sinoclaw-agent/pull/51), [#48](https://github.com/NousResearch/sinoclaw-agent/pull/48)) — @deankerr
+- Consistent SINOCLAW_HOME and .env path resolution ([#51](https://github.com/NousResearch/sinoclaw-agent/pull/51), [#48](https://github.com/NousResearch/sinoclaw-agent/pull/48)) — @deankerr
 - Docker backend fix on macOS + subagent auth for Nous Portal ([#46](https://github.com/NousResearch/sinoclaw-agent/pull/46)) — @rsavitt
 
 ---

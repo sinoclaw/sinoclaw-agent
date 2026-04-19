@@ -1,12 +1,12 @@
 ---
 sidebar_position: 4
 title: "MCP (Model Context Protocol)"
-description: "Connect Hermes Agent to external tool servers via MCP — and control exactly which MCP tools Hermes loads"
+description: "Connect Sinoclaw Agent to external tool servers via MCP — and control exactly which MCP tools Hermes loads"
 ---
 
 # MCP (Model Context Protocol)
 
-MCP lets Hermes Agent connect to external tool servers so the agent can use tools that live outside Hermes itself — GitHub, databases, file systems, browser stacks, internal APIs, and more.
+MCP lets Sinoclaw Agent connect to external tool servers so the agent can use tools that live outside Hermes itself — GitHub, databases, file systems, browser stacks, internal APIs, and more.
 
 If you have ever wanted Hermes to use a tool that already exists somewhere else, MCP is usually the cleanest way to do it.
 
@@ -23,11 +23,11 @@ If you have ever wanted Hermes to use a tool that already exists somewhere else,
 1. Install MCP support (already included if you used the standard install script):
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 uv pip install -e ".[mcp]"
 ```
 
-2. Add an MCP server to `~/.hermes/config.yaml`:
+2. Add an MCP server to `~/.sinoclaw/config.yaml`:
 
 ```yaml
 mcp_servers:
@@ -39,7 +39,7 @@ mcp_servers:
 3. Start Hermes:
 
 ```bash
-hermes chat
+sinoclaw chat
 ```
 
 4. Ask Hermes to use the MCP-backed capability.
@@ -91,7 +91,7 @@ Use HTTP servers when:
 
 ## Basic configuration reference
 
-Hermes reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
+Hermes reads MCP config from `~/.sinoclaw/config.yaml` under `mcp_servers`.
 
 ### Common keys
 
@@ -222,7 +222,7 @@ tools:
 
 ### Filter utility tools too
 
-You can also separately disable Hermes-added utility wrappers:
+You can also separately disable Sinoclaw-added utility wrappers:
 
 ```yaml
 mcp_servers:
@@ -382,7 +382,7 @@ Check:
 
 ```bash
 # Verify MCP deps are installed (already included in standard install)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+cd ~/.sinoclaw/sinoclaw-agent && uv pip install -e ".[mcp]"
 
 node --version
 npx --version
@@ -455,7 +455,7 @@ In addition to connecting **to** MCP servers, Hermes can also **be** an MCP serv
 ### Quick start
 
 ```bash
-hermes mcp serve
+sinoclaw mcp serve
 ```
 
 This starts a stdio MCP server. The MCP client (not you) manages the process lifecycle.
@@ -467,8 +467,8 @@ Add Hermes to your MCP client config. For example, in Claude Code's `~/.claude/c
 ```json
 {
   "mcpServers": {
-    "hermes": {
-      "command": "hermes",
+    "sinoclaw": {
+      "command": "sinoclaw",
       "args": ["mcp", "serve"]
     }
   }
@@ -480,8 +480,8 @@ Or if you installed Hermes in a specific location:
 ```json
 {
   "mcpServers": {
-    "hermes": {
-      "command": "/home/user/.hermes/hermes-agent/venv/bin/hermes",
+    "sinoclaw": {
+      "command": "/home/user/.sinoclaw/sinoclaw-agent/venv/bin/sinoclaw",
       "args": ["mcp", "serve"]
     }
   }
@@ -490,7 +490,7 @@ Or if you installed Hermes in a specific location:
 
 ### Available tools
 
-The MCP server exposes 10 tools, matching OpenClaw's channel bridge surface plus a Hermes-specific channel browser:
+The MCP server exposes 10 tools, matching OpenClaw's channel bridge surface plus a Sinoclaw-specific channel browser:
 
 | Tool | Description |
 |------|-------------|
@@ -524,13 +524,13 @@ The event queue is in-memory and starts when the bridge connects. Older messages
 ### Options
 
 ```bash
-hermes mcp serve              # Normal mode
-hermes mcp serve --verbose    # Debug logging on stderr
+sinoclaw mcp serve              # Normal mode
+sinoclaw mcp serve --verbose    # Debug logging on stderr
 ```
 
 ### How it works
 
-The MCP server reads conversation data directly from Hermes's session store (`~/.hermes/sessions/sessions.json` and the SQLite database). A background thread polls the database for new messages and maintains an in-memory event queue. For sending messages, it uses the same `send_message` infrastructure as the Hermes agent itself.
+The MCP server reads conversation data directly from Hermes's session store (`~/.sinoclaw/sessions/sessions.json` and the SQLite database). A background thread polls the database for new messages and maintains an in-memory event queue. For sending messages, it uses the same `send_message` infrastructure as the Hermes agent itself.
 
 The gateway does NOT need to be running for read operations (listing conversations, reading history, polling events). It DOES need to be running for send operations, since the platform adapters need active connections.
 
@@ -543,7 +543,7 @@ The gateway does NOT need to be running for read operations (listing conversatio
 
 ## Related docs
 
-- [Use MCP with Hermes](/docs/guides/use-mcp-with-hermes)
+- [Use MCP with Hermes](/docs/guides/use-mcp-with-sinoclaw)
 - [CLI Commands](/docs/reference/cli-commands)
 - [Slash Commands](/docs/reference/slash-commands)
 - [FAQ](/docs/reference/faq)

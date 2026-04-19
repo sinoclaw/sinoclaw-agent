@@ -14,30 +14,30 @@ Every tool belongs to exactly one toolset. When you enable a toolset, all tools 
 
 - **Core** — A single logical group of related tools (e.g., `file` bundles `read_file`, `write_file`, `patch`, `search_files`)
 - **Composite** — Combines multiple core toolsets for a common scenario (e.g., `debugging` bundles file, terminal, and web tools)
-- **Platform** — A complete tool configuration for a specific deployment context (e.g., `hermes-cli` is the default for interactive CLI sessions)
+- **Platform** — A complete tool configuration for a specific deployment context (e.g., `sinoclaw-cli` is the default for interactive CLI sessions)
 
 ## Configuring Toolsets
 
 ### Per-session (CLI)
 
 ```bash
-hermes chat --toolsets web,file,terminal
-hermes chat --toolsets debugging        # composite — expands to file + terminal + web
-hermes chat --toolsets all              # everything
+sinoclaw chat --toolsets web,file,terminal
+sinoclaw chat --toolsets debugging        # composite — expands to file + terminal + web
+sinoclaw chat --toolsets all              # everything
 ```
 
 ### Per-platform (config.yaml)
 
 ```yaml
 toolsets:
-  - hermes-cli          # default for CLI
-  # - hermes-telegram   # override for Telegram gateway
+  - sinoclaw-cli          # default for CLI
+  # - sinoclaw-telegram   # override for Telegram gateway
 ```
 
 ### Interactive management
 
 ```bash
-hermes tools                            # curses UI to enable/disable per platform
+sinoclaw tools                            # curses UI to enable/disable per platform
 ```
 
 Or in-session:
@@ -84,32 +84,32 @@ These expand to multiple core toolsets, providing a convenient shorthand for com
 
 ## Platform Toolsets
 
-Platform toolsets define the complete tool configuration for a deployment target. Most messaging platforms use the same set as `hermes-cli`:
+Platform toolsets define the complete tool configuration for a deployment target. Most messaging platforms use the same set as `sinoclaw-cli`:
 
-| Toolset | Differences from `hermes-cli` |
+| Toolset | Differences from `sinoclaw-cli` |
 |---------|-------------------------------|
-| `hermes-cli` | Full toolset — all 36 tools including `clarify`. The default for interactive CLI sessions. |
-| `hermes-acp` | Drops `clarify`, `cronjob`, `image_generate`, `send_message`, `text_to_speech`, homeassistant tools. Focused on coding tasks in IDE context. |
-| `hermes-api-server` | Drops `clarify`, `send_message`, and `text_to_speech`. Adds everything else — suitable for programmatic access where user interaction isn't possible. |
-| `hermes-telegram` | Same as `hermes-cli`. |
-| `hermes-discord` | Same as `hermes-cli`. |
-| `hermes-slack` | Same as `hermes-cli`. |
-| `hermes-whatsapp` | Same as `hermes-cli`. |
-| `hermes-signal` | Same as `hermes-cli`. |
-| `hermes-matrix` | Same as `hermes-cli`. |
-| `hermes-mattermost` | Same as `hermes-cli`. |
-| `hermes-email` | Same as `hermes-cli`. |
-| `hermes-sms` | Same as `hermes-cli`. |
-| `hermes-dingtalk` | Same as `hermes-cli`. |
-| `hermes-feishu` | Same as `hermes-cli`. |
-| `hermes-wecom` | Same as `hermes-cli`. |
-| `hermes-wecom-callback` | WeCom callback toolset — enterprise self-built app messaging (full access). |
-| `hermes-weixin` | Same as `hermes-cli`. |
-| `hermes-bluebubbles` | Same as `hermes-cli`. |
-| `hermes-qqbot` | Same as `hermes-cli`. |
-| `hermes-homeassistant` | Same as `hermes-cli`. |
-| `hermes-webhook` | Same as `hermes-cli`. |
-| `hermes-gateway` | Union of all messaging platform toolsets. Used internally when the gateway needs the broadest possible tool set. |
+| `sinoclaw-cli` | Full toolset — all 36 tools including `clarify`. The default for interactive CLI sessions. |
+| `sinoclaw-acp` | Drops `clarify`, `cronjob`, `image_generate`, `send_message`, `text_to_speech`, homeassistant tools. Focused on coding tasks in IDE context. |
+| `sinoclaw-api-server` | Drops `clarify`, `send_message`, and `text_to_speech`. Adds everything else — suitable for programmatic access where user interaction isn't possible. |
+| `sinoclaw-telegram` | Same as `sinoclaw-cli`. |
+| `sinoclaw-discord` | Same as `sinoclaw-cli`. |
+| `sinoclaw-slack` | Same as `sinoclaw-cli`. |
+| `sinoclaw-whatsapp` | Same as `sinoclaw-cli`. |
+| `sinoclaw-signal` | Same as `sinoclaw-cli`. |
+| `sinoclaw-matrix` | Same as `sinoclaw-cli`. |
+| `sinoclaw-mattermost` | Same as `sinoclaw-cli`. |
+| `sinoclaw-email` | Same as `sinoclaw-cli`. |
+| `sinoclaw-sms` | Same as `sinoclaw-cli`. |
+| `sinoclaw-dingtalk` | Same as `sinoclaw-cli`. |
+| `sinoclaw-feishu` | Same as `sinoclaw-cli`. |
+| `sinoclaw-wecom` | Same as `sinoclaw-cli`. |
+| `sinoclaw-wecom-callback` | WeCom callback toolset — enterprise self-built app messaging (full access). |
+| `sinoclaw-weixin` | Same as `sinoclaw-cli`. |
+| `sinoclaw-bluebubbles` | Same as `sinoclaw-cli`. |
+| `sinoclaw-qqbot` | Same as `sinoclaw-cli`. |
+| `sinoclaw-homeassistant` | Same as `sinoclaw-cli`. |
+| `sinoclaw-webhook` | Same as `sinoclaw-cli`. |
+| `sinoclaw-gateway` | Union of all messaging platform toolsets. Used internally when the gateway needs the broadest possible tool set. |
 
 ## Dynamic Toolsets
 
@@ -138,7 +138,7 @@ Define custom toolsets in `config.yaml` to create project-specific bundles:
 
 ```yaml
 toolsets:
-  - hermes-cli
+  - sinoclaw-cli
 custom_toolsets:
   data-science:
     - file
@@ -152,8 +152,8 @@ custom_toolsets:
 
 - `all` or `*` — expands to every registered toolset (built-in + dynamic + plugin)
 
-## Relationship to `hermes tools`
+## Relationship to `sinoclaw tools`
 
-The `hermes tools` command provides a curses-based UI for toggling individual tools on or off per platform. This operates at the tool level (finer than toolsets) and persists to `config.yaml`. Disabled tools are filtered out even if their toolset is enabled.
+The `sinoclaw tools` command provides a curses-based UI for toggling individual tools on or off per platform. This operates at the tool level (finer than toolsets) and persists to `config.yaml`. Disabled tools are filtered out even if their toolset is enabled.
 
 See also: [Tools Reference](./tools-reference.md) for the complete list of individual tools and their parameters.

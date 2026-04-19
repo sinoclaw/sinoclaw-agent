@@ -22,9 +22,9 @@ Key implementation files:
 ## Boot flow
 
 ```text
-hermes acp / hermes-acp / python -m acp_adapter
+sinoclaw acp / sinoclaw-acp / python -m acp_adapter
   -> acp_adapter.entry.main()
-  -> load ~/.hermes/.env
+  -> load ~/.sinoclaw/.env
   -> configure stderr logging
   -> construct HermesACPAgent
   -> acp.run_agent(agent)
@@ -114,7 +114,7 @@ Examples:
 ```text
 new_session(cwd)
   -> create SessionState
-  -> create AIAgent(platform="acp", enabled_toolsets=["hermes-acp"])
+  -> create AIAgent(platform="acp", enabled_toolsets=["sinoclaw-acp"])
   -> bind task_id/session_id to cwd override
 
 prompt(..., session_id)
@@ -145,7 +145,7 @@ ACP does not implement its own auth store.
 Instead it reuses Hermes' runtime resolver:
 
 - `acp_adapter/auth.py`
-- `hermes_cli/runtime_provider.py`
+- `sinoclaw_cli/runtime_provider.py`
 
 So ACP advertises and uses the currently configured Hermes provider/credentials.
 
@@ -177,6 +177,6 @@ ACP temporarily installs an approval callback on the terminal tool during prompt
 ## Related files
 
 - `tests/acp/` — ACP test suite
-- `toolsets.py` — `hermes-acp` toolset definition
-- `hermes_cli/main.py` — `hermes acp` CLI subcommand
-- `pyproject.toml` — `[acp]` optional dependency + `hermes-acp` script
+- `toolsets.py` — `sinoclaw-acp` toolset definition
+- `sinoclaw_cli/main.py` — `sinoclaw acp` CLI subcommand
+- `pyproject.toml` — `[acp]` optional dependency + `sinoclaw-acp` script

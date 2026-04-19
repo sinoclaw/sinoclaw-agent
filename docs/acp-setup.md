@@ -163,7 +163,7 @@ Edit `~/.sinoclaw/config.yaml`:
 model: openrouter/nous/sinoclaw-3-llama-3.1-70b
 ```
 
-Or set the `HERMES_MODEL` environment variable.
+Or set the `SINOCLAW_MODEL` environment variable.
 
 ### Toolsets
 
@@ -216,7 +216,7 @@ Sinoclaw logs are written to stderr when running in ACP mode. Check:
 You can also enable verbose logging:
 
 ```bash
-HERMES_LOG_LEVEL=DEBUG sinoclaw acp
+SINOCLAW_LOG_LEVEL=DEBUG sinoclaw acp
 ```
 
 ---

@@ -213,7 +213,7 @@ Both backends tested on the same machine (Apple M5 Max, 128 GB unified memory) r
 Once your local server is running:
 
 ```bash
-hermes model
+sinoclaw model
 ```
 
 Select **Custom endpoint** and follow the prompts. It will ask for the base URL and model name — use the values from whichever backend you set up above.
@@ -228,13 +228,13 @@ If you still hit timeout errors (e.g. very large contexts on slow hardware), you
 
 ```bash
 # In your .env — raise from the 120s default to 30 minutes
-HERMES_STREAM_READ_TIMEOUT=1800
+SINOCLAW_STREAM_READ_TIMEOUT=1800
 ```
 
 | Timeout | Default | Local auto-adjustment | Env var override |
 |---------|---------|----------------------|------------------|
-| Stream read (socket-level) | 120s | Raised to 1800s | `HERMES_STREAM_READ_TIMEOUT` |
-| Stale stream detection | 180s | Disabled entirely | `HERMES_STREAM_STALE_TIMEOUT` |
-| API call (non-streaming) | 1800s | No change needed | `HERMES_API_TIMEOUT` |
+| Stream read (socket-level) | 120s | Raised to 1800s | `SINOCLAW_STREAM_READ_TIMEOUT` |
+| Stale stream detection | 180s | Disabled entirely | `SINOCLAW_STREAM_STALE_TIMEOUT` |
+| API call (non-streaming) | 1800s | No change needed | `SINOCLAW_API_TIMEOUT` |
 
 The stream read timeout is the one most likely to cause issues — it's the socket-level deadline for receiving the next chunk of data. During prefill on large contexts, local models may produce no output for minutes while processing the prompt. The auto-detection handles this transparently.

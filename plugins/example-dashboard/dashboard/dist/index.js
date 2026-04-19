@@ -1,13 +1,13 @@
 /**
  * Example Dashboard Plugin
  *
- * Demonstrates how to build a dashboard plugin using the Hermes Plugin SDK.
+ * Demonstrates how to build a dashboard plugin using the Sinoclaw Plugin SDK.
  * No build step needed — this is a plain IIFE that uses globals from the SDK.
  */
 (function () {
   "use strict";
 
-  const SDK = window.__HERMES_PLUGIN_SDK__;
+  const SDK = window.__SINOCLAW_PLUGIN_SDK__;
   const { React } = SDK;
   const { Card, CardHeader, CardTitle, CardContent, Badge, Button } = SDK.components;
   const { useState, useEffect } = SDK.hooks;
@@ -38,7 +38,7 @@
           React.createElement("p", { className: "text-sm text-muted-foreground" },
             "This is an example dashboard plugin. It demonstrates using the Plugin SDK to build ",
             "custom tabs with React components, connect to backend API routes, and integrate with ",
-            "the existing Hermes UI system.",
+            "the existing Sinoclaw UI system.",
           ),
           React.createElement("div", { className: "flex items-center gap-3" },
             React.createElement(Button, {
@@ -64,23 +64,23 @@
         React.createElement(CardContent, null,
           React.createElement("div", { className: "grid gap-3 text-sm" },
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.React"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.React"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "React instance — use instead of importing react"),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.hooks"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.hooks"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "useState, useEffect, useCallback, useMemo, useRef, useContext, createContext"),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.components"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.components"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "Card, Badge, Button, Input, Label, Select, Separator, Tabs, etc."),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.api"),
-              React.createElement("span", { className: "text-muted-foreground text-xs" }, "Hermes API client — getStatus(), getSessions(), etc."),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.api"),
+              React.createElement("span", { className: "text-muted-foreground text-xs" }, "Sinoclaw API client — getStatus(), getSessions(), etc."),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.utils"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.utils"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "cn(), timeAgo(), isoTimeAgo()"),
             ),
           ),
@@ -90,5 +90,5 @@
   }
 
   // Register this plugin — the dashboard picks it up automatically.
-  window.__HERMES_PLUGINS__.register("example", ExamplePage);
+  window.__SINOCLAW_PLUGINS__.register("example", ExamplePage);
 })();

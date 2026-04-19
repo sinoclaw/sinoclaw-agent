@@ -13,7 +13,7 @@ Dashboard plugins let you add custom tabs to the web dashboard. A plugin can dis
 Create a plugin directory with a manifest and a JS file:
 
 ```bash
-mkdir -p ~/.hermes/plugins/my-plugin/dashboard/dist
+mkdir -p ~/.sinoclaw/plugins/my-plugin/dashboard/dist
 ```
 
 **manifest.json:**
@@ -36,7 +36,7 @@ mkdir -p ~/.hermes/plugins/my-plugin/dashboard/dist
 
 ```javascript
 (function () {
-  var SDK = window.__HERMES_PLUGIN_SDK__;
+  var SDK = window.__SINOCLAW_PLUGIN_SDK__;
   var React = SDK.React;
   var Card = SDK.components.Card;
   var CardHeader = SDK.components.CardHeader;
@@ -56,7 +56,7 @@ mkdir -p ~/.hermes/plugins/my-plugin/dashboard/dist
     );
   }
 
-  window.__HERMES_PLUGINS__.register("my-plugin", MyPage);
+  window.__SINOCLAW_PLUGINS__.register("my-plugin", MyPage);
 })();
 ```
 
@@ -64,10 +64,10 @@ Refresh the dashboard — your tab appears in the navigation bar.
 
 ## Plugin Structure
 
-Plugins live inside the standard `~/.hermes/plugins/` directory. The dashboard extension is a `dashboard/` subfolder:
+Plugins live inside the standard `~/.sinoclaw/plugins/` directory. The dashboard extension is a `dashboard/` subfolder:
 
 ```
-~/.hermes/plugins/my-plugin/
+~/.sinoclaw/plugins/my-plugin/
   plugin.yaml              # optional — existing CLI/gateway plugin manifest
   __init__.py              # optional — existing CLI/gateway hooks
   dashboard/               # dashboard extension
@@ -135,12 +135,12 @@ Unrecognized icon names fall back to `Puzzle`.
 
 ## Plugin SDK
 
-Plugins don't bundle React or UI components — they use the SDK exposed on `window.__HERMES_PLUGIN_SDK__`. This avoids version conflicts and keeps plugin bundles tiny.
+Plugins don't bundle React or UI components — they use the SDK exposed on `window.__SINOCLAW_PLUGIN_SDK__`. This avoids version conflicts and keeps plugin bundles tiny.
 
 ### SDK Contents
 
 ```javascript
-var SDK = window.__HERMES_PLUGIN_SDK__;
+var SDK = window.__SINOCLAW_PLUGIN_SDK__;
 
 // React
 SDK.React              // React instance
@@ -241,12 +241,12 @@ Plugin API routes bypass session token authentication since the dashboard server
 
 ### Accessing Hermes Internals
 
-Backend routes can import from the hermes-agent codebase:
+Backend routes can import from the sinoclaw-agent codebase:
 
 ```python
 from fastapi import APIRouter
-from hermes_state import SessionDB
-from hermes_cli.config import load_config
+from sinoclaw_state import SessionDB
+from sinoclaw_cli.config import load_config
 
 router = APIRouter()
 
@@ -285,10 +285,10 @@ You can use the dashboard's CSS custom properties (e.g. `--color-border`, `--col
 
 ## Plugin Loading Flow
 
-1. Dashboard loads — `main.tsx` exposes the SDK on `window.__HERMES_PLUGIN_SDK__`
+1. Dashboard loads — `main.tsx` exposes the SDK on `window.__SINOCLAW_PLUGIN_SDK__`
 2. `App.tsx` calls `usePlugins()` which fetches `GET /api/dashboard/plugins`
 3. For each plugin: CSS `<link>` injected (if declared), JS `<script>` loaded
-4. Plugin JS calls `window.__HERMES_PLUGINS__.register(name, Component)`
+4. Plugin JS calls `window.__SINOCLAW_PLUGINS__.register(name, Component)`
 5. Dashboard adds the tab to navigation and mounts the component as a route
 
 Plugins have up to 2 seconds to register after their script loads. If a plugin fails to load, the dashboard continues without it.
@@ -297,9 +297,9 @@ Plugins have up to 2 seconds to register after their script loads. If a plugin f
 
 The dashboard scans these directories for `dashboard/manifest.json`:
 
-1. **User plugins:** `~/.hermes/plugins/<name>/dashboard/manifest.json`
+1. **User plugins:** `~/.sinoclaw/plugins/<name>/dashboard/manifest.json`
 2. **Bundled plugins:** `<repo>/plugins/<name>/dashboard/manifest.json`
-3. **Project plugins:** `./.hermes/plugins/<name>/dashboard/manifest.json` (only when `HERMES_ENABLE_PROJECT_PLUGINS` is set)
+3. **Project plugins:** `./.sinoclaw/plugins/<name>/dashboard/manifest.json` (only when `SINOCLAW_ENABLE_PROJECT_PLUGINS` is set)
 
 User plugins take precedence — if the same plugin name exists in multiple sources, the user version wins.
 
@@ -324,13 +324,13 @@ The repository includes an example plugin at `plugins/example-dashboard/` that d
 
 - Using SDK components (Card, Badge, Button)
 - Calling a backend API route
-- Registering via `window.__HERMES_PLUGINS__.register()`
+- Registering via `window.__SINOCLAW_PLUGINS__.register()`
 
-To try it, run `hermes dashboard` — the "Example" tab appears after Skills.
+To try it, run `sinoclaw dashboard` — the "Example" tab appears after Skills.
 
 ## Tips
 
 - **No build step required** — write plain JavaScript IIFEs. If you prefer JSX, use any bundler (esbuild, Vite, webpack) targeting IIFE output with React as an external.
 - **Keep bundles small** — React and all UI components are provided by the SDK. Your bundle should only contain your plugin logic.
 - **Use theme variables** — reference `var(--color-*)` in CSS to automatically match whatever theme the user has selected.
-- **Test locally** — run `hermes dashboard --no-open` and use browser dev tools to verify your plugin loads and registers correctly.
+- **Test locally** — run `sinoclaw dashboard --no-open` and use browser dev tools to verify your plugin loads and registers correctly.

@@ -15,19 +15,19 @@ Hermes isn't just a CLI tool. You can import `AIAgent` directly and use it progr
 Install Hermes directly from the repository:
 
 ```bash
-pip install git+https://github.com/NousResearch/hermes-agent.git
+pip install git+https://github.com/NousResearch/sinoclaw-agent.git
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv pip install git+https://github.com/NousResearch/hermes-agent.git
+uv pip install git+https://github.com/NousResearch/sinoclaw-agent.git
 ```
 
 You can also pin it in your `requirements.txt`:
 
 ```text
-hermes-agent @ git+https://github.com/NousResearch/hermes-agent.git
+sinoclaw-agent @ git+https://github.com/NousResearch/sinoclaw-agent.git
 ```
 
 :::tip
@@ -265,7 +265,7 @@ client = discord.Client(intents=discord.Intents.default())
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content.startswith("!hermes "):
+    if message.content.startswith("!sinoclaw "):
         query = message.content[8:]
         agent = AIAgent(
             model="anthropic/claude-sonnet-4",

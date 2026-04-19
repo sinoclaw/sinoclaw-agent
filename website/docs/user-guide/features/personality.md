@@ -1,12 +1,12 @@
 ---
 sidebar_position: 9
 title: "Personality & SOUL.md"
-description: "Customize Hermes Agent's personality with a global SOUL.md, built-in personalities, and custom persona definitions"
+description: "Customize Sinoclaw Agent's personality with a global SOUL.md, built-in personalities, and custom persona definitions"
 ---
 
 # Personality & SOUL.md
 
-Hermes Agent's personality is fully customizable. `SOUL.md` is the **primary identity** — it's the first thing in the system prompt and defines who the agent is.
+Sinoclaw Agent's personality is fully customizable. `SOUL.md` is the **primary identity** — it's the first thing in the system prompt and defines who the agent is.
 
 - `SOUL.md` — a durable persona file that lives in `SINOCLAW_HOME` and serves as the agent's identity (slot #1 in the system prompt)
 - built-in or custom `/personality` presets — session-level system-prompt overlays
@@ -18,7 +18,7 @@ If you want to change who Hermes is — or replace it with an entirely different
 Hermes now seeds a default `SOUL.md` automatically in:
 
 ```text
-~/.hermes/SOUL.md
+~/.sinoclaw/SOUL.md
 ```
 
 More precisely, it uses the current instance's `SINOCLAW_HOME`, so if you run Hermes with a custom home directory, it will use:
@@ -47,14 +47,14 @@ This keeps personality predictable.
 If Hermes loaded `SOUL.md` from whatever directory you happened to launch it in, your personality could change unexpectedly between projects. By loading only from `SINOCLAW_HOME`, the personality belongs to the Hermes instance itself.
 
 That also makes it easier to teach users:
-- "Edit `~/.hermes/SOUL.md` to change Hermes' default personality."
+- "Edit `~/.sinoclaw/SOUL.md` to change Hermes' default personality."
 
 ## Where to edit it
 
 For most users:
 
 ```bash
-~/.hermes/SOUL.md
+~/.sinoclaw/SOUL.md
 ```
 
 If you use a custom home:
@@ -211,7 +211,7 @@ These are convenient overlays, but your global `SOUL.md` still gives Hermes its 
 
 ## Custom personalities in config
 
-You can also define named custom personalities in `~/.hermes/config.yaml` under `agent.personalities`.
+You can also define named custom personalities in `~/.sinoclaw/config.yaml` under `agent.personalities`.
 
 ```yaml
 agent:
@@ -231,7 +231,7 @@ Then switch to it with:
 
 A strong default setup is:
 
-1. Keep a thoughtful global `SOUL.md` in `~/.hermes/SOUL.md`
+1. Keep a thoughtful global `SOUL.md` in `~/.sinoclaw/SOUL.md`
 2. Put project instructions in `AGENTS.md`
 3. Use `/personality` only when you want a temporary mode shift
 
@@ -259,7 +259,7 @@ At a high level, the prompt stack includes:
 - [Context Files](/docs/user-guide/features/context-files)
 - [Configuration](/docs/user-guide/configuration)
 - [Tips & Best Practices](/docs/guides/tips)
-- [SOUL.md Guide](/docs/guides/use-soul-with-hermes)
+- [SOUL.md Guide](/docs/guides/use-soul-with-sinoclaw)
 
 ## CLI appearance vs conversational personality
 

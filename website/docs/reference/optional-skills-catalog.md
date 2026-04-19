@@ -1,22 +1,22 @@
 ---
 sidebar_position: 9
 title: "Optional Skills Catalog"
-description: "Official optional skills shipped with hermes-agent — install via hermes skills install official/<category>/<skill>"
+description: "Official optional skills shipped with sinoclaw-agent — install via sinoclaw skills install official/<category>/<skill>"
 ---
 
 # Optional Skills Catalog
 
-Official optional skills ship with the hermes-agent repository under `optional-skills/` but are **not active by default**. Install them explicitly:
+Official optional skills ship with the sinoclaw-agent repository under `optional-skills/` but are **not active by default**. Install them explicitly:
 
 ```bash
-hermes skills install official/<category>/<skill>
+sinoclaw skills install official/<category>/<skill>
 ```
 
 For example:
 
 ```bash
-hermes skills install official/blockchain/solana
-hermes skills install official/mlops/flash-attention
+sinoclaw skills install official/blockchain/solana
+sinoclaw skills install official/mlops/flash-attention
 ```
 
 Once installed, the skill appears in the agent's skill list and can be loaded automatically when relevant tasks are detected.
@@ -24,7 +24,7 @@ Once installed, the skill appears in the agent's skill list and can be loaded au
 To uninstall:
 
 ```bash
-hermes skills uninstall <skill-name>
+sinoclaw skills uninstall <skill-name>
 ```
 
 ---
@@ -85,7 +85,7 @@ hermes skills uninstall <skill-name>
 
 | Skill | Description |
 |-------|-------------|
-| **openclaw-migration** | Migrate a user's OpenClaw customization footprint into Hermes Agent. Imports memories, SOUL.md, command allowlists, user skills, and selected workspace assets. |
+| **openclaw-migration** | Migrate a user's OpenClaw customization footprint into Sinoclaw Agent. Imports memories, SOUL.md, command allowlists, user skills, and selected workspace assets. |
 
 ## MLOps
 
@@ -97,7 +97,7 @@ The largest optional category — covers the full ML pipeline from data curation
 | **chroma** | Open-source embedding database. Store embeddings and metadata, perform vector and full-text search. Simple 4-function API for RAG and semantic search. |
 | **faiss** | Facebook's library for efficient similarity search and clustering of dense vectors. Supports billions of vectors, GPU acceleration, and various index types (Flat, IVF, HNSW). |
 | **flash-attention** | Optimize transformer attention with Flash Attention for 2-4x speedup and 10-20x memory reduction. Supports PyTorch SDPA, flash-attn library, H100 FP8, and sliding window. |
-| **hermes-atropos-environments** | Build, test, and debug Hermes Agent RL environments for Atropos training. Covers the HermesAgentBaseEnv interface, reward functions, agent loop integration, and evaluation. |
+| **sinoclaw-atropos-environments** | Build, test, and debug Sinoclaw Agent RL environments for Atropos training. Covers the HermesAgentBaseEnv interface, reward functions, agent loop integration, and evaluation. |
 | **huggingface-tokenizers** | Fast Rust-based tokenizers for research and production. Tokenizes 1GB in under 20 seconds. Supports BPE, WordPiece, and Unigram algorithms. |
 | **instructor** | Extract structured data from LLM responses with Pydantic validation, retry failed extractions automatically, and stream partial results. |
 | **lambda-labs** | Reserved and on-demand GPU cloud instances for ML training and inference. SSH access, persistent filesystems, and multi-node clusters. |

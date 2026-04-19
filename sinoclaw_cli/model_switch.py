@@ -731,7 +731,7 @@ def switch_model(
     # Anthropic SDK prepends its own /v1/messages to the base_url.  Strip the
     # trailing /v1 so the SDK constructs the correct path (e.g.
     # https://opencode.ai/zen/go/v1/messages instead of .../v1/v1/messages).
-    # Mirrors the same logic in hermes_cli.runtime_provider.resolve_runtime_provider;
+    # Mirrors the same logic in sinoclaw_cli.runtime_provider.resolve_runtime_provider;
     # without it, /model switches into an anthropic_messages-routed OpenCode
     # model (e.g. `/model minimax-m2.7` on opencode-go, `/model claude-sonnet-4-6`
     # on opencode-zen) hit a double /v1 and returned OpenCode's website 404 page.
@@ -877,15 +877,15 @@ def list_authenticated_providers(
         seen_mdev_ids.add(mdev_id)
 
     # --- 2. Check Sinoclaw-only providers (nous, openai-codex, copilot, opencode-go) ---
-    from sinoclaw_cli.providers import HERMES_OVERLAYS
+    from sinoclaw_cli.providers import SINOCLAW_OVERLAYS
     from sinoclaw_cli.auth import PROVIDER_REGISTRY as _auth_registry
 
     # Build reverse mapping: models.dev ID → Sinoclaw provider ID.
-    # HERMES_OVERLAYS keys may be models.dev IDs (e.g. "github-copilot")
+    # SINOCLAW_OVERLAYS keys may be models.dev IDs (e.g. "github-copilot")
     # while _PROVIDER_MODELS and config.yaml use Sinoclaw IDs ("copilot").
     _mdev_to_sinoclaw = {v: k for k, v in PROVIDER_TO_MODELS_DEV.items()}
 
-    for pid, overlay in HERMES_OVERLAYS.items():
+    for pid, overlay in SINOCLAW_OVERLAYS.items():
         if pid.lower() in seen_slugs:
             continue
 
@@ -977,7 +977,7 @@ def list_authenticated_providers(
 
     # --- 2b. Cross-check canonical provider list ---
     # Catches providers that are in CANONICAL_PROVIDERS but weren't found
-    # in PROVIDER_TO_MODELS_DEV or HERMES_OVERLAYS (keeps /model in sync
+    # in PROVIDER_TO_MODELS_DEV or SINOCLAW_OVERLAYS (keeps /model in sync
     # with `sinoclaw model`).
     try:
         from sinoclaw_cli.models import CANONICAL_PROVIDERS as _canon_provs

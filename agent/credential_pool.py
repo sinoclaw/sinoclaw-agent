@@ -1208,9 +1208,9 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             logger.debug("Qwen OAuth token seed failed: %s", exc)
 
     elif provider == "openai-codex":
-        # Respect user suppression — `hermes auth remove openai-codex` marks
+        # Respect user suppression — `sinoclaw auth remove openai-codex` marks
         # the device_code source as suppressed so it won't be re-seeded from
-        # either the Hermes auth store or ~/.codex/auth.json.  Without this
+        # either the Sinoclaw auth store or ~/.codex/auth.json.  Without this
         # gate the removal is instantly undone on the next load_pool() call.
         codex_suppressed = False
         try:

@@ -76,7 +76,7 @@ if __name__ == "__main__":
 Run it:
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 source .venv/bin/activate
 python my_cli.py
 ```

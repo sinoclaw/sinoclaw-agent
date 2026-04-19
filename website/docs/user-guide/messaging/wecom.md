@@ -1,7 +1,7 @@
 ---
 sidebar_position: 14
 title: "WeCom (Enterprise WeChat)"
-description: "Connect Hermes Agent to WeCom via the AI Bot WebSocket gateway"
+description: "Connect Sinoclaw Agent to WeCom via the AI Bot WebSocket gateway"
 ---
 
 # WeCom (Enterprise WeChat)
@@ -29,12 +29,12 @@ Connect Hermes to [WeCom](https://work.weixin.qq.com/) (企业微信), Tencent's
 Run the interactive setup:
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 Select **WeCom** and enter your Bot ID and Secret.
 
-Or set environment variables in `~/.hermes/.env`:
+Or set environment variables in `~/.sinoclaw/.env`:
 
 ```bash
 WECOM_BOT_ID=your-bot-id
@@ -50,7 +50,7 @@ WECOM_HOME_CHANNEL=chat_id
 ### 3. Start the gateway
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 ## Features

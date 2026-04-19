@@ -1,12 +1,12 @@
 ---
 sidebar_position: 6
 title: "Use MCP with Hermes"
-description: "A practical guide to connecting MCP servers to Hermes Agent, filtering their tools, and using them safely in real workflows"
+description: "A practical guide to connecting MCP servers to Sinoclaw Agent, filtering their tools, and using them safely in real workflows"
 ---
 
 # Use MCP with Hermes
 
-This guide shows how to actually use MCP with Hermes Agent in day-to-day workflows.
+This guide shows how to actually use MCP with Sinoclaw Agent in day-to-day workflows.
 
 If the feature page explains what MCP is, this guide is about how to get value from it quickly and safely.
 
@@ -42,7 +42,7 @@ If you installed Hermes with the standard install script, MCP support is already
 If you installed without extras and need to add MCP separately:
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 uv pip install -e ".[mcp]"
 ```
 
@@ -66,7 +66,7 @@ mcp_servers:
 Then start Hermes:
 
 ```bash
-hermes chat
+sinoclaw chat
 ```
 
 Now ask something concrete:
@@ -141,7 +141,7 @@ There are two categories of MCP-exposed functionality in Hermes:
   - `tools.include`
   - `tools.exclude`
 
-2. Hermes-added utility wrappers
+2. Sinoclaw-added utility wrappers
 - filtered with:
   - `tools.resources`
   - `tools.prompts`
