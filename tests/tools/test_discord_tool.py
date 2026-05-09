@@ -616,24 +616,24 @@ class TestRegistration:
 
 
 # ---------------------------------------------------------------------------
-# Toolset: discord / discord_admin only in hermes-discord
+# Toolset: discord / discord_admin only in sinoclaw-discord
 # ---------------------------------------------------------------------------
 
 class TestToolsetInclusion:
-    def test_discord_tools_in_hermes_discord_toolset(self):
+    def test_discord_tools_in_sinoclaw_discord_toolset(self):
         from toolsets import TOOLSETS
-        assert "discord" in TOOLSETS["hermes-discord"]["tools"]
-        assert "discord_admin" in TOOLSETS["hermes-discord"]["tools"]
+        assert "discord" in TOOLSETS["sinoclaw-discord"]["tools"]
+        assert "discord_admin" in TOOLSETS["sinoclaw-discord"]["tools"]
 
     def test_discord_tools_not_in_core_tools(self):
-        from toolsets import _HERMES_CORE_TOOLS
-        assert "discord" not in _HERMES_CORE_TOOLS
-        assert "discord_admin" not in _HERMES_CORE_TOOLS
+        from toolsets import _SINOCLAW_CORE_TOOLS
+        assert "discord" not in _SINOCLAW_CORE_TOOLS
+        assert "discord_admin" not in _SINOCLAW_CORE_TOOLS
 
     def test_discord_tools_not_in_other_toolsets(self):
         from toolsets import TOOLSETS
         for name, ts in TOOLSETS.items():
-            if name in ("hermes-discord", "hermes-gateway", "discord", "discord_admin"):
+            if name in ("sinoclaw-discord", "sinoclaw-gateway", "discord", "discord_admin"):
                 continue
             tools = ts.get("tools", [])
             assert "discord" not in tools or name == "discord", (
@@ -776,21 +776,21 @@ class TestConfigAllowlist:
     def test_empty_string_returns_none(self, monkeypatch):
         """Empty config means no allowlist — all actions visible."""
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         assert _load_allowed_actions_config() is None
 
     def test_missing_key_returns_none(self, monkeypatch):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {}},
         )
         assert _load_allowed_actions_config() is None
 
     def test_comma_separated_string(self, monkeypatch):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds,list_channels,fetch_messages"}},
         )
         result = _load_allowed_actions_config()
@@ -798,7 +798,7 @@ class TestConfigAllowlist:
 
     def test_yaml_list(self, monkeypatch):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ["list_guilds", "server_info"]}},
         )
         result = _load_allowed_actions_config()
@@ -806,7 +806,7 @@ class TestConfigAllowlist:
 
     def test_unknown_names_dropped(self, monkeypatch, caplog):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds,bogus_action,fetch_messages"}},
         )
         with caplog.at_level("WARNING"):
@@ -818,12 +818,12 @@ class TestConfigAllowlist:
         """If config can't be loaded at all, fall back to None (all allowed)."""
         def bad_load():
             raise RuntimeError("disk gone")
-        monkeypatch.setattr("hermes_cli.config.load_config", bad_load)
+        monkeypatch.setattr("sinoclaw_cli.config.load_config", bad_load)
         assert _load_allowed_actions_config() is None
 
     def test_unexpected_type_ignored(self, monkeypatch, caplog):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": {"unexpected": "dict"}}},
         )
         with caplog.at_level("WARNING"):
@@ -898,7 +898,7 @@ class TestDynamicSchema:
     def test_full_intents_core_schema(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": (1 << 14) | (1 << 18)}
@@ -911,7 +911,7 @@ class TestDynamicSchema:
     def test_full_intents_admin_schema(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": (1 << 14) | (1 << 18)}
@@ -930,7 +930,7 @@ class TestDynamicSchema:
         GUILD_MEMBERS intent is missing."""
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": 1 << 18}  # only MESSAGE_CONTENT
@@ -946,7 +946,7 @@ class TestDynamicSchema:
         """search_members is a core action gated by GUILD_MEMBERS intent."""
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": 1 << 18}  # only MESSAGE_CONTENT
@@ -958,7 +958,7 @@ class TestDynamicSchema:
     def test_no_message_content_adds_warning_note(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": 1 << 14}  # only GUILD_MEMBERS
@@ -972,7 +972,7 @@ class TestDynamicSchema:
     def test_config_allowlist_narrows_admin_schema(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds,list_channels"}},
         )
         mock_req.return_value = {"flags": (1 << 14) | (1 << 18)}
@@ -988,7 +988,7 @@ class TestDynamicSchema:
         were typos), get_dynamic_schema returns None so the tool is dropped."""
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "typo_one,typo_two"}},
         )
         mock_req.return_value = {"flags": (1 << 14) | (1 << 18)}
@@ -1000,7 +1000,7 @@ class TestDynamicSchema:
         """get_dynamic_schema() should delegate to get_dynamic_schema_core()."""
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.return_value = {"flags": (1 << 14) | (1 << 18)}
@@ -1020,7 +1020,7 @@ class TestRuntimeAllowlistEnforcement:
     def test_denied_action_blocked_at_runtime(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds"}},
         )
         result = json.loads(discord_admin_handler(action="add_role", guild_id="1", user_id="2", role_id="3"))
@@ -1032,7 +1032,7 @@ class TestRuntimeAllowlistEnforcement:
     def test_allowed_action_proceeds(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds"}},
         )
         mock_req.return_value = []
@@ -1059,7 +1059,7 @@ class Test403Enrichment:
     def test_403_in_runtime_is_enriched(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.side_effect = DiscordAPIError(403, '{"message":"Missing Permissions"}')
@@ -1073,7 +1073,7 @@ class Test403Enrichment:
     def test_non_403_errors_are_not_enriched(self, mock_req, monkeypatch):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": ""}},
         )
         mock_req.side_effect = DiscordAPIError(500, "server error")
@@ -1101,14 +1101,14 @@ class TestModelToolsIntegration:
         available, it should replace the static schema with the dynamic one."""
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "list_guilds,server_info"}},
         )
         # Bot without GUILD_MEMBERS intent
         mock_req.return_value = {"flags": 0}
 
         from model_tools import get_tool_definitions
-        tools = get_tool_definitions(enabled_toolsets=["hermes-discord"], quiet_mode=True)
+        tools = get_tool_definitions(enabled_toolsets=["sinoclaw-discord"], quiet_mode=True)
         discord_admin_tool = next(
             (t for t in tools if t.get("function", {}).get("name") == "discord_admin"),
             None,
@@ -1123,13 +1123,13 @@ class TestModelToolsIntegration:
     ):
         monkeypatch.setenv("DISCORD_BOT_TOKEN", "tok")
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"discord": {"server_actions": "all_bogus_names"}},
         )
         mock_req.return_value = {"flags": 0}
 
         from model_tools import get_tool_definitions
-        tools = get_tool_definitions(enabled_toolsets=["hermes-discord"], quiet_mode=True)
+        tools = get_tool_definitions(enabled_toolsets=["sinoclaw-discord"], quiet_mode=True)
         names = [t.get("function", {}).get("name") for t in tools]
         assert "discord" not in names
         assert "discord_admin" not in names

@@ -4,7 +4,7 @@ set -euo pipefail
 # Bootstrap Open WebUI against Hermes Agent's OpenAI-compatible API server.
 #
 # Idempotent by design:
-# - ensures ~/.hermes/.env has API server settings
+# - ensures ~/.sinoclaw/.env has API server settings
 # - installs Open WebUI into ~/.local/open-webui-venv
 # - writes a reusable launcher at ~/.local/bin/start-open-webui-hermes.sh
 # - optionally installs a user service (launchd on macOS, systemd --user on Linux)
@@ -20,9 +20,9 @@ set -euo pipefail
 #   OPEN_WEBUI_ENABLE_SERVICE=auto   # auto|true|false
 #   OPEN_WEBUI_VENV=~/.local/open-webui-venv
 #   OPEN_WEBUI_DATA_DIR=~/.local/share/open-webui/data
-#   HERMES_API_PORT=8642
-#   HERMES_API_HOST=127.0.0.1
-#   HERMES_API_MODEL_NAME='Hermes Agent'
+#   SINOCLAW_API_PORT=8642
+#   SINOCLAW_API_HOST=127.0.0.1
+#   SINOCLAW_API_MODEL_NAME='Hermes Agent'
 
 OPEN_WEBUI_PORT="${OPEN_WEBUI_PORT:-8080}"
 OPEN_WEBUI_HOST="${OPEN_WEBUI_HOST:-127.0.0.1}"
@@ -31,14 +31,14 @@ OPEN_WEBUI_ENABLE_SIGNUP="${OPEN_WEBUI_ENABLE_SIGNUP:-true}"
 OPEN_WEBUI_ENABLE_SERVICE="${OPEN_WEBUI_ENABLE_SERVICE:-auto}"
 OPEN_WEBUI_VENV="${OPEN_WEBUI_VENV:-$HOME/.local/open-webui-venv}"
 OPEN_WEBUI_DATA_DIR="${OPEN_WEBUI_DATA_DIR:-$HOME/.local/share/open-webui/data}"
-HERMES_ENV_FILE="${HERMES_ENV_FILE:-$HOME/.hermes/.env}"
-HERMES_API_PORT="${HERMES_API_PORT:-8642}"
-HERMES_API_HOST="${HERMES_API_HOST:-127.0.0.1}"
-HERMES_API_CONNECT_HOST="${HERMES_API_CONNECT_HOST:-127.0.0.1}"
-HERMES_API_MODEL_NAME="${HERMES_API_MODEL_NAME:-Hermes Agent}"
-HERMES_API_BASE_URL="http://${HERMES_API_CONNECT_HOST}:${HERMES_API_PORT}/v1"
+SINOCLAW_ENV_FILE="${SINOCLAW_ENV_FILE:-$HOME/.sinoclaw/.env}"
+SINOCLAW_API_PORT="${SINOCLAW_API_PORT:-8642}"
+SINOCLAW_API_HOST="${SINOCLAW_API_HOST:-127.0.0.1}"
+SINOCLAW_API_CONNECT_HOST="${SINOCLAW_API_CONNECT_HOST:-127.0.0.1}"
+SINOCLAW_API_MODEL_NAME="${SINOCLAW_API_MODEL_NAME:-Hermes Agent}"
+SINOCLAW_API_BASE_URL="http://${SINOCLAW_API_CONNECT_HOST}:${SINOCLAW_API_PORT}/v1"
 LAUNCHER_PATH="$HOME/.local/bin/start-open-webui-hermes.sh"
-LOG_DIR="$HOME/.hermes/logs"
+LOG_DIR="$HOME/.sinoclaw/logs"
 
 log() {
   printf '[open-webui-bootstrap] %s\n' "$*"
@@ -173,7 +173,7 @@ write_launcher() {
   local quoted_data_dir quoted_name quoted_base_url quoted_host quoted_port quoted_venv
   quoted_data_dir="$(shell_quote "$OPEN_WEBUI_DATA_DIR")"
   quoted_name="$(shell_quote "$OPEN_WEBUI_NAME")"
-  quoted_base_url="$(shell_quote "$HERMES_API_BASE_URL")"
+  quoted_base_url="$(shell_quote "$SINOCLAW_API_BASE_URL")"
   quoted_host="$(shell_quote "$OPEN_WEBUI_HOST")"
   quoted_port="$(shell_quote "$OPEN_WEBUI_PORT")"
   quoted_venv="$(shell_quote "$OPEN_WEBUI_VENV")"
@@ -218,7 +218,7 @@ EOF
 }
 
 ensure_env_permissions() {
-  chmod 600 "$HERMES_ENV_FILE" 2>/dev/null || true
+  chmod 600 "$SINOCLAW_ENV_FILE" 2>/dev/null || true
 }
 
 install_launchd_service() {
@@ -271,8 +271,8 @@ ExecStart=/bin/bash %h/.local/bin/start-open-webui-hermes.sh
 Restart=always
 RestartSec=3
 WorkingDirectory=%h
-StandardOutput=append:%h/.hermes/logs/openwebui.log
-StandardError=append:%h/.hermes/logs/openwebui.error.log
+StandardOutput=append:%h/.sinoclaw/logs/openwebui.log
+StandardError=append:%h/.sinoclaw/logs/openwebui.error.log
 
 [Install]
 WantedBy=default.target
@@ -294,28 +294,28 @@ main() {
   install_macos_dependencies
 
   local api_key
-  api_key="$(get_env_value API_SERVER_KEY "$HERMES_ENV_FILE")"
+  api_key="$(get_env_value API_SERVER_KEY "$SINOCLAW_ENV_FILE")"
   if [[ -z "$api_key" ]]; then
     api_key="$(generate_secret)"
   fi
 
   log 'Ensuring Hermes API server is configured...'
-  upsert_env API_SERVER_ENABLED true "$HERMES_ENV_FILE"
-  upsert_env API_SERVER_HOST "$HERMES_API_HOST" "$HERMES_ENV_FILE"
-  upsert_env API_SERVER_PORT "$HERMES_API_PORT" "$HERMES_ENV_FILE"
-  upsert_env API_SERVER_MODEL_NAME "$HERMES_API_MODEL_NAME" "$HERMES_ENV_FILE"
-  upsert_env API_SERVER_KEY "$api_key" "$HERMES_ENV_FILE"
+  upsert_env API_SERVER_ENABLED true "$SINOCLAW_ENV_FILE"
+  upsert_env API_SERVER_HOST "$SINOCLAW_API_HOST" "$SINOCLAW_ENV_FILE"
+  upsert_env API_SERVER_PORT "$SINOCLAW_API_PORT" "$SINOCLAW_ENV_FILE"
+  upsert_env API_SERVER_MODEL_NAME "$SINOCLAW_API_MODEL_NAME" "$SINOCLAW_ENV_FILE"
+  upsert_env API_SERVER_KEY "$api_key" "$SINOCLAW_ENV_FILE"
   ensure_env_permissions
 
   log 'Restarting Hermes gateway so API server settings take effect...'
-  hermes gateway restart >/dev/null 2>&1 || true
+  sinoclaw gateway restart >/dev/null 2>&1 || true
   sleep 4
-  if ! curl -fsS "http://${HERMES_API_CONNECT_HOST}:${HERMES_API_PORT}/health" >/dev/null; then
+  if ! curl -fsS "http://${SINOCLAW_API_CONNECT_HOST}:${SINOCLAW_API_PORT}/health" >/dev/null; then
     log 'Hermes API server did not answer on the first check. Trying to start gateway in the background...'
-    nohup hermes gateway run >/dev/null 2>&1 &
+    nohup sinoclaw gateway run >/dev/null 2>&1 &
     sleep 6
   fi
-  curl -fsS "http://${HERMES_API_CONNECT_HOST}:${HERMES_API_PORT}/health" >/dev/null
+  curl -fsS "http://${SINOCLAW_API_CONNECT_HOST}:${SINOCLAW_API_PORT}/health" >/dev/null
 
   log 'Installing Open WebUI into a dedicated virtualenv...'
   install_open_webui
@@ -342,7 +342,7 @@ main() {
   esac
 
   log "Done. Open WebUI should be available at: http://${OPEN_WEBUI_HOST}:${OPEN_WEBUI_PORT}"
-  log "Hermes API endpoint: ${HERMES_API_BASE_URL}"
+  log "Hermes API endpoint: ${SINOCLAW_API_BASE_URL}"
   log 'Important: Open WebUI persists connection settings after first launch. If you later save a wrong API key in the Admin UI, update/delete that connection there or reset its database.'
 }
 

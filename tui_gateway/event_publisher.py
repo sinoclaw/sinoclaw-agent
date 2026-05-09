@@ -64,7 +64,7 @@ class WsPublisherTransport:
 
         self._worker = threading.Thread(
             target=self._drain,
-            name="hermes-ws-pub",
+            name="sinoclaw-ws-pub",
             daemon=True,
         )
         self._worker.start()

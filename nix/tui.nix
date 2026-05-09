@@ -7,13 +7,13 @@ let
     hash = "sha256-MLcLhjTF6dgdvNBtJWzo8Nh19eNh/ZitD2b07nm61Tc=";
   };
 
-  npm = hermesNpmLib.mkNpmPassthru { folder = "ui-tui"; attr = "tui"; pname = "hermes-tui"; };
+  npm = hermesNpmLib.mkNpmPassthru { folder = "ui-tui"; attr = "tui"; pname = "sinoclaw-tui"; };
 
   packageJson = builtins.fromJSON (builtins.readFile (src + "/package.json"));
   version = packageJson.version;
 in
 pkgs.buildNpmPackage (npm // {
-  pname = "hermes-tui";
+  pname = "sinoclaw-tui";
   inherit src npmDeps version;
 
   doCheck = false;
@@ -22,19 +22,19 @@ pkgs.buildNpmPackage (npm // {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib/hermes-tui
+    mkdir -p $out/lib/sinoclaw-tui
 
-    cp -r dist $out/lib/hermes-tui/dist
+    cp -r dist $out/lib/sinoclaw-tui/dist
 
     # runtime node_modules
-    cp -r node_modules $out/lib/hermes-tui/node_modules
+    cp -r node_modules $out/lib/sinoclaw-tui/node_modules
 
-    # @hermes/ink is a file: dependency, we need to copy it in fr
-    rm -f $out/lib/hermes-tui/node_modules/@hermes/ink
-    cp -r packages/hermes-ink $out/lib/hermes-tui/node_modules/@hermes/ink
+    # @sinoclaw/ink is a file: dependency, we need to copy it in fr
+    rm -f $out/lib/sinoclaw-tui/node_modules/@sinoclaw/ink
+    cp -r packages/sinoclaw-ink $out/lib/sinoclaw-tui/node_modules/@sinoclaw/ink
 
     # package.json needed for "type": "module" resolution
-    cp package.json $out/lib/hermes-tui/
+    cp package.json $out/lib/sinoclaw-tui/
 
     runHook postInstall
   '';

@@ -1389,13 +1389,13 @@ export default class Ink {
           return text
         }
 
-        if (process.env.HERMES_TUI_DEBUG_CLIPBOARD) {
+        if (process.env.SINOCLAW_TUI_DEBUG_CLIPBOARD) {
           console.error(
-            '[clipboard] no path reached the clipboard (headless + no tmux?) — set HERMES_TUI_FORCE_OSC52=1 to force the escape sequence'
+            '[clipboard] no path reached the clipboard (headless + no tmux?) — set SINOCLAW_TUI_FORCE_OSC52=1 to force the escape sequence'
           )
         }
       } catch (err) {
-        if (process.env.HERMES_TUI_DEBUG_CLIPBOARD) {
+        if (process.env.SINOCLAW_TUI_DEBUG_CLIPBOARD) {
           console.error('[clipboard] error:', err)
         }
       }

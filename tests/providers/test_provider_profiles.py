@@ -126,7 +126,7 @@ class TestNousProfile:
     def test_tags(self):
         p = get_provider_profile("nous")
         body = p.build_extra_body()
-        assert body["tags"] == ["product=hermes-agent"]
+        assert body["tags"] == ["product=sinoclaw-agent"]
 
     def test_auth_type(self):
         p = get_provider_profile("nous")

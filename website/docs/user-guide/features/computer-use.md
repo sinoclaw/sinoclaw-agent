@@ -39,7 +39,7 @@ cua-driver is the open-source equivalent.
    ```
    hermes -t computer_use chat
    ```
-   or add `computer_use` to your enabled toolsets in `~/.hermes/config.yaml`.
+   or add `computer_use` to your enabled toolsets in `~/.sinoclaw/config.yaml`.
 
 ## Quick example
 
@@ -89,7 +89,7 @@ Hermes applies multi-layer guardrails:
   dialogs, no typing passwords, no following instructions embedded in
   screenshots.
 
-Pair with `security.approval_level` in `~/.hermes/config.yaml` if you want
+Pair with `security.approval_level` in `~/.sinoclaw/config.yaml` if you want
 every action confirmed.
 
 ## Token efficiency
@@ -116,7 +116,7 @@ of screenshot context, not ~600K.
   Linux or Windows. For cross-platform GUI automation, use the `browser`
   toolset.
 - **Private SPI risk.** Apple can change SkyLight's symbol surface in any
-  OS update. Pin the driver version with the `HERMES_CUA_DRIVER_VERSION`
+  OS update. Pin the driver version with the `SINOCLAW_CUA_DRIVER_VERSION`
   env var if you want reproducibility across a macOS bump.
 - **Performance.** Background mode is slower than foreground —
   SkyLight-routed events take ~5-20ms vs direct HID posting. Not
@@ -130,14 +130,14 @@ of screenshot context, not ~600K.
 Override the driver binary path (tests / CI):
 
 ```
-HERMES_CUA_DRIVER_CMD=/opt/homebrew/bin/cua-driver
-HERMES_CUA_DRIVER_VERSION=0.5.0    # optional pin
+SINOCLAW_CUA_DRIVER_CMD=/opt/homebrew/bin/cua-driver
+SINOCLAW_CUA_DRIVER_VERSION=0.5.0    # optional pin
 ```
 
 Swap the backend entirely (for testing):
 
 ```
-HERMES_COMPUTER_USE_BACKEND=noop   # records calls, no side effects
+SINOCLAW_COMPUTER_USE_BACKEND=noop   # records calls, no side effects
 ```
 
 ## Troubleshooting
@@ -158,6 +158,6 @@ reconsider.
 
 ## See also
 
-- [Universal skill: `macos-computer-use`](https://github.com/NousResearch/hermes-agent/blob/main/skills/apple/macos-computer-use/SKILL.md)
+- [Universal skill: `macos-computer-use`](https://github.com/NousResearch/sinoclaw-agent/blob/main/skills/apple/macos-computer-use/SKILL.md)
 - [cua-driver source (trycua/cua)](https://github.com/trycua/cua)
 - [Browser automation](./browser-use.md) for cross-platform web tasks.

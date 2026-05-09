@@ -29,16 +29,16 @@ Before starting, make sure you have:
 - **Hermes Agent installed** — see the [Installation guide](/docs/getting-started/installation)
 - **Gateway running** — the gateway daemon handles cron execution:
   ```bash
-  hermes gateway install   # Install as a user service
-  sudo hermes gateway install --system   # Linux servers: boot-time system service
+  sinoclaw gateway install   # Install as a user service
+  sudo sinoclaw gateway install --system   # Linux servers: boot-time system service
   # or
-  hermes gateway           # Run in foreground
+  sinoclaw gateway           # Run in foreground
   ```
 - **Firecrawl API key** — set `FIRECRAWL_API_KEY` in your environment for web search
 - **Messaging configured** (optional but recommended) — [Telegram](/docs/user-guide/messaging/telegram) or Discord set up with a home channel
 
 :::tip No messaging? No problem
-You can still follow this tutorial using `deliver: "local"`. Briefings will be saved to `~/.hermes/cron/output/` and you can read them anytime.
+You can still follow this tutorial using `deliver: "local"`. Briefings will be saved to `~/.sinoclaw/cron/output/` and you can read them anytime.
 :::
 
 ## Step 1: Test the Workflow Manually
@@ -248,9 +248,9 @@ hermes cron status
 If the gateway isn't running, your jobs won't execute. Install it as a background service for reliability:
 
 ```bash
-hermes gateway install
+sinoclaw gateway install
 # or on Linux servers
-sudo hermes gateway install --system
+sudo sinoclaw gateway install --system
 ```
 
 ## Going Further

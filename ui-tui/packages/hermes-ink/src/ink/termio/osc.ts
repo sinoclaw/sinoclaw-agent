@@ -85,9 +85,9 @@ export function getClipboardPath(): ClipboardPath {
 
 export function shouldEmitClipboardSequence(env: NodeJS.ProcessEnv = process.env): boolean {
   const override = (
-    env.HERMES_TUI_FORCE_OSC52 ??
-    env.HERMES_TUI_CLIPBOARD_OSC52 ??
-    env.HERMES_TUI_COPY_OSC52 ??
+    env.SINOCLAW_TUI_FORCE_OSC52 ??
+    env.SINOCLAW_TUI_CLIPBOARD_OSC52 ??
+    env.SINOCLAW_TUI_COPY_OSC52 ??
     ''
   ).trim()
 
@@ -283,7 +283,7 @@ function copyNative(text: string): boolean {
 
       // No display server → native tools will fail immediately. Cache null.
       if (!process.env.DISPLAY && !process.env.WAYLAND_DISPLAY) {
-        if (process.env.HERMES_TUI_DEBUG_CLIPBOARD) {
+        if (process.env.SINOCLAW_TUI_DEBUG_CLIPBOARD) {
           console.error('[clipboard] [native] Linux: no DISPLAY or WAYLAND_DISPLAY — native clipboard unavailable')
         }
 
@@ -299,7 +299,7 @@ function copyNative(text: string): boolean {
         const winner = await probeLinuxCopy()
         linuxCopy = winner
 
-        if (process.env.HERMES_TUI_DEBUG_CLIPBOARD) {
+        if (process.env.SINOCLAW_TUI_DEBUG_CLIPBOARD) {
           console.error(`[clipboard] [native] Linux: clipboard probe complete → ${winner ?? 'no tool available'}`)
         }
 

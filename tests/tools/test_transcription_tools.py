@@ -49,8 +49,8 @@ def clean_env(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     monkeypatch.delenv("MISTRAL_API_KEY", raising=False)
-    monkeypatch.delenv("HERMES_LOCAL_STT_COMMAND", raising=False)
-    monkeypatch.delenv("HERMES_LOCAL_STT_LANGUAGE", raising=False)
+    monkeypatch.delenv("SINOCLAW_LOCAL_STT_COMMAND", raising=False)
+    monkeypatch.delenv("SINOCLAW_LOCAL_STT_LANGUAGE", raising=False)
 
 
 # ============================================================================
@@ -153,7 +153,7 @@ class TestExplicitProviderRespected:
     def test_explicit_local_uses_local_command_fallback(self, monkeypatch):
         """Local-to-local_command fallback is fine — both are local."""
         monkeypatch.setenv(
-            "HERMES_LOCAL_STT_COMMAND",
+            "SINOCLAW_LOCAL_STT_COMMAND",
             "whisper {input_path} --output_dir {output_dir} --language {language}",
         )
         with patch("tools.transcription_tools._HAS_FASTER_WHISPER", False):
@@ -355,7 +355,7 @@ class TestTranscribeOpenAIExtended:
 
 class TestTranscribeLocalCommand:
     def test_auto_detects_local_whisper_binary(self, monkeypatch):
-        monkeypatch.delenv("HERMES_LOCAL_STT_COMMAND", raising=False)
+        monkeypatch.delenv("SINOCLAW_LOCAL_STT_COMMAND", raising=False)
         monkeypatch.setattr("tools.transcription_tools._find_whisper_binary", lambda: "/opt/homebrew/bin/whisper")
 
         from tools.transcription_tools import _get_local_command_template
@@ -372,10 +372,10 @@ class TestTranscribeLocalCommand:
         out_dir.mkdir()
 
         monkeypatch.setenv(
-            "HERMES_LOCAL_STT_COMMAND",
+            "SINOCLAW_LOCAL_STT_COMMAND",
             "whisper {input_path} --model {model} --output_dir {output_dir} --language {language}",
         )
-        monkeypatch.setenv("HERMES_LOCAL_STT_LANGUAGE", "en")
+        monkeypatch.setenv("SINOCLAW_LOCAL_STT_LANGUAGE", "en")
 
         def fake_tempdir(prefix=None):
             class _TempDir:
@@ -737,7 +737,7 @@ class TestLoadSttConfig:
 
     def test_real_load_returns_dict(self):
         """_load_stt_config should always return a dict, even on import error."""
-        with patch.dict("sys.modules", {"hermes_cli": None, "hermes_cli.config": None}):
+        with patch.dict("sys.modules", {"sinoclaw_cli": None, "sinoclaw_cli.config": None}):
             from tools.transcription_tools import _load_stt_config
             result = _load_stt_config()
         assert isinstance(result, dict)
@@ -1098,7 +1098,7 @@ class TestTranscribeAudioMistralDispatch:
 def mock_xai_http_module():
     """Inject a fake tools.xai_http module for testing."""
     fake_module = MagicMock()
-    fake_module.hermes_xai_user_agent = MagicMock(return_value="hermes-xai/test")
+    fake_module.sinoclaw_xai_user_agent = MagicMock(return_value="sinoclaw-xai/test")
     with patch.dict("sys.modules", {"tools.xai_http": fake_module}):
         yield fake_module
 
@@ -1203,7 +1203,7 @@ class TestTranscribeXAI:
         monkeypatch.setenv("XAI_API_KEY", "xai-test-key")
         # Explicitly set language via env to exercise the override chain
         # (config > env > DEFAULT_LOCAL_STT_LANGUAGE)
-        monkeypatch.setenv("HERMES_LOCAL_STT_LANGUAGE", "fr")
+        monkeypatch.setenv("SINOCLAW_LOCAL_STT_LANGUAGE", "fr")
 
         mock_response = MagicMock()
         mock_response.status_code = 200

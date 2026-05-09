@@ -11,7 +11,7 @@ three virtual model IDs so the ``hermes tools`` model picker and the
 
 All three hit the same underlying API model (``gpt-image-2``) with a
 different ``quality`` parameter. Output is base64 JSON → saved under
-``$HERMES_HOME/cache/images/``.
+``$SINOCLAW_HOME/cache/images/``.
 
 Selection precedence (first hit wins):
 
@@ -82,7 +82,7 @@ _SIZES = {
 def _load_openai_config() -> Dict[str, Any]:
     """Read ``image_gen`` from config.yaml (returns {} on any failure)."""
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
 
         cfg = load_config()
         section = cfg.get("image_gen") if isinstance(cfg, dict) else None
@@ -191,7 +191,7 @@ class OpenAIImageGenProvider(ImageGenProvider):
             return error_response(
                 error=(
                     "OPENAI_API_KEY not set. Run `hermes tools` → Image "
-                    "Generation → OpenAI to configure, or `hermes setup` "
+                    "Generation → OpenAI to configure, or `sinoclaw setup` "
                     "to add the key."
                 ),
                 error_type="auth_required",

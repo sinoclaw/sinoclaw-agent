@@ -17,7 +17,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from hermes_cli import kanban_db as kb
+from sinoclaw_cli import kanban_db as kb
 
 
 # ---------------------------------------------------------------------------
@@ -32,7 +32,7 @@ def _load_plugin_router():
     assert plugin_file.exists(), f"plugin file missing: {plugin_file}"
 
     spec = importlib.util.spec_from_file_location(
-        "hermes_dashboard_plugin_kanban_test", plugin_file,
+        "sinoclaw_dashboard_plugin_kanban_test", plugin_file,
     )
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
@@ -43,10 +43,10 @@ def _load_plugin_router():
 
 @pytest.fixture
 def kanban_home(tmp_path, monkeypatch):
-    """Isolated HERMES_HOME with an empty kanban DB."""
+    """Isolated SINOCLAW_HOME with an empty kanban DB."""
     home = tmp_path / ".hermes"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     kb.init_db()
     return home
@@ -533,7 +533,7 @@ def test_board_auto_initializes_missing_db(tmp_path, monkeypatch):
     """If kanban.db doesn't exist yet, GET /board must create it, not 500."""
     home = tmp_path / ".hermes"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     # Deliberately DO NOT call kb.init_db().
 
@@ -555,16 +555,16 @@ def test_ws_events_rejects_when_token_required(tmp_path, monkeypatch):
     wrong ?token= query param must be rejected with policy-violation."""
     home = tmp_path / ".hermes"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     kb.init_db()
 
     # Stub web_server so _check_ws_token has a token to compare against.
-    import hermes_cli
+    import sinoclaw_cli
     import types
     stub = types.SimpleNamespace(_SESSION_TOKEN="secret-xyz")
-    monkeypatch.setitem(sys.modules, "hermes_cli.web_server", stub)
-    monkeypatch.setattr(hermes_cli, "web_server", stub, raising=False)
+    monkeypatch.setitem(sys.modules, "sinoclaw_cli.web_server", stub)
+    monkeypatch.setattr(sinoclaw_cli, "web_server", stub, raising=False)
 
     app = FastAPI()
     app.include_router(_load_plugin_router(), prefix="/api/plugins/kanban")
@@ -606,7 +606,7 @@ def test_ws_events_swallows_cancellation_on_shutdown(tmp_path, monkeypatch):
 
     home = tmp_path / ".hermes"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     kb.init_db()
 
@@ -825,7 +825,7 @@ def test_config_returns_defaults_when_section_missing(client):
 
 
 def test_config_reads_dashboard_kanban_section(tmp_path, monkeypatch, client):
-    home = Path(os.environ["HERMES_HOME"])
+    home = Path(os.environ["SINOCLAW_HOME"])
     (home / "config.yaml").write_text(
         "dashboard:\n"
         "  kanban:\n"
@@ -856,7 +856,7 @@ def test_task_detail_includes_runs(client):
     # Drive status running to force a run creation: PATCH to running
     # doesn't call claim_task (the PATCH path uses _set_status_direct),
     # so use the bulk/claim indirection via the kernel.
-    import hermes_cli.kanban_db as _kb
+    import sinoclaw_cli.kanban_db as _kb
     conn = _kb.connect()
     try:
         _kb.claim_task(conn, tid)
@@ -894,7 +894,7 @@ def test_patch_status_done_with_summary_and_metadata(client):
     # Create + claim.
     r = client.post("/api/plugins/kanban/tasks", json={"title": "x", "assignee": "worker"})
     tid = r.json()["task"]["id"]
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     conn = kb.connect()
     try:
         kb.claim_task(conn, tid)
@@ -926,7 +926,7 @@ def test_patch_status_done_without_summary_still_works(client):
     """Back-compat: PATCH without the new fields still completes."""
     r = client.post("/api/plugins/kanban/tasks", json={"title": "y", "assignee": "worker"})
     tid = r.json()["task"]["id"]
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     conn = kb.connect()
     try:
         kb.claim_task(conn, tid)
@@ -950,7 +950,7 @@ def test_patch_status_archive_closes_running_run(client):
     """PATCH to archived while running must close the in-flight run."""
     r = client.post("/api/plugins/kanban/tasks", json={"title": "z", "assignee": "worker"})
     tid = r.json()["task"]["id"]
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     conn = kb.connect()
     try:
         kb.claim_task(conn, tid)
@@ -977,7 +977,7 @@ def test_event_dict_includes_run_id(client):
     """GET /tasks/:id returns events with run_id populated."""
     r = client.post("/api/plugins/kanban/tasks", json={"title": "e", "assignee": "worker"})
     tid = r.json()["task"]["id"]
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     conn = kb.connect()
     try:
         kb.claim_task(conn, tid)
@@ -1046,8 +1046,8 @@ def test_create_task_includes_warning_when_no_dispatcher(client, monkeypatch):
     so the dashboard UI can surface a banner."""
     # Force the dispatcher probe to report "not running".
     monkeypatch.setattr(
-        "hermes_cli.kanban._check_dispatcher_presence",
-        lambda: (False, "No gateway is running — start `hermes gateway start`."),
+        "sinoclaw_cli.kanban._check_dispatcher_presence",
+        lambda: (False, "No gateway is running — start `sinoclaw gateway start`."),
     )
     r = client.post(
         "/api/plugins/kanban/tasks",
@@ -1062,7 +1062,7 @@ def test_create_task_includes_warning_when_no_dispatcher(client, monkeypatch):
 def test_create_task_no_warning_when_dispatcher_up(client, monkeypatch):
     """Dispatcher running -> no `warning` field in the response."""
     monkeypatch.setattr(
-        "hermes_cli.kanban._check_dispatcher_presence",
+        "sinoclaw_cli.kanban._check_dispatcher_presence",
         lambda: (True, ""),
     )
     r = client.post(
@@ -1077,7 +1077,7 @@ def test_create_task_no_warning_on_triage(client, monkeypatch):
     """Triage tasks never get the warning (they can't be dispatched
     anyway until promoted)."""
     monkeypatch.setattr(
-        "hermes_cli.kanban._check_dispatcher_presence",
+        "sinoclaw_cli.kanban._check_dispatcher_presence",
         lambda: (False, "oh no"),
     )
     r = client.post(
@@ -1093,7 +1093,7 @@ def test_create_task_probe_error_does_not_break_create(client, monkeypatch):
     def _raise():
         raise RuntimeError("probe crashed")
     monkeypatch.setattr(
-        "hermes_cli.kanban._check_dispatcher_presence", _raise,
+        "sinoclaw_cli.kanban._check_dispatcher_presence", _raise,
     )
     r = client.post(
         "/api/plugins/kanban/tasks",
@@ -1151,7 +1151,7 @@ def test_home_channels_no_task_id_all_unsubscribed(client, with_home_channels):
 def test_home_subscribe_creates_notify_sub_row(client, with_home_channels):
     """POST .../home-subscribe/telegram writes a kanban_notify_subs row
     keyed to the telegram home's (chat_id, thread_id)."""
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     t = client.post("/api/plugins/kanban/tasks", json={"title": "x"}).json()["task"]
 
     r = client.post(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
@@ -1182,7 +1182,7 @@ def test_home_subscribe_flips_subscribed_flag_in_subsequent_get(client, with_hom
 
 def test_home_subscribe_is_idempotent(client, with_home_channels):
     """Re-subscribing keeps a single row at the DB layer."""
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     t = client.post("/api/plugins/kanban/tasks", json={"title": "x"}).json()["task"]
     client.post(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
     client.post(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
@@ -1209,7 +1209,7 @@ def test_home_subscribe_unknown_task_returns_404(client, with_home_channels):
 
 def test_home_unsubscribe_removes_notify_sub_row(client, with_home_channels):
     """DELETE .../home-subscribe/telegram removes the matching row."""
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     t = client.post("/api/plugins/kanban/tasks", json={"title": "x"}).json()["task"]
     client.post(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
     r = client.delete(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
@@ -1224,7 +1224,7 @@ def test_home_unsubscribe_removes_notify_sub_row(client, with_home_channels):
 
 def test_home_subscribe_multiple_platforms_independent(client, with_home_channels):
     """Subscribing on telegram does not affect discord and vice versa."""
-    from hermes_cli import kanban_db as kb
+    from sinoclaw_cli import kanban_db as kb
     t = client.post("/api/plugins/kanban/tasks", json={"title": "x"}).json()["task"]
 
     client.post(f"/api/plugins/kanban/tasks/{t['id']}/home-subscribe/telegram")
@@ -1270,7 +1270,7 @@ def test_board_surfaces_warnings_field_for_hallucinated_completions(client):
     a ``warnings`` object on the /board payload so the UI can badge
     them without fetching per-task events. The warnings summary is
     keyed by diagnostic kind (``hallucinated_cards``) rather than the
-    raw event kind — see hermes_cli.kanban_diagnostics for the rule
+    raw event kind — see sinoclaw_cli.kanban_diagnostics for the rule
     that produces it.
     """
     conn = kb.connect()

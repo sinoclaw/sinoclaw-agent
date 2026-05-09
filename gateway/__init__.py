@@ -1,5 +1,5 @@
 """
-Hermes Gateway - Multi-platform messaging integration.
+Sinoclaw Gateway - Multi-platform messaging integration.
 
 This module provides a unified gateway for connecting the Hermes agent
 to various messaging platforms (Telegram, Discord, WhatsApp) with:

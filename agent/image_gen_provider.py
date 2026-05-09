@@ -8,7 +8,7 @@ instances via ``PluginContext.register_image_gen_provider()``; the active one
 ``image_generate`` tool call.
 
 Providers live in ``<repo>/plugins/image_gen/<name>/`` (built-in, auto-loaded
-as ``kind: backend``) or ``~/.hermes/plugins/image_gen/<name>/`` (user, opt-in
+as ``kind: backend``) or ``~/.sinoclaw/plugins/image_gen/<name>/`` (user, opt-in
 via ``plugins.enabled``).
 
 Response shape
@@ -163,10 +163,10 @@ def resolve_aspect_ratio(value: Optional[str]) -> str:
 
 
 def _images_cache_dir() -> Path:
-    """Return ``$HERMES_HOME/cache/images/``, creating parents as needed."""
-    from hermes_constants import get_hermes_home
+    """Return ``$SINOCLAW_HOME/cache/images/``, creating parents as needed."""
+    from sinoclaw_constants import get_sinoclaw_home
 
-    path = get_hermes_home() / "cache" / "images"
+    path = get_sinoclaw_home() / "cache" / "images"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -177,7 +177,7 @@ def save_b64_image(
     prefix: str = "image",
     extension: str = "png",
 ) -> Path:
-    """Decode base64 image data and write it under ``$HERMES_HOME/cache/images/``.
+    """Decode base64 image data and write it under ``$SINOCLAW_HOME/cache/images/``.
 
     Returns the absolute :class:`Path` to the saved file.
 

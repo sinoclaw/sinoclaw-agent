@@ -32,9 +32,9 @@ Label, prioritize, and summarize new issues every night. Delivers a digest to yo
 
 ```bash
 hermes cron create "0 2 * * *" \
-  "You are a project manager triaging the NousResearch/hermes-agent GitHub repo.
+  "You are a project manager triaging the NousResearch/sinoclaw-agent GitHub repo.
 
-1. Run: gh issue list --repo NousResearch/hermes-agent --state open --json number,title,labels,author,createdAt --limit 30
+1. Run: gh issue list --repo NousResearch/sinoclaw-agent --state open --json number,title,labels,author,createdAt --limit 30
 2. Identify issues opened in the last 24 hours
 3. For each new issue:
    - Suggest a priority label (P0-critical, P1-high, P2-medium, P3-low)
@@ -114,14 +114,14 @@ Weekly scan of merged PRs to find API changes that need documentation updates.
 
 ```bash
 hermes cron create "0 9 * * 1" \
-  "Scan the NousResearch/hermes-agent repo for documentation drift.
+  "Scan the NousResearch/sinoclaw-agent repo for documentation drift.
 
-1. Run: gh pr list --repo NousResearch/hermes-agent --state merged --json number,title,files,mergedAt --limit 30
+1. Run: gh pr list --repo NousResearch/sinoclaw-agent --state merged --json number,title,files,mergedAt --limit 30
 2. Filter to PRs merged in the last 7 days
 3. For each merged PR, check if it modified:
    - Tool schemas (tools/*.py) — may need docs/reference/tools-reference.md update
-   - CLI commands (hermes_cli/commands.py, hermes_cli/main.py) — may need docs/reference/cli-commands.md update
-   - Config options (hermes_cli/config.py) — may need docs/user-guide/configuration.md update
+   - CLI commands (sinoclaw_cli/commands.py, sinoclaw_cli/main.py) — may need docs/reference/cli-commands.md update
+   - Config options (sinoclaw_cli/config.py) — may need docs/user-guide/configuration.md update
    - Environment variables — may need docs/reference/environment-variables.md update
 4. Cross-reference: for each code change, check if the corresponding docs page was also updated in the same PR
 
@@ -138,9 +138,9 @@ Daily scan for known vulnerabilities in project dependencies.
 
 ```bash
 hermes cron create "0 6 * * *" \
-  "Run a dependency security audit on the hermes-agent project.
+  "Run a dependency security audit on the sinoclaw-agent project.
 
-1. cd ~/.hermes/hermes-agent && source .venv/bin/activate
+1. cd ~/.sinoclaw/sinoclaw-agent && source .venv/bin/activate
 2. Run: pip audit --format json 2>/dev/null || pip audit 2>&1
 3. Run: npm audit --json 2>/dev/null (in website/ directory if it exists)
 4. Check for any CVEs with CVSS score >= 7.0
@@ -226,7 +226,7 @@ Check endpoints every 30 minutes. Only notify when something is down.
 
 **Trigger:** Schedule (every 30 min)
 
-```python title="~/.hermes/scripts/check-uptime.py"
+```python title="~/.sinoclaw/scripts/check-uptime.py"
 import urllib.request, json, time
 
 ENDPOINTS = [
@@ -259,7 +259,7 @@ else:
 ```bash
 hermes cron create "every 30m" \
   "If the script reports OUTAGE DETECTED, summarize which services are down and suggest likely causes. If NO_ISSUES, respond with [SILENT]." \
-  --script ~/.hermes/scripts/check-uptime.py \
+  --script ~/.sinoclaw/scripts/check-uptime.py \
   --name "Uptime monitor" \
   --deliver telegram
 ```
@@ -501,7 +501,7 @@ Combine multiple skills for a comprehensive weekly security review.
 
 ```bash
 hermes cron create "0 3 * * 0" \
-  "Run a comprehensive security audit of the hermes-agent codebase.
+  "Run a comprehensive security audit of the sinoclaw-agent codebase.
 
 1. Check for dependency vulnerabilities (pip audit, npm audit)
 2. Search the codebase for common security anti-patterns:

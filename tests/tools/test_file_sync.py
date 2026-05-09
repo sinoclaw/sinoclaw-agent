@@ -245,7 +245,7 @@ class TestEdgeCases:
 
         upload = MagicMock()
         mgr = FileSyncManager(
-            get_files_fn=lambda: [(str(f), "/root/.hermes/ephemeral.txt")],
+            get_files_fn=lambda: [(str(f), "/root/.sinoclaw/ephemeral.txt")],
             upload_fn=upload,
             delete_fn=MagicMock(),
         )

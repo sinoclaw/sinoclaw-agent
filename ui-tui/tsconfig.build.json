@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@hermes/ink": ["src/types/hermes-ink.d.ts"]
+      "@sinoclaw/ink": ["src/types/sinoclaw-ink.d.ts"]
     }
   }
 }

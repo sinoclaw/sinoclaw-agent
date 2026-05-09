@@ -6,7 +6,7 @@ Registered as a separate parser name for clarity when using --tool-parser=qwen.
 """
 
 from environments.tool_call_parsers import register_parser
-from environments.tool_call_parsers.hermes_parser import HermesToolCallParser
+from environments.tool_call_parsers.sinoclaw_parser import HermesToolCallParser
 
 
 @register_parser("qwen")

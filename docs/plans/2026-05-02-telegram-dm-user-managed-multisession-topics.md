@@ -349,7 +349,7 @@ Normal Hermes agent flow for that topic's session lane.
 
 **Files likely touched:**
 
-- `hermes_state.py`
+- `sinoclaw_state.py`
 - tests under `tests/`
 
 **Tests first:**
@@ -447,7 +447,7 @@ Run targeted tests after each TDD cycle, then broader tests before completion.
 Suggested commands after inspection confirms test paths:
 
 ```bash
-python -m pytest tests/test_hermes_state.py -q
+python -m pytest tests/test_sinoclaw_state.py -q
 python -m pytest tests/gateway/ -q
 python -m pytest tests/ -o 'addopts=' -q
 ```

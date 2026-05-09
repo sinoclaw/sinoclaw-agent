@@ -74,7 +74,7 @@ hermes tools
 
 ### 手动编辑配置
 
-在 `~/.hermes/config.yaml` 中直接设置 `use_gateway`：
+在 `~/.sinoclaw/config.yaml` 中直接设置 `use_gateway`：
 
 ```yaml
 web:
@@ -102,7 +102,7 @@ browser:
 3. **TTS** — `text_to_speech` 走网关的 OpenAI Audio 端点  
 4. **浏览器** — `browser_navigate` 等走网关的 Browser Use 端点  
 
-网关使用 Nous Portal 凭据认证（在 `hermes model` 完成后写入 `~/.hermes/auth.json`）。
+网关使用 Nous Portal 凭据认证（在 `hermes model` 完成后写入 `~/.sinoclaw/auth.json`）。
 
 ### 优先级
 
@@ -153,7 +153,7 @@ hermes status
 
 ## 进阶：自建网关
 
-若使用自建或自定义网关，可在 `~/.hermes/.env` 中用环境变量覆盖端点：
+若使用自建或自定义网关，可在 `~/.sinoclaw/.env` 中用环境变量覆盖端点：
 
 ```bash
 TOOL_GATEWAY_DOMAIN=nousresearch.com     # 网关路由基础域名
@@ -184,4 +184,4 @@ FIRECRAWL_GATEWAY_URL=https://...         # 单独覆盖 Firecrawl 端点
 
 ### Modal 算在 Tool Gateway 里吗？
 
-Modal（无服务器终端后端）可作为 Nous 订阅的可选附加能力，但**不会**由 Tool Gateway 安装向导一并打开——请单独通过 `hermes setup terminal` 或在 `config.yaml` 中配置。
+Modal（无服务器终端后端）可作为 Nous 订阅的可选附加能力，但**不会**由 Tool Gateway 安装向导一并打开——请单独通过 `sinoclaw setup terminal` 或在 `config.yaml` 中配置。

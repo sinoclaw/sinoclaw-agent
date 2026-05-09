@@ -31,7 +31,7 @@ from agent.image_gen_provider import (
     save_b64_image,
     success_response,
 )
-from tools.xai_http import hermes_xai_user_agent
+from tools.xai_http import sinoclaw_xai_user_agent
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ DEFAULT_RESOLUTION = "1k"
 def _load_xai_config() -> Dict[str, Any]:
     """Read ``image_gen.xai`` from config.yaml."""
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
 
         cfg = load_config()
         section = cfg.get("image_gen") if isinstance(cfg, dict) else None
@@ -189,7 +189,7 @@ class XAIImageGenProvider(ImageGenProvider):
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": hermes_xai_user_agent(),
+            "User-Agent": sinoclaw_xai_user_agent(),
         }
 
         base_url = (os.getenv("XAI_BASE_URL") or "https://api.x.ai/v1").strip().rstrip("/")

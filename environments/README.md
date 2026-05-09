@@ -1,6 +1,6 @@
 # Hermes-Agent Atropos Environments
 
-This directory contains the integration layer between **hermes-agent's** tool-calling capabilities and the **Atropos** RL training framework. It provides everything needed to run agentic LLMs through multi-turn tool-calling loops, score their output with arbitrary reward functions, and feed results into Atropos for training or evaluation.
+This directory contains the integration layer between **sinoclaw-agent's** tool-calling capabilities and the **Atropos** RL training framework. It provides everything needed to run agentic LLMs through multi-turn tool-calling loops, score their output with arbitrary reward functions, and feed results into Atropos for training or evaluation.
 
 ## Architecture Overview
 
@@ -16,7 +16,7 @@ This directory contains the integration layer between **hermes-agent's** tool-ca
                     └───────────┬───────────┘
                                 │ inherits
                     ┌───────────┴───────────┐
-                    │  HermesAgentBaseEnv    │  hermes_base_env.py
+                    │  HermesAgentBaseEnv    │  sinoclaw_base_env.py
                     │  - Terminal backend    │
                     │  - Tool resolution     │
                     │  - Agent loop          │
@@ -39,9 +39,9 @@ This directory contains the integration layer between **hermes-agent's** tool-ca
 - CLI interface with three subcommands: `serve`, `process`, `evaluate`
 - `evaluate_log()` for saving eval results to JSON + samples.jsonl
 
-**HermesAgentBaseEnv** (`hermes_base_env.py`) extends BaseEnv with hermes-agent specifics:
+**HermesAgentBaseEnv** (`sinoclaw_base_env.py`) extends BaseEnv with sinoclaw-agent specifics:
 - Sets `os.environ["TERMINAL_ENV"]` to configure the terminal backend (local, docker, ssh, singularity, modal, daytona, vercel_sandbox)
-- Resolves hermes-agent toolsets via `_resolve_tools_for_group()` (calls `get_tool_definitions()` which queries `tools/registry.py`)
+- Resolves sinoclaw-agent toolsets via `_resolve_tools_for_group()` (calls `get_tool_definitions()` which queries `tools/registry.py`)
 - Implements `collect_trajectory()` which runs the full agent loop and computes rewards
 - Supports two-phase operation (Phase 1: OpenAI server, Phase 2: VLLM ManagedServer)
 - Applies monkey patches for async-safe tool operation at import time
@@ -57,7 +57,7 @@ Concrete environments inherit from `HermesAgentBaseEnv` and implement:
 
 ### Agent Loop (`agent_loop.py`)
 
-`HermesAgentLoop` is the reusable multi-turn agent engine. It runs the same pattern as hermes-agent's `run_agent.py`:
+`HermesAgentLoop` is the reusable multi-turn agent engine. It runs the same pattern as sinoclaw-agent's `run_agent.py`:
 
 1. Send messages + tools to the API via `server.chat_completion()`
 2. If the response contains `tool_calls`, execute each one via `handle_function_call()` (which delegates to `tools/registry.py`'s `dispatch()`)
@@ -70,7 +70,7 @@ Returns an `AgentResult` containing the full conversation history, turn count, r
 
 ### Tool Context (`tool_context.py`)
 
-`ToolContext` is a per-rollout handle that gives reward/verification functions direct access to **all** hermes-agent tools, scoped to the rollout's `task_id`. The same `task_id` means the terminal/browser session is the SAME one the model used during its rollout -- all state (files, processes, browser tabs) is preserved.
+`ToolContext` is a per-rollout handle that gives reward/verification functions direct access to **all** sinoclaw-agent tools, scoped to the rollout's `task_id`. The same `task_id` means the terminal/browser session is the SAME one the model used during its rollout -- all state (files, processes, browser tabs) is preserved.
 
 ```python
 async def compute_reward(self, item, result, ctx: ToolContext):
@@ -96,12 +96,12 @@ Available methods:
 - **Transfers**: `upload_file()`, `upload_dir()`, `download_file()`, `download_dir()` -- binary-safe file transfers between host and sandbox
 - **Web**: `web_search(query)`, `web_extract(urls)`
 - **Browser**: `browser_navigate(url)`, `browser_snapshot()`
-- **Generic**: `call_tool(name, args)` -- call any hermes-agent tool by name
+- **Generic**: `call_tool(name, args)` -- call any sinoclaw-agent tool by name
 - **Cleanup**: `cleanup()` -- release all resources (called automatically after `compute_reward`)
 
 ### Patches (`patches.py`)
 
-**Problem**: Some hermes-agent tools use `asyncio.run()` internally (e.g., the Modal backend). This crashes when called from inside Atropos's event loop because `asyncio.run()` cannot be nested.
+**Problem**: Some sinoclaw-agent tools use `asyncio.run()` internally (e.g., the Modal backend). This crashes when called from inside Atropos's event loop because `asyncio.run()` cannot be nested.
 
 **Solution**: `ModalEnvironment` uses a dedicated `_AsyncWorker` background thread with its own event loop. The calling code sees a sync interface, but internally all async Modal SDK calls happen on the worker thread so they don't conflict with Atropos's loop. This is built directly into `tools/environments/modal.py` — no monkey-patching required.
 
@@ -159,14 +159,14 @@ Uses ManagedServer for exact token IDs + logprobs via `/generate`. Client-side t
 environments/
 ├── README.md                     # This file
 ├── __init__.py                   # Package exports
-├── hermes_base_env.py            # Abstract base (HermesAgentBaseEnv)
+├── sinoclaw_base_env.py            # Abstract base (HermesAgentBaseEnv)
 ├── agent_loop.py                 # Multi-turn agent engine (HermesAgentLoop)
 ├── tool_context.py               # Per-rollout tool access for reward functions
 ├── patches.py                    # Async-safety patches for Modal backend
 │
 ├── tool_call_parsers/            # Phase 2 client-side parsers
 │   ├── __init__.py               # Registry + base class
-│   ├── hermes_parser.py
+│   ├── sinoclaw_parser.py
 │   ├── mistral_parser.py
 │   ├── llama_parser.py
 │   ├── qwen_parser.py
@@ -181,8 +181,8 @@ environments/
 ├── terminal_test_env/            # Stack validation environment
 │   └── terminal_test_env.py
 │
-├── hermes_swe_env/               # SWE-bench style training environment
-│   └── hermes_swe_env.py
+├── sinoclaw_swe_env/               # SWE-bench style training environment
+│   └── sinoclaw_swe_env.py
 │
 └── benchmarks/                   # Evaluation benchmarks
     ├── terminalbench_2/          # 89 terminal tasks, Modal sandboxes
@@ -209,12 +209,12 @@ python environments/terminal_test_env/terminal_test_env.py process \
     --env.data_path_to_save_groups terminal_test_output.jsonl
 ```
 
-### HermesSweEnv (`hermes_swe_env/`)
+### HermesSweEnv (`sinoclaw_swe_env/`)
 
 SWE-bench style training environment. The model gets a coding task, uses terminal + file + web tools to solve it, and the reward function runs tests in the same Modal sandbox.
 
 ```bash
-python environments/hermes_swe_env/hermes_swe_env.py serve \
+python environments/sinoclaw_swe_env/sinoclaw_swe_env.py serve \
     --openai.model_name YourModel \
     --env.dataset_name bigcode/humanevalpack \
     --env.terminal_backend modal
@@ -255,7 +255,7 @@ python environments/benchmarks/terminalbench_2/terminalbench2_env.py evaluate \
 3. Implement the four abstract methods + `evaluate()`
 
 ```python
-from environments.hermes_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
 
 class MyEnvConfig(HermesAgentEnvConfig):
     pass  # Add custom fields as needed

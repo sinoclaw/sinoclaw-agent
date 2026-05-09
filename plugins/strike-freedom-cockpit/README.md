@@ -17,18 +17,18 @@ Two pieces:
 
 ## Install
 
-1. **Theme** — copy the theme YAML into your Hermes home:
+1. **Theme** — copy the theme YAML into your Sinoclaw home:
 
    ```
-   cp theme/strike-freedom.yaml ~/.hermes/dashboard-themes/
+   cp theme/strike-freedom.yaml ~/.sinoclaw/dashboard-themes/
    ```
 
 2. **Plugin** — the `dashboard/` directory gets auto-discovered because
    it lives under `plugins/` in the repo. On a user install, copy the
-   whole plugin directory into `~/.hermes/plugins/`:
+   whole plugin directory into `~/.sinoclaw/plugins/`:
 
    ```
-   cp -r . ~/.hermes/plugins/strike-freedom-cockpit
+   cp -r . ~/.sinoclaw/plugins/strike-freedom-cockpit
    ```
 
 3. Restart the web UI (or `GET /api/dashboard/plugins/rescan`), open it,

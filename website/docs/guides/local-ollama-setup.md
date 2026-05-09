@@ -96,7 +96,7 @@ You should see a JSON response with the model's reply.
 Run the Hermes setup wizard:
 
 ```bash
-hermes setup
+sinoclaw setup
 ```
 
 When prompted for a provider, select **Custom Endpoint** and enter:
@@ -105,7 +105,7 @@ When prompted for a provider, select **Custom Endpoint** and enter:
 - **API Key:** Leave empty or type `no-key` (Ollama doesn't need one)
 - **Model:** `gemma4:31b` (or whichever model you pulled)
 
-Alternatively, edit `~/.hermes/config.yaml` directly:
+Alternatively, edit `~/.sinoclaw/config.yaml` directly:
 
 ```yaml
 model:
@@ -205,7 +205,7 @@ Once Hermes works locally in the CLI, you can expose it as a Telegram or Discord
 ### Telegram
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) and get the token
-2. Add to your `~/.hermes/config.yaml`:
+2. Add to your `~/.sinoclaw/config.yaml`:
 
 ```yaml
 model:
@@ -222,7 +222,7 @@ platforms:
 3. Start the gateway:
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 Now message your bot on Telegram — it responds using your local model.
@@ -239,7 +239,7 @@ platforms:
     token: "YOUR_DISCORD_BOT_TOKEN"
 ```
 
-3. Start: `hermes gateway`
+3. Start: `sinoclaw gateway`
 
 ## Step 8: Set Up Fallbacks (Optional)
 
