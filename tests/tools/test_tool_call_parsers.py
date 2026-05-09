@@ -54,7 +54,7 @@ class TestParserRegistry:
 
 # ─── Sinoclaw parser tests ────────────────────────────────────────────────
 
-class TestHermesParser:
+class TestSinoclawParser:
     @pytest.fixture
     def parser(self):
         return get_parser("hermes")

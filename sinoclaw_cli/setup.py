@@ -1,5 +1,5 @@
 """
-Interactive setup wizard for Hermes Agent.
+Interactive setup wizard for Sinoclaw Agent.
 
 Modular wizard with independently-runnable sections:
   1. Model & Provider — choose your AI provider and model
@@ -2087,7 +2087,7 @@ def _write_slack_manifest_and_instruct():
 
         manifest = _build_full_manifest(
             bot_name="Hermes",
-            bot_description="Your Hermes agent on Slack",
+            bot_description="Your Sinoclaw agent on Slack",
         )
         target = Path(get_sinoclaw_home()) / "slack-manifest.json"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -3132,7 +3132,7 @@ def run_setup_wizard(args):
     )
     print(
         color(
-            "│             ⚕ Hermes Agent Setup Wizard                │", Colors.MAGENTA
+            "│             ⚕ Sinoclaw Agent Setup Wizard                │", Colors.MAGENTA
         )
     )
     print(
@@ -3143,7 +3143,7 @@ def run_setup_wizard(args):
     )
     print(
         color(
-            "│  Let's configure your Hermes Agent installation.       │", Colors.MAGENTA
+            "│  Let's configure your Sinoclaw Agent installation.       │", Colors.MAGENTA
         )
     )
     print(

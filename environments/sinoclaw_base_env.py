@@ -1,10 +1,10 @@
 """
-HermesAgentBaseEnv -- Abstract Base Environment for Hermes-Agent + Atropos
+SinoclawAgentBaseEnv -- Abstract Base Environment for Sinoclaw-Agent + Atropos
 
 Provides the Atropos integration plumbing that all sinoclaw-agent environments share:
 - Two-mode operation (OpenAI server for Phase 1, VLLM ManagedServer for Phase 2)
 - Per-group toolset/distribution resolution
-- Agent loop orchestration via HermesAgentLoop
+- Agent loop orchestration via SinoclawAgentLoop
 - ToolContext creation for reward functions
 - ScoredDataGroup construction from ManagedServer state
 
@@ -60,7 +60,7 @@ from atroposlib.envs.server_handling.server_manager import (
 )
 from atroposlib.type_definitions import Item
 
-from environments.agent_loop import AgentResult, HermesAgentLoop
+from environments.agent_loop import AgentResult, SinoclawAgentLoop
 from environments.tool_context import ToolContext
 from tools.budget_config import (
     DEFAULT_RESULT_SIZE_CHARS,
@@ -75,7 +75,7 @@ from toolset_distributions import sample_toolsets_from_distribution
 logger = logging.getLogger(__name__)
 
 
-class HermesAgentEnvConfig(BaseEnvConfig):
+class SinoclawAgentEnvConfig(BaseEnvConfig):
     """
     Configuration for sinoclaw-agent Atropos environments.
 
@@ -218,7 +218,7 @@ class HermesAgentEnvConfig(BaseEnvConfig):
         )
 
 
-class HermesAgentBaseEnv(BaseEnv):
+class SinoclawAgentBaseEnv(BaseEnv):
     """
     Abstract base environment for sinoclaw-agent Atropos integration.
 
@@ -241,11 +241,11 @@ class HermesAgentBaseEnv(BaseEnv):
     """
 
     name: Optional[str] = "sinoclaw-agent"
-    env_config_cls = HermesAgentEnvConfig
+    env_config_cls = SinoclawAgentEnvConfig
 
     def __init__(
         self,
-        config: HermesAgentEnvConfig,
+        config: SinoclawAgentEnvConfig,
         server_configs: Union[ServerBaseline, List[APIServerConfig]],
         slurm=False,
         testing=False,
@@ -522,7 +522,7 @@ class HermesAgentBaseEnv(BaseEnv):
                     tokenizer=self.tokenizer,
                     preserve_think_blocks=bool(self.config.thinking_mode),
                 ) as managed:
-                    agent = HermesAgentLoop(
+                    agent = SinoclawAgentLoop(
                         server=managed,
                         tool_schemas=tools,
                         valid_tool_names=valid_names,
@@ -540,7 +540,7 @@ class HermesAgentBaseEnv(BaseEnv):
                     "ManagedServer not available (OpenAI server?). "
                     "Falling back to direct server mode."
                 )
-                agent = HermesAgentLoop(
+                agent = SinoclawAgentLoop(
                     server=self.server,
                     tool_schemas=tools,
                     valid_tool_names=valid_names,
@@ -554,7 +554,7 @@ class HermesAgentBaseEnv(BaseEnv):
                 result = await agent.run(messages)
         else:
             # Phase 1: OpenAI server -- native tool_calls, placeholder tokens
-            agent = HermesAgentLoop(
+            agent = SinoclawAgentLoop(
                 server=self.server,
                 tool_schemas=tools,
                 valid_tool_names=valid_names,

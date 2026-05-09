@@ -17,7 +17,7 @@ Linear: manage issues, projects, teams via GraphQL + curl.
 | Source | Bundled (installed by default) |
 | Path | `skills/productivity/linear` |
 | Version | `1.0.0` |
-| Author | Hermes Agent |
+| Author | Sinoclaw Agent |
 | License | MIT |
 | Tags | `Linear`, `Project Management`, `Issues`, `GraphQL`, `API`, `Productivity` |
 

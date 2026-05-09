@@ -17,7 +17,7 @@ Index a codebase with GitNexus and serve an interactive knowledge graph via web 
 | Source | Optional — install with `hermes skills install official/research/gitnexus-explorer` |
 | Path | `optional-skills/research/gitnexus-explorer` |
 | Version | `1.0.0` |
-| Author | Hermes Agent + Teknium |
+| Author | Sinoclaw Agent + Teknium |
 | License | MIT |
 | Tags | `gitnexus`, `code-intelligence`, `knowledge-graph`, `visualization` |
 | Related skills | [`native-mcp`](/docs/user-guide/skills/bundled/mcp/mcp-native-mcp), [`codebase-inspection`](/docs/user-guide/skills/bundled/github/github-codebase-inspection) |

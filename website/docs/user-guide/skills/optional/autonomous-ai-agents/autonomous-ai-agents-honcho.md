@@ -17,7 +17,7 @@ Configure and use Honcho memory with Hermes -- cross-session user modeling, mult
 | Source | Optional — install with `hermes skills install official/autonomous-ai-agents/honcho` |
 | Path | `optional-skills/autonomous-ai-agents/honcho` |
 | Version | `2.0.0` |
-| Author | Hermes Agent |
+| Author | Sinoclaw Agent |
 | License | MIT |
 | Tags | `Honcho`, `Memory`, `Profiles`, `Observation`, `Dialectic`, `User-Modeling`, `Session-Summary` |
 | Related skills | [`sinoclaw-agent`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-sinoclaw-agent) |

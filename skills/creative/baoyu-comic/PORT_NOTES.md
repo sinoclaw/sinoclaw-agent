@@ -72,6 +72,6 @@ diff <(curl -sL https://raw.githubusercontent.com/JimLiu/baoyu-skills/main/skill
      references/art-styles/manga.md
 ```
 
-Art-style, tone, and layout reference files can usually be overwritten directly (they're upstream-verbatim). `SKILL.md`, `references/workflow.md`, `references/partial-workflows.md`, `references/auto-selection.md`, `references/analysis-framework.md`, `references/ohmsha-guide.md`, and `references/presets/*.md` must be manually merged since they contain Hermes-specific adaptations.
+Art-style, tone, and layout reference files can usually be overwritten directly (they're upstream-verbatim). `SKILL.md`, `references/workflow.md`, `references/partial-workflows.md`, `references/auto-selection.md`, `references/analysis-framework.md`, `references/ohmsha-guide.md`, and `references/presets/*.md` must be manually merged since they contain Sinoclaw-specific adaptations.
 
-If upstream adds a Hermes-compatible PDF merge step (no extra npm deps), restore `scripts/` and reintroduce Step 8 in `workflow.md`.
+If upstream adds a Sinoclaw-compatible PDF merge step (no extra npm deps), restore `scripts/` and reintroduce Step 8 in `workflow.md`.

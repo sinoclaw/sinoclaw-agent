@@ -17,7 +17,7 @@ Spotify: play, search, queue, manage playlists and devices.
 | Source | Bundled (installed by default) |
 | Path | `skills/media/spotify` |
 | Version | `1.0.0` |
-| Author | Hermes Agent |
+| Author | Sinoclaw Agent |
 | License | MIT |
 | Tags | `spotify`, `music`, `playback`, `playlists`, `media` |
 | Related skills | [`gif-search`](/docs/user-guide/skills/bundled/media/media-gif-search) |

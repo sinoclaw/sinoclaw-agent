@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 title: "Email"
-description: "Set up Hermes Agent as an email assistant via IMAP/SMTP"
+description: "Set up Sinoclaw Agent as an email assistant via IMAP/SMTP"
 ---
 
 # Email Setup
@@ -16,7 +16,7 @@ The Email adapter uses Python's built-in `imaplib`, `smtplib`, and `email` modul
 
 ## Prerequisites
 
-- **A dedicated email account** for your Hermes agent (don't use your personal email)
+- **A dedicated email account** for your Sinoclaw agent (don't use your personal email)
 - **IMAP enabled** on the email account
 - **An app password** if using Gmail or another provider with 2FA
 

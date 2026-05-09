@@ -35,7 +35,7 @@ vercel = VercelAIGatewayProfile(
     base_url="https://ai-gateway.vercel.sh/v1",
     default_headers={
         "HTTP-Referer": "https://sinoclaw-agent.nousresearch.com",
-        "X-Title": "Hermes Agent",
+        "X-Title": "Sinoclaw Agent",
     },
     default_aux_model="google/gemini-3-flash",
 )

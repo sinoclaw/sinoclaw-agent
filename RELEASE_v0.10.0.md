@@ -1,4 +1,4 @@
-# Hermes Agent v0.10.0 (v2026.4.16)
+# Sinoclaw Agent v0.10.0 (v2026.4.16)
 
 **Release Date:** April 16, 2026
 

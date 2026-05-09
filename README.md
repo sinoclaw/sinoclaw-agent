@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Hermes Agent" width="100%">
+  <img src="assets/banner.png" alt="Sinoclaw Agent" width="100%">
 </p>
 
-# Hermes Agent ☤
+# Sinoclaw Agent ☤
 
 <p align="center">
   <a href="https://sinoclaw-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-sinoclaw--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
@@ -184,7 +184,7 @@ scripts/run_tests.sh
 - 💬 [Discord](https://discord.gg/NousResearch)
 - 📚 [Skills Hub](https://agentskills.io)
 - 🐛 [Issues](https://github.com/NousResearch/sinoclaw-agent/issues)
-- 🔌 [HermesClaw](https://github.com/AaronWong1999/hermesclaw) — Community WeChat bridge: Run Hermes Agent and OpenClaw on the same WeChat account.
+- 🔌 [HermesClaw](https://github.com/AaronWong1999/hermesclaw) — Community WeChat bridge: Run Sinoclaw Agent and OpenClaw on the same WeChat account.
 
 ---
 

@@ -31,7 +31,7 @@ def _reset_sinoclaw_time_cache():
 # sinoclaw_time.now() — core helper
 # =========================================================================
 
-class TestHermesTimeNow:
+class TestSinoclawTimeNow:
     """Test the timezone-aware now() helper."""
 
     def setup_method(self):

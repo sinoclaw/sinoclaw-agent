@@ -1,4 +1,4 @@
-# nix/sinoclaw-agent.nix — Overridable Hermes Agent package
+# nix/sinoclaw-agent.nix — Overridable Sinoclaw Agent package
 #
 # callPackage auto-wires nixpkgs args; flake inputs are passed explicitly.
 # Users override via: pkgs.sinoclaw-agent.override { extraPythonPackages = [...]; }

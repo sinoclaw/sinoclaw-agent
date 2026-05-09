@@ -1,4 +1,4 @@
-# Hermes Agent v0.4.0 (v2026.3.23)
+# Sinoclaw Agent v0.4.0 (v2026.3.23)
 
 **Release Date:** March 23, 2026
 
@@ -292,7 +292,7 @@
 - **Base blockchain** optional skill ([#1643](https://github.com/NousResearch/sinoclaw-agent/pull/1643))
 - **3D-model-viewer** optional skill ([#2226](https://github.com/NousResearch/sinoclaw-agent/pull/2226))
 - **FastMCP** optional skill ([#2113](https://github.com/NousResearch/sinoclaw-agent/pull/2113))
-- **Hermes-agent-setup** skill ([#1905](https://github.com/NousResearch/sinoclaw-agent/pull/1905))
+- **Sinoclaw-agent-setup** skill ([#1905](https://github.com/NousResearch/sinoclaw-agent/pull/1905))
 
 ---
 

@@ -1,5 +1,5 @@
 """
-Unified tool configuration for Hermes Agent.
+Unified tool configuration for Sinoclaw Agent.
 
 `hermes tools` and `sinoclaw setup tools` both enter this module.
 Select a platform → toggle toolsets on/off → for newly enabled tools

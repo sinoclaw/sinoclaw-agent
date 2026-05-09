@@ -2,7 +2,7 @@
 name: debugging-sinoclaw-tui-commands
 description: "Debug Hermes TUI slash commands: Python, gateway, Ink UI."
 version: 1.0.0
-author: Hermes Agent
+author: Sinoclaw Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

@@ -84,8 +84,8 @@ from atroposlib.envs.base import ScoredDataGroup, ScoredDataItem
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 from atroposlib.type_definitions import Item
 
-from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
-from environments.agent_loop import AgentResult, HermesAgentLoop
+from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
+from environments.agent_loop import AgentResult, SinoclawAgentLoop
 from environments.tool_context import ToolContext
 
 logger = logging.getLogger(__name__)
@@ -315,7 +315,7 @@ def _append_hint_to_messages(messages: list[dict], hint: str) -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 
-class AgenticOPDConfig(HermesAgentEnvConfig):
+class AgenticOPDConfig(SinoclawAgentEnvConfig):
     """Configuration for the agentic OPD environment."""
 
     # --- OPD settings ---
@@ -376,7 +376,7 @@ class AgenticOPDConfig(HermesAgentEnvConfig):
 # ═══════════════════════════════════════════════════════════════════════
 
 
-class AgenticOPDEnv(HermesAgentBaseEnv):
+class AgenticOPDEnv(SinoclawAgentBaseEnv):
     """
     RL environment with on-policy distillation from next-state signals.
 
@@ -1039,7 +1039,7 @@ class AgenticOPDEnv(HermesAgentBaseEnv):
                     {"role": "user", "content": self.format_prompt(item)}
                 )
 
-                agent = HermesAgentLoop(
+                agent = SinoclawAgentLoop(
                     server=self.server,
                     tool_schemas=tools,
                     valid_tool_names=valid_names,

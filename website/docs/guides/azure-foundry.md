@@ -1,12 +1,12 @@
 ---
 sidebar_position: 15
 title: "Azure AI Foundry"
-description: "Use Hermes Agent with Azure AI Foundry — OpenAI-style and Anthropic-style endpoints, auto-detection of transport and deployed models"
+description: "Use Sinoclaw Agent with Azure AI Foundry — OpenAI-style and Anthropic-style endpoints, auto-detection of transport and deployed models"
 ---
 
 # Azure AI Foundry
 
-Hermes Agent supports Azure AI Foundry (and Azure OpenAI) as a first-class provider. A single Azure resource can host models with two different wire formats:
+Sinoclaw Agent supports Azure AI Foundry (and Azure OpenAI) as a first-class provider. A single Azure resource can host models with two different wire formats:
 
 - **OpenAI-style** — `POST /v1/chat/completions` on endpoints like `https://<resource>.openai.azure.com/openai/v1`. Used for GPT-4.x, GPT-5.x, Llama, Mistral, and most open-weight models.
 - **Anthropic-style** — `POST /v1/messages` on endpoints like `https://<resource>.services.ai.azure.com/anthropic`. Used when Azure Foundry serves Claude models via the Anthropic Messages API format.

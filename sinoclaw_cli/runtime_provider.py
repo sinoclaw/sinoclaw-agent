@@ -1162,7 +1162,7 @@ def resolve_runtime_provider(
             # falling back to the built-in AZURE_ANTHROPIC_KEY / ANTHROPIC_API_KEY
             # chain.  Accept both `key_env` (Hermes canonical — matches the
             # custom_providers field name) and `api_key_env` (documented in the
-            # Azure Foundry guide and read by most Hermes-compatible importers).
+            # Azure Foundry guide and read by most Sinoclaw-compatible importers).
             # Matches the config.yaml examples in website/docs/guides/azure-foundry.md.
             token = ""
             for hint_key in ("key_env", "api_key_env"):

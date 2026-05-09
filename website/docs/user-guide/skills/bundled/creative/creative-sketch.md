@@ -17,7 +17,7 @@ Throwaway HTML mockups: 2-3 design variants to compare.
 | Source | Bundled (installed by default) |
 | Path | `skills/creative/sketch` |
 | Version | `1.0.0` |
-| Author | Hermes Agent (adapted from gsd-build/get-shit-done) |
+| Author | Sinoclaw Agent (adapted from gsd-build/get-shit-done) |
 | License | MIT |
 | Tags | `sketch`, `mockup`, `design`, `ui`, `prototype`, `html`, `variants`, `exploration`, `wireframe`, `comparison` |
 | Related skills | [`spike`](/docs/user-guide/skills/bundled/software-development/software-development-spike), [`claude-design`](/docs/user-guide/skills/bundled/creative/creative-claude-design), [`popular-web-designs`](/docs/user-guide/skills/bundled/creative/creative-popular-web-designs), [`excalidraw`](/docs/user-guide/skills/bundled/creative/creative-excalidraw) |

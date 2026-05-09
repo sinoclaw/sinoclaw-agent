@@ -21,7 +21,7 @@ from environments.tool_call_parsers import ParseResult, ToolCallParser, register
 @register_parser("hermes")
 class HermesToolCallParser(ToolCallParser):
     """
-    Parser for Hermes-format tool calls.
+    Parser for Sinoclaw-format tool calls.
 
     Matches <tool_call>...</tool_call> tags containing JSON with "name" and "arguments".
     Also handles unclosed <tool_call> at end-of-string (truncated generation).

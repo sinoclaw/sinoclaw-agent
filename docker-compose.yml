@@ -1,5 +1,5 @@
 #
-# docker-compose.yml for Hermes Agent
+# docker-compose.yml for Sinoclaw Agent
 #
 # Usage:
 #   SINOCLAW_UID=$(id -u) SINOCLAW_GID=$(id -g) docker compose up -d

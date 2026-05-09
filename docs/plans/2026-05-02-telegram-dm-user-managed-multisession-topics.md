@@ -337,7 +337,7 @@ Reply with system-lobby instruction. Do not enter agent loop.
 
 ### Normal text non-main topic
 
-Normal Hermes agent flow for that topic's session lane.
+Normal Sinoclaw agent flow for that topic's session lane.
 
 ---
 

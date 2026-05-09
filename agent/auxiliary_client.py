@@ -310,7 +310,7 @@ _PROVIDERS_WITHOUT_VISION: frozenset = frozenset({
 # reads; the previous `X-OpenRouter-Title` label was not recognized there.
 _OR_HEADERS_BASE = {
     "HTTP-Referer": "https://sinoclaw-agent.nousresearch.com",
-    "X-Title": "Hermes Agent",
+    "X-Title": "Sinoclaw Agent",
     "X-OpenRouter-Categories": "productivity,cli-agent",
 }
 
@@ -375,8 +375,8 @@ from sinoclaw_cli import __version__ as _SINOCLAW_VERSION
 
 _AI_GATEWAY_HEADERS = {
     "HTTP-Referer": "https://sinoclaw-agent.nousresearch.com",
-    "X-Title": "Hermes Agent",
-    "User-Agent": f"HermesAgent/{_SINOCLAW_VERSION}",
+    "X-Title": "Sinoclaw Agent",
+    "User-Agent": f"SinoclawAgent/{_SINOCLAW_VERSION}",
 }
 
 # Nous Portal extra_body for product attribution.
@@ -424,7 +424,7 @@ def _codex_cloudflare_headers(access_token: str) -> Dict[str, str]:
     crash at client construction.
     """
     headers = {
-        "User-Agent": "codex_cli_rs/0.0.0 (Hermes Agent)",
+        "User-Agent": "codex_cli_rs/0.0.0 (Sinoclaw Agent)",
         "originator": "codex_cli_rs",
     }
     if not isinstance(access_token, str) or not access_token.strip():

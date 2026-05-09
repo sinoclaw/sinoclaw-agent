@@ -15,7 +15,7 @@ Bypass safety filters on API-served LLMs using techniques from [G0DM0D3](https:/
 
 ## What is G0DM0D3?
 
-G0DM0D3 is an open-source jailbreaking toolkit that automates bypassing LLM safety filters through three complementary attack modes. It was created by Pliny the Prompter and packages the battle-tested jailbreak templates from the L1B3RT4S collection into runnable scripts with automated strategy selection, scoring, and Hermes-native config integration.
+G0DM0D3 is an open-source jailbreaking toolkit that automates bypassing LLM safety filters through three complementary attack modes. It was created by Pliny the Prompter and packages the battle-tested jailbreak templates from the L1B3RT4S collection into runnable scripts with automated strategy selection, scoring, and Sinoclaw-native config integration.
 
 ## Three Attack Modes
 
@@ -115,7 +115,7 @@ Each strategy is also retried with prefill messages added if it fails alone.
 
 ## Hermes Integration
 
-The godmode skill integrates with two Hermes Agent config mechanisms:
+The godmode skill integrates with two Sinoclaw Agent config mechanisms:
 
 ### Ephemeral System Prompt (`config.yaml`)
 

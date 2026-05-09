@@ -1,7 +1,7 @@
 ---
 sidebar_position: 6
 title: "Signal"
-description: "Set up Hermes Agent as a Signal messenger bot via signal-cli daemon"
+description: "Set up Sinoclaw Agent as a Signal messenger bot via signal-cli daemon"
 ---
 
 # Signal Setup
@@ -48,7 +48,7 @@ Signal-cli works as a **linked device** — like WhatsApp Web, but for Signal. Y
 
 ```bash
 # Generate a linking URI (displays a QR code or link)
-signal-cli link -n "HermesAgent"
+signal-cli link -n "SinoclawAgent"
 ```
 
 1. Open **Signal** on your phone

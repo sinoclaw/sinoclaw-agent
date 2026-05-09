@@ -17,7 +17,7 @@ Plan mode: write markdown plan to .hermes/plans/, no exec.
 | Source | Bundled (installed by default) |
 | Path | `skills/software-development/plan` |
 | Version | `1.0.0` |
-| Author | Hermes Agent |
+| Author | Sinoclaw Agent |
 | License | MIT |
 | Tags | `planning`, `plan-mode`, `implementation`, `workflow` |
 | Related skills | [`writing-plans`](/docs/user-guide/skills/bundled/software-development/software-development-writing-plans), [`subagent-driven-development`](/docs/user-guide/skills/bundled/software-development/software-development-subagent-driven-development) |

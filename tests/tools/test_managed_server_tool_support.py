@@ -4,7 +4,7 @@ Tests for ManagedServer / tool-parser integration.
 Validates that:
 1. The installed atroposlib API still matches Sinoclaw's expectations
 2. Sinoclaw's parser registry remains compatible with ManagedServer parsing
-3. HermesAgentBaseEnv wires the selected parser into ServerManager correctly
+3. SinoclawAgentBaseEnv wires the selected parser into ServerManager correctly
 
 These tests verify the contract between sinoclaw-agent's environments/ code
 and atroposlib's ManagedServer. They detect API incompatibilities early.

@@ -258,7 +258,7 @@ class TestExchangeAuthCode:
         assert not setup_module.PENDING_AUTH_PATH.exists()
 
 
-class TestHermesConstantsFallback:
+class TestSinoclawConstantsFallback:
     """Tests for _sinoclaw_home.py fallback when sinoclaw_constants is unavailable."""
 
     HELPER_PATH = (

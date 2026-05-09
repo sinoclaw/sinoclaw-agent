@@ -44,7 +44,7 @@ def _build_full_manifest(bot_name: str, bot_description: str) -> dict:
         },
         "display_information": {
             "name": bot_name[:35],
-            "description": (bot_description or "Your Hermes agent on Slack")[:140],
+            "description": (bot_description or "Your Sinoclaw agent on Slack")[:140],
             "background_color": "#1a1a2e",
         },
         "features": {
@@ -115,7 +115,7 @@ def slack_manifest_command(args) -> int:
                       merging into an existing manifest manually)
     """
     name = getattr(args, "name", None) or "Hermes"
-    description = getattr(args, "description", None) or "Your Hermes agent on Slack"
+    description = getattr(args, "description", None) or "Your Sinoclaw agent on Slack"
 
     if getattr(args, "slashes_only", False):
         from sinoclaw_cli.commands import slack_app_manifest

@@ -79,7 +79,7 @@ def _discord_request(
         headers={
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json",
-            "User-Agent": "Hermes-Agent (https://github.com/NousResearch/sinoclaw-agent)",
+            "User-Agent": "Sinoclaw-Agent (https://github.com/NousResearch/sinoclaw-agent)",
         },
     )
 

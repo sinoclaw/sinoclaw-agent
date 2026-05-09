@@ -972,7 +972,7 @@ class TestDiskFailureMarker:
 # SINOCLAW_HOME isolation
 # ---------------------------------------------------------------------------
 
-class TestHermesHomeIsolation:
+class TestSinoclawHomeIsolation:
     def test_sinoclaw_bin_dir_respects_sinoclaw_home(self):
         """_sinoclaw_bin_dir must use SINOCLAW_HOME, not hardcoded ~/.sinoclaw."""
         from tools.tirith_security import _sinoclaw_bin_dir
