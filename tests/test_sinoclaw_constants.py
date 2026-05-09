@@ -15,7 +15,7 @@ from sinoclaw_constants import (
 )
 
 
-class TestGetDefaultHermesRoot:
+class TestGetDefaultSinoclawRoot:
     """Tests for get_default_sinoclaw_root() — Docker/custom deployment awareness."""
 
     def test_no_sinoclaw_home_returns_native(self, tmp_path, monkeypatch):

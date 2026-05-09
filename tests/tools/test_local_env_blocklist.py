@@ -2,7 +2,7 @@
 
 Verifies that Hermes-managed provider, tool, and gateway env vars are
 stripped from subprocess environments so external CLIs are not silently
-misrouted or handed Hermes secrets.
+misrouted or handed Sinoclaw secrets.
 
 See: https://github.com/NousResearch/sinoclaw-agent/issues/1002
 See: https://github.com/NousResearch/sinoclaw-agent/issues/1264

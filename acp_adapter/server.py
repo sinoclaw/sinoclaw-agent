@@ -442,7 +442,7 @@ def _content_blocks_to_openai_user_content(
     return parts
 
 
-class HermesACPAgent(acp.Agent):
+class SinoclawACPAgent(acp.Agent):
     """ACP Agent implementation wrapping Hermes AIAgent."""
 
     _SLASH_COMMANDS = {

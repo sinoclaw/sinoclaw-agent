@@ -73,7 +73,7 @@ def test_manager_remove_evicts_cache(tmp_path, monkeypatch):
 
 
 def test_sinoclaw_provider_subclass_exists():
-    """HermesMCPOAuthProvider is defined and subclasses OAuthClientProvider."""
+    """SinoclawMCPOAuthProvider is defined and subclasses OAuthClientProvider."""
     from tools.mcp_oauth_manager import _SINOCLAW_PROVIDER_CLS
     from mcp.client.auth.oauth2 import OAuthClientProvider
 

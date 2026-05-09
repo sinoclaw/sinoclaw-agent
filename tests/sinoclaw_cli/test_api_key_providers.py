@@ -750,7 +750,7 @@ class TestHasAnyProviderConfigured:
         assert _has_any_provider_configured() is True
 
     def test_claude_code_creds_ignored_on_fresh_install(self, monkeypatch, tmp_path):
-        """Claude Code credentials should NOT skip the wizard when Hermes is unconfigured."""
+        """Claude Code credentials should NOT skip the wizard when Sinoclaw is unconfigured."""
         from sinoclaw_cli import config as config_module
         from sinoclaw_cli.auth import PROVIDER_REGISTRY
         sinoclaw_home = tmp_path / ".hermes"
@@ -866,7 +866,7 @@ class TestHasAnyProviderConfigured:
         assert _has_any_provider_configured() is False
 
     def test_claude_code_creds_counted_when_sinoclaw_configured(self, monkeypatch, tmp_path):
-        """Claude Code credentials should count when Hermes has been explicitly configured."""
+        """Claude Code credentials should count when Sinoclaw has been explicitly configured."""
         import yaml
         from sinoclaw_cli import config as config_module
         sinoclaw_home = tmp_path / ".hermes"

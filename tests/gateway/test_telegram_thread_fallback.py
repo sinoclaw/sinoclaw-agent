@@ -1,6 +1,6 @@
 """Tests for Telegram topic/thread routing fallbacks.
 
-Supergroup forum topics route with ``message_thread_id``. Hermes-created
+Supergroup forum topics route with ``message_thread_id``. Sinoclaw-created
 private DM topic lanes are different: live Telegram testing showed they only
 stay in the expected lane when sends include both the private topic
 ``message_thread_id`` and a ``reply_to_message_id`` anchor to the triggering
@@ -237,7 +237,7 @@ async def test_send_typing_does_not_fall_back_to_root_for_dm_topic():
 
 @pytest.mark.asyncio
 async def test_send_typing_skips_api_call_for_dm_topic_reply_fallback():
-    """Hermes-created DM topic lanes have no working Bot API typing route.
+    """Sinoclaw-created DM topic lanes have no working Bot API typing route.
 
     ``send_chat_action`` only accepts ``message_thread_id``, which Telegram's
     Bot API 10.0 rejects for these lanes — the call would silently fail and
@@ -413,7 +413,7 @@ async def test_gateway_runner_busy_ack_replies_to_triggering_message_for_telegra
 
 @pytest.mark.asyncio
 async def test_send_uses_reply_fallback_for_sinoclaw_dm_topics():
-    """Hermes-created Telegram DM topics route with thread id plus reply anchor."""
+    """Sinoclaw-created Telegram DM topics route with thread id plus reply anchor."""
     adapter = _make_adapter()
     call_log = []
 
@@ -441,7 +441,7 @@ async def test_send_uses_reply_fallback_for_sinoclaw_dm_topics():
 
 @pytest.mark.asyncio
 async def test_send_uses_metadata_reply_fallback_for_streaming_dm_topics():
-    """Metadata-only sends still stay in Hermes-created Telegram DM topics."""
+    """Metadata-only sends still stay in Sinoclaw-created Telegram DM topics."""
     adapter = _make_adapter()
     call_log = []
 

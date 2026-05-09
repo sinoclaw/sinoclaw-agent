@@ -1252,7 +1252,7 @@ class TestGatewayModeWritesExitCodeEarly:
 class TestCmdUpdateLegacyGatewayWarning:
     """Tests for the legacy hermes.service warning printed by `hermes update`.
 
-    Users who installed Hermes before the service rename often have a
+    Users who installed Sinoclaw before the service rename often have a
     dormant ``hermes.service`` that starts flap-fighting the current
     ``sinoclaw-gateway.service`` after PR #5646. Every ``hermes update``
     should remind them to run ``sinoclaw gateway migrate-legacy`` until
@@ -1292,7 +1292,7 @@ class TestCmdUpdateLegacyGatewayWarning:
             cmd_update(mock_args)
 
         captured = capsys.readouterr().out
-        assert "Legacy Hermes gateway unit(s) detected" in captured
+        assert "Legacy Sinoclaw gateway unit(s) detected" in captured
         assert "hermes.service" in captured
         assert "sinoclaw gateway migrate-legacy" in captured
         assert "(user scope)" in captured
@@ -1323,7 +1323,7 @@ class TestCmdUpdateLegacyGatewayWarning:
             cmd_update(mock_args)
 
         captured = capsys.readouterr().out
-        assert "Legacy Hermes gateway" not in captured
+        assert "Legacy Sinoclaw gateway" not in captured
         assert "migrate-legacy" not in captured
 
     @patch("shutil.which", return_value=None)
@@ -1363,7 +1363,7 @@ class TestCmdUpdateLegacyGatewayWarning:
             cmd_update(mock_args)
 
         captured = capsys.readouterr().out
-        assert "Legacy Hermes gateway" not in captured
+        assert "Legacy Sinoclaw gateway" not in captured
         assert "sinoclaw-gateway-coder.service" not in captured  # not flagged
 
     @patch("shutil.which", return_value=None)
@@ -1395,7 +1395,7 @@ class TestCmdUpdateLegacyGatewayWarning:
 
         captured = capsys.readouterr().out
         # Must not print the warning on non-systemd platforms
-        assert "Legacy Hermes gateway" not in captured
+        assert "Legacy Sinoclaw gateway" not in captured
 
     @patch("shutil.which", return_value=None)
     @patch("subprocess.run")
@@ -1424,7 +1424,7 @@ class TestCmdUpdateLegacyGatewayWarning:
             cmd_update(mock_args)
 
         captured = capsys.readouterr().out
-        assert "Legacy Hermes gateway" in captured
+        assert "Legacy Sinoclaw gateway" in captured
         assert "(system scope)" in captured
         assert "sudo" in captured
 

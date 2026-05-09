@@ -2184,7 +2184,7 @@ class TestMatrixSystemBridgeFilter:
         ) is False
 
     def test_bot_account_is_not_bridge(self):
-        # The Hermes bot itself (no leading underscore) must not be
+        # The Sinoclaw bot itself (no leading underscore) must not be
         # classified as a bridge — that filter is a pairing guard, not
         # a self-filter.
         assert self.adapter._is_system_or_bridge_sender(
