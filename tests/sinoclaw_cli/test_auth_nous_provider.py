@@ -634,7 +634,7 @@ def test_persist_nous_credentials_writes_both_pool_and_providers(tmp_path, monke
 
 def test_persist_nous_credentials_allows_recovery_from_401(tmp_path, monkeypatch):
     """End-to-end: after persisting via the helper, resolve_nous_runtime_credentials
-    must succeed (not raise "Hermes is not logged into Nous Portal").
+    must succeed (not raise "Sinoclaw is not logged into Nous Portal").
 
     This is the exact path that run_agent.py's `_try_refresh_nous_client_credentials`
     calls after a Nous 401 — before the fix it would raise AuthError because
@@ -653,7 +653,7 @@ def test_persist_nous_credentials_allows_recovery_from_401(tmp_path, monkeypatch
 
     # Stub the network-touching steps so we don't actually contact the
     # portal — the point of this test is that state lookup succeeds and
-    # doesn't raise "Hermes is not logged into Nous Portal".
+    # doesn't raise "Sinoclaw is not logged into Nous Portal".
     def _fake_refresh_access_token(*, client, portal_base_url, client_id, refresh_token):
         return {
             "access_token": "access-new",
@@ -821,10 +821,10 @@ def test_refresh_token_reuse_detection_surfaces_actionable_message():
     """Regression for #15099.
 
     When the Nous Portal server returns ``invalid_grant`` with
-    ``error_description`` containing "reuse detected", Hermes must surface an
+    ``error_description`` containing "reuse detected", Sinoclaw must surface an
     actionable message explaining that an external process consumed the
     refresh token.  The default opaque "Refresh token reuse detected; please
-    re-authenticate" string led users to report this as a Hermes persistence
+    re-authenticate" string led users to report this as a Sinoclaw persistence
     bug when the true cause is external RT consumption (monitoring scripts,
     custom self-heal hooks).
     """

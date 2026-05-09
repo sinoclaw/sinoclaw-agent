@@ -52,7 +52,7 @@ class TestParserRegistry:
             assert hasattr(parser, "parse")
 
 
-# ─── Hermes parser tests ────────────────────────────────────────────────
+# ─── Sinoclaw parser tests ────────────────────────────────────────────────
 
 class TestHermesParser:
     @pytest.fixture

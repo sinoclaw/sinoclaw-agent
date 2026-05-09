@@ -288,7 +288,7 @@ class TestGmiAuxiliary:
         # for traffic attribution. The generic profile-fallback branch in
         # resolve_provider_client should carry it through to the OpenAI client.
         headers = mock_openai.call_args.kwargs.get("default_headers", {})
-        assert headers.get("User-Agent", "").startswith("HermesAgent/")
+        assert headers.get("User-Agent", "").startswith("SinoclawAgent/")
 
     def test_gmi_profile_declares_sinoclaw_user_agent(self):
         """The GMI plugin sets a HermesAgent/<ver> User-Agent on its profile."""
@@ -297,8 +297,8 @@ class TestGmiAuxiliary:
         profile = get_provider_profile("gmi")
         assert profile is not None
         ua = profile.default_headers.get("User-Agent", "")
-        assert ua.startswith("HermesAgent/"), (
-            f"expected GMI profile User-Agent to start with 'HermesAgent/', got {ua!r}"
+        assert ua.startswith("SinoclawAgent/"), (
+            f"expected GMI profile User-Agent to start with 'SinoclawAgent/', got {ua!r}"
         )
 
     def test_resolve_provider_client_accepts_gmi_alias(self, monkeypatch):

@@ -1,4 +1,4 @@
-"""Tests for the Hermes plugin system (sinoclaw_cli.plugins)."""
+"""Tests for the Sinoclaw plugin system (sinoclaw_cli.plugins)."""
 
 import logging
 import os

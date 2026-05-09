@@ -438,7 +438,7 @@ def test_has_spawnable_ready_false_when_only_terminal_lanes(kanban_home, monkeyp
 
 def test_has_spawnable_ready_true_when_real_profile_present(kanban_home, monkeypatch):
     """``has_spawnable_ready`` returns True as soon as ANY ready task
-    has an assignee that maps to a real Hermes profile — preserves the
+    has an assignee that maps to a real Sinoclaw profile — preserves the
     real "stuck" signal when a daily/agent task is queued."""
     from sinoclaw_cli import profiles
     monkeypatch.setattr(
