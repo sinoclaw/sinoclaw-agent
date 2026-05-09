@@ -107,7 +107,7 @@ export class GatewayClient {
     if (this._state === "open" || this._state === "connecting") return;
     this.setState("connecting");
 
-    const resolved = token ?? window.__HERMES_SESSION_TOKEN__ ?? "";
+    const resolved = token ?? window.__SINOCLAW_SESSION_TOKEN__ ?? "";
     if (!resolved) {
       this.setState("error");
       throw new Error(
@@ -230,6 +230,6 @@ export class GatewayClient {
 
 declare global {
   interface Window {
-    __HERMES_SESSION_TOKEN__?: string;
+    __SINOCLAW_SESSION_TOKEN__?: string;
   }
 }

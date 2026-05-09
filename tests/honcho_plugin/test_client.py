@@ -101,7 +101,7 @@ class TestFromGlobalConfig:
             "workspace": "my-workspace",
             "environment": "staging",
             "peerName": "alice",
-            "aiPeer": "hermes-custom",
+            "aiPeer": "sinoclaw-custom",
             "enabled": True,
             "saveMessages": False,
             "contextTokens": 2000,
@@ -115,8 +115,8 @@ class TestFromGlobalConfig:
                 }
             }
         }))
-        # Isolate from real ~/.hermes/honcho.json
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "isolated"))
+        # Isolate from real ~/.sinoclaw/honcho.json
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "isolated"))
 
         config = HonchoClientConfig.from_global_config(config_path=config_file)
         assert config.api_key == "***"
@@ -306,10 +306,10 @@ class TestResolveSessionName:
     def test_per_repo_uses_git_root(self):
         config = HonchoClientConfig(session_strategy="per-repo")
         with patch.object(
-            HonchoClientConfig, "_git_repo_name", return_value="hermes-agent"
+            HonchoClientConfig, "_git_repo_name", return_value="sinoclaw-agent"
         ):
-            result = config.resolve_session_name("/home/user/hermes-agent/subdir")
-        assert result == "hermes-agent"
+            result = config.resolve_session_name("/home/user/sinoclaw-agent/subdir")
+        assert result == "sinoclaw-agent"
 
     def test_per_repo_with_peer_prefix(self):
         config = HonchoClientConfig(
@@ -339,60 +339,60 @@ class TestResolveSessionName:
 
 
 class TestResolveConfigPath:
-    def test_prefers_hermes_home_when_exists(self, tmp_path):
-        hermes_home = tmp_path / "hermes"
-        hermes_home.mkdir()
-        local_cfg = hermes_home / "honcho.json"
+    def test_prefers_sinoclaw_home_when_exists(self, tmp_path):
+        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home.mkdir()
+        local_cfg = sinoclaw_home / "honcho.json"
         local_cfg.write_text('{"apiKey": "local"}')
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(hermes_home)}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}):
             result = resolve_config_path()
         assert result == local_cfg
 
     def test_falls_back_to_global_when_no_local(self, tmp_path):
-        hermes_home = tmp_path / "hermes"
-        hermes_home.mkdir()
-        # No honcho.json in HERMES_HOME — also isolate ~/.hermes so
+        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home.mkdir()
+        # No honcho.json in SINOCLAW_HOME — also isolate ~/.sinoclaw so
         # the default-profile fallback doesn't hit the real filesystem.
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(hermes_home)}), \
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
              patch.object(Path, "home", return_value=fake_home):
             result = resolve_config_path()
         assert result == fake_home / ".honcho" / "config.json"
 
-    def test_falls_back_to_global_without_hermes_home_env(self, tmp_path):
+    def test_falls_back_to_global_without_sinoclaw_home_env(self, tmp_path):
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()
 
         with patch.dict(os.environ, {}, clear=False), \
              patch.object(Path, "home", return_value=fake_home):
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             result = resolve_config_path()
         assert result == fake_home / ".honcho" / "config.json"
 
     def test_global_fallback_uses_home_at_call_time(self, tmp_path):
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()
-        hermes_home = tmp_path / "hermes"
-        hermes_home.mkdir()
+        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home.mkdir()
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(hermes_home)}), \
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
              patch.object(Path, "home", return_value=fake_home):
             assert resolve_global_config_path() == fake_home / ".honcho" / "config.json"
             assert resolve_config_path() == fake_home / ".honcho" / "config.json"
 
     def test_from_global_config_uses_local_path(self, tmp_path):
-        hermes_home = tmp_path / "hermes"
-        hermes_home.mkdir()
-        local_cfg = hermes_home / "honcho.json"
+        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home.mkdir()
+        local_cfg = sinoclaw_home / "honcho.json"
         local_cfg.write_text(json.dumps({
             "apiKey": "***",
             "workspace": "local-ws",
         }))
 
-        with patch.dict(os.environ, {"HERMES_HOME": str(hermes_home)}), \
+        with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
              patch.object(Path, "home", return_value=tmp_path):
             config = HonchoClientConfig.from_global_config()
         assert config.api_key == "***"
@@ -402,46 +402,46 @@ class TestResolveConfigPath:
 class TestResolveActiveHost:
     def test_default_returns_hermes(self):
         with patch.dict(os.environ, {}, clear=True):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            os.environ.pop("HERMES_HOME", None)
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            os.environ.pop("SINOCLAW_HOME", None)
             assert resolve_active_host() == "hermes"
 
     def test_explicit_env_var_wins(self):
-        with patch.dict(os.environ, {"HERMES_HONCHO_HOST": "hermes.coder"}):
+        with patch.dict(os.environ, {"SINOCLAW_HONCHO_HOST": "hermes.coder"}):
             assert resolve_active_host() == "hermes.coder"
 
     def test_profile_name_derives_host(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            with patch("hermes_cli.profiles.get_active_profile_name", return_value="coder"):
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="coder"):
                 assert resolve_active_host() == "hermes.coder"
 
     def test_default_profile_returns_hermes(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            with patch("hermes_cli.profiles.get_active_profile_name", return_value="default"):
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="default"):
                 assert resolve_active_host() == "hermes"
 
     def test_custom_profile_returns_hermes(self):
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            with patch("hermes_cli.profiles.get_active_profile_name", return_value="custom"):
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="custom"):
                 assert resolve_active_host() == "hermes"
 
     def test_profiles_import_failure_falls_back(self):
         import sys
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("HERMES_HONCHO_HOST", None)
-            # Temporarily remove hermes_cli.profiles to simulate import failure
-            saved = sys.modules.get("hermes_cli.profiles")
-            sys.modules["hermes_cli.profiles"] = None  # type: ignore
+            os.environ.pop("SINOCLAW_HONCHO_HOST", None)
+            # Temporarily remove sinoclaw_cli.profiles to simulate import failure
+            saved = sys.modules.get("sinoclaw_cli.profiles")
+            sys.modules["sinoclaw_cli.profiles"] = None  # type: ignore
             try:
                 assert resolve_active_host() == "hermes"
             finally:
                 if saved is not None:
-                    sys.modules["hermes_cli.profiles"] = saved
+                    sys.modules["sinoclaw_cli.profiles"] = saved
                 else:
-                    sys.modules.pop("hermes_cli.profiles", None)
+                    sys.modules.pop("sinoclaw_cli.profiles", None)
 
 
 class TestProfileScopedConfig:
@@ -584,7 +584,7 @@ class TestGetHonchoClient:
         not importlib.util.find_spec("honcho"),
         reason="honcho SDK not installed"
     )
-    def test_hermes_config_timeout_override_used_when_config_timeout_missing(self):
+    def test_sinoclaw_config_timeout_override_used_when_config_timeout_missing(self):
         fake_honcho = MagicMock(name="Honcho")
         cfg = HonchoClientConfig(
             api_key="test-key",
@@ -593,7 +593,7 @@ class TestGetHonchoClient:
         )
 
         with patch("honcho.Honcho", return_value=fake_honcho) as mock_honcho, \
-             patch("hermes_cli.config.load_config", return_value={"honcho": {"timeout": 88}}):
+             patch("sinoclaw_cli.config.load_config", return_value={"honcho": {"timeout": 88}}):
             client = get_honcho_client(cfg)
 
         assert client is fake_honcho
@@ -615,7 +615,7 @@ class TestGetHonchoClient:
         )
 
         with patch("honcho.Honcho", return_value=fake_honcho) as mock_honcho, \
-             patch("hermes_cli.config.load_config", return_value={}):
+             patch("sinoclaw_cli.config.load_config", return_value={}):
             client = get_honcho_client(cfg)
 
         assert client is fake_honcho
@@ -626,7 +626,7 @@ class TestGetHonchoClient:
         not importlib.util.find_spec("honcho"),
         reason="honcho SDK not installed"
     )
-    def test_hermes_request_timeout_alias_used(self):
+    def test_sinoclaw_request_timeout_alias_used(self):
         fake_honcho = MagicMock(name="Honcho")
         cfg = HonchoClientConfig(
             api_key="test-key",
@@ -635,7 +635,7 @@ class TestGetHonchoClient:
         )
 
         with patch("honcho.Honcho", return_value=fake_honcho) as mock_honcho, \
-             patch("hermes_cli.config.load_config", return_value={"honcho": {"request_timeout": "77.5"}}):
+             patch("sinoclaw_cli.config.load_config", return_value={"honcho": {"request_timeout": "77.5"}}):
             client = get_honcho_client(cfg)
 
         assert client is fake_honcho

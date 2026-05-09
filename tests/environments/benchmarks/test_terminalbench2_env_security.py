@@ -58,8 +58,8 @@ def _load_terminalbench_module(monkeypatch):
             AgentResult=_AgentResult,
             HermesAgentLoop=_HermesAgentLoop,
         ),
-        "environments.hermes_base_env": _stub_module(
-            "environments.hermes_base_env",
+        "environments.sinoclaw_base_env": _stub_module(
+            "environments.sinoclaw_base_env",
             HermesAgentBaseEnv=_HermesAgentBaseEnv,
             HermesAgentEnvConfig=_HermesAgentEnvConfig,
         ),

@@ -29,7 +29,7 @@ hermes fallback
 
 `hermes fallback` reuses the provider picker from `hermes model` — same provider list, same credential prompts, same validation. Press `a` to add a fallback, `↑`/`↓` to reorder, `d` to remove, `q` to save and exit. Changes persist under `model.fallback_providers` in `config.yaml`.
 
-If you'd rather edit the YAML directly, add a `fallback_model` section to `~/.hermes/config.yaml`:
+If you'd rather edit the YAML directly, add a `fallback_model` section to `~/.sinoclaw/config.yaml`:
 
 ```yaml
 fallback_model:
@@ -63,11 +63,11 @@ Both `provider` and `model` are **required**. If either is missing, the fallback
 | GMI Cloud | `gmi` | `GMI_API_KEY` (optional: `GMI_BASE_URL`) |
 | StepFun | `stepfun` | `STEPFUN_API_KEY` (optional: `STEPFUN_BASE_URL`) |
 | Ollama Cloud | `ollama-cloud` | `OLLAMA_API_KEY` |
-| Google Gemini (OAuth) | `google-gemini-cli` | `hermes model` (Google OAuth; optional: `HERMES_GEMINI_PROJECT_ID`) |
+| Google Gemini (OAuth) | `google-gemini-cli` | `hermes model` (Google OAuth; optional: `SINOCLAW_GEMINI_PROJECT_ID`) |
 | Google AI Studio | `gemini` | `GOOGLE_API_KEY` (alias: `GEMINI_API_KEY`) |
 | xAI (Grok) | `xai` (alias `grok`) | `XAI_API_KEY` (optional: `XAI_BASE_URL`) |
 | AWS Bedrock | `bedrock` | Standard boto3 auth (`AWS_REGION` + `AWS_PROFILE` or `AWS_ACCESS_KEY_ID`) |
-| Qwen Portal (OAuth) | `qwen-oauth` | `hermes model` (Qwen Portal OAuth; optional: `HERMES_QWEN_BASE_URL`) |
+| Qwen Portal (OAuth) | `qwen-oauth` | `hermes model` (Qwen Portal OAuth; optional: `SINOCLAW_QWEN_BASE_URL`) |
 | MiniMax (OAuth) | `minimax-oauth` | `hermes model` (MiniMax portal OAuth) |
 | OpenCode Zen | `opencode-zen` | `OPENCODE_ZEN_API_KEY` |
 | OpenCode Go | `opencode-go` | `OPENCODE_GO_API_KEY` |
@@ -141,7 +141,7 @@ model:
 
 fallback_model:
   provider: nous
-  model: nous-hermes-3
+  model: nous-sinoclaw-3
 ```
 
 **Local model as fallback for cloud:**

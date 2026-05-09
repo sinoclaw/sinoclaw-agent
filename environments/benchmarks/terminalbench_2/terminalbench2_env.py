@@ -58,7 +58,7 @@ from atroposlib.envs.base import EvalHandlingEnum
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 
 from environments.agent_loop import AgentResult, HermesAgentLoop
-from environments.hermes_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
 from environments.tool_context import ToolContext
 from tools.terminal_tool import (
     register_task_env_overrides,
@@ -792,7 +792,7 @@ class TerminalBench2EvalEnv(HermesAgentBaseEnv):
         (same pattern as GPQA and other Atropos eval envs). Each task is
         wrapped with a wall-clock timeout so hung tasks auto-fail.
 
-        Suppresses noisy Modal/terminal output (HERMES_QUIET) so the tqdm
+        Suppresses noisy Modal/terminal output (SINOCLAW_QUIET) so the tqdm
         bar stays visible.
         """
         start_time = time.time()

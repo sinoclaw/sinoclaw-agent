@@ -31,7 +31,7 @@ hermes --tui --dev
 You can also enable it via env var:
 
 ```bash
-export HERMES_TUI=1
+export SINOCLAW_TUI=1
 hermes          # now uses the TUI
 hermes chat     # same
 ```
@@ -62,7 +62,7 @@ On first launch Hermes installs the TUI's Node dependencies into `ui-tui/node_mo
 Distributions that ship a prebuilt bundle (Nix, system packages) can point Hermes at it:
 
 ```bash
-export HERMES_TUI_DIR=/path/to/prebuilt/ui-tui
+export SINOCLAW_TUI_DIR=/path/to/prebuilt/ui-tui
 hermes --tui
 ```
 
@@ -92,7 +92,7 @@ All slash commands work unchanged. A few are TUI-owned — they produce richer o
 | `/details` | Toggle verbose tool-call details (global or per-section) |
 | `/usage` | Rich token / cost / context panel |
 | `/agents` (alias `/tasks`) | Observability overlay — live subagent tree with kill/pause controls, per-branch cost / token / file rollups, turn-by-turn history |
-| `/reload` | Re-reads `~/.hermes/.env` into the running TUI process so newly added API keys take effect without a restart |
+| `/reload` | Re-reads `~/.sinoclaw/.env` into the running TUI process so newly added API keys take effect without a restart |
 | `/mouse` | Toggle mouse tracking on/off at runtime (also persists to `display.mouse_tracking` in `config.yaml`) |
 
 Every other slash command (including installed skills, quick commands, and personality toggles) works identically to the classic CLI. See [Slash Commands Reference](../reference/slash-commands.md).
@@ -107,14 +107,14 @@ This is always-on — nothing to configure. Classic CLI keeps the raw TeX.
 
 The TUI auto-detects light terminals and swaps to the light theme accordingly. Detection works in three layers:
 
-1. `HERMES_TUI_THEME` env var — highest priority. Values: `light`, `dark`, or a raw 6-char background hex (e.g. `ffffff`, `1a1a2e`).
+1. `SINOCLAW_TUI_THEME` env var — highest priority. Values: `light`, `dark`, or a raw 6-char background hex (e.g. `ffffff`, `1a1a2e`).
 2. `COLORFGBG` env var — the classic "what's my background color?" hint used by xterm-derived terminals.
 3. Terminal background probe via OSC 11 — works on modern terminals (Ghostty, Warp, iTerm2, WezTerm, Kitty) that don't set `COLORFGBG`.
 
 If you want the light theme permanently regardless of terminal:
 
 ```bash
-export HERMES_TUI_THEME=light
+export SINOCLAW_TUI_THEME=light
 ```
 
 ## Busy indicator styles
@@ -134,9 +134,9 @@ Styles ship with matched glyph widths so the rest of the status bar doesn't jitt
 By default, `hermes --tui` starts a fresh session each launch. To re-attach to the most recent TUI session automatically (useful when your terminal or SSH connection drops unexpectedly), opt in:
 
 ```bash
-export HERMES_TUI_RESUME=1          # most-recent TUI session
+export SINOCLAW_TUI_RESUME=1          # most-recent TUI session
 # or:
-export HERMES_TUI_RESUME=<session-id>   # specific session
+export SINOCLAW_TUI_RESUME=<session-id>   # specific session
 ```
 
 Unset the variable or pass `--resume <id>` explicitly to override on a per-launch basis.
@@ -157,12 +157,12 @@ The per-skin status-bar colors and thresholds are shared with the classic CLI �
 
 The status line also shows:
 
-- **Working directory with git branch** — `~/projects/hermes-agent (docs/two-week-gap-sweep)`. The branch suffix updates when you `git checkout` in a side terminal (mtime-cached) so the TUI reflects your actual active branch, not whatever it was at launch.
+- **Working directory with git branch** — `~/projects/sinoclaw-agent (docs/two-week-gap-sweep)`. The branch suffix updates when you `git checkout` in a side terminal (mtime-cached) so the TUI reflects your actual active branch, not whatever it was at launch.
 - **Per-prompt elapsed time** — `⏱ 12s/3m 45s` while the turn is running (live), frozen to `⏲ 32s / 3m 45s` after the turn completes. First number is time since last user message; second is total session duration. Resets on every new prompt.
 
 ## Configuration
 
-The TUI respects all standard Hermes config: `~/.hermes/config.yaml`, profiles, personalities, skins, quick commands, credential pools, memory providers, tool/skill enablement. No TUI-specific config file exists.
+The TUI respects all standard Hermes config: `~/.sinoclaw/config.yaml`, profiles, personalities, skins, quick commands, credential pools, memory providers, tool/skill enablement. No TUI-specific config file exists.
 
 A handful of keys tune the TUI surface specifically:
 
@@ -212,13 +212,13 @@ existing configs keep working unchanged.
 
 ## Sessions
 
-Sessions are shared between the TUI and the classic CLI — both write to the same `~/.hermes/state.db`. You can start a session in one, resume in the other. The session picker surfaces sessions from both sources, with a source tag.
+Sessions are shared between the TUI and the classic CLI — both write to the same `~/.sinoclaw/state.db`. You can start a session in one, resume in the other. The session picker surfaces sessions from both sources, with a source tag.
 
 See [Sessions](sessions.md) for lifecycle, search, compression, and export.
 
 ## Reverting to the classic CLI
 
-Launching `hermes` (without `--tui`) stays on the classic CLI. To make a machine prefer the TUI, set `HERMES_TUI=1` in your shell profile. To go back, unset it.
+Launching `hermes` (without `--tui`) stays on the classic CLI. To make a machine prefer the TUI, set `SINOCLAW_TUI=1` in your shell profile. To go back, unset it.
 
 If the TUI fails to launch (no Node, missing bundle, TTY issue), Hermes prints a diagnostic and falls back — rather than leaving you stuck.
 

@@ -2,7 +2,7 @@
 
 Uses the Vercel Python SDK to run commands in cloud sandboxes through Hermes'
 shared ``BaseEnvironment`` shell contract. When persistence is enabled, the
-backend stores task-scoped snapshot metadata under ``HERMES_HOME`` and restores
+backend stores task-scoped snapshot metadata under ``SINOCLAW_HOME`` and restores
 new sandboxes from those snapshots on later task reuse.
 """
 
@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING, Any
 
 import httpx
 
-from hermes_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 from tools.environments.base import (
     BaseEnvironment,
     _ThreadedProcessHandle,
@@ -140,7 +140,7 @@ def _extract_result_returncode(result: Any) -> int:
 
 
 def _snapshot_store_path() -> Path:
-    return get_hermes_home() / _SNAPSHOT_STORE_NAME
+    return get_sinoclaw_home() / _SNAPSHOT_STORE_NAME
 
 
 def _load_snapshots() -> dict:
@@ -534,7 +534,7 @@ class VercelSandboxEnvironment(BaseEnvironment):
             else f"{self._remote_home.rstrip('/')}/.hermes"
         )
         archive_member = remote_hermes.lstrip("/")
-        remote_tar = f"/tmp/.hermes_sync.{os.getpid()}.tar"
+        remote_tar = f"/tmp/.sinoclaw_sync.{os.getpid()}.tar"
         sandbox = self._sandbox
         if sandbox is None:
             raise RuntimeError("Vercel sandbox is not attached")

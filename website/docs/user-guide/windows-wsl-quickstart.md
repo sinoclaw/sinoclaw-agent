@@ -69,7 +69,7 @@ Ubuntu (LTS) is what we test against. Debian works. Arch and NixOS work for peop
 
 ### Enable systemd (recommended)
 
-The hermes gateway (and anything else you want to keep running) is easier to manage with systemd. On modern WSL, enable it once inside your distro:
+The sinoclaw gateway (and anything else you want to keep running) is easier to manage with systemd. On modern WSL, enable it once inside your distro:
 
 ```bash
 sudo tee /etc/wsl.conf >/dev/null <<'EOF'
@@ -100,7 +100,7 @@ The `metadata` mount option above is important — without it, files on `/mnt/c/
 Once you have a WSL2 shell open:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/NousResearch/sinoclaw-agent/main/scripts/install.sh | bash
 source ~/.bashrc
 hermes
 ```
@@ -124,7 +124,7 @@ Both are real, both work, but they are **not the same filesystem** — they're b
 
 **Rule of thumb: keep everything Linux-ish inside the Linux filesystem.**
 
-- Your Hermes install (`~/.hermes/`) — Linux side. The installer already does this.
+- Your Hermes install (`~/.sinoclaw/`) — Linux side. The installer already does this.
 - Your git repos that you work on from WSL — Linux side (`~/code/...`, `~/projects/...`).
 - Your models, datasets, venvs — Linux side.
 
@@ -188,7 +188,7 @@ dos2unix path/to/script.sh
 
 Clone inside WSL. Always, unless you have a specific reason not to. A typical Hermes workflow (`hermes chat`, tool calls that `rg`/`ripgrep` the repo, file watchers, background gateway) will be dramatically faster and more reliable against `~/code/myrepo` than `/mnt/c/Users/you/myrepo`.
 
-One exception: **MCP bridges that launch Windows binaries.** If you're using `chrome-devtools-mcp` through `cmd.exe` (see [MCP guide: WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome)), Windows may complain with a `UNC` warning if Hermes's current working directory is `~`. In that case, start Hermes from somewhere under `/mnt/c/` so the Windows process has a drive-letter cwd.
+One exception: **MCP bridges that launch Windows binaries.** If you're using `chrome-devtools-mcp` through `cmd.exe` (see [MCP guide: WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-sinoclaw-in-wsl-to-windows-chrome)), Windows may complain with a `UNC` warning if Hermes's current working directory is `~`. In that case, start Hermes from somewhere under `/mnt/c/` so the Windows process has a drive-letter cwd.
 
 ## Networking: WSL ↔ Windows
 
@@ -262,10 +262,10 @@ The Hermes [Tool Gateway](/docs/user-guide/features/tool-gateway) and the API se
 
 ### Inside WSL with systemd (recommended)
 
-If you enabled systemd per the setup section above, `hermes gateway` and the API server work the way they do on any Linux machine. Use the gateway setup wizard:
+If you enabled systemd per the setup section above, `sinoclaw gateway` and the API server work the way they do on any Linux machine. Use the gateway setup wizard:
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 It will offer to install a systemd user unit so the gateway comes up automatically when WSL starts.
@@ -328,5 +328,5 @@ WSL2 stores its VM disk as a sparse VHDX under `%LOCALAPPDATA%\Packages\...`. It
 
 - **[Installation](/docs/getting-started/installation)** — actual install steps (Linux/WSL2/Termux all use the same installer).
 - **[Integrations → Providers → WSL2 Networking](/docs/integrations/providers#wsl2-networking-windows-users)** — the canonical networking deep-dive for local model servers.
-- **[MCP guide → WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome)** — controlling your signed-in Windows Chrome from Hermes in WSL.
+- **[MCP guide → WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-sinoclaw-in-wsl-to-windows-chrome)** — controlling your signed-in Windows Chrome from Hermes in WSL.
 - **[Tool Gateway](/docs/user-guide/features/tool-gateway)** and **[Web Dashboard](/docs/user-guide/features/web-dashboard)** — the long-lived services you'll most often want to expose from WSL to the rest of your network.

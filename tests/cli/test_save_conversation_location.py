@@ -1,10 +1,10 @@
 """Tests for /save — the conversation snapshot slash command.
 
-Regression: the old implementation wrote ``hermes_conversation_<ts>.json``
+Regression: the old implementation wrote ``sinoclaw_conversation_<ts>.json``
 to the current working directory (CWD). Users who ran /save expected the
 file to be discoverable via ``hermes sessions browse``, but CWD-resident
 snapshots are not indexed in the state DB and are generally invisible.
-The fix writes snapshots under ``~/.hermes/sessions/saved/`` and prints
+The fix writes snapshots under ``~/.sinoclaw/sessions/saved/`` and prints
 the absolute path plus the resume hint for the live session.
 """
 
@@ -21,15 +21,15 @@ import pytest
 
 
 @pytest.fixture
-def hermes_home(tmp_path, monkeypatch):
+def sinoclaw_home(tmp_path, monkeypatch):
     home = tmp_path / ".hermes"
     home.mkdir()
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    monkeypatch.setenv("HERMES_HOME", str(home))
-    # Clear any cached hermes_home computation
-    import hermes_constants
-    if hasattr(hermes_constants, "_hermes_home_cache"):
-        hermes_constants._hermes_home_cache = None
+    monkeypatch.setenv("SINOCLAW_HOME", str(home))
+    # Clear any cached sinoclaw_home computation
+    import sinoclaw_constants
+    if hasattr(sinoclaw_constants, "_sinoclaw_home_cache"):
+        sinoclaw_constants._sinoclaw_home_cache = None
     return home
 
 
@@ -43,15 +43,15 @@ def _make_stub_cli(history):
     )
 
 
-def test_save_conversation_writes_under_hermes_home(hermes_home, tmp_path, monkeypatch, capsys):
-    """Snapshot must land under ~/.hermes/sessions/saved/, not CWD."""
+def test_save_conversation_writes_under_sinoclaw_home(sinoclaw_home, tmp_path, monkeypatch, capsys):
+    """Snapshot must land under ~/.sinoclaw/sessions/saved/, not CWD."""
     # Change CWD to a different directory to prove the file does NOT go there.
     work = tmp_path / "somewhere-else"
     work.mkdir()
     monkeypatch.chdir(work)
 
-    # Import fresh to pick up the HERMES_HOME fixture
-    for mod in [m for m in sys.modules if m.startswith("cli") or m == "hermes_constants"]:
+    # Import fresh to pick up the SINOCLAW_HOME fixture
+    for mod in [m for m in sys.modules if m.startswith("cli") or m == "sinoclaw_constants"]:
         sys.modules.pop(mod, None)
 
     import cli  # noqa: F401  (module under test)
@@ -62,16 +62,16 @@ def test_save_conversation_writes_under_hermes_home(hermes_home, tmp_path, monke
     ])
 
     # Call the unbound method against our stub.
-    cli.HermesCLI.save_conversation(stub)
+    cli.SinoclawCLI.save_conversation(stub)
 
     # File must NOT be in CWD
-    cwd_leak = list(work.glob("hermes_conversation_*.json"))
+    cwd_leak = list(work.glob("sinoclaw_conversation_*.json"))
     assert not cwd_leak, f"snapshot leaked to CWD: {cwd_leak}"
 
-    # File MUST be under ~/.hermes/sessions/saved/
-    saved_dir = hermes_home / "sessions" / "saved"
+    # File MUST be under ~/.sinoclaw/sessions/saved/
+    saved_dir = sinoclaw_home / "sessions" / "saved"
     assert saved_dir.is_dir(), "expected saved/ subdirectory to be created"
-    files = list(saved_dir.glob("hermes_conversation_*.json"))
+    files = list(saved_dir.glob("sinoclaw_conversation_*.json"))
     assert len(files) == 1, files
 
     payload = json.loads(files[0].read_text())
@@ -88,15 +88,15 @@ def test_save_conversation_writes_under_hermes_home(hermes_home, tmp_path, monke
     assert "hermes --resume 20260101_120000_abc123" in out, out
 
 
-def test_save_conversation_empty_history_does_nothing(hermes_home, capsys):
-    for mod in [m for m in sys.modules if m.startswith("cli") or m == "hermes_constants"]:
+def test_save_conversation_empty_history_does_nothing(sinoclaw_home, capsys):
+    for mod in [m for m in sys.modules if m.startswith("cli") or m == "sinoclaw_constants"]:
         sys.modules.pop(mod, None)
     import cli
 
     stub = _make_stub_cli([])
-    cli.HermesCLI.save_conversation(stub)
+    cli.SinoclawCLI.save_conversation(stub)
 
-    saved_dir = hermes_home / "sessions" / "saved"
+    saved_dir = sinoclaw_home / "sessions" / "saved"
     assert not saved_dir.exists() or not list(saved_dir.iterdir())
     out = capsys.readouterr().out
     assert "No conversation to save" in out

@@ -7,7 +7,7 @@
 (function () {
   "use strict";
 
-  const SDK = window.__HERMES_PLUGIN_SDK__;
+  const SDK = window.__SINOCLAW_PLUGIN_SDK__;
   const { React } = SDK;
   const { Card, CardHeader, CardTitle, CardContent, Badge, Button } = SDK.components;
   const { useState, useEffect } = SDK.hooks;
@@ -64,23 +64,23 @@
         React.createElement(CardContent, null,
           React.createElement("div", { className: "grid gap-3 text-sm" },
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.React"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.React"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "React instance — use instead of importing react"),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.hooks"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.hooks"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "useState, useEffect, useCallback, useMemo, useRef, useContext, createContext"),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.components"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.components"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "Card, Badge, Button, Input, Label, Select, Separator, Tabs, etc."),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.api"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.api"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "Hermes API client — getStatus(), getSessions(), etc."),
             ),
             React.createElement("div", { className: "flex flex-col gap-1 border border-border p-3" },
-              React.createElement("span", { className: "font-medium" }, "window.__HERMES_PLUGIN_SDK__.utils"),
+              React.createElement("span", { className: "font-medium" }, "window.__SINOCLAW_PLUGIN_SDK__.utils"),
               React.createElement("span", { className: "text-muted-foreground text-xs" }, "cn(), timeAgo(), isoTimeAgo()"),
             ),
           ),
@@ -90,7 +90,7 @@
   }
 
   // Register this plugin — the dashboard picks it up automatically.
-  window.__HERMES_PLUGINS__.register("example", ExamplePage);
+  window.__SINOCLAW_PLUGINS__.register("example", ExamplePage);
 
   // ─────────────────────────────────────────────────────────────────────
   // Page-scoped slot demo: inject a small banner at the top of /sessions.
@@ -115,5 +115,5 @@
     );
   }
 
-  window.__HERMES_PLUGINS__.registerSlot("example", "sessions:top", SessionsTopBanner);
+  window.__SINOCLAW_PLUGINS__.registerSlot("example", "sessions:top", SessionsTopBanner);
 })();

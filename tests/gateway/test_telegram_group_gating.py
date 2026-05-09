@@ -32,7 +32,7 @@ def _make_adapter(
     adapter = object.__new__(TelegramAdapter)
     adapter.platform = Platform.TELEGRAM
     adapter.config = PlatformConfig(enabled=True, token="***", extra=extra)
-    adapter._bot = SimpleNamespace(id=999, username="hermes_bot")
+    adapter._bot = SimpleNamespace(id=999, username="sinoclaw_bot")
     adapter._message_handler = AsyncMock()
     adapter._pending_text_batches = {}
     adapter._pending_text_batch_tasks = {}
@@ -80,7 +80,7 @@ def _dm_message(text="hello", *, from_user_id=111):
     )
 
 
-def _mention_entity(text, mention="@hermes_bot"):
+def _mention_entity(text, mention="@sinoclaw_bot"):
     offset = text.index(mention)
     return SimpleNamespace(type="mention", offset=offset, length=len(mention))
 
@@ -106,7 +106,7 @@ def test_group_messages_can_require_direct_trigger_via_config():
     adapter = _make_adapter(require_mention=True)
 
     assert adapter._should_process_message(_group_message("hello everyone")) is False
-    assert adapter._should_process_message(_group_message("hi @hermes_bot", entities=[_mention_entity("hi @hermes_bot")])) is True
+    assert adapter._should_process_message(_group_message("hi @sinoclaw_bot", entities=[_mention_entity("hi @sinoclaw_bot")])) is True
     assert adapter._should_process_message(_group_message("replying", reply_to_bot=True)) is True
     # Commands must also respect require_mention when it is enabled
     assert adapter._should_process_message(_group_message("/status"), is_command=True) is False
@@ -115,8 +115,8 @@ def test_group_messages_can_require_direct_trigger_via_config():
     # entity). We must accept it so the menu works when require_mention is on.
     assert adapter._should_process_message(
         _group_message(
-            "/status@hermes_bot",
-            entities=[_bot_command_entity("/status@hermes_bot", "/status@hermes_bot")],
+            "/status@sinoclaw_bot",
+            entities=[_bot_command_entity("/status@sinoclaw_bot", "/status@sinoclaw_bot")],
         ),
         is_command=True,
     ) is True
@@ -174,9 +174,9 @@ def test_invalid_regex_patterns_are_ignored():
 
 
 def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
+    (sinoclaw_home / "config.yaml").write_text(
         "telegram:\n"
         "  require_mention: true\n"
         "  mention_patterns:\n"
@@ -186,7 +186,7 @@ def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
     monkeypatch.delenv("TELEGRAM_MENTION_PATTERNS", raising=False)
     monkeypatch.delenv("TELEGRAM_FREE_RESPONSE_CHATS", raising=False)
@@ -200,9 +200,9 @@ def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
 
 
 def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
+    (sinoclaw_home / "config.yaml").write_text(
         "telegram:\n"
         "  allow_from:\n"
         "    - \"111\"\n"
@@ -214,7 +214,7 @@ def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("TELEGRAM_ALLOWED_USERS", raising=False)
     monkeypatch.delenv("TELEGRAM_GROUP_ALLOWED_USERS", raising=False)
     monkeypatch.delenv("TELEGRAM_GROUP_ALLOWED_CHATS", raising=False)
@@ -228,16 +228,16 @@ def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
 
 
 def test_config_env_overrides_telegram_user_allowlists(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
+    (sinoclaw_home / "config.yaml").write_text(
         "telegram:\n"
         "  allow_from: \"111\"\n"
         "  group_allow_from: \"222\"\n",
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.setenv("TELEGRAM_ALLOWED_USERS", "999")
     monkeypatch.setenv("TELEGRAM_GROUP_ALLOWED_USERS", "888")
 
@@ -265,16 +265,16 @@ def test_top_level_require_mention_bridges_to_telegram(monkeypatch, tmp_path):
     """require_mention at the config.yaml top level (alongside group_sessions_per_user)
     must behave identically to telegram.require_mention: true (#3979).
     """
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
     # Intentionally no "telegram:" section — keys are at the top level.
-    (hermes_home / "config.yaml").write_text(
+    (sinoclaw_home / "config.yaml").write_text(
         "require_mention: true\n"
         "group_sessions_per_user: true\n",
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
 
     config = load_gateway_config()
@@ -293,16 +293,16 @@ def test_top_level_require_mention_does_not_override_telegram_section(monkeypatc
     """When telegram.require_mention is explicitly set, top-level require_mention
     must not override it (platform-specific config takes precedence).
     """
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
+    (sinoclaw_home / "config.yaml").write_text(
         "require_mention: true\n"
         "telegram:\n"
         "  require_mention: false\n",
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
 
     config = load_gateway_config()
@@ -313,9 +313,9 @@ def test_top_level_require_mention_does_not_override_telegram_section(monkeypatc
 
 
 def test_config_bridges_telegram_ignored_threads(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
-    hermes_home.mkdir()
-    (hermes_home / "config.yaml").write_text(
+    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home.mkdir()
+    (sinoclaw_home / "config.yaml").write_text(
         "telegram:\n"
         "  ignored_threads:\n"
         "    - 31\n"
@@ -323,7 +323,7 @@ def test_config_bridges_telegram_ignored_threads(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("TELEGRAM_IGNORED_THREADS", raising=False)
 
     config = load_gateway_config()

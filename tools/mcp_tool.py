@@ -3,10 +3,10 @@
 MCP (Model Context Protocol) Client Support
 
 Connects to external MCP servers via stdio, HTTP/StreamableHTTP, or SSE
-transport, discovers their tools, and registers them into the hermes-agent
+transport, discovers their tools, and registers them into the sinoclaw-agent
 tool registry so the agent can call them like any built-in tool.
 
-Configuration is read from ~/.hermes/config.yaml under the ``mcp_servers`` key.
+Configuration is read from ~/.sinoclaw/config.yaml under the ``mcp_servers`` key.
 The ``mcp`` Python package is optional -- if not installed, this module is a
 no-op and logs a debug message.
 
@@ -104,7 +104,7 @@ logger = logging.getLogger(__name__)
 # corrupts the display and can hang the session.
 #
 # Instead we redirect every stdio MCP subprocess's stderr into a shared
-# per-profile log file (~/.hermes/logs/mcp-stderr.log), tagged with the
+# per-profile log file (~/.sinoclaw/logs/mcp-stderr.log), tagged with the
 # server name so individual servers remain debuggable.
 #
 # Fallback is os.devnull if opening the log file fails for any reason.
@@ -126,8 +126,8 @@ def _get_mcp_stderr_log() -> Any:
         if _mcp_stderr_log_fh is not None:
             return _mcp_stderr_log_fh
         try:
-            from hermes_constants import get_hermes_home
-            log_dir = get_hermes_home() / "logs"
+            from sinoclaw_constants import get_sinoclaw_home
+            log_dir = get_sinoclaw_home() / "logs"
             log_dir.mkdir(parents=True, exist_ok=True)
             log_path = log_dir / "mcp-stderr.log"
             # Line-buffered so server output lands on disk promptly; errors=
@@ -405,13 +405,13 @@ def _resolve_stdio_command(command: str, env: dict) -> tuple[str, dict]:
         if which_hit:
             resolved_command = which_hit
         elif resolved_command in {"npx", "npm", "node"}:
-            hermes_home = os.path.expanduser(
+            sinoclaw_home = os.path.expanduser(
                 os.getenv(
-                    "HERMES_HOME", os.path.join(os.path.expanduser("~"), ".hermes")
+                    "SINOCLAW_HOME", os.path.join(os.path.expanduser("~"), ".hermes")
                 )
             )
             candidates = [
-                os.path.join(hermes_home, "node", "bin", resolved_command),
+                os.path.join(sinoclaw_home, "node", "bin", resolved_command),
                 os.path.join(os.path.expanduser("~"), ".local", "bin", resolved_command),
             ]
             for candidate in candidates:
@@ -1215,7 +1215,7 @@ class MCPServerTask:
         # Redirect subprocess stderr into a shared log file so MCP servers
         # (FastMCP banners, slack-mcp startup JSON, etc.) don't dump onto
         # the user's TTY and corrupt the TUI.  Preserves debuggability via
-        # ~/.hermes/logs/mcp-stderr.log.
+        # ~/.sinoclaw/logs/mcp-stderr.log.
         _write_stderr_log_header(self.name)
         _errlog = _get_mcp_stderr_log()
         try:
@@ -1824,7 +1824,7 @@ def _handle_auth_error_and_retry(
         "error": (
             f"MCP server '{server_name}' requires re-authentication. "
             f"Run `hermes mcp login {server_name}` (or delete the tokens "
-            f"file under ~/.hermes/mcp-tokens/ and restart). Do NOT retry "
+            f"file under ~/.sinoclaw/mcp-tokens/ and restart). Do NOT retry "
             f"this tool — ask the user to re-authenticate."
         ),
         "needs_reauth": True,
@@ -2111,18 +2111,18 @@ def _load_mcp_config() -> Dict[str, dict]:
     ``timeout``, ``connect_timeout``, and ``auth`` overrides.
 
     ``${ENV_VAR}`` placeholders in string values are resolved from
-    ``os.environ`` (which includes ``~/.hermes/.env`` loaded at startup).
+    ``os.environ`` (which includes ``~/.sinoclaw/.env`` loaded at startup).
     """
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         config = load_config()
         servers = config.get("mcp_servers")
         if not servers or not isinstance(servers, dict):
             return {}
         # Ensure .env vars are available for interpolation
         try:
-            from hermes_cli.env_loader import load_hermes_dotenv
-            load_hermes_dotenv()
+            from sinoclaw_cli.env_loader import load_sinoclaw_dotenv
+            load_sinoclaw_dotenv()
         except Exception:
             pass
         return {name: _interpolate_env_vars(cfg) for name, cfg in servers.items()}

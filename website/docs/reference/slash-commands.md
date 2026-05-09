@@ -6,7 +6,7 @@ description: "Complete reference for interactive CLI and messaging slash command
 
 # Slash Commands Reference
 
-Hermes has two slash-command surfaces, both driven by a central `COMMAND_REGISTRY` in `hermes_cli/commands.py`:
+Hermes has two slash-command surfaces, both driven by a central `COMMAND_REGISTRY` in `sinoclaw_cli/commands.py`:
 
 - **Interactive CLI slash commands** — dispatched by `cli.py`, with autocomplete from the registry
 - **Messaging slash commands** — dispatched by `gateway/run.py`, with help text and platform menus generated from the registry
@@ -105,13 +105,13 @@ Type `/` in the CLI to open the autocomplete menu. Built-in commands are case-in
 
 ### Quick Commands
 
-User-defined quick commands map a short slash command to either a shell command or another slash command. Configure them in `~/.hermes/config.yaml`:
+User-defined quick commands map a short slash command to either a shell command or another slash command. Configure them in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 quick_commands:
   status:
     type: exec
-    command: systemctl status hermes-agent
+    command: systemctl status sinoclaw-agent
   deploy:
     type: exec
     command: scripts/deploy.sh
@@ -130,7 +130,7 @@ Define your own short names for models you use often, then reach them with `/mod
 
 Two config formats are supported:
 
-**Full form** — pin an exact model, provider, and optionally a base URL. Put this in `~/.hermes/config.yaml`:
+**Full form** — pin an exact model, provider, and optionally a base URL. Put this in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 model_aliases:

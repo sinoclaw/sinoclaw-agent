@@ -1,6 +1,6 @@
-"""CLI entry point for the hermes-agent ACP adapter.
+"""CLI entry point for the sinoclaw-agent ACP adapter.
 
-Loads environment variables from ``~/.hermes/.env``, configures logging
+Loads environment variables from ``~/.sinoclaw/.env``, configures logging
 to write to stderr (so stdout is reserved for ACP JSON-RPC transport),
 and starts the ACP agent server.
 
@@ -10,15 +10,15 @@ Usage::
     # or
     hermes acp
     # or
-    hermes-acp
+    sinoclaw-acp
 """
 
-# IMPORTANT: hermes_bootstrap must be the very first import — UTF-8 stdio
-# on Windows.  No-op on POSIX.  See hermes_bootstrap.py for full rationale.
+# IMPORTANT: sinoclaw_bootstrap must be the very first import — UTF-8 stdio
+# on Windows.  No-op on POSIX.  See sinoclaw_bootstrap.py for full rationale.
 try:
-    import hermes_bootstrap  # noqa: F401
+    import sinoclaw_bootstrap  # noqa: F401
 except ModuleNotFoundError:
-    # Graceful fallback when hermes_bootstrap isn't registered in the venv
+    # Graceful fallback when sinoclaw_bootstrap isn't registered in the venv
     # yet — happens during partial ``hermes update`` where git-reset landed
     # new code but ``uv pip install -e .`` didn't finish.  Missing bootstrap
     # means UTF-8 stdio setup is skipped on Windows; POSIX is unaffected.
@@ -28,7 +28,7 @@ import asyncio
 import logging
 import sys
 from pathlib import Path
-from hermes_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 
 
 # Methods clients send as periodic liveness probes. They are not part of the
@@ -93,17 +93,17 @@ def _setup_logging() -> None:
 
 
 def _load_env() -> None:
-    """Load .env from HERMES_HOME (default ``~/.hermes``)."""
-    from hermes_cli.env_loader import load_hermes_dotenv
+    """Load .env from SINOCLAW_HOME (default ``~/.sinoclaw``)."""
+    from sinoclaw_cli.env_loader import load_sinoclaw_dotenv
 
-    hermes_home = get_hermes_home()
-    loaded = load_hermes_dotenv(hermes_home=hermes_home)
+    sinoclaw_home = get_sinoclaw_home()
+    loaded = load_sinoclaw_dotenv(sinoclaw_home=sinoclaw_home)
     if loaded:
         for env_file in loaded:
             logging.getLogger(__name__).info("Loaded env from %s", env_file)
     else:
         logging.getLogger(__name__).info(
-            "No .env found at %s, using system env", hermes_home / ".env"
+            "No .env found at %s, using system env", sinoclaw_home / ".env"
         )
 
 
@@ -113,7 +113,7 @@ def main() -> None:
     _load_env()
 
     logger = logging.getLogger(__name__)
-    logger.info("Starting hermes-agent ACP adapter")
+    logger.info("Starting sinoclaw-agent ACP adapter")
 
     # Ensure the project root is on sys.path so ``from run_agent import AIAgent`` works
     project_root = str(Path(__file__).resolve().parent.parent)

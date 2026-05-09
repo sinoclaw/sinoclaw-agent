@@ -174,7 +174,7 @@ const sidebars: SidebarsConfig = {
         'guides/use-mcp-with-hermes',
         'guides/use-soul-with-hermes',
         'guides/use-voice-mode-with-hermes',
-        'guides/build-a-hermes-plugin',
+        'guides/build-a-sinoclaw-plugin',
         'guides/automate-with-cron',
         'guides/cron-script-only',
         'guides/automation-templates',

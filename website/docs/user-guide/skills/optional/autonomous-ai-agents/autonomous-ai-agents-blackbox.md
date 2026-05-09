@@ -20,7 +20,7 @@ Delegate coding tasks to Blackbox AI CLI agent. Multi-model agent with built-in 
 | Author | Hermes Agent (Nous Research) |
 | License | MIT |
 | Tags | `Coding-Agent`, `Blackbox`, `Multi-Agent`, `Judge`, `Multi-Model` |
-| Related skills | [`claude-code`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code), [`codex`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex), [`hermes-agent`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent) |
+| Related skills | [`claude-code`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code), [`codex`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex), [`sinoclaw-agent`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-sinoclaw-agent) |
 
 ## Reference: full SKILL.md
 

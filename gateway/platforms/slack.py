@@ -508,8 +508,8 @@ class SlackAdapter(BasePlatformAdapter):
         bot_tokens = [t.strip() for t in raw_token.split(",") if t.strip()]
 
         # Also load tokens from OAuth token file
-        from hermes_constants import get_hermes_home
-        tokens_file = get_hermes_home() / "slack_tokens.json"
+        from sinoclaw_constants import get_sinoclaw_home
+        tokens_file = get_sinoclaw_home() / "slack_tokens.json"
         if tokens_file.exists():
             try:
                 saved = json.loads(tokens_file.read_text(encoding="utf-8"))
@@ -622,7 +622,7 @@ class SlackAdapter(BasePlatformAdapter):
             # routes the command event through the socket regardless of the
             # manifest's request URL, but it will not deliver an event for
             # a slash command the manifest doesn't declare.
-            from hermes_cli.commands import slack_native_slashes
+            from sinoclaw_cli.commands import slack_native_slashes
             import re as _re
 
             _slash_names = [name for name, _d, _h in slack_native_slashes()]
@@ -634,7 +634,7 @@ class SlackAdapter(BasePlatformAdapter):
                 _slash_pattern = _re.compile(r"^/hermes$")
 
             @self._app.command(_slash_pattern)
-            async def handle_hermes_command(ack, command):
+            async def handle_sinoclaw_command(ack, command):
                 slash = (command.get("command") or "").lstrip("/")
                 await ack(
                     response_type="ephemeral",
@@ -644,19 +644,19 @@ class SlackAdapter(BasePlatformAdapter):
 
             # Register Block Kit action handlers for approval buttons
             for _action_id in (
-                "hermes_approve_once",
-                "hermes_approve_session",
-                "hermes_approve_always",
-                "hermes_deny",
+                "sinoclaw_approve_once",
+                "sinoclaw_approve_session",
+                "sinoclaw_approve_always",
+                "sinoclaw_deny",
             ):
                 self._app.action(_action_id)(self._handle_approval_action)
 
             # Register Block Kit action handlers for slash-confirm buttons
             # (generic three-option prompts; see tools/slash_confirm.py).
             for _action_id in (
-                "hermes_confirm_once",
-                "hermes_confirm_always",
-                "hermes_confirm_cancel",
+                "sinoclaw_confirm_once",
+                "sinoclaw_confirm_always",
+                "sinoclaw_confirm_cancel",
             ):
                 self._app.action(_action_id)(self._handle_slash_confirm_action)
 
@@ -2199,26 +2199,26 @@ class SlackAdapter(BasePlatformAdapter):
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Allow Once"},
                             "style": "primary",
-                            "action_id": "hermes_approve_once",
+                            "action_id": "sinoclaw_approve_once",
                             "value": session_key,
                         },
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Allow Session"},
-                            "action_id": "hermes_approve_session",
+                            "action_id": "sinoclaw_approve_session",
                             "value": session_key,
                         },
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Always Allow"},
-                            "action_id": "hermes_approve_always",
+                            "action_id": "sinoclaw_approve_always",
                             "value": session_key,
                         },
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Deny"},
                             "style": "danger",
-                            "action_id": "hermes_deny",
+                            "action_id": "sinoclaw_deny",
                             "value": session_key,
                         },
                     ],
@@ -2273,20 +2273,20 @@ class SlackAdapter(BasePlatformAdapter):
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Approve Once"},
                             "style": "primary",
-                            "action_id": "hermes_confirm_once",
+                            "action_id": "sinoclaw_confirm_once",
                             "value": value,
                         },
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Always Approve"},
-                            "action_id": "hermes_confirm_always",
+                            "action_id": "sinoclaw_confirm_always",
                             "value": value,
                         },
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Cancel"},
                             "style": "danger",
-                            "action_id": "hermes_confirm_cancel",
+                            "action_id": "sinoclaw_confirm_cancel",
                             "value": value,
                         },
                     ],
@@ -2337,9 +2337,9 @@ class SlackAdapter(BasePlatformAdapter):
         session_key, confirm_id = value.split("|", 1)
 
         choice_map = {
-            "hermes_confirm_once": "once",
-            "hermes_confirm_always": "always",
-            "hermes_confirm_cancel": "cancel",
+            "sinoclaw_confirm_once": "once",
+            "sinoclaw_confirm_always": "always",
+            "sinoclaw_confirm_cancel": "cancel",
         }
         choice = choice_map.get(action_id, "cancel")
 
@@ -2432,10 +2432,10 @@ class SlackAdapter(BasePlatformAdapter):
 
         # Map action_id to approval choice
         choice_map = {
-            "hermes_approve_once": "once",
-            "hermes_approve_session": "session",
-            "hermes_approve_always": "always",
-            "hermes_deny": "deny",
+            "sinoclaw_approve_once": "once",
+            "sinoclaw_approve_session": "session",
+            "sinoclaw_approve_always": "always",
+            "sinoclaw_deny": "deny",
         }
         choice = choice_map.get(action_id, "deny")
 
@@ -2706,7 +2706,7 @@ class SlackAdapter(BasePlatformAdapter):
             # Legacy /hermes <subcommand> [args] routing + free-form questions.
             # Empty slash_name falls into this branch for backward compat
             # with any caller that didn't populate command["command"].
-            from hermes_cli.commands import slack_subcommand_map
+            from sinoclaw_cli.commands import slack_subcommand_map
             subcommand_map = slack_subcommand_map()
             subcommand_map["compact"] = "/compress"
             first_word = text.split()[0] if text else ""
@@ -2742,7 +2742,7 @@ class SlackAdapter(BasePlatformAdapter):
 
         # Stash the Slack response_url so the first reply for this
         # channel+user can be routed ephemerally (replaces the initial
-        # "Running /cmd…" ack shown by handle_hermes_command).
+        # "Running /cmd…" ack shown by handle_sinoclaw_command).
         # Only stash for COMMAND events (text starts with "/") — free-form
         # questions via "/hermes <question>" must produce public replies so
         # the whole channel can see the agent's answer.

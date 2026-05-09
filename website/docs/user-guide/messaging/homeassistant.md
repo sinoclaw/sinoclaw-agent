@@ -25,7 +25,7 @@ Hermes Agent integrates with [Home Assistant](https://www.home-assistant.io/) in
 ### 2. Configure Environment Variables
 
 ```bash
-# Add to ~/.hermes/.env
+# Add to ~/.sinoclaw/.env
 
 # Required: your Long-Lived Access Token
 HASS_TOKEN=your-long-lived-access-token
@@ -41,7 +41,7 @@ The `homeassistant` toolset is automatically enabled when `HASS_TOKEN` is set. B
 ### 3. Start the Gateway
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 Home Assistant will appear as a connected platform alongside any other messaging platforms (Telegram, Discord, etc.).
@@ -130,7 +130,7 @@ The Home Assistant gateway adapter connects via WebSocket and subscribes to `sta
 By default, **no events are forwarded**. You must configure at least one of `watch_domains`, `watch_entities`, or `watch_all` to receive events. Without filters, a warning is logged at startup and all state changes are silently dropped.
 :::
 
-Configure which events the agent sees in `~/.hermes/config.yaml` under the Home Assistant platform's `extra` section:
+Configure which events the agent sees in `~/.sinoclaw/config.yaml` under the Home Assistant platform's `extra` section:
 
 ```yaml
 platforms:

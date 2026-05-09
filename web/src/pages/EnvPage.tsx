@@ -48,7 +48,7 @@ const PROVIDER_GROUPS: { prefix: string; name: string; priority: number }[] = [
   // Then alphabetical by display name
   { prefix: "ANTHROPIC_", name: "Anthropic", priority: 1 },
   { prefix: "DASHSCOPE_", name: "DashScope (Qwen)", priority: 2 },
-  { prefix: "HERMES_QWEN_", name: "DashScope (Qwen)", priority: 2 },
+  { prefix: "SINOCLAW_QWEN_", name: "DashScope (Qwen)", priority: 2 },
   { prefix: "DEEPSEEK_", name: "DeepSeek", priority: 3 },
   { prefix: "GOOGLE_", name: "Gemini", priority: 4 },
   { prefix: "GEMINI_", name: "Gemini", priority: 4 },
@@ -686,7 +686,7 @@ export default function EnvPage() {
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-muted-foreground">
-            {t.env.description} <code>~/.hermes/.env</code>
+            {t.env.description} <code>~/.sinoclaw/.env</code>
           </p>
           <p className="text-[0.7rem] text-muted-foreground/70">
             {t.env.changesNote}

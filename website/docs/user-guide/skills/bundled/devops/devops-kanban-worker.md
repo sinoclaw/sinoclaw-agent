@@ -32,7 +32,7 @@ The following is the complete skill definition that Hermes loads when this skill
 
 ## Workspace handling
 
-Your workspace kind determines how you should behave inside `$HERMES_KANBAN_WORKSPACE`:
+Your workspace kind determines how you should behave inside `$SINOCLAW_KANBAN_WORKSPACE`:
 
 | Kind | What it is | How to work |
 |---|---|---|
@@ -42,7 +42,7 @@ Your workspace kind determines how you should behave inside `$HERMES_KANBAN_WORK
 
 ## Tenant isolation
 
-If `$HERMES_TENANT` is set, the task belongs to a tenant namespace. When reading or writing persistent memory, prefix memory entries with the tenant so context doesn't leak across tenants:
+If `$SINOCLAW_TENANT` is set, the task belongs to a tenant namespace. When reading or writing persistent memory, prefix memory entries with the tenant so context doesn't leak across tenants:
 
 - Good: `business-a: Acme is our biggest customer`
 - Bad (leaks): `Acme is our biggest customer`
@@ -101,7 +101,7 @@ Good: one sentence naming the specific decision you need. Leave longer context a
 
 ```python
 kanban_comment(
-    task_id=os.environ["HERMES_KANBAN_TASK"],
+    task_id=os.environ["SINOCLAW_KANBAN_TASK"],
     body="Full context: I have user IPs from Cloudflare headers but some users are behind NATs with thousands of peers. Keying on IP alone causes false positives.",
 )
 kanban_block(reason="Rate limit key choice: IP (simple, NAT-unsafe) or user_id (requires auth, skips anonymous endpoints)?")
@@ -128,7 +128,7 @@ If you open the task and `kanban_show` returns `runs: [...]` with one or more cl
 ## Do NOT
 
 - Call `delegate_task` as a substitute for `kanban_create`. `delegate_task` is for short reasoning subtasks inside YOUR run; `kanban_create` is for cross-agent handoffs that outlive one API loop.
-- Modify files outside `$HERMES_KANBAN_WORKSPACE` unless the task body says to.
+- Modify files outside `$SINOCLAW_KANBAN_WORKSPACE` unless the task body says to.
 - Create follow-up tasks assigned to yourself — assign to the right specialist.
 - Complete a task you didn't actually finish. Block it instead.
 

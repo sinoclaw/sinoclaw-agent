@@ -96,6 +96,6 @@ let
         pythonPackageOverrides
       ]);
 in
-pythonSet.mkVirtualEnv "hermes-agent-env" {
-  hermes-agent = dependency-groups;
+pythonSet.mkVirtualEnv "sinoclaw-agent-env" {
+  sinoclaw-agent = dependency-groups;
 }

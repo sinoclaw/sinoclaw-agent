@@ -13,7 +13,7 @@ description: "Connect Open WebUI to Hermes Agent via the OpenAI-compatible API s
 ```mermaid
 flowchart LR
     A["Open WebUI<br/>browser UI<br/>port 3000"]
-    B["hermes-agent<br/>gateway API server<br/>port 8642"]
+    B["sinoclaw-agent<br/>gateway API server<br/>port 8642"]
     A -->|POST /v1/chat/completions| B
     B -->|SSE streaming response| A
 ```
@@ -35,13 +35,13 @@ Open WebUI talks to Hermes server-to-server, so you do not need `API_SERVER_CORS
 If you want Hermes + Open WebUI wired together locally with a reusable launcher, run:
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 bash scripts/setup_open_webui.sh
 ```
 
 What the script does:
 
-- ensures `~/.hermes/.env` contains `API_SERVER_ENABLED`, `API_SERVER_HOST`, `API_SERVER_KEY`, `API_SERVER_PORT`, and `API_SERVER_MODEL_NAME`
+- ensures `~/.sinoclaw/.env` contains `API_SERVER_ENABLED`, `API_SERVER_HOST`, `API_SERVER_KEY`, `API_SERVER_PORT`, and `API_SERVER_MODEL_NAME`
 - restarts the Hermes gateway so the API server comes up
 - installs Open WebUI into `~/.local/open-webui-venv`
 - writes a launcher at `~/.local/bin/start-open-webui-hermes.sh`
@@ -58,7 +58,7 @@ Useful overrides:
 ```bash
 OPEN_WEBUI_NAME='My Hermes UI' \
 OPEN_WEBUI_ENABLE_SIGNUP=true \
-HERMES_API_MODEL_NAME='My Hermes Agent' \
+SINOCLAW_API_MODEL_NAME='My Hermes Agent' \
 bash scripts/setup_open_webui.sh
 ```
 
@@ -75,16 +75,16 @@ hermes config set API_SERVER_ENABLED true
 hermes config set API_SERVER_KEY your-secret-key
 ```
 
-`hermes config set` auto-routes the flag to `config.yaml` and the secret to `~/.hermes/.env`. If the gateway is already running, restart it so the change takes effect:
+`hermes config set` auto-routes the flag to `config.yaml` and the secret to `~/.sinoclaw/.env`. If the gateway is already running, restart it so the change takes effect:
 
 ```bash
-hermes gateway stop && hermes gateway
+sinoclaw gateway stop && sinoclaw gateway
 ```
 
 ### 2. Start Hermes Agent gateway
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 You should see:
@@ -100,7 +100,7 @@ curl -s http://127.0.0.1:8642/health
 # {"status": "ok", ...}
 
 curl -s -H "Authorization: Bearer your-secret-key" http://127.0.0.1:8642/v1/models
-# {"object":"list","data":[{"id":"hermes-agent", ...}]}
+# {"object":"list","data":[{"id":"sinoclaw-agent", ...}]}
 ```
 
 If `/health` fails, the gateway didn't pick up `API_SERVER_ENABLED=true` — restart it. If `/v1/models` returns `401`, your `Authorization` header doesn't match `API_SERVER_KEY`.
@@ -125,7 +125,7 @@ First launch takes 15–30 seconds: Open WebUI downloads sentence-transformer em
 
 ### 5. Open the UI
 
-Go to **http://localhost:3000**. Create your admin account (the first user becomes admin). You should see your agent in the model dropdown (named after your profile, or **hermes-agent** for the default profile). Start chatting!
+Go to **http://localhost:3000**. Create your admin account (the first user becomes admin). You should see your agent in the model dropdown (named after your profile, or **sinoclaw-agent** for the default profile). Start chatting!
 
 ## Docker Compose Setup
 
@@ -172,7 +172,7 @@ If you prefer to configure the connection through the UI instead of environment 
 7. Click the **checkmark** to verify the connection
 8. **Save**
 
-Your agent model should now appear in the model dropdown (named after your profile, or **hermes-agent** for the default profile).
+Your agent model should now appear in the model dropdown (named after your profile, or **sinoclaw-agent** for the default profile).
 
 :::warning
 Environment variables only take effect on Open WebUI's **first launch**. After that, connection settings are stored in its internal database. To change them later, use the Admin UI or delete the Docker volume and start fresh.
@@ -196,7 +196,7 @@ This is the default and requires no extra configuration. Open WebUI sends standa
 To use the Responses API mode:
 
 1. Go to **Admin Settings** → **Connections** → **OpenAI** → **Manage**
-2. Edit your hermes-agent connection
+2. Edit your sinoclaw-agent connection
 3. Change **API Type** from "Chat Completions" to **"Responses (Experimental)"**
 4. Save
 
@@ -219,7 +219,7 @@ When you send a message in Open WebUI:
 
 Your agent has access to the same tools and capabilities as that API-server Hermes instance. If the API server is remote, those tools are remote too.
 
-If you need tools to run against your **local** workspace today, run Hermes locally and point it at a pure LLM provider or pure OpenAI-compatible model proxy (for example vLLM, LiteLLM, Ollama, llama.cpp, OpenAI, OpenRouter, etc.). A future split-runtime mode for "remote brain, local hands" is being tracked in [#18715](https://github.com/NousResearch/hermes-agent/issues/18715); it is not the behavior of the current API server.
+If you need tools to run against your **local** workspace today, run Hermes locally and point it at a pure LLM provider or pure OpenAI-compatible model proxy (for example vLLM, LiteLLM, Ollama, llama.cpp, OpenAI, OpenRouter, etc.). A future split-runtime mode for "remote brain, local hands" is being tracked in [#18715](https://github.com/NousResearch/sinoclaw-agent/issues/18715); it is not the behavior of the current API server.
 
 :::tip Tool Progress
 With streaming enabled (the default), you'll see brief inline indicators as tools run — the tool emoji and its key argument. These appear in the response stream before the agent's final answer, giving you visibility into what's happening behind the scenes.
@@ -249,7 +249,7 @@ With streaming enabled (the default), you'll see brief inline indicators as tool
 
 - **Check the URL has `/v1` suffix**: `http://host.docker.internal:8642/v1` (not just `:8642`)
 - **Verify the gateway is running**: `curl http://localhost:8642/health` should return `{"status": "ok"}`
-- **Check model listing**: `curl -H "Authorization: Bearer your-secret-key" http://localhost:8642/v1/models` should return a list with `hermes-agent`
+- **Check model listing**: `curl -H "Authorization: Bearer your-secret-key" http://localhost:8642/v1/models` should return a list with `sinoclaw-agent`
 - **Docker networking**: From inside Docker, `localhost` means the container, not your host. Use `host.docker.internal` or `--network=host`.
 - **Empty Ollama backend shadowing the picker**: If you omitted `ENABLE_OLLAMA_API=false`, Open WebUI shows an empty Ollama section above your Hermes models. Restart the container with `-e ENABLE_OLLAMA_API=false` or disable Ollama in **Admin Settings → Connections**.
 

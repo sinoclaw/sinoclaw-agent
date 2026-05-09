@@ -83,9 +83,9 @@ The foundation from `atroposlib`. Provides:
 
 ### HermesAgentBaseEnv
 
-The hermes-agent layer (`environments/hermes_base_env.py`). Adds:
+The sinoclaw-agent layer (`environments/sinoclaw_base_env.py`). Adds:
 - **Terminal backend configuration** — sets `TERMINAL_ENV` for sandboxed execution (local, Docker, Modal, Daytona, SSH, Singularity)
-- **Tool resolution** — `_resolve_tools_for_group()` calls hermes-agent's `get_tool_definitions()` to get the right tool schemas based on enabled/disabled toolsets
+- **Tool resolution** — `_resolve_tools_for_group()` calls sinoclaw-agent's `get_tool_definitions()` to get the right tool schemas based on enabled/disabled toolsets
 - **Agent loop integration** — `collect_trajectory()` runs `HermesAgentLoop` and scores the result
 - **Two-phase operation** — Phase 1 (OpenAI server) for eval/SFT, Phase 2 (VLLM ManagedServer) for full RL with logprobs
 - **Async safety patches** — monkey-patches Modal backend to work inside Atropos's event loop
@@ -106,7 +106,7 @@ Your environment inherits from `HermesAgentBaseEnv` and implements five methods:
 
 ### Agent Loop
 
-`HermesAgentLoop` (`environments/agent_loop.py`) is the reusable multi-turn agent engine. It runs the same tool-calling pattern as hermes-agent's main loop:
+`HermesAgentLoop` (`environments/agent_loop.py`) is the reusable multi-turn agent engine. It runs the same tool-calling pattern as sinoclaw-agent's main loop:
 
 1. Send messages + tool schemas to the API via `server.chat_completion()`
 2. If the response contains `tool_calls`, dispatch each via `handle_function_call()`
@@ -158,7 +158,7 @@ Available methods:
 | **Transfers** | `upload_file()`, `upload_dir()`, `download_file()`, `download_dir()` |
 | **Web** | `web_search(query)`, `web_extract(urls)` |
 | **Browser** | `browser_navigate(url)`, `browser_snapshot()` |
-| **Generic** | `call_tool(name, args)` — escape hatch for any hermes-agent tool |
+| **Generic** | `call_tool(name, args)` — escape hatch for any sinoclaw-agent tool |
 | **Cleanup** | `cleanup()` — release all resources |
 
 ### Tool Call Parsers
@@ -241,7 +241,7 @@ TBLite is a thin subclass of TerminalBench2 — only the dataset and timeouts di
 
 ```bash
 # Install yc-bench (optional dependency)
-pip install "hermes-agent[yc-bench]"
+pip install "sinoclaw-agent[yc-bench]"
 
 # Run evaluation
 bash environments/benchmarks/yc_bench/run_eval.sh
@@ -278,7 +278,7 @@ python environments/terminal_test_env/terminal_test_env.py serve
 SWE-bench style training environment. The model gets a coding task, uses terminal + file + web tools to solve it, and the reward function runs tests in the same Modal sandbox.
 
 ```bash
-python environments/hermes_swe_env/hermes_swe_env.py serve \
+python environments/sinoclaw_swe_env/sinoclaw_swe_env.py serve \
     --openai.model_name YourModel \
     --env.dataset_name bigcode/humanevalpack \
     --env.terminal_backend modal
@@ -321,7 +321,7 @@ Connects the environment to a running Atropos API server (`run-api`). Used durin
 run-api
 
 # Terminal 2: Start the environment
-python environments/hermes_swe_env/hermes_swe_env.py serve \
+python environments/sinoclaw_swe_env/sinoclaw_swe_env.py serve \
     --openai.model_name YourModel
 ```
 
@@ -349,7 +349,7 @@ Uses ManagedServer for exact token IDs + logprobs via `/generate`. A client-side
 ### Training Environment
 
 ```python
-from environments.hermes_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 
 class MyEnvConfig(HermesAgentEnvConfig):
@@ -477,12 +477,12 @@ python my_env.py evaluate \
 
 ### For Modal-sandboxed benchmarks (TB2, TBLite)
 
-- [Modal](https://modal.com) account and CLI: `pip install "hermes-agent[modal]"`
+- [Modal](https://modal.com) account and CLI: `pip install "sinoclaw-agent[modal]"`
 - `MODAL_TOKEN_ID` and `MODAL_TOKEN_SECRET` environment variables
 
 ### For YC-Bench
 
-- `pip install "hermes-agent[yc-bench]"` (installs the yc-bench CLI + SQLAlchemy)
+- `pip install "sinoclaw-agent[yc-bench]"` (installs the yc-bench CLI + SQLAlchemy)
 - No Modal needed — runs with local terminal backend
 
 ### For RL training
@@ -497,13 +497,13 @@ See [RL Training](/user-guide/features/rl-training) for the agent-driven RL work
 
 ```
 environments/
-├── hermes_base_env.py          # Abstract base class (HermesAgentBaseEnv)
+├── sinoclaw_base_env.py          # Abstract base class (HermesAgentBaseEnv)
 ├── agent_loop.py               # Multi-turn agent engine (HermesAgentLoop)
 ├── tool_context.py             # Per-rollout tool access for reward functions
 ├── patches.py                  # Async-safety patches for Modal backend
 │
 ├── tool_call_parsers/          # Phase 2 client-side parsers
-│   ├── hermes_parser.py        # Hermes/ChatML <tool_call> format
+│   ├── sinoclaw_parser.py        # Hermes/ChatML <tool_call> format
 │   ├── mistral_parser.py       # Mistral [TOOL_CALLS] format
 │   ├── llama_parser.py         # Llama 3 JSON tool calling
 │   ├── qwen_parser.py          # Qwen format
@@ -511,7 +511,7 @@ environments/
 │   └── ...                     # + kimi_k2, longcat, glm45/47, etc.
 │
 ├── terminal_test_env/          # Stack validation (inline tasks)
-├── hermes_swe_env/             # SWE-bench training environment
+├── sinoclaw_swe_env/             # SWE-bench training environment
 │
 └── benchmarks/                 # Evaluation benchmarks
     ├── terminalbench_2/        # 89 terminal tasks, Modal sandboxes

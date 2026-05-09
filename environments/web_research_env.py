@@ -32,7 +32,7 @@ Usage:
 
 Built by: github.com/jackx707
 Inspired by: GroceryMind — production Hermes agent doing live web research
-             across German grocery stores (firecrawl + hermes-agent)
+             across German grocery stores (firecrawl + sinoclaw-agent)
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ from urllib.parse import urlparse
 
 from pydantic import Field
 
-# Ensure hermes-agent root is on path
+# Ensure sinoclaw-agent root is on path
 _repo_root = Path(__file__).resolve().parent.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
@@ -68,7 +68,7 @@ from atroposlib.envs.base import ScoredDataGroup
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 from atroposlib.type_definitions import Item
 
-from environments.hermes_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
 from environments.agent_loop import AgentResult
 from environments.tool_context import ToolContext
 

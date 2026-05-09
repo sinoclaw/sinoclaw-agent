@@ -12,7 +12,7 @@ class NousProfile(ProviderProfile):
     def build_extra_body(
         self, *, session_id: str | None = None, **context
     ) -> dict[str, Any]:
-        return {"tags": ["product=hermes-agent"]}
+        return {"tags": ["product=sinoclaw-agent"]}
 
     def build_api_kwargs_extras(
         self,
@@ -43,8 +43,8 @@ nous = NousProfile(
     description="Nous Research — Hermes model family",
     signup_url="https://nousresearch.com/",
     fallback_models=(
-        "hermes-3-405b",
-        "hermes-3-70b",
+        "sinoclaw-3-405b",
+        "sinoclaw-3-70b",
     ),
     base_url="https://inference.nousresearch.com/v1",
     auth_type="oauth_device_code",

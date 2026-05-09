@@ -2,9 +2,9 @@
 # docker-compose.yml for Hermes Agent
 #
 # Usage:
-#   HERMES_UID=$(id -u) HERMES_GID=$(id -g) docker compose up -d
+#   SINOCLAW_UID=$(id -u) SINOCLAW_GID=$(id -g) docker compose up -d
 #
-# Set HERMES_UID / HERMES_GID to the host user that owns ~/.hermes so
+# Set SINOCLAW_UID / SINOCLAW_GID to the host user that owns ~/.sinoclaw so
 # files created inside the container stay readable/writable on the host.
 # The entrypoint remaps the internal `hermes` user to these values via
 # usermod/groupmod + gosu.
@@ -24,15 +24,15 @@
 services:
   gateway:
     build: .
-    image: hermes-agent
+    image: sinoclaw-agent
     container_name: hermes
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ~/.hermes:/opt/data
+      - ~/.sinoclaw:/opt/data
     environment:
-      - HERMES_UID=${HERMES_UID:-10000}
-      - HERMES_GID=${HERMES_GID:-10000}
+      - SINOCLAW_UID=${SINOCLAW_UID:-10000}
+      - SINOCLAW_GID=${SINOCLAW_GID:-10000}
       # To expose the OpenAI-compatible API server beyond localhost,
       # uncomment BOTH lines (API_SERVER_KEY is mandatory for auth):
       # - API_SERVER_HOST=0.0.0.0
@@ -47,7 +47,7 @@ services:
       # Google Chat — uncomment and fill in to enable the Google Chat gateway.
       # See website/docs/user-guide/messaging/google_chat.md for the full setup.
       # The SA JSON path must point to a file mounted into the container —
-      # add a volume entry above (e.g. ``- ~/.hermes/google-chat-sa.json:/secrets/google-chat-sa.json:ro``)
+      # add a volume entry above (e.g. ``- ~/.sinoclaw/google-chat-sa.json:/secrets/google-chat-sa.json:ro``)
       # then set GOOGLE_CHAT_SERVICE_ACCOUNT_JSON to that mount path.
       # - GOOGLE_CHAT_PROJECT_ID=${GOOGLE_CHAT_PROJECT_ID}
       # - GOOGLE_CHAT_SUBSCRIPTION_NAME=${GOOGLE_CHAT_SUBSCRIPTION_NAME}
@@ -56,16 +56,16 @@ services:
     command: ["gateway", "run"]
 
   dashboard:
-    image: hermes-agent
-    container_name: hermes-dashboard
+    image: sinoclaw-agent
+    container_name: sinoclaw-dashboard
     restart: unless-stopped
     network_mode: host
     depends_on:
       - gateway
     volumes:
-      - ~/.hermes:/opt/data
+      - ~/.sinoclaw:/opt/data
     environment:
-      - HERMES_UID=${HERMES_UID:-10000}
-      - HERMES_GID=${HERMES_GID:-10000}
+      - SINOCLAW_UID=${SINOCLAW_UID:-10000}
+      - SINOCLAW_GID=${SINOCLAW_GID:-10000}
     # Localhost-only. For remote access, tunnel via `ssh -L 9119:localhost:9119`.
     command: ["dashboard", "--host", "127.0.0.1", "--no-open"]

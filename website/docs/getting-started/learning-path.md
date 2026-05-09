@@ -81,7 +81,7 @@ Cron jobs let Hermes Agent run tasks on a schedule — daily summaries, periodic
 Extend Hermes Agent with your own tools and reusable skill packages.
 
 1. [Plugins](/docs/user-guide/features/plugins)
-2. [Build a Hermes Plugin](/docs/guides/build-a-hermes-plugin)
+2. [Build a Hermes Plugin](/docs/guides/build-a-sinoclaw-plugin)
 3. [Tools Overview](/docs/user-guide/features/tools)
 4. [Skills Overview](/docs/user-guide/features/skills)
 5. [MCP (Model Context Protocol)](/docs/user-guide/features/mcp)

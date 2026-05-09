@@ -1,4 +1,4 @@
-import { Box, Text, useInput, useStdout } from '@hermes/ink'
+import { Box, Text, useInput, useStdout } from '@sinoclaw/ink'
 import { useEffect, useMemo, useState } from 'react'
 
 import { providerDisplayNames } from '../domain/providers.js'
@@ -299,7 +299,7 @@ export function ModelPicker({ gw, onCancel, onSelect, sessionId, t }: ModelPicke
         </Text>
 
         <Text color={t.color.muted} wrap="truncate-end">
-          Paste your API key below (saved to ~/.hermes/.env)
+          Paste your API key below (saved to ~/.sinoclaw/.env)
         </Text>
 
         <Text color={t.color.muted} wrap="truncate-end"> </Text>

@@ -47,7 +47,7 @@ def _get_max_read_chars() -> int:
     if _max_read_chars_cached is not None:
         return _max_read_chars_cached
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         cfg = load_config()
         val = cfg.get("file_read_max_chars")
         if isinstance(val, (int, float)) and val > 0:
@@ -1136,7 +1136,7 @@ def _handle_write_file(args, **kw):
             "write_file: missing required field 'content'. The tool call included a "
             "path but no content argument — this is almost always a dropped-arg bug "
             "under context pressure. Re-emit the tool call with the full content "
-            "payload, or use execute_code with hermes_tools.write_file() for very "
+            "payload, or use execute_code with sinoclaw_tools.write_file() for very "
             "large files."
         )
     if not isinstance(args["content"], str):

@@ -26,12 +26,12 @@ In BlueBubbles Server → **Settings → API**, note:
 Run the setup wizard:
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 Select **BlueBubbles (iMessage)** and enter your server URL and password.
 
-Or set environment variables directly in `~/.hermes/.env`:
+Or set environment variables directly in `~/.sinoclaw/.env`:
 
 ```bash
 BLUEBUBBLES_SERVER_URL=http://192.168.1.10:1234
@@ -49,12 +49,12 @@ hermes pairing approve bluebubbles <CODE>
 ```
 Use `hermes pairing list` to see pending codes and approved users.
 
-**Pre-authorize specific users** (in `~/.hermes/.env`):
+**Pre-authorize specific users** (in `~/.sinoclaw/.env`):
 ```bash
 BLUEBUBBLES_ALLOWED_USERS=user@icloud.com,+15551234567
 ```
 
-**Open access** (in `~/.hermes/.env`):
+**Open access** (in `~/.sinoclaw/.env`):
 ```bash
 BLUEBUBBLES_ALLOW_ALL_USERS=true
 ```
@@ -62,7 +62,7 @@ BLUEBUBBLES_ALLOW_ALL_USERS=true
 ### 5. Start the Gateway
 
 ```bash
-hermes gateway run
+sinoclaw gateway run
 ```
 
 Hermes will connect to your BlueBubbles server, register a webhook, and start listening for iMessage messages.
@@ -91,7 +91,7 @@ Hermes → BlueBubbles REST API → Messages.app → iMessage
 | `BLUEBUBBLES_ALLOWED_USERS` | No | — | Comma-separated authorized users |
 | `BLUEBUBBLES_ALLOW_ALL_USERS` | No | `false` | Allow all users |
 
-Auto-marking messages as read is controlled by the `send_read_receipts` key under `platforms.bluebubbles.extra` in `~/.hermes/config.yaml` (default: `true`). There is no corresponding environment variable.
+Auto-marking messages as read is controlled by the `send_read_receipts` key under `platforms.bluebubbles.extra` in `~/.sinoclaw/config.yaml` (default: `true`). There is no corresponding environment variable.
 
 ## Features
 

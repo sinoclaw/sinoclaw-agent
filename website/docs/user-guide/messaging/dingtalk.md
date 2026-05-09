@@ -44,7 +44,7 @@ This guide walks you through the full setup process — from creating your DingT
 Install the required Python packages:
 
 ```bash
-pip install "hermes-agent[dingtalk]"
+pip install "sinoclaw-agent[dingtalk]"
 ```
 
 Or individually:
@@ -97,12 +97,12 @@ To find yours:
 Run the guided setup command:
 
 ```bash
-hermes gateway setup
+sinoclaw gateway setup
 ```
 
 Select **DingTalk** when prompted. The setup wizard can authorize via one of two paths:
 
-- **QR-code device flow (recommended).** Scan the QR that prints in your terminal with the DingTalk mobile app — your Client ID and Client Secret are returned automatically and written to `~/.hermes/.env`. No developer-console trip needed.
+- **QR-code device flow (recommended).** Scan the QR that prints in your terminal with the DingTalk mobile app — your Client ID and Client Secret are returned automatically and written to `~/.sinoclaw/.env`. No developer-console trip needed.
 - **Manual paste.** If you already have credentials (or QR scanning isn't convenient), paste your Client ID, Client Secret, and allowed user IDs when prompted.
 
 :::note openClaw branding disclosure
@@ -111,7 +111,7 @@ Because DingTalk's `verification_uri_complete` is hardcoded to the openClaw iden
 
 ### Option B: Manual Configuration
 
-Add the following to your `~/.hermes/.env` file:
+Add the following to your `~/.sinoclaw/.env` file:
 
 ```bash
 # Required
@@ -132,7 +132,7 @@ DINGTALK_ALLOWED_USERS=user-id-1
 # DINGTALK_ALLOW_ALL_USERS=true
 ```
 
-Optional behavior settings in `~/.hermes/config.yaml`:
+Optional behavior settings in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 group_sessions_per_user: true
@@ -161,13 +161,13 @@ gateway:
 Once configured, start the DingTalk gateway:
 
 ```bash
-hermes gateway
+sinoclaw gateway
 ```
 
 The bot should connect to DingTalk's Stream Mode within a few seconds. Send it a message — either a DM or in a group where it's been added — to test.
 
 :::tip
-You can run `hermes gateway` in the background or as a systemd service for persistent operation. See the deployment docs for details.
+You can run `sinoclaw gateway` in the background or as a systemd service for persistent operation. See the deployment docs for details.
 :::
 
 ## Features
@@ -243,7 +243,7 @@ pip install dingtalk-stream httpx
 
 **Cause**: The credentials aren't set in your environment or `.env` file.
 
-**Fix**: Verify `DINGTALK_CLIENT_ID` and `DINGTALK_CLIENT_SECRET` are set correctly in `~/.hermes/.env`. The Client ID is your AppKey, and the Client Secret is your AppSecret from the DingTalk Developer Console.
+**Fix**: Verify `DINGTALK_CLIENT_ID` and `DINGTALK_CLIENT_SECRET` are set correctly in `~/.sinoclaw/.env`. The Client ID is your AppKey, and the Client Secret is your AppSecret from the DingTalk Developer Console.
 
 ### Stream disconnects / reconnection loops
 
@@ -255,7 +255,7 @@ pip install dingtalk-stream httpx
 
 **Cause**: The Hermes gateway isn't running, or it failed to connect.
 
-**Fix**: Check that `hermes gateway` is running. Look at the terminal output for error messages. Common issues: wrong credentials, app deactivated, `dingtalk-stream` or `httpx` not installed.
+**Fix**: Check that `sinoclaw gateway` is running. Look at the terminal output for error messages. Common issues: wrong credentials, app deactivated, `dingtalk-stream` or `httpx` not installed.
 
 ### "No session_webhook available"
 

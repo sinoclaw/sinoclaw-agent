@@ -12,7 +12,7 @@ body:
         - Run `hermes debug share` and paste the links in the Debug Report section below
         - If you're in a chat session, you can use `/debug` instead — it does the same thing
         - Try `hermes update` to get the latest version
-        - Check the [README troubleshooting section](https://github.com/NousResearch/hermes-agent#troubleshooting)
+        - Check the [README troubleshooting section](https://github.com/NousResearch/sinoclaw-agent#troubleshooting)
         - For general questions, consider the [Nous Research Discord](https://discord.gg/NousResearch) for faster help
 
   - type: textarea
@@ -21,7 +21,7 @@ body:
       label: What's Going Wrong?
       description: Describe what you're trying to do and where it fails.
       placeholder: |
-        I ran `hermes setup` and selected Nous Portal, but when I try to
+        I ran `sinoclaw setup` and selected Nous Portal, but when I try to
         start the gateway I get...
     validations:
       required: true
@@ -33,7 +33,7 @@ body:
       description: What did you do? Include the exact commands you ran.
       placeholder: |
         1. Ran the install script: `curl -fsSL ... | bash`
-        2. Ran `hermes setup` and chose "Quick setup"
+        2. Ran `sinoclaw setup` and chose "Quick setup"
         3. Selected OpenRouter, entered API key
         4. Ran `hermes chat` and got error...
     validations:
@@ -68,7 +68,7 @@ body:
       placeholder: "3.11.9"
 
   - type: input
-    id: hermes-version
+    id: sinoclaw-version
     attributes:
       label: Hermes Version
       description: Output of `hermes version` (if install got that far)
@@ -109,4 +109,4 @@ body:
       placeholder: |
         - Ran `hermes update`
         - Tried reinstalling with `pip install -e ".[all]"`
-        - Checked that OPENROUTER_API_KEY is set in ~/.hermes/.env
+        - Checked that OPENROUTER_API_KEY is set in ~/.sinoclaw/.env

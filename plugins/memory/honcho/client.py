@@ -1,7 +1,7 @@
 """Honcho client initialization and configuration.
 
 Resolution order for config file:
-  1. $HERMES_HOME/honcho.json  (instance-local, enables isolated Hermes instances)
+  1. $SINOCLAW_HOME/honcho.json  (instance-local, enables isolated Hermes instances)
   2. ~/.honcho/config.json     (global, shared across all Honcho-enabled apps)
   3. Environment variables     (HONCHO_API_KEY, HONCHO_ENVIRONMENT)
 
@@ -20,7 +20,7 @@ import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from hermes_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -35,16 +35,16 @@ def resolve_active_host() -> str:
     """Derive the Honcho host key from the active Hermes profile.
 
     Resolution order:
-      1. HERMES_HONCHO_HOST env var (explicit override)
+      1. SINOCLAW_HONCHO_HOST env var (explicit override)
       2. Active profile name via profiles system -> ``hermes.<profile>``
       3. Fallback: ``"hermes"`` (default profile)
     """
-    explicit = os.environ.get("HERMES_HONCHO_HOST", "").strip()
+    explicit = os.environ.get("SINOCLAW_HONCHO_HOST", "").strip()
     if explicit:
         return explicit
 
     try:
-        from hermes_cli.profiles import get_active_profile_name
+        from sinoclaw_cli.profiles import get_active_profile_name
         profile = get_active_profile_name()
         if profile and profile not in ("default", "custom"):
             return f"{HOST}.{profile}"
@@ -62,13 +62,13 @@ def resolve_config_path() -> Path:
     """Return the active Honcho config path.
 
     Resolution order:
-      1. $HERMES_HOME/honcho.json      (profile-local, if it exists)
-      2. ~/.hermes/honcho.json          (default profile — shared host blocks live here)
+      1. $SINOCLAW_HOME/honcho.json      (profile-local, if it exists)
+      2. ~/.sinoclaw/honcho.json          (default profile — shared host blocks live here)
       3. ~/.honcho/config.json          (global, cross-app interop)
 
     Returns the global path if none exist (for first-time setup writes).
     """
-    local_path = get_hermes_home() / "honcho.json"
+    local_path = get_sinoclaw_home() / "honcho.json"
     if local_path.exists():
         return local_path
 
@@ -351,7 +351,7 @@ class HonchoClientConfig:
     ) -> HonchoClientConfig:
         """Create config from the resolved Honcho config path.
 
-        Resolution: $HERMES_HOME/honcho.json -> ~/.honcho/config.json -> env vars.
+        Resolution: $SINOCLAW_HOME/honcho.json -> ~/.honcho/config.json -> env vars.
         When host is None, derives it from the active Hermes profile.
         """
         resolved_host = host or resolve_active_host()
@@ -702,9 +702,9 @@ def get_honcho_client(config: HonchoClientConfig | None = None) -> Honcho:
     resolved_timeout = config.timeout
     if not resolved_base_url or resolved_timeout is None:
         try:
-            from hermes_cli.config import load_config
-            hermes_cfg = load_config()
-            honcho_cfg = hermes_cfg.get("honcho", {})
+            from sinoclaw_cli.config import load_config
+            sinoclaw_cfg = load_config()
+            honcho_cfg = sinoclaw_cfg.get("honcho", {})
             if isinstance(honcho_cfg, dict):
                 if not resolved_base_url:
                     resolved_base_url = honcho_cfg.get("base_url", "").strip() or None

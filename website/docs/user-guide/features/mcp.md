@@ -23,11 +23,11 @@ If you have ever wanted Hermes to use a tool that already exists somewhere else,
 1. Install MCP support (already included if you used the standard install script):
 
 ```bash
-cd ~/.hermes/hermes-agent
+cd ~/.sinoclaw/sinoclaw-agent
 uv pip install -e ".[mcp]"
 ```
 
-2. Add an MCP server to `~/.hermes/config.yaml`:
+2. Add an MCP server to `~/.sinoclaw/config.yaml`:
 
 ```yaml
 mcp_servers:
@@ -91,7 +91,7 @@ Use HTTP servers when:
 
 ## Basic configuration reference
 
-Hermes reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
+Hermes reads MCP config from `~/.sinoclaw/config.yaml` under `mcp_servers`.
 
 ### Common keys
 
@@ -382,7 +382,7 @@ Check:
 
 ```bash
 # Verify MCP deps are installed (already included in standard install)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+cd ~/.sinoclaw/sinoclaw-agent && uv pip install -e ".[mcp]"
 
 node --version
 npx --version
@@ -481,7 +481,7 @@ Or if you installed Hermes in a specific location:
 {
   "mcpServers": {
     "hermes": {
-      "command": "/home/user/.hermes/hermes-agent/venv/bin/hermes",
+      "command": "/home/user/.sinoclaw/sinoclaw-agent/venv/bin/hermes",
       "args": ["mcp", "serve"]
     }
   }
@@ -530,7 +530,7 @@ hermes mcp serve --verbose    # Debug logging on stderr
 
 ### How it works
 
-The MCP server reads conversation data directly from Hermes's session store (`~/.hermes/sessions/sessions.json` and the SQLite database). A background thread polls the database for new messages and maintains an in-memory event queue. For sending messages, it uses the same `send_message` infrastructure as the Hermes agent itself.
+The MCP server reads conversation data directly from Hermes's session store (`~/.sinoclaw/sessions/sessions.json` and the SQLite database). A background thread polls the database for new messages and maintains an in-memory event queue. For sending messages, it uses the same `send_message` infrastructure as the Hermes agent itself.
 
 The gateway does NOT need to be running for read operations (listing conversations, reading history, polling events). It DOES need to be running for send operations, since the platform adapters need active connections.
 

@@ -64,7 +64,7 @@ Registered only when a Chrome DevTools Protocol endpoint is reachable at session
 
 ## `feishu_doc` toolset
 
-Scoped to the Feishu document-comment intelligent-reply handler (`gateway/platforms/feishu_comment.py`). Not exposed on `hermes-cli` or the regular Feishu chat adapter.
+Scoped to the Feishu document-comment intelligent-reply handler (`gateway/platforms/feishu_comment.py`). Not exposed on `sinoclaw-cli` or the regular Feishu chat adapter.
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|
@@ -159,7 +159,7 @@ Scoped to the Feishu document-comment handler. Drives comment read/write operati
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|
-| `skill_manage` | Manage skills (create, update, delete). Skills are your procedural memory — reusable approaches for recurring task types. New skills go to ~/.hermes/skills/; existing skills can be modified wherever they live. Actions: create (full SKILL.m… | — |
+| `skill_manage` | Manage skills (create, update, delete). Skills are your procedural memory — reusable approaches for recurring task types. New skills go to ~/.sinoclaw/skills/; existing skills can be modified wherever they live. Actions: create (full SKILL.m… | — |
 | `skill_view` | Skills allow for loading information about specific tasks and workflows, as well as scripts and templates. Load a skill's full content or access its linked files (references, templates, scripts). First call returns SKILL.md content plus a… | — |
 | `skills_list` | List available skills (name + description). Use skill_view(name) to load full content. | — |
 
@@ -197,7 +197,7 @@ Scoped to the Feishu document-comment handler. Drives comment read/write operati
 
 ## `discord` toolset
 
-Registered on the `hermes-discord` platform toolset (gateway only). Uses the same bot token as the messaging adapter.
+Registered on the `sinoclaw-discord` platform toolset (gateway only). Uses the same bot token as the messaging adapter.
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|
@@ -205,7 +205,7 @@ Registered on the `hermes-discord` platform toolset (gateway only). Uses the sam
 
 ## `discord_admin` toolset
 
-Registered on the `hermes-discord` platform toolset. Moderation actions require the bot to hold the matching Discord permissions.
+Registered on the `sinoclaw-discord` platform toolset. Moderation actions require the bot to hold the matching Discord permissions.
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|
@@ -225,9 +225,9 @@ Registered by the bundled `spotify` plugin. Requires an OAuth token — run `her
 | `spotify_albums` | Fetch Spotify album metadata or album tracks. | Spotify OAuth |
 | `spotify_library` | List, save, or remove the user's saved Spotify tracks or albums. | Spotify OAuth |
 
-## `hermes-yuanbao` toolset
+## `sinoclaw-yuanbao` toolset
 
-Registered only on the `hermes-yuanbao` platform toolset. Yuanbao is Tencent's chat app; these tools drive its DM/group/sticker APIs.
+Registered only on the `sinoclaw-yuanbao` platform toolset. Yuanbao is Tencent's chat app; these tools drive its DM/group/sticker APIs.
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|

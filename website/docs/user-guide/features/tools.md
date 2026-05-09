@@ -50,7 +50,7 @@ hermes tools
 
 Common toolsets include `web`, `search`, `terminal`, `file`, `browser`, `vision`, `image_gen`, `moa`, `skills`, `tts`, `todo`, `memory`, `session_search`, `cronjob`, `code_execution`, `delegation`, `clarify`, `homeassistant`, `messaging`, `spotify`, `discord`, `discord_admin`, `debugging`, `safe`, and `rl`.
 
-See [Toolsets Reference](/docs/reference/toolsets-reference) for the full set, including platform presets such as `hermes-cli`, `hermes-telegram`, and dynamic MCP toolsets like `mcp-<server>`.
+See [Toolsets Reference](/docs/reference/toolsets-reference) for the full set, including platform presets such as `sinoclaw-cli`, `sinoclaw-telegram`, and dynamic MCP toolsets like `mcp-<server>`.
 
 ## Terminal Backends
 
@@ -69,7 +69,7 @@ The terminal tool can execute commands in different environments:
 ### Configuration
 
 ```yaml
-# In ~/.hermes/config.yaml
+# In ~/.sinoclaw/config.yaml
 terminal:
   backend: local    # or: docker, ssh, singularity, modal, daytona, vercel_sandbox
   cwd: "."          # Working directory
@@ -97,7 +97,7 @@ terminal:
   backend: ssh
 ```
 ```bash
-# Set credentials in ~/.hermes/.env
+# Set credentials in ~/.sinoclaw/.env
 TERMINAL_SSH_HOST=my-server.example.com
 TERMINAL_SSH_USER=myuser
 TERMINAL_SSH_KEY=~/.ssh/id_rsa
@@ -125,7 +125,7 @@ hermes config set terminal.backend modal
 ### Vercel Sandbox
 
 ```bash
-pip install 'hermes-agent[vercel]'
+pip install 'sinoclaw-agent[vercel]'
 hermes config set terminal.backend vercel_sandbox
 hermes config set terminal.vercel_runtime node24
 ```
@@ -199,8 +199,8 @@ PTY mode (`pty=true`) enables interactive CLI tools like Codex and Claude Code.
 
 ## Sudo Support
 
-If a command needs sudo, you'll be prompted for your password (cached for the session). Or set `SUDO_PASSWORD` in `~/.hermes/.env`.
+If a command needs sudo, you'll be prompted for your password (cached for the session). Or set `SUDO_PASSWORD` in `~/.sinoclaw/.env`.
 
 :::warning
-On messaging platforms, if sudo fails, the output includes a tip to add `SUDO_PASSWORD` to `~/.hermes/.env`.
+On messaging platforms, if sudo fails, the output includes a tip to add `SUDO_PASSWORD` to `~/.sinoclaw/.env`.
 :::

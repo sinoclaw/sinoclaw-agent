@@ -488,7 +488,7 @@ async def _standalone_send(
 
     Used by ``tools/send_message_tool._send_via_adapter`` when the gateway
     runner is not in this process (e.g. ``hermes cron`` running as a
-    separate process from ``hermes gateway``).  Without this hook,
+    separate process from ``sinoclaw gateway``).  Without this hook,
     ``deliver=teams`` cron jobs fail with ``No live adapter for platform``.
 
     Configuration: requires ``TEAMS_CLIENT_ID``, ``TEAMS_CLIENT_SECRET``,
@@ -806,10 +806,10 @@ class TeamsAdapter(BasePlatformAdapter):
 
         action = ctx.activity.value.action
         data = action.data or {}
-        hermes_action = data.get("hermes_action", "")
+        sinoclaw_action = data.get("sinoclaw_action", "")
         session_key = data.get("session_key", "")
 
-        if not hermes_action or not session_key:
+        if not sinoclaw_action or not session_key:
             return InvokeResponse(
                 status=200,
                 body=AdaptiveCardActionMessageResponse(value="Unknown action."),
@@ -851,7 +851,7 @@ class TeamsAdapter(BasePlatformAdapter):
             "approve_always": "always",
             "deny": "deny",
         }
-        choice = choice_map.get(hermes_action)
+        choice = choice_map.get(sinoclaw_action)
         if not choice:
             return InvokeResponse(
                 status=200,
@@ -924,24 +924,24 @@ class TeamsAdapter(BasePlatformAdapter):
             .with_actions([
                 ExecuteAction(
                     title="Allow Once",
-                    verb="hermes_approve",
-                    data={**btn_data_base, "hermes_action": "approve_once"},
+                    verb="sinoclaw_approve",
+                    data={**btn_data_base, "sinoclaw_action": "approve_once"},
                     style="positive",
                 ),
                 ExecuteAction(
                     title="Allow Session",
-                    verb="hermes_approve",
-                    data={**btn_data_base, "hermes_action": "approve_session"},
+                    verb="sinoclaw_approve",
+                    data={**btn_data_base, "sinoclaw_action": "approve_session"},
                 ),
                 ExecuteAction(
                     title="Always Allow",
-                    verb="hermes_approve",
-                    data={**btn_data_base, "hermes_action": "approve_always"},
+                    verb="sinoclaw_approve",
+                    data={**btn_data_base, "sinoclaw_action": "approve_always"},
                 ),
                 ExecuteAction(
                     title="Deny",
-                    verb="hermes_approve",
-                    data={**btn_data_base, "hermes_action": "deny"},
+                    verb="sinoclaw_approve",
+                    data={**btn_data_base, "sinoclaw_action": "deny"},
                     style="destructive",
                 ),
             ])
@@ -1064,11 +1064,11 @@ class TeamsAdapter(BasePlatformAdapter):
 
 def interactive_setup() -> None:
     """Guide the user through Teams setup using the Teams CLI."""
-    from hermes_cli.config import (
+    from sinoclaw_cli.config import (
         get_env_value,
         save_env_value,
     )
-    from hermes_cli.cli_output import (
+    from sinoclaw_cli.cli_output import (
         prompt,
         prompt_yes_no,
         print_info,
@@ -1128,9 +1128,9 @@ def interactive_setup() -> None:
         print_warning("⚠️  Open access — anyone who can message the bot can command it.")
 
     print()
-    print_success("Teams configuration saved to ~/.hermes/.env")
+    print_success("Teams configuration saved to ~/.sinoclaw/.env")
     print_info("Install the app in Teams:  teams app install --id <teamsAppId>")
-    print_info("Restart the gateway:       hermes gateway restart")
+    print_info("Restart the gateway:       sinoclaw gateway restart")
 
 
 # ── Plugin entry point ────────────────────────────────────────────────────────

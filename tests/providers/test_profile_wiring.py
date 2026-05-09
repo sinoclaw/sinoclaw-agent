@@ -145,10 +145,10 @@ class TestOpenRouterProfileParity:
 class TestNousProfileParity:
     def test_tags(self, transport):
         legacy = transport.build_kwargs(
-            model="hermes-3", messages=_msgs(), tools=None, provider_profile=get_provider_profile("nous"),
+            model="sinoclaw-3", messages=_msgs(), tools=None, provider_profile=get_provider_profile("nous"),
         )
         profile = transport.build_kwargs(
-            model="hermes-3", messages=_msgs(), tools=None,
+            model="sinoclaw-3", messages=_msgs(), tools=None,
             provider_profile=get_provider_profile("nous"),
         )
         assert profile["extra_body"]["tags"] == legacy["extra_body"]["tags"]
@@ -156,11 +156,11 @@ class TestNousProfileParity:
     def test_reasoning_omitted_when_disabled(self, transport):
         rc = {"enabled": False}
         legacy = transport.build_kwargs(
-            model="hermes-3", messages=_msgs(), tools=None,
+            model="sinoclaw-3", messages=_msgs(), tools=None,
             provider_profile=get_provider_profile("nous"), supports_reasoning=True, reasoning_config=rc,
         )
         profile = transport.build_kwargs(
-            model="hermes-3", messages=_msgs(), tools=None,
+            model="sinoclaw-3", messages=_msgs(), tools=None,
             provider_profile=get_provider_profile("nous"),
             supports_reasoning=True, reasoning_config=rc,
         )
@@ -274,11 +274,11 @@ class TestRequestOverridesParity:
     def test_extra_body_override_merges_with_provider_body(self, transport):
         """Override extra_body merges WITH provider extra_body, not replaces."""
         kw = transport.build_kwargs(
-            model="hermes-3", messages=_msgs(), tools=None,
+            model="sinoclaw-3", messages=_msgs(), tools=None,
             provider_profile=get_provider_profile("nous"),
             request_overrides={"extra_body": {"custom": True}},
         )
-        assert kw["extra_body"]["tags"] == ["product=hermes-agent"]  # from profile
+        assert kw["extra_body"]["tags"] == ["product=sinoclaw-agent"]  # from profile
         assert kw["extra_body"]["custom"] is True  # from override
 
     def test_top_level_override(self, transport):

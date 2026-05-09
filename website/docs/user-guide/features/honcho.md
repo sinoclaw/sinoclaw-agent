@@ -39,13 +39,13 @@ hermes memory setup    # select "honcho" from the provider list
 Or configure manually:
 
 ```yaml
-# ~/.hermes/config.yaml
+# ~/.sinoclaw/config.yaml
 memory:
   provider: honcho
 ```
 
 ```bash
-echo "HONCHO_API_KEY=*** >> ~/.hermes/.env
+echo "HONCHO_API_KEY=*** >> ~/.sinoclaw/.env
 ```
 
 Get an API key at [honcho.dev](https://honcho.dev).
@@ -104,7 +104,7 @@ The auto-injected dialectic scales `dialecticReasoningLevel` by query length: +1
 
 ## Configuration Options
 
-Honcho is configured in `~/.honcho/config.json` (global) or `$HERMES_HOME/honcho.json` (profile-local). The setup wizard handles this for you.
+Honcho is configured in `~/.honcho/config.json` (global) or `$SINOCLAW_HOME/honcho.json` (profile-local). The setup wizard handles this for you.
 
 ### Full Config Reference
 

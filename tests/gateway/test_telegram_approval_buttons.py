@@ -348,7 +348,7 @@ class TestTelegramApprovalCallback:
         context = MagicMock()
 
         with patch("tools.approval.resolve_gateway_approval") as mock_resolve:
-            with patch("hermes_constants.get_hermes_home", return_value=tmp_path):
+            with patch("sinoclaw_constants.get_sinoclaw_home", return_value=tmp_path):
                 with patch.dict(os.environ, {"TELEGRAM_ALLOWED_USERS": ""}):
                     await adapter._handle_callback_query(update, context)
 
@@ -374,7 +374,7 @@ class TestTelegramApprovalCallback:
         update.callback_query = query
         context = MagicMock()
 
-        with patch("hermes_constants.get_hermes_home", return_value=tmp_path):
+        with patch("sinoclaw_constants.get_sinoclaw_home", return_value=tmp_path):
             with patch.dict(os.environ, {"TELEGRAM_ALLOWED_USERS": "111"}):
                 await adapter._handle_callback_query(update, context)
 
@@ -404,7 +404,7 @@ class TestTelegramApprovalCallback:
         update.callback_query = query
         context = MagicMock()
 
-        with patch("hermes_constants.get_hermes_home", return_value=tmp_path):
+        with patch("sinoclaw_constants.get_sinoclaw_home", return_value=tmp_path):
             with patch.dict(os.environ, {"TELEGRAM_ALLOWED_USERS": ""}):
                 await adapter._handle_callback_query(update, context)
 
@@ -434,7 +434,7 @@ class TestTelegramApprovalCallback:
         update.callback_query = query
         context = MagicMock()
 
-        with patch("hermes_constants.get_hermes_home", return_value=tmp_path):
+        with patch("sinoclaw_constants.get_sinoclaw_home", return_value=tmp_path):
             with patch.dict(os.environ, {"TELEGRAM_ALLOWED_USERS": "111"}):
                 await adapter._handle_callback_query(update, context)
 

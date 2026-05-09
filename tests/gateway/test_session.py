@@ -314,7 +314,7 @@ class TestBuildSessionContextPrompt:
         assert "Local" in prompt
         assert "machine running this agent" in prompt
 
-    def test_local_delivery_path_uses_display_hermes_home(self):
+    def test_local_delivery_path_uses_display_sinoclaw_home(self):
         config = GatewayConfig()
         source = SessionSource(
             platform=Platform.LOCAL, chat_id="cli",
@@ -322,10 +322,10 @@ class TestBuildSessionContextPrompt:
         )
         ctx = build_session_context(source, config)
 
-        with patch("hermes_constants.display_hermes_home", return_value="~/.hermes/profiles/coder"):
+        with patch("sinoclaw_constants.display_sinoclaw_home", return_value="~/.sinoclaw/profiles/coder"):
             prompt = build_session_context_prompt(ctx)
 
-        assert "~/.hermes/profiles/coder/cron/output/" in prompt
+        assert "~/.sinoclaw/profiles/coder/cron/output/" in prompt
 
     def test_whatsapp_prompt(self):
         config = GatewayConfig(
@@ -531,7 +531,7 @@ class TestLoadTranscriptPreferLongerSource:
     @pytest.fixture()
     def store_with_db(self, tmp_path):
         """SessionStore with both SQLite and JSONL active."""
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
 
         config = GatewayConfig()
         with patch("gateway.session.SessionStore._ensure_loaded"):
@@ -622,7 +622,7 @@ class TestSessionStoreSwitchSession:
     """Regression coverage for gateway /resume session switching semantics."""
 
     def test_switch_session_reopens_target_session_in_db(self, tmp_path):
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
 
         config = GatewayConfig()
         with patch("gateway.session.SessionStore._ensure_loaded"):
@@ -681,14 +681,14 @@ class TestWhatsAppSessionKeyConsistency:
         assert key == "agent:main:whatsapp:dm:15551234567"
 
     def test_whatsapp_dm_aliases_share_one_session_key(self, tmp_path, monkeypatch):
-        tmp_home = tmp_path / "hermes-home"
+        tmp_home = tmp_path / "sinoclaw-home"
         mapping_dir = tmp_home / "whatsapp" / "session"
         mapping_dir.mkdir(parents=True, exist_ok=True)
         (mapping_dir / "lid-mapping-999999999999999.json").write_text(
             json.dumps("15551234567@s.whatsapp.net"),
             encoding="utf-8",
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_home))
 
         lid_source = SessionSource(
             platform=Platform.WHATSAPP,
@@ -710,14 +710,14 @@ class TestWhatsAppSessionKeyConsistency:
         """With group_sessions_per_user, the same human flipping between
         phone-JID and LID inside a group must not produce two isolated
         per-user sessions."""
-        tmp_home = tmp_path / "hermes-home"
+        tmp_home = tmp_path / "sinoclaw-home"
         mapping_dir = tmp_home / "whatsapp" / "session"
         mapping_dir.mkdir(parents=True, exist_ok=True)
         (mapping_dir / "lid-mapping-999999999999999.json").write_text(
             json.dumps("15551234567@s.whatsapp.net"),
             encoding="utf-8",
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_home))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_home))
 
         lid_source = SessionSource(
             platform=Platform.WHATSAPP,
@@ -999,7 +999,7 @@ class TestWhatsAppIdentifierPublicHelpers:
 
     def test_canonical_without_mapping_returns_normalized(self, tmp_path, monkeypatch):
         """With no bridge mapping files, the normalized input is returned."""
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
         assert canonical_whatsapp_identifier("60123456789@lid") == "60123456789"
 
     def test_canonical_walks_lid_mapping(self, tmp_path, monkeypatch):
@@ -1010,14 +1010,14 @@ class TestWhatsAppIdentifierPublicHelpers:
             json.dumps("15551234567@s.whatsapp.net"),
             encoding="utf-8",
         )
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
 
         canonical = canonical_whatsapp_identifier("999999999999999@lid")
         assert canonical == "15551234567"
         assert canonical_whatsapp_identifier("15551234567@s.whatsapp.net") == "15551234567"
 
     def test_canonical_empty_input(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
         assert canonical_whatsapp_identifier("") == ""
 
 
@@ -1202,7 +1202,7 @@ class TestRewriteTranscriptPreservesReasoning:
     """rewrite_transcript must not drop reasoning fields from SQLite."""
 
     def test_reasoning_survives_rewrite(self, tmp_path):
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
 
         db = SessionDB(db_path=tmp_path / "test.db")
         session_id = "reasoning-test"
@@ -1244,7 +1244,7 @@ class TestRewriteTranscriptPreservesReasoning:
         assert after[0].get("codex_reasoning_items") == [{"id": "r1", "type": "reasoning"}]
 
     def test_db_rewrite_is_atomic_on_insert_failure(self, tmp_path, monkeypatch):
-        from hermes_state import SessionDB
+        from sinoclaw_state import SessionDB
 
         db = SessionDB(db_path=tmp_path / "test.db")
         session_id = "atomic-rewrite-test"

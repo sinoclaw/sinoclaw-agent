@@ -493,7 +493,7 @@ def _resolve_fal_model() -> tuple:
     """
     model_id = ""
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         cfg = load_config()
         img_cfg = cfg.get("image_gen") if isinstance(cfg, dict) else None
         if isinstance(img_cfg, dict):
@@ -796,7 +796,7 @@ def check_image_generation_requirements() -> bool:
     # Probe plugin providers. Discovery is idempotent and cheap.
     try:
         from agent.image_gen_registry import list_providers
-        from hermes_cli.plugins import _ensure_plugins_discovered
+        from sinoclaw_cli.plugins import _ensure_plugins_discovered
 
         _ensure_plugins_discovered()
         for provider in list_providers():
@@ -882,7 +882,7 @@ IMAGE_GENERATE_SCHEMA = {
 def _read_configured_image_model():
     """Return the value of ``image_gen.model`` from config.yaml, or None."""
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         cfg = load_config()
         section = cfg.get("image_gen") if isinstance(cfg, dict) else None
         if isinstance(section, dict):
@@ -903,7 +903,7 @@ def _read_configured_image_provider():
     for other features but never asked for OpenAI image gen).
     """
     try:
-        from hermes_cli.config import load_config
+        from sinoclaw_cli.config import load_config
         cfg = load_config()
         section = cfg.get("image_gen") if isinstance(cfg, dict) else None
         if isinstance(section, dict):
@@ -937,7 +937,7 @@ def _dispatch_to_plugin_provider(prompt: str, aspect_ratio: str):
         # Import locally so plugin discovery isn't triggered just by
         # importing this module (tests rely on that).
         from agent.image_gen_registry import get_provider
-        from hermes_cli.plugins import _ensure_plugins_discovered
+        from sinoclaw_cli.plugins import _ensure_plugins_discovered
 
         _ensure_plugins_discovered()
         provider = get_provider(configured)

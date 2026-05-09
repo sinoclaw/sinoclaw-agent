@@ -142,7 +142,7 @@ web:
 
 ### Self-hosted gateway (advanced)
 
-Running your own Nous-compatible gateway? Override endpoints in `~/.hermes/.env`:
+Running your own Nous-compatible gateway? Override endpoints in `~/.sinoclaw/.env`:
 
 ```bash
 TOOL_GATEWAY_DOMAIN=your-domain.example.com
@@ -169,7 +169,7 @@ Yes — the [Nous Portal dashboard](https://portal.nousresearch.com) breaks usag
 
 ### Is Modal (serverless terminal) included?
 
-Modal is available as an **optional add-on** through the Nous subscription, not part of the default Tool Gateway bundle. Configure it via `hermes setup terminal` or directly in `config.yaml` when you want a remote sandbox for shell execution.
+Modal is available as an **optional add-on** through the Nous subscription, not part of the default Tool Gateway bundle. Configure it via `sinoclaw setup terminal` or directly in `config.yaml` when you want a remote sandbox for shell execution.
 
 ### Do I need to delete my existing API keys when I enable the gateway?
 

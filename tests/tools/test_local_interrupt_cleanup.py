@@ -24,8 +24,8 @@ from tools.environments.local import LocalEnvironment
 
 
 @pytest.fixture(autouse=True)
-def _isolate_hermes_home(tmp_path, monkeypatch):
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+def _isolate_sinoclaw_home(tmp_path, monkeypatch):
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     (tmp_path / "logs").mkdir(exist_ok=True)
 
 
@@ -68,7 +68,7 @@ def test_kill_process_uses_cached_pgid_if_wrapper_already_exited(monkeypatch):
     env = object.__new__(LocalEnvironment)
     proc = SimpleNamespace(
         pid=12345,
-        _hermes_pgid=67890,
+        _sinoclaw_pgid=67890,
         poll=lambda: 0,
         kill=lambda: None,
     )

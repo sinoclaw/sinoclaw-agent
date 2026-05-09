@@ -19,7 +19,7 @@ ACP is a good fit when you want Hermes to behave like an editor-native coding ag
 
 ## What Hermes exposes in ACP mode
 
-Hermes runs with a curated `hermes-acp` toolset designed for editor workflows. It includes:
+Hermes runs with a curated `sinoclaw-acp` toolset designed for editor workflows. It includes:
 
 - file tools: `read_file`, `write_file`, `patch`, `search_files`
 - terminal tools: `terminal`, `process`
@@ -42,7 +42,7 @@ pip install -e '.[acp]'
 This installs the `agent-client-protocol` dependency and enables:
 
 - `hermes acp`
-- `hermes-acp`
+- `sinoclaw-acp`
 - `python -m acp_adapter`
 
 ## Launching the ACP server
@@ -54,7 +54,7 @@ hermes acp
 ```
 
 ```bash
-hermes-acp
+sinoclaw-acp
 ```
 
 ```bash
@@ -95,7 +95,7 @@ Example settings snippet:
 ```json
 {
   "agent_servers": {
-    "hermes-agent": {
+    "sinoclaw-agent": {
       "type": "custom",
       "command": "hermes",
       "args": ["acp"],
@@ -109,7 +109,7 @@ Example settings snippet:
 Use an ACP-compatible plugin and point it at:
 
 ```text
-/path/to/hermes-agent/acp_registry
+/path/to/sinoclaw-agent/acp_registry
 ```
 
 ## Registry manifest
@@ -130,10 +130,10 @@ hermes acp
 
 ACP mode uses the same Hermes configuration as the CLI:
 
-- `~/.hermes/.env`
-- `~/.hermes/config.yaml`
-- `~/.hermes/skills/`
-- `~/.hermes/state.db`
+- `~/.sinoclaw/.env`
+- `~/.sinoclaw/config.yaml`
+- `~/.sinoclaw/skills/`
+- `~/.sinoclaw/state.db`
 
 Provider resolution uses Hermes' normal runtime resolver, so ACP inherits the currently configured provider and credentials.
 
@@ -193,7 +193,7 @@ ACP mode does not have its own login flow. It uses Hermes' existing provider set
 hermes model
 ```
 
-or by editing `~/.hermes/.env`.
+or by editing `~/.sinoclaw/.env`.
 
 ## See also
 

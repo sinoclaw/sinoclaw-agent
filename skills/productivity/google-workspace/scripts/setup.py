@@ -30,17 +30,17 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Ensure sibling modules (_hermes_home) are importable when run standalone.
+# Ensure sibling modules (_sinoclaw_home) are importable when run standalone.
 _SCRIPTS_DIR = str(Path(__file__).resolve().parent)
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
-from _hermes_home import display_hermes_home, get_hermes_home
+from _sinoclaw_home import display_sinoclaw_home, get_sinoclaw_home
 
-HERMES_HOME = get_hermes_home()
-TOKEN_PATH = HERMES_HOME / "google_token.json"
-CLIENT_SECRET_PATH = HERMES_HOME / "google_client_secret.json"
-PENDING_AUTH_PATH = HERMES_HOME / "google_oauth_pending.json"
+SINOCLAW_HOME = get_sinoclaw_home()
+TOKEN_PATH = SINOCLAW_HOME / "google_token.json"
+CLIENT_SECRET_PATH = SINOCLAW_HOME / "google_client_secret.json"
+PENDING_AUTH_PATH = SINOCLAW_HOME / "google_oauth_pending.json"
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
@@ -115,7 +115,7 @@ def install_deps():
         print(
             "On environments without pip (e.g. Nix), install the optional extra instead:"
         )
-        print("  pip install 'hermes-agent[google]'")
+        print("  pip install 'sinoclaw-agent[google]'")
         print(f"Or manually: {sys.executable} -m pip install {' '.join(REQUIRED_PACKAGES)}")
         return False
 
@@ -227,7 +227,7 @@ def check_auth(quiet: bool = False):
 
 
 def store_client_secret(path: str):
-    """Copy and validate client_secret.json to Hermes home."""
+    """Copy and validate client_secret.json to Sinoclaw home."""
     src = Path(path).expanduser().resolve()
     if not src.exists():
         print(f"ERROR: File not found: {src}")
@@ -387,7 +387,7 @@ def exchange_auth_code(code: str):
     TOKEN_PATH.write_text(json.dumps(token_payload, indent=2))
     PENDING_AUTH_PATH.unlink(missing_ok=True)
     print(f"OK: Authenticated. Token saved to {TOKEN_PATH}")
-    print(f"Profile-scoped token location: {display_hermes_home()}/google_token.json")
+    print(f"Profile-scoped token location: {display_sinoclaw_home()}/google_token.json")
 
 
 def revoke():

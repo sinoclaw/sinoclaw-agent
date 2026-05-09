@@ -190,7 +190,7 @@ class TestSessionSearchConcurrency:
 
     def test_reads_and_clamps_configured_value(self, monkeypatch):
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"auxiliary": {"session_search": {"max_concurrency": 9}}},
         )
         assert _get_session_search_max_concurrency() == 5
@@ -200,7 +200,7 @@ class TestSessionSearchConcurrency:
         from tools.session_search_tool import session_search
 
         monkeypatch.setattr(
-            "hermes_cli.config.load_config",
+            "sinoclaw_cli.config.load_config",
             lambda: {"auxiliary": {"session_search": {"max_concurrency": 1}}},
         )
 

@@ -874,7 +874,7 @@ class TestDelegationCredentialResolution(unittest.TestCase):
         self.assertEqual(creds["provider"], "custom")
 
 
-    @patch("hermes_cli.runtime_provider.resolve_runtime_provider")
+    @patch("sinoclaw_cli.runtime_provider.resolve_runtime_provider")
     def test_provider_resolution_failure_raises_valueerror(self, mock_resolve):
         """When provider resolution fails, ValueError is raised with helpful message."""
         mock_resolve.side_effect = RuntimeError("OPENROUTER_API_KEY not set")
@@ -885,7 +885,7 @@ class TestDelegationCredentialResolution(unittest.TestCase):
         self.assertIn("openrouter", str(ctx.exception).lower())
         self.assertIn("Cannot resolve", str(ctx.exception))
 
-    @patch("hermes_cli.runtime_provider.resolve_runtime_provider")
+    @patch("sinoclaw_cli.runtime_provider.resolve_runtime_provider")
     def test_provider_resolves_but_no_api_key_raises(self, mock_resolve):
         """When provider resolves but has no API key, ValueError is raised."""
         mock_resolve.return_value = {

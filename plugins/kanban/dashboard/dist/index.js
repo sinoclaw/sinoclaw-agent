@@ -2,17 +2,17 @@
  * Hermes Kanban — Dashboard Plugin
  *
  * Board view for the multi-agent collaboration board backed by
- * ~/.hermes/kanban.db. Calls the plugin's backend at /api/plugins/kanban/
+ * ~/.sinoclaw/kanban.db. Calls the plugin's backend at /api/plugins/kanban/
  * and tails task_events over a WebSocket for live updates.
  *
- * Plain IIFE, no build step. Uses window.__HERMES_PLUGIN_SDK__ for React +
+ * Plain IIFE, no build step. Uses window.__SINOCLAW_PLUGIN_SDK__ for React +
  * shadcn primitives; HTML5 drag-and-drop for card movement on desktop and
  * a pointer-based fallback for touch.
  */
 (function () {
   "use strict";
 
-  const SDK = window.__HERMES_PLUGIN_SDK__;
+  const SDK = window.__SINOCLAW_PLUGIN_SDK__;
   if (!SDK) return;
 
   const { React } = SDK;
@@ -45,13 +45,13 @@
     archived: "Archived",
   };
   const COLUMN_DOT = {
-    triage: "hermes-kanban-dot-triage",
-    todo: "hermes-kanban-dot-todo",
-    ready: "hermes-kanban-dot-ready",
-    running: "hermes-kanban-dot-running",
-    blocked: "hermes-kanban-dot-blocked",
-    done: "hermes-kanban-dot-done",
-    archived: "hermes-kanban-dot-archived",
+    triage: "sinoclaw-kanban-dot-triage",
+    todo: "sinoclaw-kanban-dot-todo",
+    ready: "sinoclaw-kanban-dot-ready",
+    running: "sinoclaw-kanban-dot-running",
+    blocked: "sinoclaw-kanban-dot-blocked",
+    done: "sinoclaw-kanban-dot-done",
+    archived: "sinoclaw-kanban-dot-archived",
   };
 
   const DESTRUCTIVE_TRANSITIONS = {
@@ -95,13 +95,13 @@
   }
 
   const API = "/api/plugins/kanban";
-  const MIME_TASK = "text/x-hermes-task";
+  const MIME_TASK = "text/x-sinoclaw-task";
 
   // Docs link — surfaced as a `?` icon next to the board switcher and as
   // `title=` hints on unlabelled controls. Kept in one place so rebrands or
   // path changes are a single edit.
-  const DOCS_URL = "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban";
-  const DOCS_TUTORIAL_URL = "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban-tutorial";
+  const DOCS_URL = "https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/kanban";
+  const DOCS_TUTORIAL_URL = "https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/kanban-tutorial";
 
   // localStorage key for the user's selected board. Independent of the
   // CLI's on-disk ``<root>/kanban/current`` pointer so browser users
@@ -232,7 +232,7 @@
     let html = out.join("\n");
     // Re-insert fenced code blocks.
     html = html.replace(/\u0000CODE(\d+)\u0000/g, (_m, i) =>
-      `<pre class="hermes-kanban-md-code"><code>${escapeHtml(blocks[Number(i)])}</code></pre>`,
+      `<pre class="sinoclaw-kanban-md-code"><code>${escapeHtml(blocks[Number(i)])}</code></pre>`,
     );
     return html;
   }
@@ -240,10 +240,10 @@
   function MarkdownBlock(props) {
     const enabled = props.enabled !== false;
     if (!enabled) {
-      return h("pre", { className: "hermes-kanban-pre" }, props.source || "");
+      return h("pre", { className: "sinoclaw-kanban-pre" }, props.source || "");
     }
     return h("div", {
-      className: "hermes-kanban-md",
+      className: "sinoclaw-kanban-md",
       dangerouslySetInnerHTML: { __html: renderMarkdown(props.source || "") },
     });
   }
@@ -254,7 +254,7 @@
   // HTML5 DnD is desktop-only. On touch devices we attach a pointerdown
   // handler that simulates a drag proxy and fires a custom event on the
   // column under the finger when released. Columns listen for both the
-  // standard `drop` event and our `hermes-kanban:drop` event.
+  // standard `drop` event and our `sinoclaw-kanban:drop` event.
   // -------------------------------------------------------------------------
 
   function attachTouchDrag(el, taskId) {
@@ -263,7 +263,7 @@
       if (e.pointerType !== "touch") return;
       e.preventDefault();
       const proxy = el.cloneNode(true);
-      proxy.classList.add("hermes-kanban-touch-proxy");
+      proxy.classList.add("sinoclaw-kanban-touch-proxy");
       document.body.appendChild(proxy);
       let lastTarget = null;
 
@@ -275,8 +275,8 @@
         proxy.style.display = "";
         const col = under && under.closest && under.closest("[data-kanban-column]");
         if (col !== lastTarget) {
-          if (lastTarget) lastTarget.classList.remove("hermes-kanban-column--drop");
-          if (col) col.classList.add("hermes-kanban-column--drop");
+          if (lastTarget) lastTarget.classList.remove("sinoclaw-kanban-column--drop");
+          if (col) col.classList.add("sinoclaw-kanban-column--drop");
           lastTarget = col;
         }
       }
@@ -285,9 +285,9 @@
         document.removeEventListener("pointerup", up);
         document.removeEventListener("pointercancel", up);
         if (lastTarget) {
-          lastTarget.classList.remove("hermes-kanban-column--drop");
+          lastTarget.classList.remove("sinoclaw-kanban-column--drop");
           const status = lastTarget.getAttribute("data-kanban-column");
-          lastTarget.dispatchEvent(new CustomEvent("hermes-kanban:drop", {
+          lastTarget.dispatchEvent(new CustomEvent("sinoclaw-kanban:drop", {
             detail: { taskId, status },
             bubbles: true,
           }));
@@ -459,7 +459,7 @@
       wsClosedRef.current = false;
       function openWs() {
         if (wsClosedRef.current) return;
-        const token = window.__HERMES_SESSION_TOKEN__ || "";
+        const token = window.__SINOCLAW_SESSION_TOKEN__ || "";
         const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
         const qsParams = {
           since: String(cursorRef.current || 0),
@@ -672,7 +672,7 @@
     const renderMd = !config || config.render_markdown !== false;
 
     return h(ErrorBoundary, null,
-      h("div", { className: "hermes-kanban flex flex-col gap-4" },
+      h("div", { className: "sinoclaw-kanban flex flex-col gap-4" },
         h(BoardSwitcher, {
           board: board,
           boardList: boardList,
@@ -787,54 +787,54 @@
     }
     return h("div", {
       className: cn(
-        "hermes-kanban-attention",
-        "hermes-kanban-attention--" + topSev,
+        "sinoclaw-kanban-attention",
+        "sinoclaw-kanban-attention--" + topSev,
       ),
     },
-      h("div", { className: "hermes-kanban-attention-bar" },
-        h("span", { className: "hermes-kanban-attention-icon" },
+      h("div", { className: "sinoclaw-kanban-attention-bar" },
+        h("span", { className: "sinoclaw-kanban-attention-icon" },
           topSev === "critical" ? "!!!" : topSev === "error" ? "!!" : "⚠"),
-        h("span", { className: "hermes-kanban-attention-text" },
+        h("span", { className: "sinoclaw-kanban-attention-text" },
           diagTasks.length === 1
             ? "1 task needs attention"
             : `${diagTasks.length} tasks need attention`,
         ),
         h("button", {
-          className: "hermes-kanban-attention-toggle",
+          className: "sinoclaw-kanban-attention-toggle",
           onClick: function () { setExpanded(function (x) { return !x; }); },
           type: "button",
         }, expanded ? "Hide" : "Show"),
         h("button", {
-          className: "hermes-kanban-attention-dismiss",
+          className: "sinoclaw-kanban-attention-dismiss",
           onClick: function () { setDismissed(true); },
           title: "Hide until next page reload",
           type: "button",
         }, "\u2715"),
       ),
       expanded
-        ? h("div", { className: "hermes-kanban-attention-list" },
+        ? h("div", { className: "sinoclaw-kanban-attention-list" },
             diagTasks.map(function (t) {
               const sev = (t.warnings && t.warnings.highest_severity) || "warning";
               const kinds = t.warnings && t.warnings.kinds ? Object.keys(t.warnings.kinds) : [];
               return h("div", {
                 key: t.id,
                 className: cn(
-                  "hermes-kanban-attention-row",
-                  "hermes-kanban-attention-row--" + sev,
+                  "sinoclaw-kanban-attention-row",
+                  "sinoclaw-kanban-attention-row--" + sev,
                 ),
               },
-                h("span", { className: "hermes-kanban-attention-row-sev" },
+                h("span", { className: "sinoclaw-kanban-attention-row-sev" },
                   sev === "critical" ? "!!!" : sev === "error" ? "!!" : "⚠"),
-                h("span", { className: "hermes-kanban-attention-row-id" }, t.id),
-                h("span", { className: "hermes-kanban-attention-row-title" },
+                h("span", { className: "sinoclaw-kanban-attention-row-id" }, t.id),
+                h("span", { className: "sinoclaw-kanban-attention-row-title" },
                   t.title || "(untitled)"),
-                h("span", { className: "hermes-kanban-attention-row-meta" },
+                h("span", { className: "sinoclaw-kanban-attention-row-meta" },
                   t.assignee ? "@" + t.assignee : "unassigned",
                   " \u00b7 ",
                   kinds.length > 0 ? kinds.join(", ") : "diagnostic",
                 ),
                 h("button", {
-                  className: "hermes-kanban-attention-row-btn",
+                  className: "sinoclaw-kanban-attention-row-btn",
                   onClick: function () { props.onOpen(t.id); },
                   type: "button",
                 }, "Open"),
@@ -867,8 +867,8 @@
     const { action, onExec, busy, extra } = props;
     const label = (action.suggested ? "\u2606 " : "") + action.label;
     const cls = cn(
-      "hermes-kanban-diag-action-btn",
-      action.suggested ? "hermes-kanban-diag-action-btn--suggested" : "",
+      "sinoclaw-kanban-diag-action-btn",
+      action.suggested ? "sinoclaw-kanban-diag-action-btn--suggested" : "",
     );
     if (action.kind === "reclaim" || action.kind === "reassign" ||
         action.kind === "unblock") {
@@ -904,7 +904,7 @@
       }, label);
     }
     // Unknown kind — render informational, non-interactive.
-    return h("span", { className: cls + " hermes-kanban-diag-action-btn--unknown" },
+    return h("span", { className: cls + " sinoclaw-kanban-diag-action-btn--unknown" },
       label);
   }
 
@@ -938,7 +938,7 @@
       if (action.kind === "comment") {
         // Scroll the comment input into view; the drawer already has one
         // at the bottom. Focus it so the operator can start typing.
-        const ta = document.querySelector(".hermes-kanban-drawer-comment-row input, .hermes-kanban-drawer-comment-row textarea");
+        const ta = document.querySelector(".sinoclaw-kanban-drawer-comment-row input, .sinoclaw-kanban-drawer-comment-row textarea");
         if (ta) {
           ta.scrollIntoView({ behavior: "smooth", block: "nearest" });
           ta.focus();
@@ -1009,36 +1009,36 @@
       return a.kind === "reassign";
     });
 
-    const sevClass = "hermes-kanban-diag--" + (diag.severity || "warning");
-    return h("div", { className: cn("hermes-kanban-diag", sevClass) },
-      h("div", { className: "hermes-kanban-diag-header" },
-        h("span", { className: "hermes-kanban-diag-sev" },
+    const sevClass = "sinoclaw-kanban-diag--" + (diag.severity || "warning");
+    return h("div", { className: cn("sinoclaw-kanban-diag", sevClass) },
+      h("div", { className: "sinoclaw-kanban-diag-header" },
+        h("span", { className: "sinoclaw-kanban-diag-sev" },
           diag.severity === "critical" ? "!!!" :
           diag.severity === "error" ? "!!" : "\u26a0"),
-        h("span", { className: "hermes-kanban-diag-title" },
+        h("span", { className: "sinoclaw-kanban-diag-title" },
           diag.title),
       ),
-      h("div", { className: "hermes-kanban-diag-detail" },
+      h("div", { className: "sinoclaw-kanban-diag-detail" },
         diag.detail),
       diag.data && Object.keys(diag.data).length > 0
-        ? h("div", { className: "hermes-kanban-diag-data" },
+        ? h("div", { className: "sinoclaw-kanban-diag-data" },
             Object.keys(diag.data).map(function (k) {
               const v = diag.data[k];
               if (Array.isArray(v) && v.length > 0 && typeof v[0] === "string" &&
                   v[0].indexOf("t_") === 0) {
                 // Task-id list — render as chips.
-                return h("div", { key: k, className: "hermes-kanban-diag-data-row" },
-                  h("span", { className: "hermes-kanban-diag-data-key" }, k + ":"),
+                return h("div", { key: k, className: "sinoclaw-kanban-diag-data-row" },
+                  h("span", { className: "sinoclaw-kanban-diag-data-key" }, k + ":"),
                   v.map(function (x) {
                     return h("code", {
-                      key: x, className: "hermes-kanban-event-phantom-chip",
+                      key: x, className: "sinoclaw-kanban-event-phantom-chip",
                     }, x);
                   }),
                 );
               }
-              return h("div", { key: k, className: "hermes-kanban-diag-data-row" },
-                h("span", { className: "hermes-kanban-diag-data-key" }, k + ":"),
-                h("span", { className: "hermes-kanban-diag-data-val" },
+              return h("div", { key: k, className: "sinoclaw-kanban-diag-data-row" },
+                h("span", { className: "sinoclaw-kanban-diag-data-key" }, k + ":"),
+                h("span", { className: "sinoclaw-kanban-diag-data-val" },
                   Array.isArray(v) ? v.join(", ") : String(v)),
               );
             }),
@@ -1047,11 +1047,11 @@
       // Inline reassign picker — only shown when the diagnostic offers
       // a reassign action. Profile list comes from the board payload.
       reassignAction
-        ? h("div", { className: "hermes-kanban-diag-reassign-row" },
-            h("span", { className: "hermes-kanban-diag-reassign-label" },
+        ? h("div", { className: "sinoclaw-kanban-diag-reassign-row" },
+            h("span", { className: "sinoclaw-kanban-diag-reassign-label" },
               "Reassign to:"),
             h("select", {
-              className: "hermes-kanban-recovery-select",
+              className: "sinoclaw-kanban-recovery-select",
               value: reassignProfile,
               onChange: function (e) { setReassignProfile(e.target.value); },
             },
@@ -1062,7 +1062,7 @@
             ),
           )
         : null,
-      h("div", { className: "hermes-kanban-diag-actions" },
+      h("div", { className: "sinoclaw-kanban-diag-actions" },
         (diag.actions || []).map(function (a, i) {
           return h(DiagnosticActionButton, {
             key: a.kind + i,
@@ -1079,8 +1079,8 @@
       msg
         ? h("div", {
             className: cn(
-              "hermes-kanban-diag-msg",
-              msg.ok ? "hermes-kanban-diag-msg--ok" : "hermes-kanban-diag-msg--err",
+              "sinoclaw-kanban-diag-msg",
+              msg.ok ? "sinoclaw-kanban-diag-msg--ok" : "sinoclaw-kanban-diag-msg--err",
             ),
           }, msg.text)
         : null,
@@ -1099,22 +1099,22 @@
       // an empty "Recovery" header — keeps clean tasks visually clean.
       return null;
     }
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head-row" },
-        h("span", { className: "hermes-kanban-section-head" },
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head-row" },
+        h("span", { className: "sinoclaw-kanban-section-head" },
           hasOpenDiags
-            ? h("span", { className: "hermes-kanban-section-head-warning" },
+            ? h("span", { className: "sinoclaw-kanban-section-head-warning" },
                 `\u26a0 Diagnostics (${diags.length})`)
             : "Diagnostics",
         ),
         h("button", {
-          className: "hermes-kanban-section-toggle",
+          className: "sinoclaw-kanban-section-toggle",
           onClick: function () { setOpen(function (x) { return !x; }); },
           type: "button",
         }, open ? "Hide" : "Show"),
       ),
       open
-        ? h("div", { className: "hermes-kanban-diag-list" },
+        ? h("div", { className: "sinoclaw-kanban-diag-list" },
             diags.map(function (d, i) {
               return h(DiagnosticCard, {
                 key: props.task.id + ":" + d.kind + i,
@@ -1142,7 +1142,7 @@
       href: DOCS_URL,
       target: "_blank",
       rel: "noopener noreferrer",
-      className: "hermes-kanban-docs-link",
+      className: "sinoclaw-kanban-docs-link",
       title: "Open Hermes Kanban docs in a new tab",
       "aria-label": "Hermes Kanban documentation",
     }, "?");
@@ -1164,7 +1164,7 @@
     const shouldShow = hasMultipleBoards || totalAcrossAllBoards > 0;
     if (!shouldShow) {
       return h("div", {
-        className: "hermes-kanban-boardswitcher-compact",
+        className: "sinoclaw-kanban-boardswitcher-compact",
         title: "Boards let you separate unrelated streams of work",
       },
         h(Button, {
@@ -1176,8 +1176,8 @@
       );
     }
 
-    return h("div", { className: "hermes-kanban-boardswitcher" },
-      h("div", { className: "hermes-kanban-boardswitcher-inner" },
+    return h("div", { className: "sinoclaw-kanban-boardswitcher" },
+      h("div", { className: "sinoclaw-kanban-boardswitcher-inner" },
         h("div", { className: "flex flex-col gap-0.5" },
           h("div", { className: "text-[11px] uppercase tracking-wider text-muted-foreground" },
             "Board"),
@@ -1262,14 +1262,14 @@
     }
 
     return h("div", {
-      className: "hermes-kanban-dialog-backdrop",
+      className: "sinoclaw-kanban-dialog-backdrop",
       onClick: function (e) { if (e.target === e.currentTarget) props.onCancel(); },
     },
       h("form", {
-        className: "hermes-kanban-dialog",
+        className: "sinoclaw-kanban-dialog",
         onSubmit: onSubmit,
       },
-        h("div", { className: "hermes-kanban-dialog-title" }, "New board"),
+        h("div", { className: "sinoclaw-kanban-dialog-title" }, "New board"),
         h("div", { className: "text-xs text-muted-foreground mb-2" },
           "Boards let you separate unrelated streams of work — one per project, repo, or domain. Workers on one board never see another board's tasks."),
         h("div", { className: "flex flex-col gap-3" },
@@ -1325,7 +1325,7 @@
           ),
         ),
         err ? h("div", { className: "text-xs text-destructive mt-2" }, err) : null,
-        h("div", { className: "hermes-kanban-dialog-actions" },
+        h("div", { className: "sinoclaw-kanban-dialog-actions" },
           h(Button, {
             type: "button",
             onClick: props.onCancel,
@@ -1424,8 +1424,8 @@
 
   function BulkActionBar(props) {
     const [assignee, setAssignee] = useState("");
-    return h("div", { className: "hermes-kanban-bulk" },
-      h("span", { className: "hermes-kanban-bulk-count" },
+    return h("div", { className: "sinoclaw-kanban-bulk" },
+      h("span", { className: "sinoclaw-kanban-bulk-count" },
         `${props.count} selected`),
       h(Button, {
         onClick: function () { props.onApply({ status: "ready" }); },
@@ -1448,7 +1448,7 @@
         size: "sm",
         title: "Archive selected tasks. They disappear from the default board view but remain in the database.",
       }, "Archive"),
-      h("div", { className: "hermes-kanban-bulk-reassign",
+      h("div", { className: "sinoclaw-kanban-bulk-reassign",
                  title: "Reassign selected tasks to a different Hermes profile. Pick a profile (or unassign) and click Apply." },
         h(Select, {
           value: assignee,
@@ -1486,7 +1486,7 @@
   // -------------------------------------------------------------------------
 
   function BoardColumns(props) {
-    return h("div", { className: "hermes-kanban-columns" },
+    return h("div", { className: "sinoclaw-kanban-columns" },
       props.board.columns.map(function (col) {
         return h(Column, {
           key: col.name,
@@ -1517,8 +1517,8 @@
           props.onMove(e.detail.taskId, props.column.name);
         }
       }
-      el.addEventListener("hermes-kanban:drop", onTouchDrop);
-      return function () { el.removeEventListener("hermes-kanban:drop", onTouchDrop); };
+      el.addEventListener("sinoclaw-kanban:drop", onTouchDrop);
+      return function () { el.removeEventListener("sinoclaw-kanban:drop", onTouchDrop); };
     }, [props.column.name, props.onMove]);
 
     const handleDragOver = function (e) {
@@ -1550,29 +1550,29 @@
       ref: colRef,
       "data-kanban-column": props.column.name,
       className: cn(
-        "hermes-kanban-column",
-        dragOver ? "hermes-kanban-column--drop" : "",
+        "sinoclaw-kanban-column",
+        dragOver ? "sinoclaw-kanban-column--drop" : "",
       ),
       onDragOver: handleDragOver,
       onDragLeave: handleDragLeave,
       onDrop: handleDrop,
     },
-      h("div", { className: "hermes-kanban-column-header",
+      h("div", { className: "sinoclaw-kanban-column-header",
                  title: COLUMN_HELP[props.column.name] || "" },
-        h("span", { className: cn("hermes-kanban-dot", COLUMN_DOT[props.column.name]) }),
-        h("span", { className: "hermes-kanban-column-label" },
+        h("span", { className: cn("sinoclaw-kanban-dot", COLUMN_DOT[props.column.name]) }),
+        h("span", { className: "sinoclaw-kanban-column-label" },
           COLUMN_LABEL[props.column.name] || props.column.name),
-        h("span", { className: "hermes-kanban-column-count",
+        h("span", { className: "sinoclaw-kanban-column-count",
                     title: `${props.column.tasks.length} task${props.column.tasks.length === 1 ? "" : "s"} in this column` },
           props.column.tasks.length),
         h("button", {
           type: "button",
-          className: "hermes-kanban-column-add",
+          className: "sinoclaw-kanban-column-add",
           title: "Create task in this column",
           onClick: function () { setShowCreate(function (v) { return !v; }); },
         }, showCreate ? "×" : "+"),
       ),
-      h("div", { className: "hermes-kanban-column-sub" },
+      h("div", { className: "sinoclaw-kanban-column-sub" },
         COLUMN_HELP[props.column.name] || ""),
       showCreate ? h(InlineCreate, {
         columnName: props.column.name,
@@ -1582,15 +1582,15 @@
         },
         onCancel: function () { setShowCreate(false); },
       }) : null,
-      h("div", { className: "hermes-kanban-column-body" },
+      h("div", { className: "sinoclaw-kanban-column-body" },
         props.column.tasks.length === 0
-          ? h("div", { className: "hermes-kanban-empty" }, "— no tasks —")
+          ? h("div", { className: "sinoclaw-kanban-empty" }, "— no tasks —")
           : lanes
             ? lanes.map(function (lane) {
-                return h("div", { key: lane.assignee, className: "hermes-kanban-lane" },
-                  h("div", { className: "hermes-kanban-lane-head" },
-                    h("span", { className: "hermes-kanban-lane-name" }, lane.assignee),
-                    h("span", { className: "hermes-kanban-lane-count" }, lane.tasks.length),
+                return h("div", { key: lane.assignee, className: "sinoclaw-kanban-lane" },
+                  h("div", { className: "sinoclaw-kanban-lane-head" },
+                    h("span", { className: "sinoclaw-kanban-lane-name" }, lane.assignee),
+                    h("span", { className: "sinoclaw-kanban-lane-count" }, lane.tasks.length),
                   ),
                   lane.tasks.map(function (t) {
                     return h(TaskCard, {
@@ -1634,8 +1634,8 @@
       : task.age.created_age_seconds;
     const tier = STALENESS[task.status];
     if (!tier || age == null) return "";
-    if (age >= tier.red)   return "hermes-kanban-card--stale-red";
-    if (age >= tier.amber) return "hermes-kanban-card--stale-amber";
+    if (age >= tier.red)   return "sinoclaw-kanban-card--stale-red";
+    if (age >= tier.amber) return "sinoclaw-kanban-card--stale-amber";
     return "";
   }
 
@@ -1671,8 +1671,8 @@
     return h("div", {
       ref: cardRef,
       className: cn(
-        "hermes-kanban-card",
-        props.selected ? "hermes-kanban-card--selected" : "",
+        "sinoclaw-kanban-card",
+        props.selected ? "sinoclaw-kanban-card--selected" : "",
         stalenessClass(t),
       ),
       draggable: true,
@@ -1680,23 +1680,23 @@
       onClick: handleClick,
     },
       h(Card, null,
-        h(CardContent, { className: "hermes-kanban-card-content" },
-          h("div", { className: "hermes-kanban-card-row" },
+        h(CardContent, { className: "sinoclaw-kanban-card-content" },
+          h("div", { className: "sinoclaw-kanban-card-row" },
             h("input", {
               type: "checkbox",
-              className: "hermes-kanban-card-check",
+              className: "sinoclaw-kanban-card-check",
               checked: props.selected,
               onChange: handleCheckbox,
               onClick: function (e) { e.stopPropagation(); },
               title: "Select for bulk actions",
             }),
-            h("span", { className: "hermes-kanban-card-id",
+            h("span", { className: "sinoclaw-kanban-card-id",
                         title: `Task id: ${t.id}. Use this id with kanban_show, /kanban show, or hermes kanban show.` }, t.id),
             t.warnings && t.warnings.count > 0
               ? h("span", {
                   className: cn(
-                    "hermes-kanban-warning-badge",
-                    "hermes-kanban-warning-badge--" + (t.warnings.highest_severity || "warning"),
+                    "sinoclaw-kanban-warning-badge",
+                    "sinoclaw-kanban-warning-badge--" + (t.warnings.highest_severity || "warning"),
                   ),
                   title: (
                     `${t.warnings.count} active diagnostic` +
@@ -1708,40 +1708,40 @@
                    t.warnings.highest_severity === "error" ? "!!" : "⚠")
               : null,
             t.priority > 0
-              ? h(Badge, { className: "hermes-kanban-priority",
+              ? h(Badge, { className: "sinoclaw-kanban-priority",
                            title: `Priority ${t.priority}. Higher-priority tasks are claimed first by the dispatcher.` }, `P${t.priority}`)
               : null,
             t.tenant
-              ? h(Badge, { variant: "outline", className: "hermes-kanban-tag",
+              ? h(Badge, { variant: "outline", className: "sinoclaw-kanban-tag",
                            title: `Tenant: ${t.tenant}. Free-form tag for grouping tasks (customer, project, team).` }, t.tenant)
               : null,
             progress
               ? h("span", {
                   className: cn(
-                    "hermes-kanban-progress",
-                    progress.done === progress.total ? "hermes-kanban-progress--full" : "",
+                    "sinoclaw-kanban-progress",
+                    progress.done === progress.total ? "sinoclaw-kanban-progress--full" : "",
                   ),
                   title: `${progress.done} of ${progress.total} child tasks done`,
                 }, `${progress.done}/${progress.total}`)
               : null,
           ),
-          h("div", { className: "hermes-kanban-card-title" }, t.title || "(untitled)"),
-          h("div", { className: "hermes-kanban-card-row hermes-kanban-card-meta" },
+          h("div", { className: "sinoclaw-kanban-card-title" }, t.title || "(untitled)"),
+          h("div", { className: "sinoclaw-kanban-card-row sinoclaw-kanban-card-meta" },
             t.assignee
-              ? h("span", { className: "hermes-kanban-assignee",
+              ? h("span", { className: "sinoclaw-kanban-assignee",
                             title: `Assigned to Hermes profile @${t.assignee}` }, "@", t.assignee)
-              : h("span", { className: "hermes-kanban-unassigned",
+              : h("span", { className: "sinoclaw-kanban-unassigned",
                             title: "No profile assigned. The dispatcher will pick one from available profiles when the task is Ready." }, "unassigned"),
             t.comment_count > 0
-              ? h("span", { className: "hermes-kanban-count",
+              ? h("span", { className: "sinoclaw-kanban-count",
                             title: `${t.comment_count} comment${t.comment_count === 1 ? "" : "s"} on this task` }, "💬 ", t.comment_count)
               : null,
             t.link_counts && (t.link_counts.parents + t.link_counts.children) > 0
-              ? h("span", { className: "hermes-kanban-count",
+              ? h("span", { className: "sinoclaw-kanban-count",
                             title: `${t.link_counts.parents} parent${t.link_counts.parents === 1 ? "" : "s"}, ${t.link_counts.children} child${t.link_counts.children === 1 ? "" : "ren"}. Children stay blocked until their parent is done.` },
                   "↔ ", t.link_counts.parents + t.link_counts.children)
               : null,
-            h("span", { className: "hermes-kanban-ago",
+            h("span", { className: "sinoclaw-kanban-ago",
                         title: t.created_at ? `Created ${t.created_at}` : "" },
               timeAgo ? timeAgo(t.created_at) : ""),
           ),
@@ -1802,7 +1802,7 @@
       ? "workspace path (required, e.g. ~/projects/my-app)"
       : "workspace path (optional, derived from assignee if blank)";
 
-    return h("div", { className: "hermes-kanban-inline-create" },
+    return h("div", { className: "sinoclaw-kanban-inline-create" },
       h("textarea", {
         value: title,
         onChange: function (e) { setTitle(e.target.value); },
@@ -2045,17 +2045,17 @@
         });
     };
 
-    return h("div", { className: "hermes-kanban-drawer-shade", onClick: props.onClose },
+    return h("div", { className: "sinoclaw-kanban-drawer-shade", onClick: props.onClose },
       h("div", {
-        className: "hermes-kanban-drawer",
+        className: "sinoclaw-kanban-drawer",
         onClick: function (e) { e.stopPropagation(); },
       },
-        h("div", { className: "hermes-kanban-drawer-head" },
+        h("div", { className: "sinoclaw-kanban-drawer-head" },
           h("span", { className: "text-xs text-muted-foreground" }, props.taskId),
           h("button", {
             type: "button",
             onClick: props.onClose,
-            className: "hermes-kanban-drawer-close",
+            className: "sinoclaw-kanban-drawer-close",
             title: "Close (Esc)",
           }, "×"),
         ),
@@ -2078,7 +2078,7 @@
           onToggleHomeSub: toggleHomeSubscription,
           onRefresh: props.onRefresh,
         }) : null,
-        data ? h("div", { className: "hermes-kanban-drawer-comment-row" },
+        data ? h("div", { className: "sinoclaw-kanban-drawer-comment-row" },
           h(Input, {
             value: newComment,
             onChange: function (e) { setNewComment(e.target.value); },
@@ -2105,9 +2105,9 @@
     const events = props.data.events || [];
     const links = props.data.links || { parents: [], children: [] };
 
-    return h("div", { className: "hermes-kanban-drawer-body" },
-      h("div", { className: "hermes-kanban-drawer-title" },
-        h("span", { className: cn("hermes-kanban-dot", COLUMN_DOT[t.status]) }),
+    return h("div", { className: "sinoclaw-kanban-drawer-body" },
+      h("div", { className: "sinoclaw-kanban-drawer-title" },
+        h("span", { className: cn("sinoclaw-kanban-dot", COLUMN_DOT[t.status]) }),
         props.editing
           ? h(TitleEditor, {
               initial: t.title || "",
@@ -2117,12 +2117,12 @@
               onCancel: function () { props.setEditing(false); },
             })
           : h("span", {
-              className: "hermes-kanban-drawer-title-text",
+              className: "sinoclaw-kanban-drawer-title-text",
               title: "Click to edit",
               onClick: function () { props.setEditing(true); },
             }, t.title || "(untitled)"),
       ),
-      h("div", { className: "hermes-kanban-drawer-meta" },
+      h("div", { className: "sinoclaw-kanban-drawer-meta" },
         h(MetaRow, { label: "Status", value: t.status }),
         h(AssigneeEditor, { task: t, onPatch: props.onPatch }),
         h(PriorityEditor, { task: t, onPatch: props.onPatch }),
@@ -2167,64 +2167,64 @@
         onAddChild: props.onAddChild,
         onRemoveChild: props.onRemoveChild,
       }),
-      t.result ? h("div", { className: "hermes-kanban-section" },
-        h("div", { className: "hermes-kanban-section-head" }, "Result"),
+      t.result ? h("div", { className: "sinoclaw-kanban-section" },
+        h("div", { className: "sinoclaw-kanban-section-head" }, "Result"),
         h(MarkdownBlock, { source: t.result, enabled: props.renderMarkdown }),
       ) : null,
-      h("div", { className: "hermes-kanban-section" },
-        h("div", { className: "hermes-kanban-section-head" }, `Comments (${comments.length})`),
+      h("div", { className: "sinoclaw-kanban-section" },
+        h("div", { className: "sinoclaw-kanban-section-head" }, `Comments (${comments.length})`),
         comments.length === 0
           ? h("div", { className: "text-xs text-muted-foreground" }, "— no comments —")
           : comments.map(function (c) {
-              return h("div", { key: c.id, className: "hermes-kanban-comment" },
-                h("div", { className: "hermes-kanban-comment-head" },
-                  h("span", { className: "hermes-kanban-comment-author" }, c.author || "anon"),
-                  h("span", { className: "hermes-kanban-comment-ago" },
+              return h("div", { key: c.id, className: "sinoclaw-kanban-comment" },
+                h("div", { className: "sinoclaw-kanban-comment-head" },
+                  h("span", { className: "sinoclaw-kanban-comment-author" }, c.author || "anon"),
+                  h("span", { className: "sinoclaw-kanban-comment-ago" },
                     timeAgo ? timeAgo(c.created_at) : ""),
                 ),
                 h(MarkdownBlock, { source: c.body, enabled: props.renderMarkdown }),
               );
             }),
       ),
-      h("div", { className: "hermes-kanban-section" },
-        h("div", { className: "hermes-kanban-section-head" }, `Events (${events.length})`),
+      h("div", { className: "sinoclaw-kanban-section" },
+        h("div", { className: "sinoclaw-kanban-section-head" }, `Events (${events.length})`),
         events.slice().reverse().slice(0, 20).map(function (e) {
           const isDiag = isDiagnosticEvent(e.kind);
           const phantoms = isDiag ? phantomIdsFromEvent(e) : [];
           return h("div", {
             key: e.id,
             className: cn(
-              "hermes-kanban-event",
-              isDiag ? "hermes-kanban-event--hallucination" : "",
+              "sinoclaw-kanban-event",
+              isDiag ? "sinoclaw-kanban-event--hallucination" : "",
             ),
           },
             isDiag
-              ? h("div", { className: "hermes-kanban-event-header" },
-                  h("span", { className: "hermes-kanban-event-warning-icon" }, "⚠"),
-                  h("span", { className: "hermes-kanban-event-warning-label" },
+              ? h("div", { className: "sinoclaw-kanban-event-header" },
+                  h("span", { className: "sinoclaw-kanban-event-warning-icon" }, "⚠"),
+                  h("span", { className: "sinoclaw-kanban-event-warning-label" },
                     DIAGNOSTIC_EVENT_LABELS[e.kind] || e.kind),
-                  h("span", { className: "hermes-kanban-event-ago" },
+                  h("span", { className: "sinoclaw-kanban-event-ago" },
                     timeAgo ? timeAgo(e.created_at) : ""),
                 )
-              : h("div", { className: "hermes-kanban-event-header-plain" },
-                  h("span", { className: "hermes-kanban-event-kind" }, e.kind),
-                  h("span", { className: "hermes-kanban-event-ago" },
+              : h("div", { className: "sinoclaw-kanban-event-header-plain" },
+                  h("span", { className: "sinoclaw-kanban-event-kind" }, e.kind),
+                  h("span", { className: "sinoclaw-kanban-event-ago" },
                     timeAgo ? timeAgo(e.created_at) : ""),
                 ),
             isDiag && phantoms.length > 0
-              ? h("div", { className: "hermes-kanban-event-phantom-row" },
-                  h("span", { className: "hermes-kanban-event-phantom-label" },
+              ? h("div", { className: "sinoclaw-kanban-event-phantom-row" },
+                  h("span", { className: "sinoclaw-kanban-event-phantom-label" },
                     "Phantom ids:"),
                   phantoms.map(function (pid) {
                     return h("code", {
                       key: pid,
-                      className: "hermes-kanban-event-phantom-chip",
+                      className: "sinoclaw-kanban-event-phantom-chip",
                     }, pid);
                   }),
                 )
               : null,
             e.payload && !isDiag
-              ? h("code", { className: "hermes-kanban-event-payload" },
+              ? h("code", { className: "sinoclaw-kanban-event-payload" },
                   JSON.stringify(e.payload))
               : null,
           );
@@ -2254,41 +2254,41 @@
       return `${(secs / 3600).toFixed(1)}h`;
     };
 
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head-row" },
-        h("span", { className: "hermes-kanban-section-head" },
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head-row" },
+        h("span", { className: "sinoclaw-kanban-section-head" },
           `Run history (${runs.length})`),
         !showAll
           ? h("button", {
               type: "button",
               onClick: function () { setExpanded(true); },
-              className: "hermes-kanban-edit-link",
+              className: "sinoclaw-kanban-edit-link",
               title: "Show all attempts",
             }, `+${runs.length - 3} earlier`)
           : null,
       ),
       visible.map(function (r) {
         const outcomeClass = r.ended_at
-          ? `hermes-kanban-run--${r.outcome || r.status || "ended"}`
-          : "hermes-kanban-run--active";
-        return h("div", { key: r.id, className: cn("hermes-kanban-run", outcomeClass) },
-          h("div", { className: "hermes-kanban-run-head" },
-            h("span", { className: "hermes-kanban-run-outcome" },
+          ? `sinoclaw-kanban-run--${r.outcome || r.status || "ended"}`
+          : "sinoclaw-kanban-run--active";
+        return h("div", { key: r.id, className: cn("sinoclaw-kanban-run", outcomeClass) },
+          h("div", { className: "sinoclaw-kanban-run-head" },
+            h("span", { className: "sinoclaw-kanban-run-outcome" },
               r.ended_at ? (r.outcome || r.status || "ended") : "active"),
-            h("span", { className: "hermes-kanban-run-profile" },
+            h("span", { className: "sinoclaw-kanban-run-profile" },
               r.profile ? `@${r.profile}` : "(no profile)"),
-            h("span", { className: "hermes-kanban-run-elapsed" }, fmtElapsed(r)),
-            h("span", { className: "hermes-kanban-run-ago" },
+            h("span", { className: "sinoclaw-kanban-run-elapsed" }, fmtElapsed(r)),
+            h("span", { className: "sinoclaw-kanban-run-ago" },
               timeAgo ? timeAgo(r.started_at) : ""),
           ),
           r.summary
-            ? h("div", { className: "hermes-kanban-run-summary" }, r.summary)
+            ? h("div", { className: "sinoclaw-kanban-run-summary" }, r.summary)
             : null,
           r.error
-            ? h("div", { className: "hermes-kanban-run-error" }, r.error)
+            ? h("div", { className: "sinoclaw-kanban-run-error" }, r.error)
             : null,
           r.metadata
-            ? h("code", { className: "hermes-kanban-run-meta" },
+            ? h("code", { className: "sinoclaw-kanban-run-meta" },
                 JSON.stringify(r.metadata))
             : null,
         );
@@ -2320,18 +2320,18 @@
       body = h("div", { className: "text-xs text-muted-foreground italic" },
         "— no worker log yet (task hasn't spawned or log was rotated away) —");
     } else {
-      body = h("pre", { className: "hermes-kanban-pre hermes-kanban-log" },
+      body = h("pre", { className: "sinoclaw-kanban-pre sinoclaw-kanban-log" },
         data.content || "(empty)");
     }
 
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head-row" },
-        h("span", { className: "hermes-kanban-section-head" },
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head-row" },
+        h("span", { className: "sinoclaw-kanban-section-head" },
           "Worker log" + (data && data.size_bytes ? ` (${data.size_bytes} B)` : "")),
         h("button", {
           type: "button",
           onClick: load,
-          className: "hermes-kanban-edit-link",
+          className: "sinoclaw-kanban-edit-link",
           title: "Refresh log",
         }, "refresh"),
       ),
@@ -2344,9 +2344,9 @@
   }
 
   function MetaRow(props) {
-    return h("div", { className: "hermes-kanban-meta-row" },
-      h("span", { className: "hermes-kanban-meta-label" }, props.label),
-      h("span", { className: "hermes-kanban-meta-value" }, props.value),
+    return h("div", { className: "sinoclaw-kanban-meta-row" },
+      h("span", { className: "sinoclaw-kanban-meta-label" }, props.label),
+      h("span", { className: "sinoclaw-kanban-meta-value" }, props.value),
     );
   }
 
@@ -2357,7 +2357,7 @@
       if (!t) return;
       props.onSave(t);
     };
-    return h("div", { className: "hermes-kanban-edit-row" },
+    return h("div", { className: "sinoclaw-kanban-edit-row" },
       h(Input, {
         value: v, autoFocus: true,
         onChange: function (e) { setV(e.target.value); },
@@ -2381,10 +2381,10 @@
     const [v, setV] = useState(props.task.assignee || "");
     useEffect(function () { setV(props.task.assignee || ""); }, [props.task.assignee]);
     if (!editing) {
-      return h("div", { className: "hermes-kanban-meta-row" },
-        h("span", { className: "hermes-kanban-meta-label" }, "Assignee"),
+      return h("div", { className: "sinoclaw-kanban-meta-row" },
+        h("span", { className: "sinoclaw-kanban-meta-label" }, "Assignee"),
         h("span", {
-          className: "hermes-kanban-meta-value hermes-kanban-editable",
+          className: "sinoclaw-kanban-meta-value sinoclaw-kanban-editable",
           onClick: function () { setEditing(true); },
           title: "Click to edit",
         }, props.task.assignee || "unassigned"),
@@ -2393,8 +2393,8 @@
     const save = function () {
       props.onPatch({ assignee: v.trim() || "" }).then(function () { setEditing(false); });
     };
-    return h("div", { className: "hermes-kanban-meta-row" },
-      h("span", { className: "hermes-kanban-meta-label" }, "Assignee"),
+    return h("div", { className: "sinoclaw-kanban-meta-row" },
+      h("span", { className: "sinoclaw-kanban-meta-label" }, "Assignee"),
       h(Input, {
         value: v, autoFocus: true,
         onChange: function (e) { setV(e.target.value); },
@@ -2413,10 +2413,10 @@
     const [v, setV] = useState(String(props.task.priority || 0));
     useEffect(function () { setV(String(props.task.priority || 0)); }, [props.task.priority]);
     if (!editing) {
-      return h("div", { className: "hermes-kanban-meta-row" },
-        h("span", { className: "hermes-kanban-meta-label" }, "Priority"),
+      return h("div", { className: "sinoclaw-kanban-meta-row" },
+        h("span", { className: "sinoclaw-kanban-meta-label" }, "Priority"),
         h("span", {
-          className: "hermes-kanban-meta-value hermes-kanban-editable",
+          className: "sinoclaw-kanban-meta-value sinoclaw-kanban-editable",
           onClick: function () { setEditing(true); },
           title: "Click to edit",
         }, String(props.task.priority)),
@@ -2425,8 +2425,8 @@
     const save = function () {
       props.onPatch({ priority: Number(v) || 0 }).then(function () { setEditing(false); });
     };
-    return h("div", { className: "hermes-kanban-meta-row" },
-      h("span", { className: "hermes-kanban-meta-label" }, "Priority"),
+    return h("div", { className: "sinoclaw-kanban-meta-row" },
+      h("span", { className: "sinoclaw-kanban-meta-label" }, "Priority"),
       h(Input, {
         type: "number", value: v, autoFocus: true,
         onChange: function (e) { setV(e.target.value); },
@@ -2446,9 +2446,9 @@
     const save = function () {
       props.onPatch({ body: v }).then(function () { setEditing(false); });
     };
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head-row" },
-        h("span", { className: "hermes-kanban-section-head" }, "Description"),
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head-row" },
+        h("span", { className: "sinoclaw-kanban-section-head" }, "Description"),
         editing
           ? h("div", { className: "flex gap-1" },
               h(Button, { onClick: save,
@@ -2461,13 +2461,13 @@
           : h("button", {
               type: "button",
               onClick: function () { setEditing(true); },
-              className: "hermes-kanban-edit-link",
+              className: "sinoclaw-kanban-edit-link",
               title: "Edit description",
             }, "edit"),
       ),
       editing
         ? h("textarea", {
-            className: "hermes-kanban-textarea",
+            className: "sinoclaw-kanban-textarea",
             value: v,
             rows: 8,
             onChange: function (e) { setV(e.target.value); },
@@ -2491,19 +2491,19 @@
     const parentExclude = new Set([task.id, ...(links.parents || [])]);
     const childExclude  = new Set([task.id, ...(links.children || [])]);
 
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head" }, "Dependencies"),
-      h("div", { className: "hermes-kanban-deps-row" },
-        h("span", { className: "hermes-kanban-deps-label" }, "Parents:"),
-        h("div", { className: "hermes-kanban-deps-chips" },
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head" }, "Dependencies"),
+      h("div", { className: "sinoclaw-kanban-deps-row" },
+        h("span", { className: "sinoclaw-kanban-deps-label" }, "Parents:"),
+        h("div", { className: "sinoclaw-kanban-deps-chips" },
           (links.parents || []).length === 0
-            ? h("span", { className: "hermes-kanban-deps-empty" }, "none")
+            ? h("span", { className: "sinoclaw-kanban-deps-empty" }, "none")
             : (links.parents || []).map(function (id) {
-                return h("span", { key: id, className: "hermes-kanban-dep-chip" },
+                return h("span", { key: id, className: "sinoclaw-kanban-dep-chip" },
                   id,
                   h("button", {
                     type: "button",
-                    className: "hermes-kanban-dep-chip-x",
+                    className: "sinoclaw-kanban-dep-chip-x",
                     onClick: function () { props.onRemoveParent(id); },
                     title: "Remove dependency",
                   }, "×"),
@@ -2511,7 +2511,7 @@
               }),
         ),
       ),
-      h("div", { className: "hermes-kanban-deps-row" },
+      h("div", { className: "sinoclaw-kanban-deps-row" },
         h(Select, Object.assign({
           value: newParent,
           className: "h-7 text-xs flex-1",
@@ -2531,17 +2531,17 @@
           size: "sm",
         }, "+ parent"),
       ),
-      h("div", { className: "hermes-kanban-deps-row" },
-        h("span", { className: "hermes-kanban-deps-label" }, "Children:"),
-        h("div", { className: "hermes-kanban-deps-chips" },
+      h("div", { className: "sinoclaw-kanban-deps-row" },
+        h("span", { className: "sinoclaw-kanban-deps-label" }, "Children:"),
+        h("div", { className: "sinoclaw-kanban-deps-chips" },
           (links.children || []).length === 0
-            ? h("span", { className: "hermes-kanban-deps-empty" }, "none")
+            ? h("span", { className: "sinoclaw-kanban-deps-empty" }, "none")
             : (links.children || []).map(function (id) {
-                return h("span", { key: id, className: "hermes-kanban-dep-chip" },
+                return h("span", { key: id, className: "sinoclaw-kanban-dep-chip" },
                   id,
                   h("button", {
                     type: "button",
-                    className: "hermes-kanban-dep-chip-x",
+                    className: "sinoclaw-kanban-dep-chip-x",
                     onClick: function () { props.onRemoveChild(id); },
                     title: "Remove dependency",
                   }, "×"),
@@ -2549,7 +2549,7 @@
               }),
         ),
       ),
-      h("div", { className: "hermes-kanban-deps-row" },
+      h("div", { className: "sinoclaw-kanban-deps-row" },
         h(Select, Object.assign({
           value: newChild,
           className: "h-7 text-xs flex-1",
@@ -2621,7 +2621,7 @@
       : null;
 
     return h("div", null,
-      h("div", { className: "hermes-kanban-actions" },
+      h("div", { className: "sinoclaw-kanban-actions" },
         specifyButton,
         b("→ triage",  { status: "triage" },   t.status !== "triage"),
         b("→ ready",   { status: "ready" },    t.status !== "ready"),
@@ -2641,8 +2641,8 @@
       ),
       specifyMsg ? h("div", {
         className: specifyMsg.ok
-          ? "hermes-kanban-msg-ok"
-          : "hermes-kanban-msg-err",
+          ? "sinoclaw-kanban-msg-ok"
+          : "sinoclaw-kanban-msg-err",
       }, specifyMsg.text) : null,
     );
   }
@@ -2657,10 +2657,10 @@
     const channels = props.homeChannels || [];
     if (channels.length === 0) return null;
     const busy = props.homeBusy || {};
-    return h("div", { className: "hermes-kanban-section" },
-      h("div", { className: "hermes-kanban-section-head" },
+    return h("div", { className: "sinoclaw-kanban-section" },
+      h("div", { className: "sinoclaw-kanban-section-head" },
         "Notify home channels"),
-      h("div", { className: "hermes-kanban-home-subs" },
+      h("div", { className: "sinoclaw-kanban-home-subs" },
         channels.map(function (hc) {
           const isBusy = !!busy[hc.platform];
           const label = hc.subscribed ? "✓ " + hc.platform : hc.platform;
@@ -2676,8 +2676,8 @@
               if (props.onToggle) props.onToggle(hc.platform, hc.subscribed);
             },
             className: hc.subscribed
-              ? "hermes-kanban-home-sub hermes-kanban-home-sub--on"
-              : "hermes-kanban-home-sub",
+              ? "sinoclaw-kanban-home-sub sinoclaw-kanban-home-sub--on"
+              : "sinoclaw-kanban-home-sub",
           }, label);
         })
       )
@@ -2688,7 +2688,7 @@
   // Register
   // -------------------------------------------------------------------------
 
-  if (window.__HERMES_PLUGINS__ && typeof window.__HERMES_PLUGINS__.register === "function") {
-    window.__HERMES_PLUGINS__.register("kanban", KanbanPage);
+  if (window.__SINOCLAW_PLUGINS__ && typeof window.__SINOCLAW_PLUGINS__.register === "function") {
+    window.__SINOCLAW_PLUGINS__.register("kanban", KanbanPage);
   }
 })();

@@ -219,7 +219,7 @@ Training runs log to Weights & Biases with these key metrics:
 
 ## Log Files
 
-Each training run generates log files in `~/.hermes/logs/rl_training/`:
+Each training run generates log files in `~/.sinoclaw/logs/rl_training/`:
 
 ```
 logs/

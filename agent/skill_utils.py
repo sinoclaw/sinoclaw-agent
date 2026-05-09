@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from hermes_constants import get_config_path, get_skills_dir
+from sinoclaw_constants import get_config_path, get_skills_dir
 
 logger = logging.getLogger(__name__)
 
@@ -123,8 +123,8 @@ def get_disabled_skill_names(platform: str | None = None) -> Set[str]:
 
     Args:
         platform: Explicit platform name (e.g. ``"telegram"``).  When
-            *None*, resolves from ``HERMES_PLATFORM`` or
-            ``HERMES_SESSION_PLATFORM`` env vars.  Falls back to the
+            *None*, resolves from ``SINOCLAW_PLATFORM`` or
+            ``SINOCLAW_SESSION_PLATFORM`` env vars.  Falls back to the
             global disabled list when no platform is determined.
 
     Reads the config file directly (no CLI config imports) to stay
@@ -148,8 +148,8 @@ def get_disabled_skill_names(platform: str | None = None) -> Set[str]:
     from gateway.session_context import get_session_env
     resolved_platform = (
         platform
-        or os.getenv("HERMES_PLATFORM")
-        or get_session_env("HERMES_SESSION_PLATFORM")
+        or os.getenv("SINOCLAW_PLATFORM")
+        or get_session_env("SINOCLAW_SESSION_PLATFORM")
     )
     if resolved_platform:
         platform_disabled = (skills_cfg.get("platform_disabled") or {}).get(
@@ -189,7 +189,7 @@ def get_external_skills_dirs() -> List[Path]:
 
     Each entry is expanded (``~`` and ``${VAR}``) and resolved to an absolute
     path.  Only directories that actually exist are returned.  Duplicates and
-    paths that resolve to the local ``~/.hermes/skills/`` are silently skipped.
+    paths that resolve to the local ``~/.sinoclaw/skills/`` are silently skipped.
 
     Cached in-process, keyed on ``config.yaml`` mtime — the function is
     called once per skill during banner / tool-registry scans, and YAML
@@ -236,9 +236,9 @@ def get_external_skills_dirs() -> List[Path]:
     if not isinstance(raw_dirs, list):
         return []
 
-    from hermes_constants import get_hermes_home
+    from sinoclaw_constants import get_sinoclaw_home
 
-    hermes_home = get_hermes_home()
+    sinoclaw_home = get_sinoclaw_home()
     local_skills = get_skills_dir().resolve()
     seen: Set[Path] = set()
     result = []
@@ -250,9 +250,9 @@ def get_external_skills_dirs() -> List[Path]:
         # Expand ~ and environment variables
         expanded = os.path.expanduser(os.path.expandvars(entry))
         p = Path(expanded)
-        # Resolve relative paths against HERMES_HOME, not cwd
+        # Resolve relative paths against SINOCLAW_HOME, not cwd
         if not p.is_absolute():
-            p = (hermes_home / p).resolve()
+            p = (sinoclaw_home / p).resolve()
         else:
             p = p.resolve()
         if p == local_skills:
@@ -271,7 +271,7 @@ def get_external_skills_dirs() -> List[Path]:
 
 
 def get_all_skills_dirs() -> List[Path]:
-    """Return all skill directories: local ``~/.hermes/skills/`` first, then external.
+    """Return all skill directories: local ``~/.sinoclaw/skills/`` first, then external.
 
     The local dir is always first (and always included even if it doesn't exist
     yet — callers handle that).  External dirs follow in config order.

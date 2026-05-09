@@ -86,7 +86,7 @@ def adapter():
 
 @pytest.fixture(autouse=True)
 def _redirect_cache(tmp_path, monkeypatch):
-    """Point document cache to tmp_path so tests don't touch ~/.hermes."""
+    """Point document cache to tmp_path so tests don't touch ~/.sinoclaw."""
     monkeypatch.setattr(
         "gateway.platforms.base.DOCUMENT_CACHE_DIR", tmp_path / "doc_cache"
     )
@@ -2286,7 +2286,7 @@ class TestSlashCommands:
         assert msg.text == "/model anthropic/claude-sonnet-4"
 
     @pytest.mark.asyncio
-    async def test_legacy_hermes_prefix_still_works(self, adapter):
+    async def test_legacy_sinoclaw_prefix_still_works(self, adapter):
         """Backward compat: /hermes btw foo must still route to /btw foo.
 
         Old workspace manifests only declared /hermes as the single slash.
@@ -2304,7 +2304,7 @@ class TestSlashCommands:
         assert msg.text == "/btw run the tests"
 
     @pytest.mark.asyncio
-    async def test_legacy_hermes_freeform_question(self, adapter):
+    async def test_legacy_sinoclaw_freeform_question(self, adapter):
         """/hermes <free-form text> must stay as the raw text (non-command)."""
         command = {
             "command": "/hermes",
@@ -2997,7 +2997,7 @@ class TestSlashEphemeralAck:
         assert ("C_Q", "U_Q") in adapter._slash_command_contexts
 
     @pytest.mark.asyncio
-    async def test_legacy_hermes_slash_stashes_context(self, adapter):
+    async def test_legacy_sinoclaw_slash_stashes_context(self, adapter):
         """Legacy /hermes <subcommand> also stashes context."""
         command = {
             "command": "/hermes",
@@ -3012,7 +3012,7 @@ class TestSlashEphemeralAck:
         assert ("C_H", "U_H") in adapter._slash_command_contexts
 
     @pytest.mark.asyncio
-    async def test_freeform_hermes_question_does_not_stash_context(self, adapter):
+    async def test_freeform_sinoclaw_question_does_not_stash_context(self, adapter):
         """Free-form /hermes <question> must NOT route agent reply ephemeral."""
         command = {
             "command": "/hermes",

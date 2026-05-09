@@ -36,7 +36,7 @@ const PERIODS = [
   { label: "90d", days: 90 },
 ] as const;
 
-// Must match _AUX_TASK_SLOTS in hermes_cli/web_server.py.
+// Must match _AUX_TASK_SLOTS in sinoclaw_cli/web_server.py.
 const AUX_TASKS: readonly { key: string; label: string; hint: string }[] = [
   { key: "vision", label: "Vision", hint: "Image analysis" },
   { key: "web_extract", label: "Web Extract", hint: "Page summarization" },

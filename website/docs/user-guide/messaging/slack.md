@@ -40,7 +40,7 @@ Mode — all at once.
    ```bash
    hermes slack manifest --write
    ```
-   This writes `~/.hermes/slack-manifest.json` and prints paste-in
+   This writes `~/.sinoclaw/slack-manifest.json` and prints paste-in
    instructions.
 2. Go to [https://api.slack.com/apps](https://api.slack.com/apps) →
    **Create New App** → **From an app manifest**
@@ -101,7 +101,7 @@ Socket Mode lets the bot connect via WebSocket instead of requiring a public URL
 1. In the sidebar, go to **Settings → Socket Mode**
 2. Toggle **Enable Socket Mode** to ON
 3. You'll be prompted to create an **App-Level Token**:
-   - Name it something like `hermes-socket` (the name doesn't matter)
+   - Name it something like `sinoclaw-socket` (the name doesn't matter)
    - Add the **`connections:write`** scope
    - Click **Generate**
 4. **Copy the token** — it starts with `xapp-`. This is your `SLACK_APP_TOKEN`
@@ -186,7 +186,7 @@ Member IDs look like `U01ABC2DEF3`. You need your own Member ID at minimum.
 
 ## Step 8: Configure Hermes
 
-Add the following to your `~/.hermes/.env` file:
+Add the following to your `~/.sinoclaw/.env` file:
 
 ```bash
 # Required
@@ -202,15 +202,15 @@ SLACK_HOME_CHANNEL_NAME=general              # Human-readable name for the home 
 Or run the interactive setup:
 
 ```bash
-hermes gateway setup    # Select Slack when prompted
+sinoclaw gateway setup    # Select Slack when prompted
 ```
 
 Then start the gateway:
 
 ```bash
-hermes gateway              # Foreground
-hermes gateway install      # Install as a user service
-sudo hermes gateway install --system   # Linux only: boot-time system service
+sinoclaw gateway              # Foreground
+sinoclaw gateway install      # Install as a user service
+sudo sinoclaw gateway install --system   # Linux only: boot-time system service
 ```
 
 ---
@@ -236,7 +236,7 @@ Hermes command with its description.
 
 Under the hood: Hermes ships with a generated Slack app manifest (see
 Step 1, Option A) that declares every command in
-[`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py)
+[`COMMAND_REGISTRY`](https://github.com/NousResearch/sinoclaw-agent/blob/main/sinoclaw_cli/commands.py)
 as a slash command. In Socket Mode, Slack routes the command event
 through the WebSocket regardless of the manifest's `url` field.
 
@@ -253,7 +253,7 @@ Then in Slack:
 1. Open [https://api.slack.com/apps](https://api.slack.com/apps) →
    your Hermes app
 2. **Features → App Manifest → Edit**
-3. Paste the new contents of `~/.hermes/slack-manifest.json`
+3. Paste the new contents of `~/.sinoclaw/slack-manifest.json`
 4. **Save**. Slack will prompt to reinstall the app if scopes or slash
    commands changed.
 
@@ -296,7 +296,7 @@ In channels, always @mention the bot to start a conversation. Once the bot is ac
 
 ## Configuration Options
 
-Beyond the required environment variables from Step 8, you can customize Slack bot behavior through `~/.hermes/config.yaml`.
+Beyond the required environment variables from Step 8, you can customize Slack bot behavior through `~/.sinoclaw/config.yaml`.
 
 ### Thread & Reply Behavior
 
@@ -458,7 +458,7 @@ SLACK_BOT_TOKEN=xoxb-workspace1-token,xoxb-workspace2-token,xoxb-workspace3-toke
 SLACK_APP_TOKEN=xapp-your-app-token
 ```
 
-Or in `~/.hermes/config.yaml`:
+Or in `~/.sinoclaw/config.yaml`:
 
 ```yaml
 platforms:
@@ -471,7 +471,7 @@ platforms:
 In addition to tokens in the environment or config, Hermes also loads tokens from an **OAuth token file** at:
 
 ```
-~/.hermes/slack_tokens.json
+~/.sinoclaw/slack_tokens.json
 ```
 
 This file is a JSON object mapping team IDs to token entries:
@@ -589,7 +589,7 @@ the gateway will **deny all messages** by default as a safety measure. Never sha
 treat them like passwords.
 :::
 
-- Tokens should be stored in `~/.hermes/.env` (file permissions `600`)
+- Tokens should be stored in `~/.sinoclaw/.env` (file permissions `600`)
 - Rotate tokens periodically via the Slack app settings
 - Audit who has access to your Hermes config directory
 - Socket Mode means no public endpoint is exposed — one less attack surface

@@ -9,8 +9,8 @@ Outputs:
                                     comments separating files.
 
 Both publish at:
-  https://hermes-agent.nousresearch.com/docs/llms.txt
-  https://hermes-agent.nousresearch.com/docs/llms-full.txt
+  https://sinoclaw-agent.nousresearch.com/docs/llms.txt
+  https://sinoclaw-agent.nousresearch.com/docs/llms-full.txt
 
 The `/docs/` prefix is not a mistake — Docusaurus serves `website/static/`
 at the `docs/` base path. Clients and IDE plugins that probe the classic
@@ -31,7 +31,7 @@ WEBSITE = SCRIPT_DIR.parent
 DOCS = WEBSITE / "docs"
 STATIC = WEBSITE / "static"
 
-SITE_BASE = "https://hermes-agent.nousresearch.com/docs"
+SITE_BASE = "https://sinoclaw-agent.nousresearch.com/docs"
 
 # Curated sections for llms.txt — mirrors the product story, not the filesystem.
 # Each entry: (docs-relative path without .md, display title, optional short desc).
@@ -121,7 +121,7 @@ SECTIONS: list[tuple[str, list[tuple[str, str, str | None]]]] = [
         ("guides/use-mcp-with-hermes", "Use MCP with Hermes", None),
         ("guides/use-voice-mode-with-hermes", "Use Voice Mode with Hermes", None),
         ("guides/use-soul-with-hermes", "Use SOUL.md with Hermes", None),
-        ("guides/build-a-hermes-plugin", "Build a Hermes Plugin", None),
+        ("guides/build-a-sinoclaw-plugin", "Build a Hermes Plugin", None),
         ("guides/automate-with-cron", "Automate with Cron", None),
         ("guides/work-with-skills", "Work with Skills", None),
         ("guides/delegation-patterns", "Delegation Patterns", None),
@@ -211,11 +211,11 @@ def emit_llms_index() -> str:
     lines.append("")
     lines.append(
         "Install: `curl -fsSL https://raw.githubusercontent.com/NousResearch/"
-        "hermes-agent/main/scripts/install.sh | bash`  "
+        "sinoclaw-agent/main/scripts/install.sh | bash`  "
         "(Linux, macOS, WSL2, Termux)"
     )
     lines.append("")
-    lines.append("Repo: https://github.com/NousResearch/hermes-agent")
+    lines.append("Repo: https://github.com/NousResearch/sinoclaw-agent")
     lines.append("")
 
     for section, items in SECTIONS:
@@ -248,8 +248,8 @@ def emit_llms_full() -> str:
             "Started, Using Hermes, Features, Messaging, Integrations, Guides, "
             "Developer Guide, Reference, then everything else.\n"
         ),
-        "Canonical site: https://hermes-agent.nousresearch.com/docs\n",
-        "Short index: https://hermes-agent.nousresearch.com/docs/llms.txt\n",
+        "Canonical site: https://sinoclaw-agent.nousresearch.com/docs\n",
+        "Short index: https://sinoclaw-agent.nousresearch.com/docs/llms.txt\n",
         "\n---\n\n",
     ]
 

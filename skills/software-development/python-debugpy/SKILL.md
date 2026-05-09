@@ -8,7 +8,7 @@ platforms: [linux, macos]
 metadata:
   hermes:
     tags: [debugging, python, pdb, debugpy, breakpoints, dap, post-mortem]
-    related_skills: [systematic-debugging, node-inspect-debugger, debugging-hermes-tui-commands]
+    related_skills: [systematic-debugging, node-inspect-debugger, debugging-sinoclaw-tui-commands]
 ---
 
 # Python Debugger (pdb + debugpy)
@@ -29,7 +29,7 @@ Three tools, picked by situation:
 
 - A test fails and the traceback doesn't reveal why a value is wrong
 - You need to step through a function and watch a collection mutate
-- A long-running process (hermes gateway, tui_gateway) misbehaves and you can't restart it
+- A long-running process (sinoclaw gateway, tui_gateway) misbehaves and you can't restart it
 - Post-mortem: an exception fired in prod-ish code and you want to inspect locals at the crash site
 - A subprocess / child (Python `_SlashWorker`, PTY bridge worker) is the actual bug site
 
@@ -151,7 +151,7 @@ For long-lived processes: Hermes gateway, tui_gateway, a daemon, a process that'
 ### Setup
 
 ```bash
-source /home/bb/hermes-agent/.venv/bin/activate
+source /home/bb/sinoclaw-agent/.venv/bin/activate
 pip install debugpy
 ```
 
@@ -248,7 +248,7 @@ This is fine for one-off automation but painful as an interactive UX.
   "connect": { "host": "127.0.0.1", "port": 5678 },
   "justMyCode": false,
   "pathMappings": [
-    { "localRoot": "${workspaceFolder}", "remoteRoot": "/home/bb/hermes-agent" }
+    { "localRoot": "${workspaceFolder}", "remoteRoot": "/home/bb/sinoclaw-agent" }
   ]
 }
 ```

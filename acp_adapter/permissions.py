@@ -30,7 +30,7 @@ def make_approval_callback(
     timeout: float = 60.0,
 ) -> Callable[[str, str], str]:
     """
-    Return a hermes-compatible ``approval_callback(command, description) -> str``
+    Return a sinoclaw-compatible ``approval_callback(command, description) -> str``
     that bridges to the ACP client's ``request_permission`` call.
 
     Args:

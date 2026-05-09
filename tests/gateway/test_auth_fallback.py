@@ -11,7 +11,7 @@ class TestResolveRuntimeAgentKwargsAuthFallback:
 
     def test_auth_error_tries_fallback(self, tmp_path, monkeypatch):
         """When primary provider raises AuthError, fallback is attempted."""
-        from hermes_cli.auth import AuthError
+        from sinoclaw_cli.auth import AuthError
 
         # Create a config with fallback
         config_path = tmp_path / "config.yaml"
@@ -21,7 +21,7 @@ class TestResolveRuntimeAgentKwargsAuthFallback:
             "  model: meta-llama/llama-4-maverick\n"
         )
 
-        monkeypatch.setattr("gateway.run._hermes_home", tmp_path)
+        monkeypatch.setattr("gateway.run._sinoclaw_home", tmp_path)
 
         call_count = {"n": 0}
 
@@ -40,10 +40,10 @@ class TestResolveRuntimeAgentKwargsAuthFallback:
                 "credential_pool": None,
             }
 
-        monkeypatch.setenv("HERMES_INFERENCE_PROVIDER", "openai-codex")
+        monkeypatch.setenv("SINOCLAW_INFERENCE_PROVIDER", "openai-codex")
 
         with patch(
-            "hermes_cli.runtime_provider.resolve_runtime_provider",
+            "sinoclaw_cli.runtime_provider.resolve_runtime_provider",
             side_effect=_mock_resolve,
         ):
             from gateway.run import _resolve_runtime_agent_kwargs
@@ -56,16 +56,16 @@ class TestResolveRuntimeAgentKwargsAuthFallback:
 
     def test_auth_error_no_fallback_raises(self, tmp_path, monkeypatch):
         """When primary fails and no fallback configured, RuntimeError is raised."""
-        from hermes_cli.auth import AuthError
+        from sinoclaw_cli.auth import AuthError
 
         config_path = tmp_path / "config.yaml"
         config_path.write_text("model:\n  provider: openai-codex\n")
 
-        monkeypatch.setattr("gateway.run._hermes_home", tmp_path)
-        monkeypatch.setenv("HERMES_INFERENCE_PROVIDER", "openai-codex")
+        monkeypatch.setattr("gateway.run._sinoclaw_home", tmp_path)
+        monkeypatch.setenv("SINOCLAW_INFERENCE_PROVIDER", "openai-codex")
 
         with patch(
-            "hermes_cli.runtime_provider.resolve_runtime_provider",
+            "sinoclaw_cli.runtime_provider.resolve_runtime_provider",
             side_effect=AuthError("token expired"),
         ):
             from gateway.run import _resolve_runtime_agent_kwargs

@@ -36,9 +36,9 @@ Pick the row that matches your goal:
 
 | Goal | Do this first | Then do this |
 |---|---|---|
-| I just want Hermes working on my machine | `hermes setup` | Run a real chat and verify it responds |
+| I just want Hermes working on my machine | `sinoclaw setup` | Run a real chat and verify it responds |
 | I already know my provider | `hermes model` | Save the config, then start chatting |
-| I want a bot or always-on setup | `hermes gateway setup` after CLI works | Connect Telegram, Discord, Slack, or another platform |
+| I want a bot or always-on setup | `sinoclaw gateway setup` after CLI works | Connect Telegram, Discord, Slack, or another platform |
 | I want a local or self-hosted model | `hermes model` → custom endpoint | Verify the endpoint, model name, and context length |
 | I want multi-provider fallback | `hermes model` first | Add routing and fallback only after the base chat works |
 
@@ -52,7 +52,7 @@ Run the one-line installer:
 
 ```bash
 # Linux / macOS / WSL2 / Android (Termux)
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/NousResearch/sinoclaw-agent/main/scripts/install.sh | bash
 ```
 
 :::tip Android / Termux
@@ -122,8 +122,8 @@ You can switch providers at any time with `hermes model` — no lock-in. For a f
 
 Hermes separates secrets from normal config:
 
-- **Secrets and tokens** → `~/.hermes/.env`
-- **Non-secret settings** → `~/.hermes/config.yaml`
+- **Secrets and tokens** → `~/.sinoclaw/.env`
+- **Non-secret settings** → `~/.sinoclaw/config.yaml`
 
 The easiest way to set values correctly is through the CLI:
 
@@ -217,7 +217,7 @@ Only after the base chat works. Pick what you need:
 ### Bot or shared assistant
 
 ```bash
-hermes gateway setup    # Interactive platform configuration
+sinoclaw gateway setup    # Interactive platform configuration
 ```
 
 Connect [Telegram](/docs/user-guide/messaging/telegram), [Discord](/docs/user-guide/messaging/discord), [Slack](/docs/user-guide/messaging/slack), [WhatsApp](/docs/user-guide/messaging/whatsapp), [Signal](/docs/user-guide/messaging/signal), [Email](/docs/user-guide/messaging/email), or [Home Assistant](/docs/user-guide/messaging/homeassistant), or [Microsoft Teams](/docs/user-guide/messaging/teams).
@@ -240,7 +240,7 @@ hermes config set terminal.backend ssh       # Remote server
 ### Voice mode
 
 ```bash
-pip install "hermes-agent[voice]"
+pip install "sinoclaw-agent[voice]"
 # Includes faster-whisper for free local speech-to-text
 ```
 
@@ -258,7 +258,7 @@ Or use `/skills` inside a chat session.
 ### MCP servers
 
 ```yaml
-# Add to ~/.hermes/config.yaml
+# Add to ~/.sinoclaw/config.yaml
 mcp_servers:
   github:
     command: npx
@@ -286,7 +286,7 @@ These are the problems that waste the most time:
 |---|---|---|
 | Hermes opens but gives empty or broken replies | Provider auth or model selection is wrong | Run `hermes model` again and confirm provider, model, and auth |
 | Custom endpoint "works" but returns garbage | Wrong base URL, model name, or not actually OpenAI-compatible | Verify the endpoint in a separate client first |
-| Gateway starts but nobody can message it | Bot token, allowlist, or platform setup is incomplete | Re-run `hermes gateway setup` and check `hermes gateway status` |
+| Gateway starts but nobody can message it | Bot token, allowlist, or platform setup is incomplete | Re-run `sinoclaw gateway setup` and check `sinoclaw gateway status` |
 | `hermes --continue` can't find old session | Switched profiles or session never saved | Check `hermes sessions list` and confirm you're in the right profile |
 | Model unavailable or odd fallback behavior | Provider routing or fallback settings are too aggressive | Keep routing off until the base provider is stable |
 | `hermes doctor` flags config problems | Config values are missing or stale | Fix the config, retest a plain chat before adding features |
@@ -297,10 +297,10 @@ When something feels off, use this order:
 
 1. `hermes doctor`
 2. `hermes model`
-3. `hermes setup`
+3. `sinoclaw setup`
 4. `hermes sessions list`
 5. `hermes --continue`
-6. `hermes gateway status`
+6. `sinoclaw gateway status`
 
 That sequence gets you from "broken vibes" back to a known state fast.
 
@@ -313,10 +313,10 @@ That sequence gets you from "broken vibes" back to a known state fast.
 | `hermes` | Start chatting |
 | `hermes model` | Choose your LLM provider and model |
 | `hermes tools` | Configure which tools are enabled per platform |
-| `hermes setup` | Full setup wizard (configures everything at once) |
+| `sinoclaw setup` | Full setup wizard (configures everything at once) |
 | `hermes doctor` | Diagnose issues |
 | `hermes update` | Update to latest version |
-| `hermes gateway` | Start the messaging gateway |
+| `sinoclaw gateway` | Start the messaging gateway |
 | `hermes --continue` | Resume last session |
 
 ## Next Steps

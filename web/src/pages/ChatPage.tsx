@@ -11,7 +11,7 @@
  *              ▼                                                          .
  *     WebSocket /api/pty?token=<session>                                  .
  *          ▼                                                              .
- *     FastAPI pty_ws  (hermes_cli/web_server.py)                          .
+ *     FastAPI pty_ws  (sinoclaw_cli/web_server.py)                          .
  *          ▼                                                              .
  *     POSIX PTY → `node ui-tui/dist/entry.js` → tui_gateway + AIAgent     .
  */
@@ -116,7 +116,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
   // Lazy-init: the missing-token check happens at construction so the effect
   // body doesn't have to setState (React 19's set-state-in-effect rule).
   const [banner, setBanner] = useState<string | null>(() =>
-    typeof window !== "undefined" && !window.__HERMES_SESSION_TOKEN__
+    typeof window !== "undefined" && !window.__SINOCLAW_SESSION_TOKEN__
       ? "Session token unavailable. Open this page through `hermes dashboard`, not directly."
       : null,
   );
@@ -268,7 +268,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
     const host = hostRef.current;
     if (!host) return;
 
-    const token = window.__HERMES_SESSION_TOKEN__;
+    const token = window.__SINOCLAW_SESSION_TOKEN__;
     // Banner already initialised above; just bail before wiring xterm/WS.
     if (!token) {
       return;
@@ -447,7 +447,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
         term.loadAddon(webgl);
       } catch (err) {
         console.warn(
-          "[hermes-chat] WebGL renderer unavailable; falling back to default",
+          "[sinoclaw-chat] WebGL renderer unavailable; falling back to default",
           err,
         );
       }
@@ -819,7 +819,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
         >
           <div
             ref={hostRef}
-            className="hermes-chat-xterm-host min-h-0 min-w-0 flex-1"
+            className="sinoclaw-chat-xterm-host min-h-0 min-w-0 flex-1"
           />
 
           <Button
@@ -867,6 +867,6 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
 
 declare global {
   interface Window {
-    __HERMES_SESSION_TOKEN__?: string;
+    __SINOCLAW_SESSION_TOKEN__?: string;
   }
 }

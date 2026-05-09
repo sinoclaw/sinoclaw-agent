@@ -140,7 +140,7 @@ from gateway.platforms.base import (
     cache_image_from_bytes,
 )
 from gateway.status import acquire_scoped_lock, release_scoped_lock
-from hermes_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 from utils import atomic_json_write
 
 logger = logging.getLogger(__name__)
@@ -1375,7 +1375,7 @@ class FeishuAdapter(BasePlatformAdapter):
         self._event_handler: Optional[Any] = None
         self._seen_message_ids: Dict[str, float] = {}  # message_id → seen_at (time.time())
         self._seen_message_order: List[str] = []
-        self._dedup_state_path = get_hermes_home() / "feishu_seen_message_ids.json"
+        self._dedup_state_path = get_sinoclaw_home() / "feishu_seen_message_ids.json"
         self._dedup_lock = threading.Lock()
         self._sender_name_cache: Dict[str, tuple[str, float]] = {}  # sender_id → (name, expire_at)
         self._webhook_rate_counts: Dict[str, tuple[int, float]] = {}  # rate_key → (count, window_start)
@@ -1470,24 +1470,24 @@ class FeishuAdapter(BasePlatformAdapter):
             bot_name=os.getenv("FEISHU_BOT_NAME", "").strip(),
             dedup_cache_size=max(
                 32,
-                int(os.getenv("HERMES_FEISHU_DEDUP_CACHE_SIZE", str(_DEFAULT_DEDUP_CACHE_SIZE))),
+                int(os.getenv("SINOCLAW_FEISHU_DEDUP_CACHE_SIZE", str(_DEFAULT_DEDUP_CACHE_SIZE))),
             ),
             text_batch_delay_seconds=float(
-                os.getenv("HERMES_FEISHU_TEXT_BATCH_DELAY_SECONDS", str(_DEFAULT_TEXT_BATCH_DELAY_SECONDS))
+                os.getenv("SINOCLAW_FEISHU_TEXT_BATCH_DELAY_SECONDS", str(_DEFAULT_TEXT_BATCH_DELAY_SECONDS))
             ),
             text_batch_split_delay_seconds=float(
-                os.getenv("HERMES_FEISHU_TEXT_BATCH_SPLIT_DELAY_SECONDS", "2.0")
+                os.getenv("SINOCLAW_FEISHU_TEXT_BATCH_SPLIT_DELAY_SECONDS", "2.0")
             ),
             text_batch_max_messages=max(
                 1,
-                int(os.getenv("HERMES_FEISHU_TEXT_BATCH_MAX_MESSAGES", str(_DEFAULT_TEXT_BATCH_MAX_MESSAGES))),
+                int(os.getenv("SINOCLAW_FEISHU_TEXT_BATCH_MAX_MESSAGES", str(_DEFAULT_TEXT_BATCH_MAX_MESSAGES))),
             ),
             text_batch_max_chars=max(
                 1,
-                int(os.getenv("HERMES_FEISHU_TEXT_BATCH_MAX_CHARS", str(_DEFAULT_TEXT_BATCH_MAX_CHARS))),
+                int(os.getenv("SINOCLAW_FEISHU_TEXT_BATCH_MAX_CHARS", str(_DEFAULT_TEXT_BATCH_MAX_CHARS))),
             ),
             media_batch_delay_seconds=float(
-                os.getenv("HERMES_FEISHU_MEDIA_BATCH_DELAY_SECONDS", str(_DEFAULT_MEDIA_BATCH_DELAY_SECONDS))
+                os.getenv("SINOCLAW_FEISHU_MEDIA_BATCH_DELAY_SECONDS", str(_DEFAULT_MEDIA_BATCH_DELAY_SECONDS))
             ),
             webhook_host=str(
                 extra.get("webhook_host") or os.getenv("FEISHU_WEBHOOK_HOST", _DEFAULT_WEBHOOK_HOST)
@@ -1796,7 +1796,7 @@ class FeishuAdapter(BasePlatformAdapter):
     ) -> SendResult:
         """Send an interactive card with approval buttons.
 
-        The buttons carry ``hermes_action`` in their value dict so that
+        The buttons carry ``sinoclaw_action`` in their value dict so that
         ``_handle_card_action_event`` can intercept them and call
         ``resolve_gateway_approval()`` to unblock the waiting agent thread.
         """
@@ -1812,7 +1812,7 @@ class FeishuAdapter(BasePlatformAdapter):
                     "tag": "button",
                     "text": {"tag": "plain_text", "content": label},
                     "type": btn_type,
-                    "value": {"hermes_action": action_name, "approval_id": approval_id},
+                    "value": {"sinoclaw_action": action_name, "approval_id": approval_id},
                 }
 
             card = {
@@ -1869,7 +1869,7 @@ class FeishuAdapter(BasePlatformAdapter):
                 "text": {"tag": "plain_text", "content": label},
                 "type": btn_type,
                 "value": {
-                    "hermes_update_prompt_action": answer,
+                    "sinoclaw_update_prompt_action": answer,
                     "update_prompt_id": prompt_id,
                 },
             }
@@ -1963,7 +1963,7 @@ class FeishuAdapter(BasePlatformAdapter):
 
     @staticmethod
     def _write_update_prompt_response(answer: str) -> None:
-        response_path = get_hermes_home() / ".update_response"
+        response_path = get_sinoclaw_home() / ".update_response"
         tmp_path = response_path.with_suffix(".tmp")
         tmp_path.write_text(answer)
         tmp_path.replace(response_path)
@@ -2464,13 +2464,13 @@ class FeishuAdapter(BasePlatformAdapter):
         event = getattr(data, "event", None)
         action = getattr(event, "action", None)
         action_value = getattr(action, "value", {}) or {}
-        hermes_action = action_value.get("hermes_action") if isinstance(action_value, dict) else None
+        sinoclaw_action = action_value.get("sinoclaw_action") if isinstance(action_value, dict) else None
         update_prompt_action = (
-            action_value.get("hermes_update_prompt_action")
+            action_value.get("sinoclaw_update_prompt_action")
             if isinstance(action_value, dict) else None
         )
 
-        if hermes_action:
+        if sinoclaw_action:
             return self._handle_approval_card_action(event=event, action_value=action_value, loop=loop)
         if update_prompt_action:
             return self._handle_update_prompt_card_action(
@@ -2516,7 +2516,7 @@ class FeishuAdapter(BasePlatformAdapter):
         if approval_id is None:
             logger.debug("[Feishu] Card action missing approval_id, ignoring")
             return P2CardActionTriggerResponse() if P2CardActionTriggerResponse else None
-        choice = _APPROVAL_CHOICE_MAP.get(action_value.get("hermes_action"), "deny")
+        choice = _APPROVAL_CHOICE_MAP.get(action_value.get("sinoclaw_action"), "deny")
 
         operator = getattr(event, "operator", None)
         open_id = str(getattr(operator, "open_id", "") or "")
@@ -2545,7 +2545,7 @@ class FeishuAdapter(BasePlatformAdapter):
             logger.debug("[Feishu] Update prompt %s already resolved or unknown", prompt_id)
             return P2CardActionTriggerResponse() if P2CardActionTriggerResponse else None
 
-        answer = str(action_value.get("hermes_update_prompt_action", "") or "").strip().lower()
+        answer = str(action_value.get("sinoclaw_update_prompt_action", "") or "").strip().lower()
         if answer not in {"y", "n"}:
             logger.debug("[Feishu] Card action has invalid update prompt answer=%r", answer)
             return P2CardActionTriggerResponse() if P2CardActionTriggerResponse else None
@@ -4673,7 +4673,7 @@ class FeishuAdapter(BasePlatformAdapter):
 #
 # Device-code flow: user scans a QR code with Feishu/Lark mobile app and the
 # platform creates a fully configured bot application automatically.
-# Called by `hermes gateway setup` via _setup_feishu() in hermes_cli/gateway.py.
+# Called by `sinoclaw gateway setup` via _setup_feishu() in sinoclaw_cli/gateway.py.
 # =============================================================================
 
 

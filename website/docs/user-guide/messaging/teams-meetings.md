@@ -45,7 +45,7 @@ Before enabling the meetings pipeline, make sure you have:
 
 ## Step 1: Add Microsoft Graph Credentials
 
-Add Graph app-only credentials to `~/.hermes/.env`:
+Add Graph app-only credentials to `~/.sinoclaw/.env`:
 
 ```bash
 MSGRAPH_TENANT_ID=<tenant-id>
@@ -84,7 +84,7 @@ https://ops.example.com/msgraph/webhook
 
 The meeting pipeline reads its runtime config from the existing `teams` platform entry. Pipeline-specific knobs live under `teams.extra.meeting_pipeline`. Teams outbound delivery stays on the normal Teams platform config surface.
 
-Example `~/.hermes/config.yaml`:
+Example `~/.sinoclaw/config.yaml`:
 
 ```yaml
 platforms:
@@ -165,7 +165,7 @@ platforms:
 Start Hermes normally after updating config:
 
 ```bash
-hermes gateway run
+sinoclaw gateway run
 ```
 
 Or, if you run Hermes in Docker, start the gateway the same way you already do for your deployment.

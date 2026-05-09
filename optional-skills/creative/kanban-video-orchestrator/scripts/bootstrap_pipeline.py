@@ -361,7 +361,7 @@ def render_setup_sh(plan: dict, brief_md: str, team_md: str) -> str:
     soul_writes = []
     for t in plan["team"]:
         soul_writes.append(
-            f'cat > "$HOME/.hermes/profiles/{t["profile"]}/SOUL.md" <<\'SOUL_EOF\'\n'
+            f'cat > "$HOME/.sinoclaw/profiles/{t["profile"]}/SOUL.md" <<\'SOUL_EOF\'\n'
             f"{render_soul_md(t, plan)}\n"
             f"SOUL_EOF\n"
             f'echo "  ✓ SOUL.md for {t["profile"]}"'

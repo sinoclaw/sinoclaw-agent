@@ -26,12 +26,12 @@ import pytest
 # ---------------------------------------------------------------------------
 
 @pytest.fixture(autouse=True)
-def _isolate_hermes_home(tmp_path, monkeypatch):
-    """Redirect HERMES_HOME to a temp directory."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+def _isolate_sinoclaw_home(tmp_path, monkeypatch):
+    """Redirect SINOCLAW_HOME to a temp directory."""
+    monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
     try:
-        import hermes_constants
-        monkeypatch.setattr(hermes_constants, "get_hermes_home", lambda: tmp_path)
+        import sinoclaw_constants
+        monkeypatch.setattr(sinoclaw_constants, "get_sinoclaw_home", lambda: tmp_path)
     except (ImportError, AttributeError):
         pass
     return tmp_path
@@ -123,7 +123,7 @@ def populated_sessions_dir(sessions_dir, sample_sessions):
 
 
 def _create_test_db(db_path, session_id, messages):
-    """Create a minimal SQLite DB mimicking hermes_state schema."""
+    """Create a minimal SQLite DB mimicking sinoclaw_state schema."""
     conn = sqlite3.connect(str(db_path))
     conn.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
@@ -1005,13 +1005,13 @@ class TestCliIntegration:
         assert args.verbose is True
 
     def test_dispatcher_routes_serve(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
         mock_run = MagicMock()
         monkeypatch.setattr("mcp_serve.run_mcp_server", mock_run)
 
         import argparse
         args = argparse.Namespace(mcp_action="serve", verbose=True)
-        from hermes_cli.mcp_config import mcp_command
+        from sinoclaw_cli.mcp_config import mcp_command
         mcp_command(args)
         mock_run.assert_called_once_with(verbose=True)
 
