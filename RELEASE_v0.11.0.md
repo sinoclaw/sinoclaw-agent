@@ -1,4 +1,4 @@
-# Hermes Agent v0.11.0 (v2026.4.23)
+# Sinoclaw Agent v0.11.0 (v2026.4.23)
 
 **Release Date:** April 23, 2026
 **Since v0.9.0:** 1,556 commits · 761 merged PRs · 1,314 files changed · 224,174 insertions · 29 community contributors (290 including co-authors)

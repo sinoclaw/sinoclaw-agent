@@ -17,7 +17,7 @@ Optional vendor skill for Parallel CLI — agent-native web search, extraction, 
 | Source | Optional — install with `hermes skills install official/research/parallel-cli` |
 | Path | `optional-skills/research/parallel-cli` |
 | Version | `1.1.0` |
-| Author | Hermes Agent |
+| Author | Sinoclaw Agent |
 | License | MIT |
 | Tags | `Research`, `Web`, `Search`, `Deep-Research`, `Enrichment`, `CLI` |
 | Related skills | [`duckduckgo-search`](/docs/user-guide/skills/optional/research/research-duckduckgo-search), [`mcporter`](/docs/user-guide/skills/optional/mcp/mcp-mcporter) |

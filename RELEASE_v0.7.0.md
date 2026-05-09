@@ -1,4 +1,4 @@
-# Hermes Agent v0.7.0 (v2026.4.3)
+# Sinoclaw Agent v0.7.0 (v2026.4.3)
 
 **Release Date:** April 3, 2026
 
@@ -16,7 +16,7 @@
 
 - **Inline Diff Previews** — File write and patch operations now show inline diffs in the tool activity feed, giving you visual confirmation of what changed before the agent moves on. ([#4411](https://github.com/NousResearch/sinoclaw-agent/pull/4411), [#4423](https://github.com/NousResearch/sinoclaw-agent/pull/4423))
 
-- **API Server Session Continuity & Tool Streaming** — The API server (Open WebUI integration) now streams tool progress events in real-time and supports `X-Hermes-Session-Id` headers for persistent sessions across requests. Sessions persist to the shared SessionDB. ([#4092](https://github.com/NousResearch/sinoclaw-agent/pull/4092), [#4478](https://github.com/NousResearch/sinoclaw-agent/pull/4478), [#4802](https://github.com/NousResearch/sinoclaw-agent/pull/4802))
+- **API Server Session Continuity & Tool Streaming** — The API server (Open WebUI integration) now streams tool progress events in real-time and supports `X-Sinoclaw-Session-Id` headers for persistent sessions across requests. Sessions persist to the shared SessionDB. ([#4092](https://github.com/NousResearch/sinoclaw-agent/pull/4092), [#4478](https://github.com/NousResearch/sinoclaw-agent/pull/4478), [#4802](https://github.com/NousResearch/sinoclaw-agent/pull/4802))
 
 - **ACP: Client-Provided MCP Servers** — Editor integrations (VS Code, Zed, JetBrains) can now register their own MCP servers, which Hermes picks up as additional agent tools. Your editor's MCP ecosystem flows directly into the agent. ([#4705](https://github.com/NousResearch/sinoclaw-agent/pull/4705))
 

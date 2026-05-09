@@ -308,7 +308,7 @@
     // paste in the same flow.
     function tweetText() {
       const tierPart = achievement.tier ? (achievement.tier + " tier ") : "";
-      return "Just unlocked " + tierPart + "\"" + achievement.name + "\" in Hermes Agent ☤\n\n" +
+      return "Just unlocked " + tierPart + "\"" + achievement.name + "\" in Sinoclaw Agent ☤\n\n" +
         "@NousResearch · https://sinoclaw-agent.nousresearch.com";
     }
 

@@ -40,4 +40,4 @@ curl -sL https://raw.githubusercontent.com/JimLiu/baoyu-skills/main/skills/baoyu
 diff <(curl -sL https://raw.githubusercontent.com/.../references/layouts/bento-grid.md) references/layouts/bento-grid.md
 ```
 
-Reference files can be overwritten directly (they're unchanged from upstream). SKILL.md must be manually merged since it contains Hermes-specific adaptations.
+Reference files can be overwritten directly (they're unchanged from upstream). SKILL.md must be manually merged since it contains Sinoclaw-specific adaptations.

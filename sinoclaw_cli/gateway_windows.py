@@ -46,8 +46,8 @@ _FALLBACK_PATTERNS = re.compile(
     re.IGNORECASE,
 )
 
-_TASK_NAME_DEFAULT = "Hermes_Gateway"
-_TASK_DESCRIPTION = "Hermes Agent Gateway - Messaging Platform Integration"
+_TASK_NAME_DEFAULT = "Sinoclaw_Gateway"
+_TASK_DESCRIPTION = "Sinoclaw Agent Gateway - Messaging Platform Integration"
 
 
 # ---------------------------------------------------------------------------
@@ -134,8 +134,8 @@ def _should_fall_back(code: int, detail: str) -> bool:
 def get_task_name() -> str:
     """Scheduled Task name, scoped per profile.
 
-    Default profile: ``Hermes_Gateway``
-    Named profile X: ``Hermes_Gateway_<X>``
+    Default profile: ``Sinoclaw_Gateway``
+    Named profile X: ``Sinoclaw_Gateway_<X>``
     """
     _assert_windows()
     # Local import to avoid circular module initialization during sinoclaw_cli boot.

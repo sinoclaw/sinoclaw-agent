@@ -1,4 +1,4 @@
-"""Shared Hermes-side execution flow for Modal transports.
+"""Shared Sinoclaw-side execution flow for Modal transports.
 
 This module deliberately stops at the Hermes boundary:
 - command preparation

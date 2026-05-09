@@ -17,7 +17,7 @@ Dark-themed SVG architecture/cloud/infra diagrams as HTML.
 | Source | Bundled (installed by default) |
 | Path | `skills/creative/architecture-diagram` |
 | Version | `1.0.0` |
-| Author | Cocoon AI (hello@cocoon-ai.com), ported by Hermes Agent |
+| Author | Cocoon AI (hello@cocoon-ai.com), ported by Sinoclaw Agent |
 | License | MIT |
 | Tags | `architecture`, `diagrams`, `SVG`, `HTML`, `visualization`, `infrastructure`, `cloud` |
 | Related skills | [`concept-diagrams`](/docs/user-guide/skills/optional/creative/creative-concept-diagrams), [`excalidraw`](/docs/user-guide/skills/bundled/creative/creative-excalidraw) |

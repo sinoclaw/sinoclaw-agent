@@ -1,13 +1,13 @@
 ---
 slug: /
 sidebar_position: 0
-title: "Hermes Agent Documentation"
+title: "Sinoclaw Agent Documentation"
 description: "The self-improving AI agent built by Nous Research. A built-in learning loop that creates skills from experience, improves them during use, and remembers across sessions."
 hide_table_of_contents: true
 displayed_sidebar: docs
 ---
 
-# Hermes Agent
+# Sinoclaw Agent
 
 The self-improving AI agent built by [Nous Research](https://nousresearch.com). The only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, and builds a deepening model of who you are across sessions.
 
@@ -34,7 +34,7 @@ irm https://raw.githubusercontent.com/NousResearch/sinoclaw-agent/main/scripts/i
 
 See the full **[Installation Guide](/docs/getting-started/installation)** for what the installer does, the per-user vs root layout, and Windows-specific notes.
 
-## What is Hermes Agent?
+## What is Sinoclaw Agent?
 
 It's not a coding copilot tethered to an IDE or a chatbot wrapper around a single API. It's an **autonomous agent** that gets more capable the longer it runs. It lives wherever you put it — a $5 VPS, a GPU cluster, or serverless infrastructure (Daytona, Modal) that costs nearly nothing when idle. Talk to it from Telegram while it works on a cloud VM you never SSH into yourself. It's not tied to your laptop.
 

@@ -1,10 +1,10 @@
-# Hermes Agent Security Policy
+# Sinoclaw Agent Security Policy
 
-This document outlines the security protocols, trust model, and deployment hardening guidelines for the **Hermes Agent** project.
+This document outlines the security protocols, trust model, and deployment hardening guidelines for the **Sinoclaw Agent** project.
 
 ## 1. Vulnerability Reporting
 
-Hermes Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/NousResearch/sinoclaw-agent/security/advisories/new) or by emailing **security@nousresearch.com**. Do not open public issues for security vulnerabilities.
+Sinoclaw Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/NousResearch/sinoclaw-agent/security/advisories/new) or by emailing **security@nousresearch.com**. Do not open public issues for security vulnerabilities.
 
 ### Required Submission Details
 - **Title & Severity:** Concise description and CVSS score/rating.

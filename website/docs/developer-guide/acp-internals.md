@@ -26,7 +26,7 @@ hermes acp / sinoclaw-acp / python -m acp_adapter
   -> acp_adapter.entry.main()
   -> load ~/.sinoclaw/.env
   -> configure stderr logging
-  -> construct HermesACPAgent
+  -> construct SinoclawACPAgent
   -> acp.run_agent(agent, use_unstable_protocol=True)
 ```
 
@@ -34,7 +34,7 @@ Stdout is reserved for ACP JSON-RPC transport. Human-readable logs go to stderr.
 
 ## Major components
 
-### `HermesACPAgent`
+### `SinoclawACPAgent`
 
 `acp_adapter/server.py` implements the ACP agent protocol.
 

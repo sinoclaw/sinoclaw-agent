@@ -522,7 +522,7 @@ class CopilotACPClient:
                     },
                     "clientInfo": {
                         "name": "sinoclaw-agent",
-                        "title": "Hermes Agent",
+                        "title": "Sinoclaw Agent",
                         "version": "0.0.0",
                     },
                 },

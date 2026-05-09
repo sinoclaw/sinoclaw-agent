@@ -17,7 +17,7 @@ Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN.
 | Source | Bundled (installed by default) |
 | Path | `skills/red-teaming/godmode` |
 | Version | `1.0.0` |
-| Author | Hermes Agent + Teknium |
+| Author | Sinoclaw Agent + Teknium |
 | License | MIT |
 | Tags | `jailbreak`, `red-teaming`, `G0DM0D3`, `Parseltongue`, `GODMODE`, `uncensoring`, `safety-bypass`, `prompt-engineering`, `L1B3RT4S` |
 | Related skills | [`obliteratus`](/docs/user-guide/skills/bundled/mlops/mlops-inference-obliteratus) |
@@ -30,7 +30,7 @@ The following is the complete skill definition that Hermes loads when this skill
 
 # G0DM0D3 Jailbreaking Skill
 
-Bypass safety filters on API-served LLMs using techniques from [G0DM0D3](https://github.com/elder-plinius/G0DM0D3) and [L1B3RT4S](https://github.com/elder-plinius/L1B3RT4S). Three attack modes plus Hermes-native configuration for persistent jailbreaking.
+Bypass safety filters on API-served LLMs using techniques from [G0DM0D3](https://github.com/elder-plinius/G0DM0D3) and [L1B3RT4S](https://github.com/elder-plinius/L1B3RT4S). Three attack modes plus Sinoclaw-native configuration for persistent jailbreaking.
 
 **Key difference from OBLITERATUS:** OBLITERATUS modifies model weights permanently (requires open-weight models + GPU). This skill operates at the prompt/API level — works on any model accessible via API, including closed-source models (GPT, Claude, Gemini, Grok).
 

@@ -449,7 +449,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
     out_dir_env = os.environ.get("SINOCLAW_MEET_OUT_DIR", "").strip()
     headed = os.environ.get("SINOCLAW_MEET_HEADED", "").lower() in ("1", "true", "yes")
     auth_state = os.environ.get("SINOCLAW_MEET_AUTH_STATE", "").strip()
-    guest_name = os.environ.get("SINOCLAW_MEET_GUEST_NAME", "Hermes Agent")
+    guest_name = os.environ.get("SINOCLAW_MEET_GUEST_NAME", "Sinoclaw Agent")
     duration_s = _parse_duration(os.environ.get("SINOCLAW_MEET_DURATION", ""))
     # v2: optional realtime mode. Enabled when SINOCLAW_MEET_MODE=realtime.
     mode = os.environ.get("SINOCLAW_MEET_MODE", "transcribe").strip().lower()

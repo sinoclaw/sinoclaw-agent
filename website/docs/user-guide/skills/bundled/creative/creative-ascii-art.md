@@ -17,7 +17,7 @@ ASCII art: pyfiglet, cowsay, boxes, image-to-ascii.
 | Source | Bundled (installed by default) |
 | Path | `skills/creative/ascii-art` |
 | Version | `4.0.0` |
-| Author | 0xbyt4, Hermes Agent |
+| Author | 0xbyt4, Sinoclaw Agent |
 | License | MIT |
 | Tags | `ASCII`, `Art`, `Banners`, `Creative`, `Unicode`, `Text-Art`, `pyfiglet`, `figlet`, `cowsay`, `boxes` |
 | Related skills | [`excalidraw`](/docs/user-guide/skills/bundled/creative/creative-excalidraw) |

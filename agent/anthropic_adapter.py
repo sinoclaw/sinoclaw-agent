@@ -1,4 +1,4 @@
-"""Anthropic Messages API adapter for Hermes Agent.
+"""Anthropic Messages API adapter for Sinoclaw Agent.
 
 Translates between Hermes's internal OpenAI-style message format and
 Anthropic's Messages API. Follows the same pattern as the codex_responses
@@ -956,7 +956,7 @@ def resolve_anthropic_token() -> Optional[str]:
     """
     creds = read_claude_code_credentials()
 
-    # 1. Hermes-managed OAuth/setup token env var
+    # 1. Sinoclaw-managed OAuth/setup token env var
     token = os.getenv("ANTHROPIC_TOKEN", "").strip()
     if token:
         preferred = _prefer_refreshable_claude_code_token(token, creds)
@@ -1026,7 +1026,7 @@ def run_oauth_setup_token() -> Optional[str]:
     return None
 
 
-# ── Hermes-native PKCE OAuth flow ────────────────────────────────────────
+# ── Sinoclaw-native PKCE OAuth flow ────────────────────────────────────────
 # Mirrors the flow used by Claude Code, pi-ai, and OpenCode.
 # Stores credentials in ~/.sinoclaw/.anthropic_oauth.json (our own file).
 
@@ -1051,7 +1051,7 @@ def _generate_pkce() -> tuple:
 
 
 def run_sinoclaw_oauth_login_pure() -> Optional[Dict[str, Any]]:
-    """Run Hermes-native OAuth PKCE flow and return credential state."""
+    """Run Sinoclaw-native OAuth PKCE flow and return credential state."""
     import time
     import webbrowser
 
@@ -1149,7 +1149,7 @@ def run_sinoclaw_oauth_login_pure() -> Optional[Dict[str, Any]]:
 
 
 def read_sinoclaw_oauth_credentials() -> Optional[Dict[str, Any]]:
-    """Read Hermes-managed OAuth credentials from ~/.sinoclaw/.anthropic_oauth.json."""
+    """Read Sinoclaw-managed OAuth credentials from ~/.sinoclaw/.anthropic_oauth.json."""
     if _SINOCLAW_OAUTH_FILE.exists():
         try:
             data = json.loads(_SINOCLAW_OAUTH_FILE.read_text(encoding="utf-8"))
@@ -1933,8 +1933,8 @@ def build_anthropic_kwargs(
         for block in system:
             if isinstance(block, dict) and block.get("type") == "text":
                 text = block.get("text", "")
-                text = text.replace("Hermes Agent", "Claude Code")
-                text = text.replace("Hermes agent", "Claude Code")
+                text = text.replace("Sinoclaw Agent", "Claude Code")
+                text = text.replace("Sinoclaw agent", "Claude Code")
                 text = text.replace("sinoclaw-agent", "claude-code")
                 text = text.replace("Nous Research", "Anthropic")
                 block["text"] = text

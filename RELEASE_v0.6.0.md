@@ -1,4 +1,4 @@
-# Hermes Agent v0.6.0 (v2026.3.30)
+# Sinoclaw Agent v0.6.0 (v2026.3.30)
 
 **Release Date:** March 30, 2026
 
@@ -12,7 +12,7 @@
 
 - **MCP Server Mode** — Expose Hermes conversations and sessions to any MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.) via `hermes mcp serve`. Browse conversations, read messages, search across sessions, and manage attachments — all through the Model Context Protocol. Supports both stdio and Streamable HTTP transports. ([#3795](https://github.com/NousResearch/sinoclaw-agent/pull/3795))
 
-- **Docker Container** — Official Dockerfile for running Hermes Agent in a container. Supports both CLI and gateway modes with volume-mounted config. ([#3668](https://github.com/NousResearch/sinoclaw-agent/pull/3668), closes [#850](https://github.com/NousResearch/sinoclaw-agent/issues/850))
+- **Docker Container** — Official Dockerfile for running Sinoclaw Agent in a container. Supports both CLI and gateway modes with volume-mounted config. ([#3668](https://github.com/NousResearch/sinoclaw-agent/pull/3668), closes [#850](https://github.com/NousResearch/sinoclaw-agent/issues/850))
 
 - **Ordered Fallback Provider Chain** — Configure multiple inference providers with automatic failover. When your primary provider returns errors or is unreachable, Hermes automatically tries the next provider in the chain. Configure via `fallback_providers` in config.yaml. ([#3813](https://github.com/NousResearch/sinoclaw-agent/pull/3813), closes [#1734](https://github.com/NousResearch/sinoclaw-agent/issues/1734))
 
@@ -222,7 +222,7 @@
 
 ## 📚 Documentation
 
-- **Comprehensive OpenClaw migration guide** — step-by-step guide for migrating from OpenClaw/Claw3D to Hermes Agent ([#3864](https://github.com/NousResearch/sinoclaw-agent/pull/3864), [#3900](https://github.com/NousResearch/sinoclaw-agent/pull/3900))
+- **Comprehensive OpenClaw migration guide** — step-by-step guide for migrating from OpenClaw/Claw3D to Sinoclaw Agent ([#3864](https://github.com/NousResearch/sinoclaw-agent/pull/3864), [#3900](https://github.com/NousResearch/sinoclaw-agent/pull/3900))
 - **Credential file passthrough docs** — document how to forward credential files and env vars to remote backends ([#3677](https://github.com/NousResearch/sinoclaw-agent/pull/3677))
 - **DuckDuckGo requirements clarified** — note runtime dependency on duckduckgo-search package ([#3680](https://github.com/NousResearch/sinoclaw-agent/pull/3680))
 - **Skills catalog updated** — added red-teaming category and optional skills listing ([#3745](https://github.com/NousResearch/sinoclaw-agent/pull/3745))

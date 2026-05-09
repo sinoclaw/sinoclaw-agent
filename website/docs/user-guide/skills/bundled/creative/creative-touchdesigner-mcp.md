@@ -41,7 +41,7 @@ The following is the complete skill definition that Hermes loads when this skill
 ## Architecture
 
 ```
-Hermes Agent -> MCP (Streamable HTTP) -> twozero.tox (port 40404) -> TD Python
+Sinoclaw Agent -> MCP (Streamable HTTP) -> twozero.tox (port 40404) -> TD Python
 ```
 
 36 native tools. Free plugin (no payment/license — confirmed April 2026).

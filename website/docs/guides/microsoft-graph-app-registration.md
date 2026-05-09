@@ -97,17 +97,17 @@ From an admin PowerShell with the MicrosoftTeams module installed and connected 
 ```powershell
 # Create a policy scoped to the Hermes app
 New-CsApplicationAccessPolicy `
-  -Identity "Hermes-Meeting-Pipeline-Policy" `
+  -Identity "Sinoclaw-Meeting-Pipeline-Policy" `
   -AppIds "<MSGRAPH_CLIENT_ID>" `
   -Description "Restrict Hermes meeting pipeline to allow-listed users"
 
 # Grant the policy to specific users whose meetings the pipeline may read
 Grant-CsApplicationAccessPolicy `
-  -PolicyName "Hermes-Meeting-Pipeline-Policy" `
+  -PolicyName "Sinoclaw-Meeting-Pipeline-Policy" `
   -Identity "alice@example.com"
 
 Grant-CsApplicationAccessPolicy `
-  -PolicyName "Hermes-Meeting-Pipeline-Policy" `
+  -PolicyName "Sinoclaw-Meeting-Pipeline-Policy" `
   -Identity "bob@example.com"
 ```
 

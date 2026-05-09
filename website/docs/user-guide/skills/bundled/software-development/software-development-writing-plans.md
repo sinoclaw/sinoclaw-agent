@@ -17,7 +17,7 @@ Write implementation plans: bite-sized tasks, paths, code.
 | Source | Bundled (installed by default) |
 | Path | `skills/software-development/writing-plans` |
 | Version | `1.1.0` |
-| Author | Hermes Agent (adapted from obra/superpowers) |
+| Author | Sinoclaw Agent (adapted from obra/superpowers) |
 | License | MIT |
 | Tags | `planning`, `design`, `implementation`, `workflow`, `documentation` |
 | Related skills | [`subagent-driven-development`](/docs/user-guide/skills/bundled/software-development/software-development-subagent-driven-development), [`test-driven-development`](/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development), [`requesting-code-review`](/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review) |

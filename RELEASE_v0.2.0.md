@@ -1,8 +1,8 @@
-# Hermes Agent v0.2.0 (v2026.3.12)
+# Sinoclaw Agent v0.2.0 (v2026.3.12)
 
 **Release Date:** March 12, 2026
 
-> First tagged release since v0.1.0 (the initial pre-public foundation). In just over two weeks, Hermes Agent went from a small internal project to a full-featured AI agent platform — thanks to an explosion of community contributions. This release covers **216 merged pull requests** from **63 contributors**, resolving **119 issues**.
+> First tagged release since v0.1.0 (the initial pre-public foundation). In just over two weeks, Sinoclaw Agent went from a small internal project to a full-featured AI agent platform — thanks to an explosion of community contributions. This release covers **216 merged pull requests** from **63 contributors**, resolving **119 issues**.
 
 ---
 
@@ -217,7 +217,7 @@
 - **OpenClaw Migration** — Official migration tool ([#570](https://github.com/NousResearch/sinoclaw-agent/pull/570)) — @unmodeled-tyler
 - **Domain Intelligence** — Passive recon: subdomains, SSL, WHOIS, DNS ([#136](https://github.com/NousResearch/sinoclaw-agent/pull/136)) — @FurkanL0
 - **Superpowers** — Software development skills ([#137](https://github.com/NousResearch/sinoclaw-agent/pull/137)) — @kaos35
-- **Hermes-Atropos** — RL environment development skill ([#815](https://github.com/NousResearch/sinoclaw-agent/pull/815))
+- **Sinoclaw-Atropos** — RL environment development skill ([#815](https://github.com/NousResearch/sinoclaw-agent/pull/815))
 - Plus: arXiv search, OCR/documents, Excalidraw diagrams, YouTube transcripts, GIF search, Pokémon player, Minecraft modpack server, OpenHue (Philips Hue), Google Workspace, Notion, PowerPoint, Obsidian, find-nearby, and 40+ MLOps skills
 
 ---
@@ -328,7 +328,7 @@
 
 - WebResearchEnv — Multi-step web research RL environment ([#434](https://github.com/NousResearch/sinoclaw-agent/pull/434)) — @jackx707
 - Modal sandbox concurrency limits to avoid deadlocks ([#621](https://github.com/NousResearch/sinoclaw-agent/pull/621)) — @voteblake
-- Hermes-atropos-environments bundled skill ([#815](https://github.com/NousResearch/sinoclaw-agent/pull/815))
+- Sinoclaw-atropos-environments bundled skill ([#815](https://github.com/NousResearch/sinoclaw-agent/pull/815))
 - Local vLLM instance support for evaluation — @dmahan93
 - YC-Bench long-horizon agent benchmark environment
 - OpenThoughts-TBLite evaluation environment and scripts
@@ -354,7 +354,7 @@
 
 ## 👥 Contributors
 
-Thank you to the 63 contributors who made this release possible! In just over two weeks, the Hermes Agent community came together to ship an extraordinary amount of work.
+Thank you to the 63 contributors who made this release possible! In just over two weeks, the Sinoclaw Agent community came together to ship an extraordinary amount of work.
 
 ### Core
 - **@teknium1** — 43 PRs: Project lead, core architecture, provider router, sessions, skills, CLI, documentation

@@ -27,7 +27,7 @@ from tools.mcp_oauth import (
 # HermesTokenStorage
 # ---------------------------------------------------------------------------
 
-class TestHermesTokenStorage:
+class TestSinoclawTokenStorage:
     def test_roundtrip_tokens(self, tmp_path, monkeypatch):
         monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
         storage = HermesTokenStorage("test-server")

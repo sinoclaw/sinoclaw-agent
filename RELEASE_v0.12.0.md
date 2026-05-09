@@ -1,9 +1,9 @@
-# Hermes Agent v0.12.0 (v2026.4.30)
+# Sinoclaw Agent v0.12.0 (v2026.4.30)
 
 **Release Date:** April 30, 2026
 **Since v0.11.0:** 1,096 commits · 550 merged PRs · 1,270 files changed · 217,776 insertions · 213 community contributors (including co-authors)
 
-> The Curator release — Hermes Agent now maintains itself. An autonomous background Curator grades, prunes, and consolidates your skill library on its own schedule. The self-improvement loop that reviews what to save got a substantial upgrade. Four new inference providers, a 18th messaging platform, a 19th via Teams plugin, native Spotify + Google Meet integrations, ComfyUI and TouchDesigner-MCP moved from optional to bundled-by-default, and a ~57% cut to visible TUI cold start.
+> The Curator release — Sinoclaw Agent now maintains itself. An autonomous background Curator grades, prunes, and consolidates your skill library on its own schedule. The self-improvement loop that reviews what to save got a substantial upgrade. Four new inference providers, a 18th messaging platform, a 19th via Teams plugin, native Spotify + Google Meet integrations, ComfyUI and TouchDesigner-MCP moved from optional to bundled-by-default, and a ~57% cut to visible TUI cold start.
 
 ---
 

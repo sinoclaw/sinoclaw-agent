@@ -1,6 +1,6 @@
 # Hermes Achievements
 
-> **Bundled with Hermes Agent.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/sinoclaw-achievements — vendored into `plugins/sinoclaw-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Hermes feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
+> **Bundled with Sinoclaw Agent.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/sinoclaw-achievements — vendored into `plugins/sinoclaw-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Hermes feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
 >
 > When Hermes is installed via `pip install sinoclaw-agent` or cloned from source, this plugin auto-registers as a dashboard tab on first `hermes dashboard` launch. No separate install step. See [Built-in Plugins → sinoclaw-achievements](../../website/docs/user-guide/features/built-in-plugins.md) in the main docs.
 
@@ -21,7 +21,7 @@ Hermes Achievements scans local Hermes sessions and unlocks badges based on real
 - autonomous tool chains
 - debugging and recovery patterns
 - vibe-coding file edits
-- Hermes-native skills, memory, cron, and plugin usage
+- Sinoclaw-native skills, memory, cron, and plugin usage
 - web research and browser automation
 - model/provider workflows
 - lifestyle patterns such as weekend or night sessions

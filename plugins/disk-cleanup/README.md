@@ -1,6 +1,6 @@
 # disk-cleanup
 
-Auto-tracks and cleans up ephemeral files created during Hermes Agent
+Auto-tracks and cleans up ephemeral files created during Sinoclaw Agent
 sessions — test scripts, temp outputs, cron logs, stale chrome profiles.
 Scoped strictly to `$SINOCLAW_HOME` and `/tmp/sinoclaw-*`.
 

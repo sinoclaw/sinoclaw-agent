@@ -1,5 +1,5 @@
 """
-Hermes-Agent Atropos Environments
+Sinoclaw-Agent Atropos Environments
 
 Provides a layered integration between sinoclaw-agent's tool-calling capabilities
 and the Atropos RL training framework.
@@ -19,9 +19,9 @@ Benchmarks (eval-only):
 """
 
 try:
-    from environments.agent_loop import AgentResult, HermesAgentLoop
+    from environments.agent_loop import AgentResult, SinoclawAgentLoop
     from environments.tool_context import ToolContext
-    from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+    from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
 except ImportError:
     # atroposlib not installed — environments are unavailable but
     # submodules like tool_call_parsers can still be imported directly.
@@ -29,8 +29,8 @@ except ImportError:
 
 __all__ = [
     "AgentResult",
-    "HermesAgentLoop",
+    "SinoclawAgentLoop",
     "ToolContext",
-    "HermesAgentBaseEnv",
-    "HermesAgentEnvConfig",
+    "SinoclawAgentBaseEnv",
+    "SinoclawAgentEnvConfig",
 ]

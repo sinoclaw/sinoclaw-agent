@@ -1206,7 +1206,7 @@ class TestSystemUnitHermesHome:
         assert f'SINOCLAW_HOME={sinoclaw_home}' in unit
 
 
-class TestHermesHomeForTargetUser:
+class TestSinoclawHomeForTargetUser:
     """Unit tests for _sinoclaw_home_for_target_user()."""
 
     def test_remaps_default_home(self, monkeypatch):

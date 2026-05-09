@@ -399,7 +399,7 @@ class TelegramAdapter(BasePlatformAdapter):
 
         Supergroup/forum topics use ``message_thread_id``. True Bot API Direct
         Messages topics can opt in with explicit ``direct_messages_topic_id``
-        metadata. Hermes-created private-chat topic lanes are marked with
+        metadata. Sinoclaw-created private-chat topic lanes are marked with
         ``telegram_dm_topic_reply_fallback`` and must send the private topic
         thread id together with a reply anchor. Live testing showed that either
         parameter alone can render outside the visible lane.
@@ -2868,7 +2868,7 @@ class TelegramAdapter(BasePlatformAdapter):
         if self._bot:
             try:
                 _typing_thread = self._metadata_thread_id(metadata)
-                # Skip the Bot API call entirely for Hermes-created DM topic
+                # Skip the Bot API call entirely for Sinoclaw-created DM topic
                 # lanes: send_chat_action only accepts message_thread_id, which
                 # Telegram's Bot API 10.0 rejects for these lanes. The send
                 # path uses the reply-anchor fallback instead, but typing has

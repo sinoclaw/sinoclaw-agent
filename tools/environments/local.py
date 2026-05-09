@@ -45,7 +45,7 @@ def _resolve_safe_cwd(cwd: str) -> str:
     return tempfile.gettempdir()
 
 
-# Hermes-internal env vars that should NOT leak into terminal subprocesses.
+# Sinoclaw-internal env vars that should NOT leak into terminal subprocesses.
 _SINOCLAW_PROVIDER_ENV_FORCE_PREFIX = "_SINOCLAW_FORCE_"
 
 
@@ -145,7 +145,7 @@ _SINOCLAW_PROVIDER_ENV_BLOCKLIST = _build_provider_env_blocklist()
 
 
 def _sanitize_subprocess_env(base_env: dict | None, extra_env: dict | None = None) -> dict:
-    """Filter Hermes-managed secrets from a subprocess environment."""
+    """Filter Sinoclaw-managed secrets from a subprocess environment."""
     try:
         from tools.env_passthrough import is_env_passthrough as _is_passthrough
     except Exception:
@@ -222,7 +222,7 @@ def _find_bash() -> str:
             return candidate
 
     raise RuntimeError(
-        "Git Bash not found. Hermes Agent requires Git for Windows on Windows.\n"
+        "Git Bash not found. Sinoclaw Agent requires Git for Windows on Windows.\n"
         "Install it from: https://git-scm.com/download/win\n"
         "Or set SINOCLAW_GIT_BASH_PATH to your bash.exe location."
     )

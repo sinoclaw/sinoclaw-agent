@@ -1,5 +1,5 @@
 """
-HermesAgentLoop -- Reusable Multi-Turn Agent Engine
+SinoclawAgentLoop -- Reusable Multi-Turn Agent Engine
 
 Runs the sinoclaw-agent tool-calling loop using standard OpenAI-spec tool calling.
 Works with any server that returns ChatCompletion objects with tool_calls:
@@ -29,7 +29,7 @@ from tools.tool_result_storage import maybe_persist_tool_result, enforce_turn_bu
 # thread gives them a clean event loop so they don't deadlock inside Atropos's loop.
 # Size must be large enough for concurrent eval tasks (e.g., 89 TB2 tasks all
 # making tool calls). Too small = thread pool starvation, tasks queue for minutes.
-# Resized at runtime by HermesAgentBaseEnv.__init__ via resize_tool_pool().
+# Resized at runtime by SinoclawAgentBaseEnv.__init__ via resize_tool_pool().
 _tool_executor = concurrent.futures.ThreadPoolExecutor(max_workers=128)
 
 
@@ -37,7 +37,7 @@ def resize_tool_pool(max_workers: int):
     """
     Replace the global tool executor with a new one of the given size.
 
-    Called by HermesAgentBaseEnv.__init__ based on config.tool_pool_size.
+    Called by SinoclawAgentBaseEnv.__init__ based on config.tool_pool_size.
     Safe to call before any tasks are submitted.
     """
     global _tool_executor
@@ -116,7 +116,7 @@ def _extract_reasoning_from_message(message) -> Optional[str]:
     return None
 
 
-class HermesAgentLoop:
+class SinoclawAgentLoop:
     """
     Runs sinoclaw-agent's tool-calling loop using standard OpenAI-spec tool calling.
 

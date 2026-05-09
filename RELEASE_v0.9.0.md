@@ -1,4 +1,4 @@
-# Hermes Agent v0.9.0 (v2026.4.13)
+# Sinoclaw Agent v0.9.0 (v2026.4.13)
 
 **Release Date:** April 13, 2026
 **Since v0.8.0:** 487 commits · 269 merged PRs · 167 resolved issues · 493 files changed · 63,281 insertions · 24 contributors
@@ -9,7 +9,7 @@
 
 ## ✨ Highlights
 
-- **Local Web Dashboard** — A new browser-based dashboard for managing your Hermes Agent locally. Configure settings, monitor sessions, browse skills, and manage your gateway — all from a clean web interface without touching config files or the terminal. The easiest way to get started with Hermes.
+- **Local Web Dashboard** — A new browser-based dashboard for managing your Sinoclaw Agent locally. Configure settings, monitor sessions, browse skills, and manage your gateway — all from a clean web interface without touching config files or the terminal. The easiest way to get started with Hermes.
 
 - **Fast Mode (`/fast`)** — Priority processing for OpenAI and Anthropic models. Toggle `/fast` to route through priority queues for significantly lower latency on supported models (GPT-5.4, Codex, Claude). Expands across all OpenAI Priority Processing models and Anthropic's fast tier. ([#6875](https://github.com/NousResearch/sinoclaw-agent/pull/6875), [#6960](https://github.com/NousResearch/sinoclaw-agent/pull/6960), [#7037](https://github.com/NousResearch/sinoclaw-agent/pull/7037))
 

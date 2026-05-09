@@ -127,7 +127,7 @@ def configure_windows_stdio() -> bool:
     if _default_editor and not os.environ.get("EDITOR") and not os.environ.get("VISUAL"):
         os.environ["EDITOR"] = _default_editor
 
-    # Augment PATH with the Hermes-managed Git install directories so
+    # Augment PATH with the Sinoclaw-managed Git install directories so
     # subprocess calls (bash, rg, grep, etc.) resolve even in sessions
     # that started before the User PATH broadcast reached them.  When
     # install.ps1 adds these to User PATH via SetEnvironmentVariable,
@@ -135,7 +135,7 @@ def configure_windows_stdio() -> bool:
     # launched from the install session won't find rg / bash / grep
     # even though they're "installed".  Prepending the known paths here
     # closes that gap.  No-op when the paths don't exist (e.g. system-Git
-    # install without Hermes-managed PortableGit).
+    # install without Sinoclaw-managed PortableGit).
     _augment_path_with_known_tools()
 
     # Flip the console code page first so that any subprocess that
@@ -193,7 +193,7 @@ def _default_windows_editor() -> str:
 
 
 def _augment_path_with_known_tools() -> None:
-    """Prepend well-known Hermes-managed tool directories to os.environ['PATH'].
+    """Prepend well-known Sinoclaw-managed tool directories to os.environ['PATH'].
 
     Fixes the "User PATH was just updated but my process can't see it" gap on
     Windows.  When install.ps1 runs, it adds entries like
@@ -207,7 +207,7 @@ def _augment_path_with_known_tools() -> None:
     disk.  Symptom: ``search_files`` reports "rg/find not available" when
     the user clearly just installed ripgrep.
 
-    Patch-up strategy: add the known Hermes-managed tool directories to our
+    Patch-up strategy: add the known Sinoclaw-managed tool directories to our
     PATH at startup so subprocess calls resolve correctly.  No-op on POSIX
     and when the directories don't exist.  The User PATH broadcast still
     happens in the background for future shells; this just smooths over

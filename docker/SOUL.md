@@ -1,4 +1,4 @@
-# Hermes Agent Persona
+# Sinoclaw Agent Persona
 
 <!--
 This file defines the agent's personality and tone.

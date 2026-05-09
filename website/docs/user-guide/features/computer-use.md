@@ -1,6 +1,6 @@
 # Computer Use (macOS)
 
-Hermes Agent can drive your Mac's desktop — clicking, typing, scrolling,
+Sinoclaw Agent can drive your Mac's desktop — clicking, typing, scrolling,
 dragging — in the **background**. Your cursor doesn't move, keyboard focus
 doesn't change, and macOS doesn't switch Spaces on you. You and the agent
 co-work on the same machine.

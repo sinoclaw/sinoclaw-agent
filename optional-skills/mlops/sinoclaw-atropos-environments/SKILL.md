@@ -1,8 +1,8 @@
 ---
 name: sinoclaw-atropos-environments
-description: Build, test, and debug Hermes Agent RL environments for Atropos training. Covers the HermesAgentBaseEnv interface, reward functions, agent loop integration, evaluation with tools, wandb logging, and the three CLI modes (serve/process/evaluate). Use when creating, reviewing, or fixing RL environments in the sinoclaw-agent repo.
+description: Build, test, and debug Sinoclaw Agent RL environments for Atropos training. Covers the SinoclawAgentBaseEnv interface, reward functions, agent loop integration, evaluation with tools, wandb logging, and the three CLI modes (serve/process/evaluate). Use when creating, reviewing, or fixing RL environments in the sinoclaw-agent repo.
 version: 1.1.0
-author: Hermes Agent
+author: Sinoclaw Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
@@ -11,7 +11,7 @@ metadata:
     related_skills: [axolotl, fine-tuning-with-trl, lm-evaluation-harness]
 ---
 
-# Hermes Agent Atropos Environments
+# Sinoclaw Agent Atropos Environments
 
 Guide for building RL environments in the sinoclaw-agent repo that integrate with the Atropos training framework.
 
@@ -19,7 +19,7 @@ Guide for building RL environments in the sinoclaw-agent repo that integrate wit
 
 ```
 Atropos BaseEnv (atroposlib/envs/base.py)
-    └── HermesAgentBaseEnv (environments/sinoclaw_base_env.py)
+    └── SinoclawAgentBaseEnv (environments/sinoclaw_base_env.py)
             ├── Handles agent loop orchestration
             ├── Handles tool resolution per group
             ├── Handles ToolContext for reward verification
@@ -35,7 +35,7 @@ Hermes environments are special because they run a **multi-turn agent loop with 
 | File | Purpose |
 |------|---------|
 | `environments/sinoclaw_base_env.py` | Base class with agent loop + tool resolution |
-| `environments/agent_loop.py` | `HermesAgentLoop` + `AgentResult` dataclass |
+| `environments/agent_loop.py` | `SinoclawAgentLoop` + `AgentResult` dataclass |
 | `environments/tool_context.py` | `ToolContext` for reward verification |
 | `environments/tool_call_parsers.py` | Phase 2 tool call parsers (hermes, mistral, etc.) |
 | `environments/your_env.py` | Your environment implementation |
@@ -152,7 +152,7 @@ The whole point of sinoclaw-agent environments is agentic evaluation:
 ```python
 async def evaluate(self, *args, **kwargs) -> None:
     import time, uuid
-    from environments.agent_loop import HermesAgentLoop
+    from environments.agent_loop import SinoclawAgentLoop
     from environments.tool_context import ToolContext
 
     start_time = time.time()
@@ -166,7 +166,7 @@ async def evaluate(self, *args, **kwargs) -> None:
             messages.append({"role": "system", "content": self.config.system_prompt})
         messages.append({"role": "user", "content": self.format_prompt(item)})
 
-        agent = HermesAgentLoop(
+        agent = SinoclawAgentLoop(
             server=self.server,
             tool_schemas=tools,
             valid_tool_names=valid_names,
@@ -243,7 +243,7 @@ Config priority: CLI args > YAML file > config_init() defaults.
 
 1. **AgentResult has .messages, not .final_response** — Extract the final response by iterating reversed(result.messages) looking for the last assistant message with content.
 
-2. **evaluate() must use HermesAgentLoop, not chat_completion** — Single-turn chat_completion has no tools. The whole point of sinoclaw-agent benchmarks is agentic evaluation with tool use.
+2. **evaluate() must use SinoclawAgentLoop, not chat_completion** — Single-turn chat_completion has no tools. The whole point of sinoclaw-agent benchmarks is agentic evaluation with tool use.
 
 3. **Don't call _llm_judge twice** — If compute_reward already calls it, extract the score from the buffer instead of calling judge separately in evaluate().
 
@@ -285,7 +285,7 @@ Weight correctness (0.6) + tool usage (0.2) + efficiency (0.2) + optional bonuse
 ## Minimum Implementation Checklist
 
 ```python
-class MyEnv(HermesAgentBaseEnv):
+class MyEnv(SinoclawAgentBaseEnv):
     name = "my-env"
     env_config_cls = MyEnvConfig
 

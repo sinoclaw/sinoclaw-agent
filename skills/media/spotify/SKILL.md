@@ -2,7 +2,7 @@
 name: spotify
 description: "Spotify: play, search, queue, manage playlists and devices."
 version: 1.0.0
-author: Hermes Agent
+author: Sinoclaw Agent
 license: MIT
 platforms: [linux, macos, windows]
 prerequisites:

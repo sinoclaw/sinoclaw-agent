@@ -973,7 +973,7 @@ def _routermint_headers() -> dict:
     from sinoclaw_cli import __version__ as _SINOCLAW_VERSION
 
     return {
-        "User-Agent": f"HermesAgent/{_SINOCLAW_VERSION}",
+        "User-Agent": f"SinoclawAgent/{_SINOCLAW_VERSION}",
     }
 
 
@@ -2246,7 +2246,7 @@ class AIAgent:
             raise ValueError(
                 f"Model {self.model} has a context window of {_ctx:,} tokens, "
                 f"which is below the minimum {MINIMUM_CONTEXT_LENGTH:,} required "
-                f"by Hermes Agent.  Choose a model with at least "
+                f"by Sinoclaw Agent.  Choose a model with at least "
                 f"{MINIMUM_CONTEXT_LENGTH // 1000}K context, or set "
                 f"model.context_length in config.yaml to override."
             )
@@ -12822,7 +12822,7 @@ class AIAgent:
                         print(f"{self.log_prefix}   Troubleshooting:")
                         from sinoclaw_constants import display_sinoclaw_home as _dhh_fn
                         _dhh = _dhh_fn()
-                        print(f"{self.log_prefix}     • Check ANTHROPIC_TOKEN in {_dhh}/.env for Hermes-managed OAuth/setup tokens")
+                        print(f"{self.log_prefix}     • Check ANTHROPIC_TOKEN in {_dhh}/.env for Sinoclaw-managed OAuth/setup tokens")
                         print(f"{self.log_prefix}     • Check ANTHROPIC_API_KEY in {_dhh}/.env for API keys or legacy token values")
                         print(f"{self.log_prefix}     • For API keys: verify at https://platform.claude.com/settings/keys")
                         print(f"{self.log_prefix}     • For Claude Code: run 'claude /login' to refresh, then retry")

@@ -36,7 +36,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv --version
 ```
 
-## 3. 获取 Hermes Agent
+## 3. 获取 Sinoclaw Agent
 
 在 WSL 里 clone 本仓库（或你的 fork），进入目录后按 [安装说明](/getting-started/installation) 使用 `uv sync` / 文档中的推荐命令安装依赖。
 

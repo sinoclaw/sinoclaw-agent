@@ -353,7 +353,7 @@ class TestRemoveCommand:
             ],
         })
 
-        # Picker returns index 1 (the middle entry, "nous / Hermes-4")
+        # Picker returns index 1 (the middle entry, "nous / Sinoclaw-4")
         with patch("sinoclaw_cli.setup._curses_prompt_choice", return_value=1):
             from sinoclaw_cli.fallback_cmd import cmd_fallback_remove
             cmd_fallback_remove(types.SimpleNamespace())

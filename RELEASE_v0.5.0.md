@@ -1,4 +1,4 @@
-# Hermes Agent v0.5.0 (v2026.3.28)
+# Sinoclaw Agent v0.5.0 (v2026.3.28)
 
 **Release Date:** March 28, 2026
 
@@ -8,7 +8,7 @@
 
 ## ✨ Highlights
 
-- **Nous Portal now supports 400+ models** — The Nous Research inference portal has expanded dramatically, giving Hermes Agent users access to over 400 models through a single provider endpoint
+- **Nous Portal now supports 400+ models** — The Nous Research inference portal has expanded dramatically, giving Sinoclaw Agent users access to over 400 models through a single provider endpoint
 
 - **Hugging Face as a first-class inference provider** — Full integration with HF Inference API including curated agentic model picker that maps to OpenRouter analogues, live `/models` endpoint probe, and setup wizard flow ([#3419](https://github.com/NousResearch/sinoclaw-agent/pull/3419), [#3440](https://github.com/NousResearch/sinoclaw-agent/pull/3440))
 
@@ -96,7 +96,7 @@
 - **Plugin lifecycle hooks** — `pre_llm_call`, `post_llm_call`, `on_session_start`, `on_session_end` now fire in the agent loop ([#3542](https://github.com/NousResearch/sinoclaw-agent/pull/3542))
 - Fix plugin toolsets invisible in `hermes tools` and standalone processes ([#3457](https://github.com/NousResearch/sinoclaw-agent/pull/3457))
 - Consolidate `get_sinoclaw_home()` and `parse_reasoning_effort()` ([#3062](https://github.com/NousResearch/sinoclaw-agent/pull/3062))
-- Remove unused Hermes-native PKCE OAuth flow ([#3107](https://github.com/NousResearch/sinoclaw-agent/pull/3107))
+- Remove unused Sinoclaw-native PKCE OAuth flow ([#3107](https://github.com/NousResearch/sinoclaw-agent/pull/3107))
 - Remove ~100 unused imports across 55 files ([#3016](https://github.com/NousResearch/sinoclaw-agent/pull/3016))
 - Fix 154 f-strings, simplify getattr/URL patterns, remove dead code ([#3119](https://github.com/NousResearch/sinoclaw-agent/pull/3119))
 

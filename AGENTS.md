@@ -1,4 +1,4 @@
-# Hermes Agent - Development Guide
+# Sinoclaw Agent - Development Guide
 
 Instructions for AI coding assistants and developers working on the sinoclaw-agent codebase.
 
@@ -743,7 +743,7 @@ Full user-facing docs: `website/docs/user-guide/features/kanban.md`.
 
 ### Prompt Caching Must Not Break
 
-Hermes-Agent ensures caching remains valid throughout a conversation. **Do NOT implement changes that would:**
+Sinoclaw-Agent ensures caching remains valid throughout a conversation. **Do NOT implement changes that would:**
 - Alter past context mid-conversation
 - Change toolsets mid-conversation
 - Reload memories or rebuild system prompts mid-conversation

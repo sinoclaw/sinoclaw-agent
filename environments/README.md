@@ -1,4 +1,4 @@
-# Hermes-Agent Atropos Environments
+# Sinoclaw-Agent Atropos Environments
 
 This directory contains the integration layer between **sinoclaw-agent's** tool-calling capabilities and the **Atropos** RL training framework. It provides everything needed to run agentic LLMs through multi-turn tool-calling loops, score their output with arbitrary reward functions, and feed results into Atropos for training or evaluation.
 
@@ -16,7 +16,7 @@ This directory contains the integration layer between **sinoclaw-agent's** tool-
                     └───────────┬───────────┘
                                 │ inherits
                     ┌───────────┴───────────┐
-                    │  HermesAgentBaseEnv    │  sinoclaw_base_env.py
+                    │  SinoclawAgentBaseEnv    │  sinoclaw_base_env.py
                     │  - Terminal backend    │
                     │  - Tool resolution     │
                     │  - Agent loop          │
@@ -39,14 +39,14 @@ This directory contains the integration layer between **sinoclaw-agent's** tool-
 - CLI interface with three subcommands: `serve`, `process`, `evaluate`
 - `evaluate_log()` for saving eval results to JSON + samples.jsonl
 
-**HermesAgentBaseEnv** (`sinoclaw_base_env.py`) extends BaseEnv with sinoclaw-agent specifics:
+**SinoclawAgentBaseEnv** (`sinoclaw_base_env.py`) extends BaseEnv with sinoclaw-agent specifics:
 - Sets `os.environ["TERMINAL_ENV"]` to configure the terminal backend (local, docker, ssh, singularity, modal, daytona, vercel_sandbox)
 - Resolves sinoclaw-agent toolsets via `_resolve_tools_for_group()` (calls `get_tool_definitions()` which queries `tools/registry.py`)
 - Implements `collect_trajectory()` which runs the full agent loop and computes rewards
 - Supports two-phase operation (Phase 1: OpenAI server, Phase 2: VLLM ManagedServer)
 - Applies monkey patches for async-safe tool operation at import time
 
-Concrete environments inherit from `HermesAgentBaseEnv` and implement:
+Concrete environments inherit from `SinoclawAgentBaseEnv` and implement:
 - `setup()` -- Load dataset, initialize state
 - `get_next_item()` -- Return the next item for rollout
 - `format_prompt()` -- Convert a dataset item into the user message
@@ -57,7 +57,7 @@ Concrete environments inherit from `HermesAgentBaseEnv` and implement:
 
 ### Agent Loop (`agent_loop.py`)
 
-`HermesAgentLoop` is the reusable multi-turn agent engine. It runs the same pattern as sinoclaw-agent's `run_agent.py`:
+`SinoclawAgentLoop` is the reusable multi-turn agent engine. It runs the same pattern as sinoclaw-agent's `run_agent.py`:
 
 1. Send messages + tools to the API via `server.chat_completion()`
 2. If the response contains `tool_calls`, execute each one via `handle_function_call()` (which delegates to `tools/registry.py`'s `dispatch()`)
@@ -159,8 +159,8 @@ Uses ManagedServer for exact token IDs + logprobs via `/generate`. Client-side t
 environments/
 ├── README.md                     # This file
 ├── __init__.py                   # Package exports
-├── sinoclaw_base_env.py            # Abstract base (HermesAgentBaseEnv)
-├── agent_loop.py                 # Multi-turn agent engine (HermesAgentLoop)
+├── sinoclaw_base_env.py            # Abstract base (SinoclawAgentBaseEnv)
+├── agent_loop.py                 # Multi-turn agent engine (SinoclawAgentLoop)
 ├── tool_context.py               # Per-rollout tool access for reward functions
 ├── patches.py                    # Async-safety patches for Modal backend
 │
@@ -251,16 +251,16 @@ python environments/benchmarks/terminalbench_2/terminalbench2_env.py evaluate \
 ### Training Environment
 
 1. Create a new directory under `environments/`
-2. Create your env file inheriting from `HermesAgentBaseEnv`
+2. Create your env file inheriting from `SinoclawAgentBaseEnv`
 3. Implement the four abstract methods + `evaluate()`
 
 ```python
-from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
 
-class MyEnvConfig(HermesAgentEnvConfig):
+class MyEnvConfig(SinoclawAgentEnvConfig):
     pass  # Add custom fields as needed
 
-class MyEnv(HermesAgentBaseEnv):
+class MyEnv(SinoclawAgentBaseEnv):
     name = "my-env"
     env_config_cls = MyEnvConfig
 
@@ -303,7 +303,7 @@ if __name__ == "__main__":
 
 For eval benchmarks, follow the pattern in `terminalbench2_env.py`:
 1. Create under `environments/benchmarks/your-benchmark/`
-2. Inherit from `HermesAgentBaseEnv`
+2. Inherit from `SinoclawAgentBaseEnv`
 3. Set eval-only config: `eval_handling=STOP_TRAIN`, `steps_per_eval=1`, `total_steps=1`
 4. Stub the training methods (`collect_trajectories`, `score`)
 5. Implement `rollout_and_score_eval()` and `evaluate()`
