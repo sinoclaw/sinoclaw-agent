@@ -55,7 +55,7 @@ ENV npm_config_install_links=false
 RUN mkdir -p /tmp/npm-tarballs && \
     curl -fsSL https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.26.0.tgz -o /tmp/npm-tarballs/hermes-estree-0.26.0.tgz && \
     curl -fsSL https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.26.0.tgz -o /tmp/npm-tarballs/hermes-parser-0.26.0.tgz && \
-    npm install --no-audit --install-links && \
+    npm install --offline --no-audit --install-links && \
     npx playwright install --with-deps chromium --only-shell && \
     (cd web && npm install --prefer-offline --no-audit) && \
     (cd ui-tui && npm install --prefer-offline --no-audit)

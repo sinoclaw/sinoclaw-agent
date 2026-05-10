@@ -15,6 +15,7 @@
     {
       packages = {
         default = hermesAgent;
+        sinoclaw-agent = hermesAgent;
         tui = hermesAgent.hermesTui;
         web = hermesAgent.hermesWeb;
 
