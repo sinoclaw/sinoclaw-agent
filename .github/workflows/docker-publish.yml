@@ -11,6 +11,8 @@ on:
       - 'docker/**'
       - '.github/workflows/docker-publish.yml'
       - '.github/actions/sinoclaw-smoke-test/**'
+      - 'ui-tui/package.json'
+      - 'ui-tui/package-lock.json'
   pull_request:
     branches: [main]
     paths:
@@ -21,6 +23,8 @@ on:
       - 'docker/**'
       - '.github/workflows/docker-publish.yml'
       - '.github/actions/sinoclaw-smoke-test/**'
+      - 'ui-tui/package.json'
+      - 'ui-tui/package-lock.json'
   release:
     types: [published]
 
