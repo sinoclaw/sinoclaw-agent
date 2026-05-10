@@ -1,0 +1,74 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pip-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install build dependencies
+        run: uv pip install --system .
+
+      - name: Extract version and update pyproject.toml
+        id: version
+        run: |
+          # Determine version from tag or dev fallback
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          elif [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == refs/heads/main ]]; then
+            DATE=$(date +%Y.%m.0)
+            VERSION="${DATE}.dev0"
+          else
+            VERSION="0.0.0"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          python scripts/update_version.py "${VERSION}"
+
+      - name: Install build
+        run: uv pip install --system build
+
+      - name: Build package
+        run: |
+          rm -rf dist/*
+          python -m build
+
+      - name: Publish to PyPI
+        if: github.event_name == 'release'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish to TestPyPI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.TESTPYPI_TOKEN }}
+          skip_existing: true
