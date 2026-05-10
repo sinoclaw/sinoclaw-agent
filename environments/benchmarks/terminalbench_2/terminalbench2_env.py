@@ -18,7 +18,7 @@ The evaluate flow:
         a. rollout_and_score_eval()  -- Per-task agent loop + test verification
             - Resolves Docker image (pre-built Hub image or Dockerfile fallback)
             - Registers per-task Modal sandbox via register_task_env_overrides()
-            - Runs the HermesAgentLoop (terminal + file tools)
+            - Runs the SinoclawAgentLoop (terminal + file tools)
             - Uploads test suite and runs test.sh in the same sandbox
             - Returns binary pass/fail result
         b. Aggregates per-task, per-category, and overall pass rates
@@ -57,7 +57,7 @@ from pydantic import Field
 from atroposlib.envs.base import EvalHandlingEnum
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 
-from environments.agent_loop import AgentResult, HermesAgentLoop
+from environments.agent_loop import AgentResult, SinoclawAgentLoop
 from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
 from environments.tool_context import ToolContext
 from tools.terminal_tool import (
@@ -235,7 +235,7 @@ class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
     Each task in rollout_and_score_eval():
       1. Resolve Docker image (pre-built Hub image or Dockerfile fallback)
       2. Register per-task Modal sandbox override
-      3. Run HermesAgentLoop with terminal + file tools
+      3. Run SinoclawAgentLoop with terminal + file tools
       4. Upload test suite and execute test.sh in the same sandbox
       5. Check /logs/verifier/reward.txt for pass/fail
       6. Clean up sandbox, overrides, and temp files
@@ -470,7 +470,7 @@ class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
 
         This is the core evaluation method. For each task it:
         1. Resolves the Docker image and registers the Modal sandbox override
-        2. Runs HermesAgentLoop with terminal + file tools
+        2. Runs SinoclawAgentLoop with terminal + file tools
         3. Uploads the test suite into the sandbox
         4. Executes test.sh and checks the result
         5. Cleans up the sandbox and temp files
@@ -532,7 +532,7 @@ class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
                     tokenizer=self.tokenizer,
                     preserve_think_blocks=bool(self.config.thinking_mode),
                 ) as managed:
-                    agent = HermesAgentLoop(
+                    agent = SinoclawAgentLoop(
                         server=managed,
                         tool_schemas=tools,
                         valid_tool_names=valid_names,
@@ -545,7 +545,7 @@ class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
                     )
                     result = await agent.run(messages)
             else:
-                agent = HermesAgentLoop(
+                agent = SinoclawAgentLoop(
                     server=self.server,
                     tool_schemas=tools,
                     valid_tool_names=valid_names,
