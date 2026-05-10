@@ -1665,10 +1665,10 @@ class GatewayRunner:
     def _telegram_topic_root_lobby_message(self) -> str:
         return (
             "This main chat is reserved for system commands.\n\n"
-            "To start a new Hermes chat, open the All Messages topic at the top "
+            "To start a new Sinoclaw chat, open the All Messages topic at the top "
             "of this bot interface and send any message there. Telegram will "
             "create a new topic for that message; each topic works as an "
-            "independent Hermes session."
+            "independent Sinoclaw session."
         )
 
     def _telegram_topic_root_new_message(self) -> str:
@@ -1676,7 +1676,7 @@ class GatewayRunner:
             "To start a new parallel Hermes chat, open the All Messages topic "
             "at the top of this bot interface and send any message there. "
             "Telegram will create a new topic for it.\n\n"
-            "Each topic is an independent Hermes session. Use /new inside an "
+            "Each topic is an independent Sinoclaw session. Use /new inside an "
             "existing topic only if you want to replace that topic's current session."
         )
 
@@ -1684,7 +1684,7 @@ class GatewayRunner:
         if not self._is_telegram_topic_lane(source):
             return None
         return (
-            "Started a new Hermes session in this topic.\n\n"
+            "Started a new Sinoclaw session in this topic.\n\n"
             "Tip: for parallel work, open All Messages and send a message there "
             "to create a separate topic instead of using /new here. /new replaces "
             "the session attached to the current topic."
@@ -1695,7 +1695,7 @@ class GatewayRunner:
         source: SessionSource,
         session_entry,
     ) -> None:
-        """Persist the Telegram topic -> Hermes session binding for topic lanes."""
+        """Persist the Telegram topic -> Sinoclaw session binding for topic lanes."""
         session_db = getattr(self, "_session_db", None)
         if session_db is None or not source.chat_id or not source.thread_id:
             return
@@ -8028,7 +8028,7 @@ class GatewayRunner:
         """Handle /help command - list available commands."""
         from sinoclaw_cli.commands import gateway_help_lines
         lines = [
-            "📖 **Hermes Commands**\n",
+            "📖 **Sinoclaw Commands**\n",
             *gateway_help_lines(),
         ]
         try:
@@ -10175,7 +10175,7 @@ class GatewayRunner:
         try:
             send_result = await adapter.send(
                 source.chat_id,
-                "System topic for Hermes commands and status.",
+                "System topic for Sinoclaw commands and status.",
                 metadata={"thread_id": str(thread_id)},
             )
             message_id = getattr(send_result, "message_id", None)
@@ -10218,7 +10218,7 @@ class GatewayRunner:
         """Return a Bot API-safe forum topic name from a generated session title."""
         cleaned = re.sub(r"\s+", " ", str(title or "")).strip()
         if not cleaned:
-            return "Hermes Chat"
+            return "Sinoclaw Chat"
         # Telegram forum topic names are short (currently 1-128 chars). Keep
         # extra room for multi-byte titles and avoid trailing ellipsis churn.
         if len(cleaned) > 120:
@@ -10370,7 +10370,7 @@ class GatewayRunner:
             "   Settings are enabled and flips on multi-session mode.\n"
             "2. Tap All Messages at the top of the bot and send any message.\n"
             "   Telegram creates a new topic for that message; each topic is\n"
-            "   an independent Hermes session (fresh history, fresh context).\n"
+            "   an independent Sinoclaw session (fresh history, fresh context).\n"
             "3. The root DM becomes a system lobby — send /topic, /status,\n"
             "   /help, /usage there. Normal prompts go in a topic.\n"
             "4. /new inside a topic resets just that topic's session.\n"
@@ -10520,7 +10520,7 @@ class GatewayRunner:
                 )
             return (
                 "Telegram multi-session topics are enabled.\n\n"
-                "This topic will be used as an independent Hermes session. "
+                "This topic will be used as an independent Sinoclaw session. "
                 "Use /new to replace this topic's current session. For parallel "
                 "work, open All Messages and send a message there to create another topic."
             )
@@ -10574,7 +10574,7 @@ class GatewayRunner:
         return "\n".join(lines)
 
     async def _restore_telegram_topic_session(self, event: MessageEvent, raw_session_id: str) -> str:
-        """Restore an existing Telegram-owned Hermes session into this topic."""
+        """Restore an existing Telegram-owned Sinoclaw session into this topic."""
         source = event.source
         session_id = self._session_db.resolve_session_id(raw_session_id.strip())
         if not session_id:
@@ -10624,7 +10624,7 @@ class GatewayRunner:
 
         response = f"Session restored: {title}"
         if last_assistant:
-            response += f"\n\nLast Hermes message:\n{last_assistant}"
+            response += f"\n\nLast Sinoclaw message:\n{last_assistant}"
         return response
 
     async def _handle_title_command(self, event: MessageEvent) -> str:
@@ -11598,8 +11598,8 @@ class GatewayRunner:
         sinoclaw_cmd = _resolve_sinoclaw_bin()
         if not sinoclaw_cmd:
             return (
-                "✗ Could not locate the `hermes` command. "
-                "Hermes is running, but the update command could not find the "
+                "✗ Could not locate the `sinoclaw` command. "
+                "Sinoclaw is running, but the update command could not find the "
                 "executable on PATH or via the current Python interpreter. "
                 "Try running `hermes update` manually in your terminal."
             )
@@ -12097,7 +12097,7 @@ class GatewayRunner:
         """
         delivered: set[tuple[str, str, Optional[str]]] = set()
         skipped = skip_targets or set()
-        message = "♻️ Gateway online — Hermes is back and ready."
+        message = "♻️ Gateway online — Sinoclaw is back and ready."
 
         for platform, adapter in self.adapters.items():
             home = self.config.get_home_channel(platform)
