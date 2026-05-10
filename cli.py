@@ -4939,7 +4939,7 @@ class SinoclawCLI:
         is_running = bool(getattr(self, "_agent_running", False))
 
         lines = [
-            "Hermes CLI Status",
+            "Sinoclaw CLI Status",
             "",
             f"Session ID: {self.session_id}",
             f"Path: {display_sinoclaw_home()}",
