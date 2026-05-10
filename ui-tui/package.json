@@ -53,6 +53,8 @@
     },
     "sinoclaw-parser": {
       "hermes-parser": "0.26.0"
-    }
+    },
+    "hermes-estree": "0.26.0",
+    "hermes-parser": "0.26.0"
   }
 }
