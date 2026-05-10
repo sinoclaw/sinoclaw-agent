@@ -93,7 +93,7 @@ describe('forceTruecolor', () => {
     )
   })
 
-  it('respects existing FORCE_COLOR unless Hermes truecolor is explicit', async () => {
+  it('respects existing FORCE_COLOR unless Sinoclaw truecolor is explicit', async () => {
     await withCleanEnv(
       () => {
         process.env.FORCE_COLOR = ''
@@ -107,7 +107,7 @@ describe('forceTruecolor', () => {
     )
   })
 
-  it('lets explicit Hermes truecolor override existing FORCE_COLOR', async () => {
+  it('lets explicit Sinoclaw truecolor override existing FORCE_COLOR', async () => {
     await withCleanEnv(
       () => {
         process.env.FORCE_COLOR = '0'
