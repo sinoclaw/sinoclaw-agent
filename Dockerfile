@@ -50,14 +50,15 @@ COPY ui-tui/packages/hermes-ink/ ui-tui/packages/hermes-ink/
 # fails with EACCES (node_modules/ is root-owned from build time).
 ENV npm_config_install_links=false
 
-# Pre-populate npm cache with the good hermes-estree@0.26.0 tarball
-# so --prefer-offline finds it before hitting the corrupted 0.25.1 on registry
-RUN npm cache add https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.26.0.tgz --force && \
-    npm install --prefer-offline --no-audit && \
+# Download good hermes-estree and hermes-parser tarballs locally so npm install
+# uses them instead of hitting the corrupted 0.25.1 on registry
+RUN mkdir -p /tmp/npm-tarballs && \
+    curl -fsSL https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.26.0.tgz -o /tmp/npm-tarballs/hermes-estree-0.26.0.tgz && \
+    curl -fsSL https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.26.0.tgz -o /tmp/npm-tarballs/hermes-parser-0.26.0.tgz && \
+    npm install --no-audit --install-links && \
     npx playwright install --with-deps chromium --only-shell && \
     (cd web && npm install --prefer-offline --no-audit) && \
-    (cd ui-tui && npm install --prefer-offline --no-audit) && \
-    npm cache clean --force
+    (cd ui-tui && npm install --prefer-offline --no-audit)
 
 # ---------- Layer-cached Python dependency install ----------
 # Copy only pyproject.toml + uv.lock so the Python dep resolve + wheel
