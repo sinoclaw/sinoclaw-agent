@@ -50,7 +50,10 @@ COPY ui-tui/packages/hermes-ink/ ui-tui/packages/hermes-ink/
 # fails with EACCES (node_modules/ is root-owned from build time).
 ENV npm_config_install_links=false
 
-RUN npm install --prefer-offline --no-audit && \
+# Pre-populate npm cache with the good hermes-estree@0.26.0 tarball
+# so --prefer-offline finds it before hitting the corrupted 0.25.1 on registry
+RUN npm cache add https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.26.0.tgz --force && \
+    npm install --prefer-offline --no-audit && \
     npx playwright install --with-deps chromium --only-shell && \
     (cd web && npm install --prefer-offline --no-audit) && \
     (cd ui-tui && npm install --prefer-offline --no-audit) && \
