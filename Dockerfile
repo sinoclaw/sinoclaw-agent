@@ -3,6 +3,7 @@ FROM tianon/gosu:1.19-trixie@sha256:3b176695959c71e123eb390d427efc665eeb561b1540
 FROM debian:13.4
 
 # Disable Python stdout buffering to ensure logs are printed immediately
+# Packages: hermes-estree/parser@0.26.0 (overrides corrupted 0.25.1)
 ENV PYTHONUNBUFFERED=1
 
 # Store Playwright browsers outside the volume mount so the build-time
