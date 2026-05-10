@@ -10,7 +10,7 @@ def main():
 
     version = sys.argv[1]
 
-    with open("pyproject.toml", "r") as f:
+    with open("pyproject.toml", "r", encoding="utf-8") as f:
         content = f.read()
 
     # Replace version line
@@ -21,7 +21,7 @@ def main():
         flags=re.MULTILINE
     )
 
-    with open("pyproject.toml", "w") as f:
+    with open("pyproject.toml", "w", encoding="utf-8") as f:
         f.write(new_content)
 
     print(f"Updated pyproject.toml to version={version}")
