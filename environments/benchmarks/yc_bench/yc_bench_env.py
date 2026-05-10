@@ -176,11 +176,11 @@ _PRESET_HORIZONS = {
 # Configuration
 # =============================================================================
 
-class YCBenchEvalConfig(HermesAgentEnvConfig):
+class YCBenchEvalConfig(SinoclawAgentEnvConfig):
     """
     Configuration for the YC-Bench evaluation environment.
 
-    Extends HermesAgentEnvConfig with YC-Bench-specific settings for
+    Extends SinoclawAgentEnvConfig with YC-Bench-specific settings for
     preset selection, seed control, scoring, and simulation parameters.
     """
 
@@ -326,7 +326,7 @@ def _compute_composite_score(
 # Main Environment
 # =============================================================================
 
-class YCBenchEvalEnv(HermesAgentBaseEnv):
+class YCBenchEvalEnv(SinoclawAgentBaseEnv):
     """
     YC-Bench long-horizon agent benchmark environment (eval-only).
 
