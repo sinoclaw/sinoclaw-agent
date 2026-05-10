@@ -20,7 +20,8 @@
     "agent-browser": "^0.26.0"
   },
   "overrides": {
-    "lodash": "4.18.1"
+    "lodash": "4.18.1",
+    "hermes-estree": "0.26.0"
   },
   "engines": {
     "node": ">=20.0.0"
