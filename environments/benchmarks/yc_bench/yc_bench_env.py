@@ -21,7 +21,7 @@ The evaluate flow:
     2. evaluate()  -- Iterates over all runs sequentially through:
         a. rollout_and_score_eval()  -- Per-run agent loop
             - Initialises a fresh yc-bench simulation via `sim init` (NOT `run`)
-            - Runs HermesAgentLoop with terminal tool only
+            - Runs SinoclawAgentLoop with terminal tool only
             - Reads final SQLite DB to extract score
             - Returns survival (0/1) + normalised funds score
         b. Aggregates per-preset and overall metrics
@@ -62,8 +62,8 @@ from pydantic import Field
 from atroposlib.envs.base import EvalHandlingEnum
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 
-from environments.agent_loop import HermesAgentLoop
-from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.agent_loop import SinoclawAgentLoop
+from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
 
 logger = logging.getLogger(__name__)
 
@@ -332,7 +332,7 @@ class YCBenchEvalEnv(HermesAgentBaseEnv):
 
     Each eval item is a (preset, seed) pair. The environment initialises the
     simulation via ``yc-bench sim init`` (NOT ``yc-bench run`` which would start
-    a competing built-in agent loop). The HermesAgentLoop then drives the
+    a competing built-in agent loop). The SinoclawAgentLoop then drives the
     interaction by calling individual yc-bench CLI commands via the terminal tool.
 
     After the agent loop ends, the SQLite DB is read to extract the final score.
@@ -485,7 +485,7 @@ class YCBenchEvalEnv(HermesAgentBaseEnv):
 
         1. Sets DATABASE_URL and YC_BENCH_EXPERIMENT env vars
         2. Initialises the simulation via ``yc-bench sim init`` (NOT ``run``)
-        3. Runs HermesAgentLoop with terminal tool
+        3. Runs SinoclawAgentLoop with terminal tool
         4. Reads SQLite DB to compute final score
         5. Returns result dict with survival, funds, and composite score
         """
@@ -511,7 +511,7 @@ class YCBenchEvalEnv(HermesAgentBaseEnv):
             # Step 1: Initialise the simulation via CLI
             # IMPORTANT: We use `sim init`, NOT `yc-bench run`.
             # `yc-bench run` starts yc-bench's own LLM agent loop (via
-            # LiteLLM), which would compete with our HermesAgentLoop.
+            # LiteLLM), which would compete with our SinoclawAgentLoop.
             # `sim init` just sets up the world and returns.
             # ----------------------------------------------------------
             init_cmd = [
@@ -531,7 +531,7 @@ class YCBenchEvalEnv(HermesAgentBaseEnv):
             tqdm.write(f"    Simulation initialized (horizon={horizon}yr)")
 
             # ----------------------------------------------------------
-            # Step 2: Run the HermesAgentLoop
+            # Step 2: Run the SinoclawAgentLoop
             # ----------------------------------------------------------
             tools, valid_names = self._resolve_tools_for_group()
 
@@ -540,7 +540,7 @@ class YCBenchEvalEnv(HermesAgentBaseEnv):
                 {"role": "user", "content": self.format_prompt(eval_item)},
             ]
 
-            agent = HermesAgentLoop(
+            agent = SinoclawAgentLoop(
                 server=self.server,
                 tool_schemas=tools,
                 valid_tool_names=valid_names,

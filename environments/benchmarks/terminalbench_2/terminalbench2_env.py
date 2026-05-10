@@ -58,7 +58,7 @@ from atroposlib.envs.base import EvalHandlingEnum
 from atroposlib.envs.server_handling.server_manager import APIServerConfig
 
 from environments.agent_loop import AgentResult, HermesAgentLoop
-from environments.sinoclaw_base_env import HermesAgentBaseEnv, HermesAgentEnvConfig
+from environments.sinoclaw_base_env import SinoclawAgentBaseEnv, SinoclawAgentEnvConfig
 from environments.tool_context import ToolContext
 from tools.terminal_tool import (
     register_task_env_overrides,
@@ -73,11 +73,11 @@ logger = logging.getLogger(__name__)
 # Configuration
 # =============================================================================
 
-class TerminalBench2EvalConfig(HermesAgentEnvConfig):
+class TerminalBench2EvalConfig(SinoclawAgentEnvConfig):
     """
     Configuration for the Terminal-Bench 2.0 evaluation environment.
 
-    Extends HermesAgentEnvConfig with TB2-specific settings for dataset loading,
+    Extends SinoclawAgentEnvConfig with TB2-specific settings for dataset loading,
     test execution, task filtering, and eval concurrency.
     """
 
@@ -218,11 +218,11 @@ def _extract_base64_tar(b64_data: str, target_dir: Path):
 # Main Environment
 # =============================================================================
 
-class TerminalBench2EvalEnv(HermesAgentBaseEnv):
+class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
     """
     Terminal-Bench 2.0 evaluation environment (eval-only, no training).
 
-    Inherits from HermesAgentBaseEnv for:
+    Inherits from SinoclawAgentBaseEnv for:
       - Terminal backend setup (os.environ["TERMINAL_ENV"])
       - Tool resolution via _resolve_tools_for_group()
       - Monkey patches for async-safe tool operation
@@ -384,7 +384,7 @@ class TerminalBench2EvalEnv(HermesAgentBaseEnv):
     # =========================================================================
     # Training pipeline stubs -- NOT used in eval-only mode
     # =========================================================================
-    # These satisfy the abstract method requirements from HermesAgentBaseEnv.
+    # These satisfy the abstract method requirements from SinoclawAgentBaseEnv.
     # The evaluate subcommand calls setup() -> evaluate() directly, bypassing
     # the training pipeline entirely.
 
