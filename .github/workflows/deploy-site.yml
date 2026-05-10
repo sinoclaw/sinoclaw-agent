@@ -29,7 +29,7 @@ jobs:
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
 
   deploy-docs:
-    if: github.repository == 'NousResearch/sinoclaw-agent'
+    if: github.repository == 'sinoclaw/sinoclaw-agent'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
