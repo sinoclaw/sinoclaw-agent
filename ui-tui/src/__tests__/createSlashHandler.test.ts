@@ -36,14 +36,14 @@ describe('createSlashHandler', () => {
 
   it('routes /status to live session.status instead of slash worker', async () => {
     patchUiState({ sid: 'sid-abc' })
-    const rpc = vi.fn(() => Promise.resolve({ output: 'Hermes TUI Status' }))
+    const rpc = vi.fn(() => Promise.resolve({ output: 'Sinoclaw TUI Status' }))
     const ctx = buildCtx({ gateway: { ...buildGateway(), rpc } })
 
     expect(createSlashHandler(ctx)('/status')).toBe(true)
     expect(rpc).toHaveBeenCalledWith('session.status', { session_id: 'sid-abc' })
     expect(ctx.gateway.gw.request).not.toHaveBeenCalled()
     await vi.waitFor(() => {
-      expect(ctx.transcript.page).toHaveBeenCalledWith('Hermes TUI Status', 'Status')
+      expect(ctx.transcript.page).toHaveBeenCalledWith('Sinoclaw TUI Status', 'Status')
     })
   })
 
@@ -597,7 +597,7 @@ describe('createSlashHandler', () => {
     expect(title).toBe('History')
     expect(body).toContain('[You #1]')
     expect(body).toContain('hello')
-    expect(body).toContain('[Hermes #2]')
+    expect(body).toContain('[Sinoclaw #2]')
     expect(body).toContain('hi there')
     expect(body).toContain('[You #3]')
     expect(body).not.toContain('ignore me')

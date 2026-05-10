@@ -17,8 +17,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@sinoclaw/ink": "file:./packages/sinoclaw-ink",
     "@nanostores/react": "^1.1.0",
+    "@sinoclaw/ink": "file:./packages/sinoclaw-ink",
     "ink": "^6.8.0",
     "ink-text-input": "^6.0.0",
     "nanostores": "^1.2.0",
@@ -46,5 +46,13 @@
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^4.1.3"
+  },
+  "overrides": {
+    "sinoclaw-estree": {
+      "hermes-estree": "0.26.0"
+    },
+    "sinoclaw-parser": {
+      "hermes-parser": "0.26.0"
+    }
   }
 }
