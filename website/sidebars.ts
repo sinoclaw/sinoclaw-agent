@@ -18,7 +18,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Using Hermes',
+      label: 'Using Sinoclaw',
       collapsed: true,
       items: [
         'user-guide/cli',
@@ -171,9 +171,9 @@ const sidebars: SidebarsConfig = {
         'guides/daily-briefing-bot',
         'guides/team-telegram-assistant',
         'guides/python-library',
-        'guides/use-mcp-with-hermes',
-        'guides/use-soul-with-hermes',
-        'guides/use-voice-mode-with-hermes',
+        'guides/use-mcp-with-sinoclaw',
+        'guides/use-soul-with-sinoclaw',
+        'guides/use-voice-mode-with-sinoclaw',
         'guides/build-a-sinoclaw-plugin',
         'guides/automate-with-cron',
         'guides/cron-script-only',
