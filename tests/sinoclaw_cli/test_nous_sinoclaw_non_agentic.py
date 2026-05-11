@@ -25,20 +25,19 @@ from sinoclaw_cli.model_switch import (
     [
         "NousResearch/Hermes-3-Llama-3.1-70B",
         "NousResearch/Hermes-3-Llama-3.1-405B",
-        "sinoclaw-3",
-        "Sinoclaw-3",
-        "sinoclaw-4",
-        "sinoclaw-4-405b",
-        "sinoclaw_4_70b",
+        "hermes-3",
+        "hermes-4",
+        "hermes-4-405b",
+        "hermes_4_70b",
         "openrouter/hermes3:70b",
-        "openrouter/nousresearch/sinoclaw-4-405b",
+        "openrouter/nousresearch/hermes-4-405b",
         "NousResearch/Hermes3",
-        "sinoclaw-3.1",
+        "hermes-3.1",
     ],
 )
 def test_matches_real_nous_sinoclaw_chat_models(model_name: str) -> None:
     assert is_nous_sinoclaw_non_agentic(model_name), (
-        f"expected {model_name!r} to be flagged as Nous Sinoclaw 3/4"
+        f"expected {model_name!r} to be flagged as Nous Hermes 3/4"
     )
     assert _check_sinoclaw_model_warning(model_name) == _SINOCLAW_MODEL_WARNING
 
@@ -68,12 +67,13 @@ def test_matches_real_nous_sinoclaw_chat_models(model_name: str) -> None:
         "",
         "hermes",  # bare "hermes" isn't the 3/4 family
         "sinoclaw-brain",
+        "Sinoclaw-3",  # our software brand, not a Nous model
         "brain-sinoclaw-3-impostor",  # "3" not preceded by /: boundary
     ],
 )
 def test_does_not_match_unrelated_models(model_name: str) -> None:
     assert not is_nous_sinoclaw_non_agentic(model_name), (
-        f"expected {model_name!r} NOT to be flagged as Nous Sinoclaw 3/4"
+        f"expected {model_name!r} NOT to be flagged as Nous Hermes 3/4"
     )
     assert _check_sinoclaw_model_warning(model_name) == ""
 

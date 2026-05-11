@@ -63,11 +63,11 @@ _SINOCLAW_MODEL_WARNING = (
 # happen to carry "hermes" in their tag but are fully tool-capable.
 #
 # Positive examples the regex must match:
-#   NousResearch/Hermes-3-Llama-3.1-70B, sinoclaw-4-405b, openrouter/hermes3:70b
+#   NousResearch/Hermes-3-Llama-3.1-70B, hermes-4-405b, openrouter/hermes3:70b
 # Negative examples it must NOT match:
 #   sinoclaw-brain:qwen3-14b-ctx16k, qwen3:14b, claude-opus-4-6
 _NOUS_SINOCLAW_NON_AGENTIC_RE = re.compile(
-    r"(?:^|[/:])(?:hermes|sinoclaw)[-_ ]?[34](?:[-_.:]|$)",
+    r"(?:^|[/:])hermes[-_ ]?[34](?:[-_.:]|$)",
     re.IGNORECASE,
 )
 
