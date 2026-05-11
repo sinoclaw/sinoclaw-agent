@@ -5620,7 +5620,7 @@ def _find_stale_dashboard_pids() -> list[int]:
     Returns an empty list on any scan error (missing ps/wmic, timeout, etc.).
     """
     patterns = [
-        "sinoclaw-agent dashboard",
+        "sinoclaw dashboard",
         "sinoclaw_cli.main dashboard",
         "sinoclaw_cli/main.py dashboard",
     ]
