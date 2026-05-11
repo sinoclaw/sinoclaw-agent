@@ -156,7 +156,6 @@ stdenv.mkDerivation {
           ${lib.optionalString (extraPythonPackages != [ ]) ''--suffix PYTHONPATH : "${pythonPath}"''}
       '')
       [
-        "hermes"
         "sinoclaw-agent"
         "sinoclaw-acp"
       ]
@@ -201,7 +200,7 @@ stdenv.mkDerivation {
   meta = with lib; {
     description = "AI agent with advanced tool-calling capabilities";
     homepage = "https://github.com/NousResearch/sinoclaw-agent";
-    mainProgram = "hermes";
+    mainProgram = "sinoclaw-agent";
     license = licenses.mit;
     platforms = platforms.unix;
   };
