@@ -498,7 +498,7 @@ class RetainDBMemoryProvider(MemoryProvider):
         else:
             sinoclaw_home = str(kwargs.get("sinoclaw_home", ""))
             profile_name = os.path.basename(sinoclaw_home) if sinoclaw_home else ""
-            project = f"sinoclaw-{profile_name}" if (profile_name and profile_name not in {"", ".hermes"}) else "default"
+            project = f"sinoclaw-{profile_name}" if (profile_name and profile_name not in {"", ".sinoclaw"}) else "default"
 
         self._client = _Client(api_key, base_url, project)
         self._session_id = session_id

@@ -1837,11 +1837,11 @@ def _launchd_user_home() -> Path:
 def get_launchd_plist_path() -> Path:
     """Return the launchd plist path, scoped per profile.
 
-    Default ``~/.sinoclaw`` → ``ai.hermes.gateway.plist`` (backward compatible).
-    Profile ``~/.sinoclaw/profiles/coder`` → ``ai.hermes.gateway-coder.plist``.
+    Default ``~/.sinoclaw`` → ``ai.sinoclaw.gateway.plist`` (backward compatible).
+    Profile ``~/.sinoclaw/profiles/coder`` → ``ai.sinoclaw.gateway-coder.plist``.
     """
     suffix = _profile_suffix()
-    name = f"ai.hermes.gateway-{suffix}" if suffix else "ai.hermes.gateway"
+    name = f"ai.sinoclaw.gateway-{suffix}" if suffix else "ai.sinoclaw.gateway"
     return _launchd_user_home() / "Library" / "LaunchAgents" / f"{name}.plist"
 
 def _detect_venv_dir() -> Path | None:
@@ -2599,7 +2599,7 @@ def systemd_status(deep: bool = False, system: bool = False, full: bool = False)
 def get_launchd_label() -> str:
     """Return the launchd service label, scoped per profile."""
     suffix = _profile_suffix()
-    return f"ai.hermes.gateway-{suffix}" if suffix else "ai.hermes.gateway"
+    return f"ai.sinoclaw.gateway-{suffix}" if suffix else "ai.sinoclaw.gateway"
 
 
 def _launchd_domain() -> str:

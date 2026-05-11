@@ -33,7 +33,7 @@ def _state_dir() -> Path:
     if override:
         return Path(override)
     # Default: $SINOCLAW_HOME/watcher-state/, falling back to ~/.sinoclaw/watcher-state/.
-    sinoclaw_home = os.environ.get("SINOCLAW_HOME") or str(Path.home() / ".hermes")
+    sinoclaw_home = os.environ.get("SINOCLAW_HOME") or str(Path.home() / ".sinoclaw")
     return Path(sinoclaw_home) / "watcher-state"
 
 
