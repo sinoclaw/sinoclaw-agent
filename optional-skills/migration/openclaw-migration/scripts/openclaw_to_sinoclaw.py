@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OpenClaw -> Hermes migration helper.
+"""OpenClaw -> Sinoclaw migration helper.
 
 This script migrates the parts of an OpenClaw user footprint that map cleanly
 into Sinoclaw Agent, archives selected unmapped docs for manual review, and
@@ -404,9 +404,9 @@ def backup_existing(path: Path, backup_root: Path) -> Optional[Path]:
 # like ``openclaw`` → ``hermes`` (so filesystem paths like ``~/.openclaw``
 # become ``~/.sinoclaw`` — the real Sinoclaw home — not the broken ``~/.Hermes``).
 _REBRAND_PATTERNS: List[Tuple[re.Pattern, str]] = [
-    (re.compile(r'\bOpen[\s-]?Claw\b', re.IGNORECASE), 'Hermes'),
-    (re.compile(r'\bClawdBot\b', re.IGNORECASE), 'Hermes'),
-    (re.compile(r'\bMoltBot\b', re.IGNORECASE), 'Hermes'),
+    (re.compile(r'\bOpen[\s-]?Claw\b', re.IGNORECASE), 'Sinoclaw'),
+    (re.compile(r'\bClawdBot\b', re.IGNORECASE), 'Sinoclaw'),
+    (re.compile(r'\bMoltBot\b', re.IGNORECASE), 'Sinoclaw'),
 ]
 
 

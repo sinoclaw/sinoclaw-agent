@@ -39,7 +39,7 @@ def get_sinoclaw_home() -> Path:
             # Inline the default-root resolution from get_default_sinoclaw_root()
             # to stay import-safe (this function is called from module scope
             # in 30+ files; we cannot afford to trigger logging setup here).
-            active_path = (Path.home() / ".hermes" / "active_profile")
+            active_path = (Path.home() / ".sinoclaw" / "active_profile")
             active = active_path.read_text().strip() if active_path.exists() else ""
         except (UnicodeDecodeError, OSError):
             active = ""
@@ -65,7 +65,7 @@ def get_sinoclaw_home() -> Path:
             except Exception:
                 pass
 
-    return Path.home() / ".hermes"
+    return Path.home() / ".sinoclaw"
 
 
 def get_default_sinoclaw_root() -> Path:
@@ -84,7 +84,7 @@ def get_default_sinoclaw_root() -> Path:
 
     Import-safe — no dependencies beyond stdlib.
     """
-    native_home = Path.home() / ".hermes"
+    native_home = Path.home() / ".sinoclaw"
     env_home = os.environ.get("SINOCLAW_HOME", "")
     if not env_home:
         return native_home
