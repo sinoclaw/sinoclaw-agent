@@ -29,7 +29,7 @@ except (ModuleNotFoundError, ImportError):
 
         Mirrors ``sinoclaw_constants.get_sinoclaw_home()``."""
         val = os.environ.get("SINOCLAW_HOME", "").strip()
-        return Path(val) if val else Path.home() / ".hermes"
+        return Path(val) if val else Path.home() / ".sinoclaw"
 
     def display_sinoclaw_home() -> str:
         """Return a user-friendly ``~/``-shortened display string.
