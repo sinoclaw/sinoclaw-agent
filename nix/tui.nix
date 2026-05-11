@@ -4,7 +4,7 @@ let
   src = ../ui-tui;
   npmDeps = pkgs.fetchNpmDeps {
     inherit src;
-    hash = "sha256-IfBMk1f9gVB6+cSM9amVXFGpsBzAKIVdFwLBKjOoevs=";
+    hash = "sha256-gKuCvILJJjNXhojycoaj575dVoPAid4q6Tw+6mx4mHs=";
   };
 
   npm = hermesNpmLib.mkNpmPassthru { folder = "ui-tui"; attr = "tui"; pname = "sinoclaw-tui"; };
