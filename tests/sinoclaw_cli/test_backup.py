@@ -1449,7 +1449,7 @@ class TestRunPreUpdateBackup:
         assert "Creating pre-update backup" in out
         assert "Saved:" in out
         assert "Restore:" in out
-        assert "hermes import" in out
+        assert "sinoclaw-agent import" in out
         assert "Disable:" in out
         # Actual backup was created
         backups = list((sinoclaw_home / "backups").glob("pre-update-*.zip"))

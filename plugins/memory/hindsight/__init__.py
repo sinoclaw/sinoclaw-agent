@@ -486,7 +486,7 @@ def _resolve_bank_id_template(template: str, fallback: str, **placeholders: str)
       {session}   — current session id
 
     Missing/empty placeholders are rendered as the empty string and then
-    collapsed — e.g. ``sinoclaw-{user}`` with no user becomes ``hermes``.
+    collapsed — e.g. ``sinoclaw-{user}`` with no user becomes ``sinoclaw``.
 
     If the template is empty, resolution falls back to *fallback*.
     Returns the sanitized bank id.
@@ -519,7 +519,7 @@ class HindsightMemoryProvider(MemoryProvider):
         self._config = None
         self._api_key = None
         self._api_url = _DEFAULT_API_URL
-        self._bank_id = "hermes"
+        self._bank_id = "sinoclaw"
         self._budget = "mid"
         self._mode = "cloud"
         self._llm_base_url = ""
