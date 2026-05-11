@@ -28,7 +28,7 @@ class TestGetHermesHome:
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("SINOCLAW_HOME", None)
             home = get_sinoclaw_home()
-            assert home == Path.home() / ".hermes"
+            assert home == Path.home() / ".sinoclaw"
 
     def test_env_override(self):
         with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/path"}):
