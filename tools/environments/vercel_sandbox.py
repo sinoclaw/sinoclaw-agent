@@ -323,9 +323,9 @@ class VercelSandboxEnvironment(BaseEnvironment):
         self._remote_home = self._detect_remote_home()
 
         if self._remote_home == "/":
-            container_base = "/.hermes"
+            container_base = "/.sinoclaw"
         else:
-            container_base = f"{self._remote_home.rstrip('/')}/.hermes"
+            container_base = f"{self._remote_home.rstrip('/')}/.sinoclaw"
         self._sync_manager = FileSyncManager(
             get_files_fn=lambda: iter_sync_files(container_base),
             upload_fn=self._vercel_upload,
@@ -528,12 +528,12 @@ class VercelSandboxEnvironment(BaseEnvironment):
             )
 
     def _vercel_bulk_download(self, dest_tar_path: Path) -> None:
-        remote_hermes = (
-            "/.hermes"
+        remote_sinoclaw = (
+            "/.sinoclaw"
             if self._remote_home == "/"
-            else f"{self._remote_home.rstrip('/')}/.hermes"
+            else f"{self._remote_home.rstrip('/')}/.sinoclaw"
         )
-        archive_member = remote_hermes.lstrip("/")
+        archive_member = remote_sinoclaw.lstrip("/")
         remote_tar = f"/tmp/.sinoclaw_sync.{os.getpid()}.tar"
         sandbox = self._sandbox
         if sandbox is None:
