@@ -164,7 +164,6 @@ all = [
 ]
 
 [project.scripts]
-hermes = "sinoclaw_cli.main:main"
 sinoclaw-agent = "run_agent:main"
 sinoclaw-acp = "acp_adapter.entry:main"
 

@@ -63,12 +63,11 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
         package-contents = pkgs.runCommand "sinoclaw-package-contents" { } ''
           set -e
           echo "=== Checking binaries ==="
-          test -x ${sinoclaw-agent}/bin/hermes || (echo "FAIL: hermes binary missing"; exit 1)
           test -x ${sinoclaw-agent}/bin/sinoclaw-agent || (echo "FAIL: sinoclaw-agent binary missing"; exit 1)
           echo "PASS: All binaries present"
 
           echo "=== Checking version ==="
-          ${sinoclaw-agent}/bin/hermes version 2>&1 | grep -qi "sinoclaw\|hermes" || (echo "FAIL: version check"; exit 1)
+          ${sinoclaw-agent}/bin/sinoclaw-agent version 2>&1 | grep -qi "sinoclaw" || (echo "FAIL: version check"; exit 1)
           echo "PASS: Version check"
 
           echo "=== All checks passed ==="
@@ -80,7 +79,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
         entry-points-sync = pkgs.runCommand "sinoclaw-entry-points-sync" { } ''
           set -e
           echo "=== Checking entry points match pyproject.toml [project.scripts] ==="
-          for bin in hermes sinoclaw-agent sinoclaw-acp; do
+          for bin in sinoclaw-agent sinoclaw-acp; do
             test -x ${sinoclaw-agent}/bin/$bin || (echo "FAIL: $bin binary missing from Nix package"; exit 1)
             echo "PASS: $bin present"
           done
@@ -94,9 +93,9 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           set -e
           export HOME=$(mktemp -d)
 
-          echo "=== Checking hermes --help ==="
-          ${sinoclaw-agent}/bin/hermes --help 2>&1 | grep -q "gateway" || (echo "FAIL: gateway subcommand missing"; exit 1)
-          ${sinoclaw-agent}/bin/hermes --help 2>&1 | grep -q "config" || (echo "FAIL: config subcommand missing"; exit 1)
+          echo "=== Checking sinoclaw-agent --help ==="
+          ${sinoclaw-agent}/bin/sinoclaw-agent --help 2>&1 | grep -q "gateway" || (echo "FAIL: gateway subcommand missing"; exit 1)
+          ${sinoclaw-agent}/bin/sinoclaw-agent --help 2>&1 | grep -q "config" || (echo "FAIL: config subcommand missing"; exit 1)
           echo "PASS: All subcommands accessible"
 
           echo "=== All CLI checks passed ==="
@@ -115,7 +114,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           test "$SKILL_COUNT" -gt 0 || (echo "FAIL: no SKILL.md files found in skills directory"; exit 1)
           echo "PASS: $SKILL_COUNT bundled skills found"
 
-          grep -q "SINOCLAW_BUNDLED_SKILLS" ${sinoclaw-agent}/bin/hermes || \
+          grep -q "SINOCLAW_BUNDLED_SKILLS" ${sinoclaw-agent}/bin/sinoclaw-agent || \
             (echo "FAIL: SINOCLAW_BUNDLED_SKILLS not in wrapper"; exit 1)
           echo "PASS: SINOCLAW_BUNDLED_SKILLS set in wrapper"
 
@@ -135,7 +134,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
             (echo "FAIL: irc plugin manifest missing"; exit 1)
           echo "PASS: irc plugin manifest present"
 
-          grep -q "SINOCLAW_BUNDLED_PLUGINS" ${sinoclaw-agent}/bin/hermes || \
+          grep -q "SINOCLAW_BUNDLED_PLUGINS" ${sinoclaw-agent}/bin/sinoclaw-agent || \
             (echo "FAIL: SINOCLAW_BUNDLED_PLUGINS not in wrapper"; exit 1)
           echo "PASS: SINOCLAW_BUNDLED_PLUGINS set in wrapper"
 
@@ -157,7 +156,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           test -d ${sinoclaw-agent}/ui-tui/node_modules || (echo "FAIL: node_modules missing"; exit 1)
           echo "PASS: node_modules present"
 
-          grep -q "SINOCLAW_TUI_DIR" ${sinoclaw-agent}/bin/hermes || \
+          grep -q "SINOCLAW_TUI_DIR" ${sinoclaw-agent}/bin/sinoclaw-agent || \
             (echo "FAIL: SINOCLAW_TUI_DIR not in wrapper"; exit 1)
           echo "PASS: SINOCLAW_TUI_DIR set in wrapper"
 
@@ -171,11 +170,11 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
         sinoclaw-node = pkgs.runCommand "sinoclaw-node-version" { } ''
           set -e
           echo "=== Checking SINOCLAW_NODE in wrapper ==="
-          grep -q "SINOCLAW_NODE" ${sinoclaw-agent}/bin/hermes || \
+          grep -q "SINOCLAW_NODE" ${sinoclaw-agent}/bin/sinoclaw-agent || \
             (echo "FAIL: SINOCLAW_NODE not set in wrapper"; exit 1)
           echo "PASS: SINOCLAW_NODE present in wrapper"
 
-          SINOCLAW_NODE=$(sed -n "s/^export SINOCLAW_NODE='\(.*\)'/\1/p" ${sinoclaw-agent}/bin/hermes)
+          SINOCLAW_NODE=$(sed -n "s/^export SINOCLAW_NODE='\(.*\)'/\1/p" ${sinoclaw-agent}/bin/sinoclaw-agent)
           test -x "$SINOCLAW_NODE" || (echo "FAIL: SINOCLAW_NODE=$SINOCLAW_NODE not executable"; exit 1)
           echo "PASS: SINOCLAW_NODE executable at $SINOCLAW_NODE"
 
@@ -203,8 +202,8 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           }
 
           echo "=== Checking SINOCLAW_MANAGED guards ==="
-          check_blocked "config set" ${sinoclaw-agent}/bin/hermes config set model foo
-          check_blocked "config edit" ${sinoclaw-agent}/bin/hermes config edit
+          check_blocked "config set" ${sinoclaw-agent}/bin/sinoclaw-agent config set model foo
+          check_blocked "config edit" ${sinoclaw-agent}/bin/sinoclaw-agent config edit
 
           echo "=== All guard checks passed ==="
           mkdir -p $out
@@ -214,23 +213,23 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
         # Verify extraPythonPackages PYTHONPATH injection
         extra-python-packages = let
           testPkg = pkgs.python312Packages.pyfiglet;
-          hermesWithExtra = sinoclaw-agent.override {
+          sinoclawWithExtra = sinoclaw-agent.override {
             extraPythonPackages = [ testPkg ];
           };
         in pkgs.runCommand "sinoclaw-extra-python-packages" { } ''
           set -e
           echo "=== Checking extraPythonPackages PYTHONPATH injection ==="
 
-          grep -q "PYTHONPATH" ${hermesWithExtra}/bin/hermes || \
+          grep -q "PYTHONPATH" ${sinoclawWithExtra}/bin/sinoclaw-agent || \
             (echo "FAIL: PYTHONPATH not in wrapper"; exit 1)
           echo "PASS: PYTHONPATH present in wrapper"
 
-          grep -q "${testPkg}" ${hermesWithExtra}/bin/hermes || \
+          grep -q "${testPkg}" ${sinoclawWithExtra}/bin/sinoclaw-agent || \
             (echo "FAIL: test package path not in PYTHONPATH"; exit 1)
           echo "PASS: test package path found in wrapper"
 
           echo "=== Checking base package has no PYTHONPATH ==="
-          if grep -q "PYTHONPATH" ${sinoclaw-agent}/bin/hermes; then
+          if grep -q "PYTHONPATH" ${sinoclaw-agent}/bin/sinoclaw-agent; then
             echo "FAIL: base package should not have PYTHONPATH"; exit 1
           fi
           echo "PASS: base package clean"
