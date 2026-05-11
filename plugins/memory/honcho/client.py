@@ -20,7 +20,7 @@ import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from sinoclaw_constants import get_hermes_home
+from sinoclaw_constants import get_sinoclaw_home
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -68,7 +68,7 @@ def resolve_config_path() -> Path:
 
     Returns the global path if none exist (for first-time setup writes).
     """
-    local_path = get_hermes_home() / "honcho.json"
+    local_path = get_sinoclaw_home() / "honcho.json"
     if local_path.exists():
         return local_path
 
