@@ -22,7 +22,7 @@ SCRIPT_PATH = (
     / "migration"
     / "openclaw-migration"
     / "scripts"
-    / "openclaw_to_hermes.py"
+    / "openclaw_to_sinoclaw.py"
 )
 
 

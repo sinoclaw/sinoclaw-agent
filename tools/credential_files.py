@@ -55,7 +55,7 @@ def _resolve_sinoclaw_home() -> Path:
 
 def register_credential_file(
     relative_path: str,
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> bool:
     """Register a credential file for mounting into remote sandboxes.
 
@@ -104,8 +104,8 @@ def register_credential_file(
 
 
 def register_credential_files(
-    entries: list,
-    container_base: str = "/root/.hermes",
+    entries: List[Union[str, Dict[str, str]]],
+    container_base: str = "/root/.sinoclaw",
 ) -> List[str]:
     """Register multiple credential files from skill frontmatter entries.
 
@@ -200,7 +200,7 @@ def get_credential_file_mounts() -> List[Dict[str, str]]:
 
 
 def get_skills_directory_mount(
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> list[Dict[str, str]]:
     """Return mount info for all skill directories (local + external).
 
@@ -291,7 +291,7 @@ def _safe_skills_path(skills_dir: Path) -> str:
 
 
 def iter_skills_files(
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> List[Dict[str, str]]:
     """Yield individual (host_path, container_path) entries for skills files.
 
@@ -351,7 +351,7 @@ _CACHE_DIRS: list[tuple[str, str]] = [
 
 
 def get_cache_directory_mounts(
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> List[Dict[str, str]]:
     """Return mount entries for each cache directory that exists on disk.
 
@@ -376,7 +376,7 @@ def get_cache_directory_mounts(
 
 def to_agent_visible_cache_path(
     host_path: str,
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> str:
     """Translate a host cache path to its mounted path inside the sandbox.
 
@@ -403,7 +403,7 @@ def to_agent_visible_cache_path(
 
 
 def iter_cache_files(
-    container_base: str = "/root/.hermes",
+    container_base: str = "/root/.sinoclaw",
 ) -> List[Dict[str, str]]:
     """Return individual (host_path, container_path) entries for cache files.
 

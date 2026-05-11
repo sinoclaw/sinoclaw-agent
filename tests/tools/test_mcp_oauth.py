@@ -549,7 +549,7 @@ def test_build_oauth_auth_preserves_server_url_path():
          patch.object(mcp_oauth, "OAuthClientProvider", _FakeProvider), \
          patch.object(mcp_oauth, "_is_interactive", return_value=True), \
          patch.object(mcp_oauth, "_maybe_preregister_client"), \
-         patch.object(mcp_oauth, "SinoclawTokenStorage") as mock_storage_cls:
+         patch.object(mcp_oauth, "HermesTokenStorage") as mock_storage_cls:
         mock_storage_cls.return_value = MagicMock(has_cached_tokens=lambda: True)
         build_oauth_auth(
             server_name="notion",

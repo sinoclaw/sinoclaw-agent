@@ -1,5 +1,5 @@
 #!/bin/bash
-# Docker/Podman entrypoint: bootstrap config files into the mounted volume, then run hermes.
+# Docker/Podman entrypoint: bootstrap config files into the mounted volume, then run sinoclaw.
 set -e
 
 SINOCLAW_HOME="${SINOCLAW_HOME:-/opt/data}"
