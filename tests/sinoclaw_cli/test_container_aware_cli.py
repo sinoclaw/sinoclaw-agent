@@ -24,7 +24,7 @@ from sinoclaw_cli.config import (
 @pytest.fixture
 def container_env(tmp_path, monkeypatch):
     """Set up a fake SINOCLAW_HOME with .container-mode file."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("SINOCLAW_DEV", raising=False)
@@ -62,7 +62,7 @@ def test_get_container_exec_info_none_inside_container(container_env):
 
 def test_get_container_exec_info_none_without_file(tmp_path, monkeypatch):
     """Returns None when .container-mode doesn't exist (native mode)."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     monkeypatch.delenv("SINOCLAW_DEV", raising=False)
@@ -98,7 +98,7 @@ def test_get_container_exec_info_defaults():
     import tempfile
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        sinoclaw_home = Path(tmpdir) / ".hermes"
+        sinoclaw_home = Path(tmpdir) / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / ".container-mode").write_text(
             "# minimal file with no keys\n"

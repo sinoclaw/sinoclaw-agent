@@ -15,7 +15,7 @@ from sinoclaw_cli import kanban_db as kb
 @pytest.fixture
 def kanban_home(tmp_path, monkeypatch):
     """Isolated SINOCLAW_HOME with an empty kanban DB."""
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -586,7 +586,7 @@ class TestSharedBoardPaths:
         self, tmp_path, monkeypatch
     ):
         # Standard install: SINOCLAW_HOME == ~/.sinoclaw, no profile active.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         self._set_home(monkeypatch, tmp_path, default_home)
 
@@ -605,7 +605,7 @@ class TestSharedBoardPaths:
         # worker spawned with -p <profile> previously resolved to
         # ~/.sinoclaw/profiles/<profile>/kanban.db. After the fix both
         # converge on ~/.sinoclaw/kanban.db.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         profile_home = default_home / "profiles" / "nehemiahkanban"
         profile_home.mkdir(parents=True)
@@ -631,7 +631,7 @@ class TestSharedBoardPaths:
         # End-to-end convergence: resolve the path under each side's
         # SINOCLAW_HOME and confirm equality. This is the property the
         # dispatcher/worker handoff actually depends on.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         profile_home = default_home / "profiles" / "coder"
         profile_home.mkdir(parents=True)
@@ -658,7 +658,7 @@ class TestSharedBoardPaths:
         # Docker / custom deployment: SINOCLAW_HOME points outside ~/.sinoclaw.
         # `get_default_sinoclaw_root()` returns env_home directly when it
         # is not a `<root>/profiles/<name>` shape and not under
-        # `Path.home() / ".hermes"`.
+        # `Path.home() / ".sinoclaw"`.
         custom_root = tmp_path / "opt" / "hermes"
         custom_root.mkdir(parents=True)
         self._set_home(monkeypatch, tmp_path, custom_root)
@@ -685,7 +685,7 @@ class TestSharedBoardPaths:
     ):
         # Explicit override: SINOCLAW_KANBAN_HOME beats every other
         # resolution rule.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         profile_home = default_home / "profiles" / "any"
         profile_home.mkdir(parents=True)
         override = tmp_path / "shared-board"
@@ -701,7 +701,7 @@ class TestSharedBoardPaths:
 
     def test_empty_override_falls_through(self, tmp_path, monkeypatch):
         # Empty/whitespace override is treated as unset.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(default_home))
@@ -715,7 +715,7 @@ class TestSharedBoardPaths:
         # Belt-and-suspenders: round-trip a task across the two
         # SINOCLAW_HOME perspectives via a real SQLite file. Without the
         # fix the worker would open a different file and see no rows.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         profile_home = default_home / "profiles" / "nehemiahkanban"
         profile_home.mkdir(parents=True)
@@ -739,7 +739,7 @@ class TestSharedBoardPaths:
         # SINOCLAW_KANBAN_DB pins the file path directly and beats both
         # SINOCLAW_KANBAN_HOME and the `get_default_sinoclaw_root()` path.
         # This is the env the dispatcher injects into workers.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         umbrella = tmp_path / "umbrella"
         umbrella.mkdir()
@@ -760,7 +760,7 @@ class TestSharedBoardPaths:
         self, tmp_path, monkeypatch
     ):
         # SINOCLAW_KANBAN_WORKSPACES_ROOT pins the workspaces root directly.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         umbrella = tmp_path / "umbrella"
         umbrella.mkdir()
@@ -781,7 +781,7 @@ class TestSharedBoardPaths:
     ):
         # Empty/whitespace pins are treated as unset, same as
         # SINOCLAW_KANBAN_HOME.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(default_home))
@@ -798,7 +798,7 @@ class TestSharedBoardPaths:
         # and SINOCLAW_KANBAN_WORKSPACES_ROOT into the worker env so the
         # worker converges on the dispatcher's paths even when the
         # `-p <profile>` flag rewrites SINOCLAW_HOME.
-        default_home = tmp_path / ".hermes"
+        default_home = tmp_path / ".sinoclaw"
         default_home.mkdir()
         self._set_home(monkeypatch, tmp_path, default_home)
 

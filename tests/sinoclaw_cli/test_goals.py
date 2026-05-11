@@ -18,7 +18,7 @@ def sinoclaw_home(tmp_path, monkeypatch):
     """Isolated SINOCLAW_HOME so SessionDB.state_meta writes don't clobber the real one."""
     from pathlib import Path
 
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.setenv("SINOCLAW_HOME", str(home))

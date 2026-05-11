@@ -51,7 +51,7 @@ class TestDiscovery:
         from sinoclaw_cli import plugins as plugins_mod
 
         # Isolated SINOCLAW_HOME so we don't read the developer's config.yaml.
-        home = tmp_path / ".hermes"
+        home = tmp_path / ".sinoclaw"
         home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)

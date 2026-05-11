@@ -22,7 +22,7 @@ def test_kanban_tools_hidden_without_env_var(monkeypatch, tmp_path):
     """Normal `hermes chat` sessions (no SINOCLAW_KANBAN_TASK) must have
     zero kanban_* tools in their schema."""
     monkeypatch.delenv("SINOCLAW_KANBAN_TASK", raising=False)
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
@@ -41,7 +41,7 @@ def test_kanban_tools_hidden_without_env_var(monkeypatch, tmp_path):
 def test_kanban_tools_visible_with_env_var(monkeypatch, tmp_path):
     """Worker sessions (SINOCLAW_KANBAN_TASK set) must have all 7 tools."""
     monkeypatch.setenv("SINOCLAW_KANBAN_TASK", "t_fake")
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
 
@@ -67,7 +67,7 @@ def test_kanban_tools_visible_with_env_var(monkeypatch, tmp_path):
 def worker_env(monkeypatch, tmp_path):
     """Simulate being a worker: SINOCLAW_HOME isolated, SINOCLAW_KANBAN_TASK set
     after we've created the task."""
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setenv("SINOCLAW_PROFILE", "test-worker")
@@ -529,7 +529,7 @@ def test_kanban_guidance_not_in_normal_prompt(monkeypatch, tmp_path):
     """A normal chat session (no SINOCLAW_KANBAN_TASK) must NOT have
     KANBAN_GUIDANCE in its system prompt."""
     monkeypatch.delenv("SINOCLAW_KANBAN_TASK", raising=False)
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     from pathlib import Path as _P
@@ -552,7 +552,7 @@ def test_kanban_guidance_in_worker_prompt(monkeypatch, tmp_path):
     """A worker session (SINOCLAW_KANBAN_TASK set) MUST have the full
     lifecycle guidance in its system prompt."""
     monkeypatch.setenv("SINOCLAW_KANBAN_TASK", "t_fake")
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     from pathlib import Path as _P
@@ -582,7 +582,7 @@ def test_kanban_guidance_prompt_size_bounded(monkeypatch, tmp_path):
     """Sanity: the guidance block is under 4 KB so it doesn't blow
     up the cached prompt."""
     monkeypatch.setenv("SINOCLAW_KANBAN_TASK", "t_fake")
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     from pathlib import Path as _P
@@ -763,7 +763,7 @@ def test_orchestrator_complete_any_task_allowed(monkeypatch, tmp_path):
     """Orchestrator profiles (no SINOCLAW_KANBAN_TASK) can still complete
     any task via explicit task_id. The check only applies to workers."""
     monkeypatch.delenv("SINOCLAW_KANBAN_TASK", raising=False)
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     from pathlib import Path as _P

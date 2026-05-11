@@ -13,7 +13,7 @@ from sinoclaw_cli import kanban_db as kb
 @pytest.fixture
 def kanban_home(tmp_path, monkeypatch):
     """Isolated SINOCLAW_HOME with an empty kanban DB."""
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(home))
     monkeypatch.setattr(Path, "home", lambda: tmp_path)

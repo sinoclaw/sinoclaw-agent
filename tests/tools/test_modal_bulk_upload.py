@@ -190,7 +190,7 @@ class TestModalBulkUpload:
         # Manually call the part of __init__ that wires FileSyncManager
         from tools.environments.file_sync import iter_sync_files
         env._sync_manager = modal_env.FileSyncManager(
-            get_files_fn=lambda: iter_sync_files("/root/.hermes"),
+            get_files_fn=lambda: iter_sync_files("/root/.sinoclaw"),
             upload_fn=env._modal_upload,
             delete_fn=env._modal_delete,
             bulk_upload_fn=env._modal_bulk_upload,

@@ -116,7 +116,7 @@ class TestSSHBulkDownload:
         cmd_str = " ".join(cmd)
         assert "tar cf -" in cmd_str
         assert "-C /" in cmd_str
-        assert "home/testuser/.hermes" in cmd_str
+        assert "home/testuser/.sinoclaw" in cmd_str
         assert "ssh" in cmd_str
         assert "testuser@example.com" in cmd_str
 
@@ -251,7 +251,7 @@ class TestModalBulkDownload:
         assert args[0] == "bash"
         assert args[1] == "-c"
         assert "tar cf -" in args[2]
-        assert "-C / root/.hermes" in args[2]
+        assert "-C / root/.sinoclaw" in args[2]
 
     def test_modal_bulk_download_writes_to_dest(self, tmp_path):
         """Downloaded tar bytes should be written to the dest path."""
@@ -357,7 +357,7 @@ class TestDaytonaBulkDownload:
         # PID-suffixed temp path avoids collisions on sync_back retry
         assert "/tmp/.sinoclaw_sync." in tar_cmd
         assert ".tar" in tar_cmd
-        assert ".hermes" in tar_cmd
+        assert ".sinoclaw" in tar_cmd
 
         cleanup_cmd = env._sandbox.process.exec.call_args_list[1][0][0]
         assert "rm -f" in cleanup_cmd
@@ -379,7 +379,7 @@ class TestDaytonaBulkDownload:
         env._daytona_bulk_download(dest)
 
         tar_cmd = env._sandbox.process.exec.call_args_list[0][0][0]
-        assert "home/daytona/.hermes" in tar_cmd
+        assert "home/daytona/.sinoclaw" in tar_cmd
 
 
 class TestDaytonaCleanup:
@@ -453,7 +453,7 @@ class TestBulkDownloadWiring:
         # Replicate the wiring done in __init__
         from tools.environments.file_sync import iter_sync_files
         env._sync_manager = modal_env.FileSyncManager(
-            get_files_fn=lambda: iter_sync_files("/root/.hermes"),
+            get_files_fn=lambda: iter_sync_files("/root/.sinoclaw"),
             upload_fn=env._modal_upload,
             delete_fn=env._modal_delete,
             bulk_upload_fn=env._modal_bulk_upload,

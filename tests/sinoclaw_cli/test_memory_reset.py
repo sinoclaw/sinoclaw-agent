@@ -17,7 +17,7 @@ from pathlib import Path
 @pytest.fixture
 def memory_env(tmp_path, monkeypatch):
     """Set up a fake SINOCLAW_HOME with memory files."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     memories = sinoclaw_home / "memories"
     memories.mkdir(parents=True)
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -96,7 +96,7 @@ class TestMemoryReset:
 
     def test_reset_no_files_exist(self, tmp_path, monkeypatch):
         """Should return 'nothing' when no memory files exist."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         (sinoclaw_home / "memories").mkdir(parents=True)
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
@@ -147,7 +147,7 @@ class TestMemoryReset:
 
     def test_reset_empty_memories_dir(self, tmp_path, monkeypatch):
         """No memories dir at all should report nothing."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir(parents=True)
         # No memories dir
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

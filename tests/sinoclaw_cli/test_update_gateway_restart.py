@@ -411,7 +411,7 @@ class TestCmdUpdateLaunchdRestart:
         )
         process = gateway_cli.ProfileGatewayProcess(
             profile="coder",
-            path=tmp_path / ".hermes" / "profiles" / "coder",
+            path=tmp_path / ".sinoclaw" / "profiles" / "coder",
             pid=12345,
         )
 
@@ -455,7 +455,7 @@ class TestCmdUpdateLaunchdRestart:
         )
         process = gateway_cli.ProfileGatewayProcess(
             profile="coder",
-            path=tmp_path / ".hermes" / "profiles" / "coder",
+            path=tmp_path / ".sinoclaw" / "profiles" / "coder",
             pid=12345,
         )
 
@@ -1107,7 +1107,7 @@ class TestFindGatewayPidsExclude:
         assert 200 in pids
 
     def test_filters_to_current_profile(self, monkeypatch, tmp_path):
-        profile_dir = tmp_path / ".hermes" / "profiles" / "orcha"
+        profile_dir = tmp_path / ".sinoclaw" / "profiles" / "orcha"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(gateway_cli, "is_windows", lambda: False)
         monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: profile_dir)
@@ -1156,7 +1156,7 @@ class TestGatewayModeWritesExitCodeEarly:
         monkeypatch.setattr(gateway_cli, "is_termux", lambda: False)
 
         # Point SINOCLAW_HOME at a temp dir so the marker file lands there
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg
@@ -1186,7 +1186,7 @@ class TestGatewayModeWritesExitCodeEarly:
         monkeypatch.setattr(gateway_cli, "supports_systemd_services", lambda: False)
         monkeypatch.setattr(gateway_cli, "is_termux", lambda: False)
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg
@@ -1214,7 +1214,7 @@ class TestGatewayModeWritesExitCodeEarly:
         monkeypatch.setattr(gateway_cli, "supports_systemd_services", lambda: True)
         monkeypatch.setattr(gateway_cli, "is_termux", lambda: False)
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         import sinoclaw_cli.config as _cfg

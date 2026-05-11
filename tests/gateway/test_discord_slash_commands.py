@@ -761,7 +761,7 @@ def test_discord_auto_thread_config_bridge(monkeypatch, tmp_path):
     from pathlib import Path
 
     # Write a config.yaml the loader will find
-    sinoclaw_dir = tmp_path / ".hermes"
+    sinoclaw_dir = tmp_path / ".sinoclaw"
     sinoclaw_dir.mkdir()
     config_path = sinoclaw_dir / "config.yaml"
     config_path.write_text(yaml.dump({
