@@ -1154,7 +1154,7 @@ def test_list_profiles_on_disk(tmp_path, monkeypatch):
     named profiles under ~/.sinoclaw/profiles/ that contain a config.yaml."""
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.delenv("SINOCLAW_HOME", raising=False)
-    profiles = tmp_path / ".hermes" / "profiles"
+    profiles = tmp_path / ".sinoclaw" / "profiles"
     profiles.mkdir(parents=True)
     for name in ("researcher", "writer"):
         d = profiles / name
@@ -1171,7 +1171,7 @@ def test_list_profiles_on_disk(tmp_path, monkeypatch):
 def test_list_profiles_on_disk_custom_root(tmp_path, monkeypatch):
     """list_profiles_on_disk respects a custom SINOCLAW_HOME root."""
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
-    profiles = tmp_path / "profiles"
+    profiles = tmp_path / ".sinoclaw" / "profiles"
     profiles.mkdir(parents=True)
     for name in ("researcher", "writer"):
         d = profiles / name
@@ -1179,14 +1179,14 @@ def test_list_profiles_on_disk_custom_root(tmp_path, monkeypatch):
         (d / "config.yaml").write_text("model: {}\n")
 
     names = kb.list_profiles_on_disk()
-    assert names == ["default", "researcher", "writer"]
+    assert names == ["researcher", "writer"]
 
 
 def test_known_assignees_merges_disk_and_board(tmp_path, monkeypatch):
     """known_assignees unions profiles on disk with currently-assigned
     names, and reports per-status counts."""
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    profiles = tmp_path / ".hermes" / "profiles"
+    profiles = tmp_path / ".sinoclaw" / "profiles"
     profiles.mkdir(parents=True)
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".hermes"))
 

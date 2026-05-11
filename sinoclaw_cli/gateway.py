@@ -1975,13 +1975,13 @@ def _sinoclaw_home_for_target_user(target_home_dir: str) -> str:
 
     When installing a system service via sudo, get_sinoclaw_home() resolves to
     root's home.  This translates it to the target user's equivalent path:
-      /root/.hermes                    → /home/alice/.hermes
+      /root/.sinoclaw                    → /home/alice/.sinoclaw
       /root/.sinoclaw/profiles/coder     → /home/alice/.sinoclaw/profiles/coder
       /opt/custom-hermes               → /opt/custom-hermes  (kept as-is)
     """
     current_hermes = get_sinoclaw_home().resolve()
-    current_default = (Path.home() / ".hermes").resolve()
-    target_default = Path(target_home_dir) / ".hermes"
+    current_default = (Path.home() / ".sinoclaw").resolve()
+    target_default = Path(target_home_dir) / ".sinoclaw"
 
     # Default ~/.sinoclaw → remap to target user's default
     if current_hermes == current_default:
