@@ -8,6 +8,7 @@ on:
       - 'pyproject.toml'
       - 'uv.lock'
       - 'Dockerfile'
+  workflow_dispatch:
       - 'docker/**'
       - '.github/workflows/docker-publish.yml'
       - '.github/actions/sinoclaw-smoke-test/**'
