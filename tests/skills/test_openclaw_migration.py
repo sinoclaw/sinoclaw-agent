@@ -891,7 +891,7 @@ def test_rebrand_text_handles_multiple_replacements():
 
 def test_rebrand_text_preserves_filesystem_path_casing():
     """Lowercase matches — especially ``.openclaw`` filesystem paths — must
-    rewrite to lowercase ``.hermes`` (the real Sinoclaw home), not the broken
+    rewrite to lowercase ``.sinoclaw`` (the real Sinoclaw home), not the broken
     ``.Hermes``.
 
     Regression test for @versun's OpenClaw-residue feedback: after migration,

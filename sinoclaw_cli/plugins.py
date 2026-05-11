@@ -670,7 +670,7 @@ class PluginManager:
 
         # 3. Project plugins (./.sinoclaw/plugins/)
         if _env_enabled("SINOCLAW_ENABLE_PROJECT_PLUGINS"):
-            project_dir = Path.cwd() / ".hermes" / "plugins"
+            project_dir = Path.cwd() / ".sinoclaw" / "plugins"
             manifests.extend(self._scan_directory(project_dir, source="project"))
 
         # 4. Pip / entry-point plugins

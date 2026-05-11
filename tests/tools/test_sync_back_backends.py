@@ -239,7 +239,7 @@ class TestModalBulkDownload:
     """Unit tests for _modal_bulk_download."""
 
     def test_modal_bulk_download_command(self, tmp_path):
-        """exec should be called with tar cf - -C /root/.hermes ."""
+        """exec should be called with tar cf - -C /root/.sinoclaw ."""
         env = _make_mock_modal_env()
         exec_calls = _wire_modal_download(env, tar_bytes=b"tar-content")
         dest = tmp_path / "backup.tar"
@@ -484,7 +484,7 @@ class TestBulkDownloadWiring:
         # Replicate the wiring done in __init__
         from tools.environments.file_sync import iter_sync_files
         env._sync_manager = daytona_env.FileSyncManager(
-            get_files_fn=lambda: iter_sync_files(f"{env._remote_home}/.hermes"),
+            get_files_fn=lambda: iter_sync_files(f"{env._remote_home}/.sinoclaw"),
             upload_fn=env._daytona_upload,
             delete_fn=env._daytona_delete,
             bulk_upload_fn=env._daytona_bulk_upload,

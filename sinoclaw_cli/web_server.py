@@ -3771,7 +3771,7 @@ def _discover_dashboard_plugins() -> list:
         (bundled_root, "bundled"),
     ]
     if os.environ.get("SINOCLAW_ENABLE_PROJECT_PLUGINS"):
-        search_dirs.append((Path.cwd() / ".hermes" / "plugins", "project"))
+        search_dirs.append((Path.cwd() / ".sinoclaw" / "plugins", "project"))
 
     for plugins_root, source in search_dirs:
         if not plugins_root.is_dir():

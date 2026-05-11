@@ -42,7 +42,7 @@ try:
 except ImportError:
     def get_sinoclaw_home() -> Path:  # type: ignore[misc]
         val = (os.environ.get("SINOCLAW_HOME") or "").strip()
-        return Path(val) if val else Path.home() / ".hermes"
+        return Path(val) if val else Path.home() / ".sinoclaw"
 
 DEFAULT_TUI_DIR = Path(os.environ.get("SINOCLAW_TUI_DIR", "/home/bb/sinoclaw-agent/ui-tui"))
 DEFAULT_LOG = Path(os.environ.get("SINOCLAW_PERF_LOG", str(get_sinoclaw_home() / "perf.log")))

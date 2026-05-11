@@ -35,7 +35,7 @@ try:
     _SKILL_DIR = Path(__file__).resolve().parent.parent
 except NameError:
     # __file__ not defined when loaded via exec() — search standard paths
-    _SKILL_DIR = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".hermes")) / "skills" / "red-teaming" / "godmode"
+    _SKILL_DIR = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw")) / "skills" / "red-teaming" / "godmode"
 
 _SCRIPTS_DIR = _SKILL_DIR / "scripts"
 _TEMPLATES_DIR = _SKILL_DIR / "templates"
@@ -57,7 +57,7 @@ if _race_path.exists():
 # Hermes config paths
 # ═══════════════════════════════════════════════════════════════════
 
-SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".hermes"))
+SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
 CONFIG_PATH = SINOCLAW_HOME / "config.yaml"
 PREFILL_PATH = SINOCLAW_HOME / "prefill.json"
 

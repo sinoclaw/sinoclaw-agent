@@ -215,7 +215,7 @@ def test_registry_resolve_by_name(tmp_path):
 def test_registry_defaults_to_sinoclaw_home(tmp_path, monkeypatch):
     from plugins.google_meet.node.registry import NodeRegistry
 
-    # _isolate_home already set SINOCLAW_HOME to tmp_path/.hermes; the
+    # _isolate_home already set SINOCLAW_HOME to tmp_path/.sinoclaw; the
     # registry default path must live inside that tree.
     r = NodeRegistry()
     r.add("x", "ws://x", "t")

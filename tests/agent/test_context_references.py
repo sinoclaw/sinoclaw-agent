@@ -324,7 +324,7 @@ async def test_blocks_sensitive_home_and_sinoclaw_paths(tmp_path: Path, monkeypa
     ssh_key.write_text("PRIVATE-KEY\n", encoding="utf-8")
 
     result = await preprocess_context_references_async(
-        "read @file:.hermes/.env and @file:.ssh/id_rsa",
+        "read @file:.sinoclaw/.env and @file:.ssh/id_rsa",
         cwd=tmp_path,
         allowed_root=tmp_path,
         context_length=100_000,

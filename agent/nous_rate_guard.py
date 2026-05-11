@@ -32,7 +32,7 @@ def _state_path() -> str:
         from sinoclaw_constants import get_sinoclaw_home
         base = get_sinoclaw_home()
     except ImportError:
-        base = os.path.join(os.path.expanduser("~"), ".hermes")
+        base = os.path.join(os.path.expanduser("~"), ".sinoclaw")
     return os.path.join(base, _STATE_SUBDIR, _STATE_FILENAME)
 
 

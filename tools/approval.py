@@ -118,8 +118,8 @@ def _is_gateway_approval_context() -> bool:
 # via shell expansions like $HOME or $SINOCLAW_HOME.
 _SSH_SENSITIVE_PATH = r'(?:~|\$home|\$\{home\})/\.ssh(?:/|$)'
 _SINOCLAW_ENV_PATH = (
-    r'(?:~\/\.hermes/|'
-    r'(?:\$home|\$\{home\})/\.hermes/|'
+    r'(?:~/.sinoclaw/|'
+    r'(?:\$home|\$\{home\})/\.sinoclaw/|'
     r'(?:\$sinoclaw_home|\$\{sinoclaw_home\})/)'
     r'\.env\b'
 )
