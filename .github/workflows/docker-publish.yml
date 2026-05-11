@@ -9,6 +9,12 @@ on:
       - 'uv.lock'
       - 'Dockerfile'
   workflow_dispatch:
+    inputs:
+      dummy:
+        description: 'Trigger Docker build'
+        required: false
+        default: 'trigger'
+    paths:
       - 'docker/**'
       - '.github/workflows/docker-publish.yml'
       - '.github/actions/sinoclaw-smoke-test/**'
