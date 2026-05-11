@@ -285,13 +285,13 @@ class TestSinoclawConstantsFallback:
         """When sinoclaw_constants is missing and SINOCLAW_HOME unset, default to ~/.sinoclaw."""
         monkeypatch.delenv("SINOCLAW_HOME", raising=False)
         module = self._load_helper(monkeypatch)
-        assert module.get_sinoclaw_home() == Path.home() / ".hermes"
+        assert module.get_sinoclaw_home() == Path.home() / ".sinoclaw"
 
     def test_fallback_ignores_empty_sinoclaw_home(self, monkeypatch):
         """Empty/whitespace SINOCLAW_HOME is treated as unset."""
         monkeypatch.setenv("SINOCLAW_HOME", "  ")
         module = self._load_helper(monkeypatch)
-        assert module.get_sinoclaw_home() == Path.home() / ".hermes"
+        assert module.get_sinoclaw_home() == Path.home() / ".sinoclaw"
 
     def test_fallback_display_sinoclaw_home_shortens_path(self, monkeypatch):
         """Fallback display_sinoclaw_home() uses ~/ shorthand like the real one."""
@@ -303,7 +303,7 @@ class TestSinoclawConstantsFallback:
         """Fallback display_sinoclaw_home() handles profile paths under ~/."""
         monkeypatch.setenv("SINOCLAW_HOME", str(Path.home() / ".hermes/profiles/coder"))
         module = self._load_helper(monkeypatch)
-        assert module.display_sinoclaw_home() == "~/.sinoclaw/profiles/coder"
+        assert module.display_sinoclaw_home() == "~/.hermes/profiles/coder"
 
     def test_fallback_display_sinoclaw_home_custom_path(self, monkeypatch):
         """Fallback display_sinoclaw_home() returns full path for non-home locations."""

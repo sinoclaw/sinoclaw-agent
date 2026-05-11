@@ -3,29 +3,29 @@
 set -e
 
 SINOCLAW_HOME="${SINOCLAW_HOME:-/opt/data}"
-INSTALL_DIR="/opt/hermes"
+INSTALL_DIR="/opt/sinoclaw"
 
 # --- Privilege dropping via gosu ---
 # When started as root (the default for Docker, or fakeroot in rootless Podman),
 # optionally remap the hermes user/group to match host-side ownership, fix volume
 # permissions, then re-exec as hermes.
 if [ "$(id -u)" = "0" ]; then
-    if [ -n "$SINOCLAW_UID" ] && [ "$SINOCLAW_UID" != "$(id -u hermes)" ]; then
-        echo "Changing hermes UID to $SINOCLAW_UID"
-        usermod -u "$SINOCLAW_UID" hermes
+    if [ -n "$SINOCLAW_UID" ] && [ "$SINOCLAW_UID" != "$(id -u sinoclaw)" ]; then
+        echo "Changing sinoclaw UID to $SINOCLAW_UID"
+        usermod -u "$SINOCLAW_UID" sinoclaw
     fi
 
-    if [ -n "$SINOCLAW_GID" ] && [ "$SINOCLAW_GID" != "$(id -g hermes)" ]; then
-        echo "Changing hermes GID to $SINOCLAW_GID"
+    if [ -n "$SINOCLAW_GID" ] && [ "$SINOCLAW_GID" != "$(id -g sinoclaw)" ]; then
+        echo "Changing sinoclaw GID to $SINOCLAW_GID"
         # -o allows non-unique GID (e.g. macOS GID 20 "staff" may already exist
         # as "dialout" in the Debian-based container image)
-        groupmod -o -g "$SINOCLAW_GID" hermes 2>/dev/null || true
+        groupmod -o -g "$SINOCLAW_GID" sinoclaw 2>/dev/null || true
     fi
 
-    # Fix ownership of the data volume. When SINOCLAW_UID remaps the hermes user,
+    # Fix ownership of the data volume. When SINOCLAW_UID remaps the sinoclaw user,
     # files created by previous runs (under the old UID) become inaccessible.
     # Always chown -R when UID was remapped; otherwise only if top-level is wrong.
-    actual_sinoclaw_uid=$(id -u hermes)
+    actual_sinoclaw_uid=$(id -u sinoclaw)
     needs_chown=false
     if [ -n "$SINOCLAW_UID" ] && [ "$SINOCLAW_UID" != "10000" ]; then
         needs_chown=true
@@ -33,28 +33,28 @@ if [ "$(id -u)" = "0" ]; then
         needs_chown=true
     fi
     if [ "$needs_chown" = true ]; then
-        echo "Fixing ownership of $SINOCLAW_HOME to hermes ($actual_sinoclaw_uid)"
+        echo "Fixing ownership of $SINOCLAW_HOME to sinoclaw ($actual_sinoclaw_uid)"
         # In rootless Podman the container's "root" is mapped to an unprivileged
         # host UID — chown will fail.  That's fine: the volume is already owned
         # by the mapped user on the host side.
-        chown -R hermes:hermes "$SINOCLAW_HOME" 2>/dev/null || \
+        chown -R sinoclaw:sinoclaw "$SINOCLAW_HOME" 2>/dev/null || \
             echo "Warning: chown failed (rootless container?) — continuing anyway"
     fi
 
-    # Ensure config.yaml is readable by the hermes runtime user even if it was
+    # Ensure config.yaml is readable by the sinoclaw runtime user even if it was
     # edited on the host after initial ownership setup. Must run here (as root)
     # rather than after the gosu drop, otherwise a non-root caller like
     # `docker run -u $(id -u):$(id -g)` hits "Operation not permitted" (#15865).
     if [ -f "$SINOCLAW_HOME/config.yaml" ]; then
-        chown hermes:hermes "$SINOCLAW_HOME/config.yaml" 2>/dev/null || true
+        chown sinoclaw:sinoclaw "$SINOCLAW_HOME/config.yaml" 2>/dev/null || true
         chmod 640 "$SINOCLAW_HOME/config.yaml" 2>/dev/null || true
     fi
 
     echo "Dropping root privileges"
-    exec gosu hermes "$0" "$@"
+    exec gosu sinoclaw "$0" "$@"
 fi
 
-# --- Running as hermes from here ---
+# --- Running as sinoclaw from here ---
 source "${INSTALL_DIR}/.venv/bin/activate"
 
 # Create essential directory structure.  Cache and platform directories

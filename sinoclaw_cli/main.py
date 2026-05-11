@@ -6756,7 +6756,7 @@ def _install_hangup_protection(gateway_mode: bool = False):
         import datetime as _dt
 
         log_file.write(
-            f"\n=== sinoclaw-agent update started "
+            f"\n=== sinoclaw update started "
             f"{_dt.datetime.now().isoformat(timespec='seconds')} ===\n"
         )
 
