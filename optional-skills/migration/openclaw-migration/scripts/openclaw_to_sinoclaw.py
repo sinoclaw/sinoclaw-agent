@@ -428,7 +428,7 @@ def _case_preserving_replacement(replacement: str):
 
 
 def rebrand_text(text: str) -> str:
-    """Replace OpenClaw / ClawdBot / MoltBot brand names with Hermes.
+    """Replace OpenClaw / ClawdBot / MoltBot brand names with Sinoclaw.
 
     Preserves case so filesystem-path matches (lowercase) don't become
     capitalized directory names that don't exist.

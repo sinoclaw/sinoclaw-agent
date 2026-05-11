@@ -313,7 +313,7 @@ class TestGeneratedSystemdUnits:
             "_system_service_identity",
             lambda run_as_user=None: ("alice", "alice", "/home/alice"),
         )
-        monkeypatch.setattr(gateway_cli, "_sinoclaw_home_for_target_user", lambda home: "/home/alice/.hermes")
+        monkeypatch.setattr(gateway_cli, "_sinoclaw_home_for_target_user", lambda home: "/home/alice/.sinoclaw")
         monkeypatch.setenv("PATH", "/usr/local/bin:/mnt/c/WINDOWS/system32")
         monkeypatch.setattr(gateway_cli.shutil, "which", lambda cmd: None)
 
@@ -1160,8 +1160,8 @@ class TestSystemUnitHermesHome:
 
         unit = gateway_cli.generate_systemd_unit(system=True, run_as_user="alice")
 
-        assert 'SINOCLAW_HOME=/home/alice/.hermes' in unit
-        assert '/root/.hermes' not in unit
+        assert 'SINOCLAW_HOME=/home/alice/.sinoclaw' in unit
+        assert '/root/.sinoclaw' not in unit
 
     def test_system_unit_remaps_profile_to_target_user(self, monkeypatch):
         # Simulate sudo with a profile: SINOCLAW_HOME was resolved under root
@@ -1214,7 +1214,7 @@ class TestSinoclawHomeForTargetUser:
         monkeypatch.delenv("SINOCLAW_HOME", raising=False)
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
-        assert result == "/home/alice/.hermes"
+        assert result == "/home/alice/.sinoclaw"
 
     def test_remaps_profile_path(self, monkeypatch):
         monkeypatch.setattr(Path, "home", staticmethod(lambda: Path("/root")))
@@ -1235,7 +1235,7 @@ class TestSinoclawHomeForTargetUser:
         monkeypatch.delenv("SINOCLAW_HOME", raising=False)
 
         result = gateway_cli._sinoclaw_home_for_target_user("/home/alice")
-        assert result == "/home/alice/.hermes"
+        assert result == "/home/alice/.sinoclaw"
 
 
 class TestGeneratedUnitUsesDetectedVenv:

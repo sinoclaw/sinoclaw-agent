@@ -23,11 +23,11 @@ class TestGetDefaultSinoclawRoot:
         monkeypatch.delenv("SINOCLAW_HOME", raising=False)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
-        assert get_default_sinoclaw_root() == tmp_path / ".hermes"
+        assert get_default_sinoclaw_root() == tmp_path / ".sinoclaw"
 
     def test_sinoclaw_home_is_native(self, tmp_path, monkeypatch):
         """When SINOCLAW_HOME = ~/.sinoclaw, returns ~/.sinoclaw."""
-        native = tmp_path / ".hermes"
+        native = tmp_path / ".sinoclaw"
         native.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(native))
@@ -35,7 +35,7 @@ class TestGetDefaultSinoclawRoot:
 
     def test_sinoclaw_home_is_profile(self, tmp_path, monkeypatch):
         """When SINOCLAW_HOME is a profile under ~/.sinoclaw, returns ~/.sinoclaw."""
-        native = tmp_path / ".hermes"
+        native = tmp_path / ".sinoclaw"
         profile = native / "profiles" / "coder"
         profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
