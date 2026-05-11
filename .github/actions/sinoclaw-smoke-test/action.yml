@@ -1,4 +1,4 @@
-name: Hermes smoke test
+name: Sinoclaw smoke test
 description: >
   Run the image's built-in entrypoint against `--help` and `dashboard --help`
   to catch basic runtime regressions before publishing.  Requires the image
@@ -8,7 +8,7 @@ description: >
 
 inputs:
   image:
-    description: Fully-qualified image tag (e.g. nousresearch/sinoclaw-agent:test)
+    description: Fully-qualified image tag (e.g. sinoclaw/sinoclaw-agent:test)
     required: true
 
 runs:
@@ -17,8 +17,8 @@ runs:
     - name: Ensure /tmp/sinoclaw-test is sinoclaw-writable
       shell: bash
       run: |
-        # The image runs as the hermes user (UID 10000).  GitHub Actions
-        # creates /tmp/sinoclaw-test root-owned by default, which hermes
+        # The image runs as the sinoclaw user (UID 10000).  GitHub Actions
+        # creates /tmp/sinoclaw-test root-owned by default, which sinoclaw
         # can't write to — chown it to match the in-container UID before
         # bind-mounting.  Real users doing `docker run -v ~/.sinoclaw:...`
         # with their own UID hit the same issue and have their own
@@ -26,15 +26,15 @@ runs:
         mkdir -p /tmp/sinoclaw-test
         sudo chown -R 10000:10000 /tmp/sinoclaw-test
 
-    - name: hermes --help
+    - name: sinoclaw --help
       shell: bash
       run: |
         docker run --rm \
           -v /tmp/sinoclaw-test:/opt/data \
-          --entrypoint /opt/hermes/docker/entrypoint.sh \
+          --entrypoint /opt/sinoclaw/docker/entrypoint.sh \
           "${{ inputs.image }}" --help
 
-    - name: hermes dashboard --help
+    - name: sinoclaw dashboard --help
       shell: bash
       run: |
         # Regression guard for #9153: dashboard was present in source but
@@ -43,5 +43,5 @@ runs:
         # installed package.
         docker run --rm \
           -v /tmp/sinoclaw-test:/opt/data \
-          --entrypoint /opt/hermes/docker/entrypoint.sh \
+          --entrypoint /opt/sinoclaw/docker/entrypoint.sh \
           "${{ inputs.image }}" dashboard --help

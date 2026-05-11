@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Store Playwright browsers outside the volume mount so the build-time
 # install survives the /opt/data volume overlay at runtime.
-ENV PLAYWRIGHT_BROWSERS_PATH=/opt/hermes/.playwright
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/sinoclaw/.playwright
 
 # Install system dependencies in one layer, clear APT cache
 # tini reaps orphaned zombie processes (MCP stdio subprocesses, git, bun, etc.)
@@ -19,12 +19,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Non-root user for runtime; UID can be overridden via SINOCLAW_UID at runtime
-RUN useradd -u 10000 -m -d /opt/data hermes
+RUN useradd -u 10000 -m -d /opt/data sinoclaw
 
 COPY --chmod=0755 --from=gosu_source /gosu /usr/local/bin/
 COPY --chmod=0755 --from=uv_source /usr/local/bin/uv /usr/local/bin/uvx /usr/local/bin/
 
-WORKDIR /opt/hermes
+WORKDIR /opt/sinoclaw
 
 # ---------- Layer-cached dependency install ----------
 # Copy only package manifests first so npm install + Playwright are cached
@@ -82,7 +82,7 @@ RUN uv sync --frozen --no-install-project --extra all
 
 # ---------- Source code ----------
 # .dockerignore excludes node_modules, so the installs above survive.
-COPY --chown=hermes:hermes . .
+COPY --chown=sinoclaw:sinoclaw . .
 
 # Build browser dashboard and terminal UI assets.
 RUN cd web && npm run build && \
@@ -93,14 +93,14 @@ RUN cd web && npm run build && \
 # The venv needs to be traversable too.
 # node_modules trees additionally need to be writable by the hermes user
 # so the runtime `npm install` triggered by _tui_need_npm_install() in
-# sinoclaw_cli/main.py succeeds (see #18800). /opt/hermes/web is build-time
+# sinoclaw_cli/main.py succeeds (see #18800). /opt/sinoclaw/web is build-time
 # only (SINOCLAW_WEB_DIST points at sinoclaw_cli/web_dist) and is intentionally
 # not chowned here.
 USER root
-RUN chmod -R a+rX /opt/hermes && \
-    chown -R hermes:hermes /opt/hermes/ui-tui /opt/hermes/node_modules
+RUN chmod -R a+rX /opt/sinoclaw && \
+    chown -R sinoclaw:sinoclaw /opt/sinoclaw/ui-tui /opt/sinoclaw/node_modules
 # Start as root so the entrypoint can usermod/groupmod + gosu.
-# If SINOCLAW_UID is unset, the entrypoint drops to the default hermes user (10000).
+# If SINOCLAW_UID is unset, the entrypoint drops to the default sinoclaw user (10000).
 
 # ---------- Link sinoclaw-agent itself (editable) ----------
 # Deps are already installed in the cached layer above; `--no-deps` makes
@@ -108,8 +108,8 @@ RUN chmod -R a+rX /opt/hermes && \
 RUN uv pip install --no-cache-dir --no-deps -e "."
 
 # ---------- Runtime ----------
-ENV SINOCLAW_WEB_DIST=/opt/hermes/sinoclaw_cli/web_dist
+ENV SINOCLAW_WEB_DIST=/opt/sinoclaw/sinoclaw_cli/web_dist
 ENV SINOCLAW_HOME=/opt/data
 ENV PATH="/opt/data/.local/bin:${PATH}"
 VOLUME [ "/opt/data" ]
-ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/opt/hermes/docker/entrypoint.sh" ]
+ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/opt/sinoclaw/docker/entrypoint.sh" ]
