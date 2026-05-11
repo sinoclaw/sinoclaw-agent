@@ -1267,12 +1267,12 @@ class TestBankIdTemplate:
         assert result == "myorg-coder-cli"
 
     def test_resolve_collapses_empty_placeholders(self):
-        # When user is empty, "sinoclaw-{user}" becomes "sinoclaw-" -> trimmed to "hermes"
+        # When user is empty, "sinoclaw-{user}" becomes "sinoclaw-" -> trimmed to "sinoclaw"
         result = _resolve_bank_id_template(
             "sinoclaw-{user}", fallback="default",
             profile="", workspace="", platform="", user="", session="",
         )
-        assert result == "hermes"
+        assert result == "sinoclaw"
 
     def test_resolve_collapses_double_dashes(self):
         # Two empty placeholders with a dash between them should collapse
@@ -1366,7 +1366,7 @@ class TestBankIdTemplate:
         p = HindsightMemoryProvider()
         # No agent_identity passed — template renders to "sinoclaw-" which collapses to "hermes"
         p.initialize(session_id="s1", sinoclaw_home=str(tmp_path), platform="cli")
-        assert p._bank_id == "hermes"
+        assert p._bank_id == "sinoclaw"
 
 
 # ---------------------------------------------------------------------------
