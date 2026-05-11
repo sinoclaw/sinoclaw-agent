@@ -461,7 +461,7 @@ class GoogleChatAdapter(BasePlatformAdapter):
             from sinoclaw_constants import get_sinoclaw_home as _get_sinoclaw_home
             _sinoclaw_home = _get_sinoclaw_home()
         except (ModuleNotFoundError, ImportError):
-            _sinoclaw_home = _Path.home() / ".hermes"
+            _sinoclaw_home = _Path.home() / ".sinoclaw"
         self._thread_count_store = _ThreadCountStore(
             _sinoclaw_home / "google_chat_thread_counts.json"
         )
@@ -617,7 +617,7 @@ class GoogleChatAdapter(BasePlatformAdapter):
     # ------------------------------------------------------------------
     def _bot_id_cache_path(self) -> _Path:
         """Location where the resolved bot user_id is cached across restarts."""
-        base = os.getenv("SINOCLAW_HOME", str(_Path.home() / ".hermes"))
+        base = os.getenv("SINOCLAW_HOME", str(_Path.home() / ".sinoclaw"))
         return _Path(base) / "google_chat_bot_id.json"
 
     def _load_cached_bot_id(self) -> Optional[str]:

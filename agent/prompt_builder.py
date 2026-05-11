@@ -86,11 +86,11 @@ def _find_git_root(start: Path) -> Optional[Path]:
     return None
 
 
-_SINOCLAW_MD_NAMES = (".hermes.md", "HERMES.md")
+_SINOCLAW_MD_NAMES = (".sinoclaw.md", "SINOCLAW.md")
 
 
 def _find_sinoclaw_md(cwd: Path) -> Optional[Path]:
-    """Discover the nearest ``.hermes.md`` or ``HERMES.md``.
+    """Discover the nearest ``.sinoclaw.md`` or ``HERMES.md``.
 
     Search order: *cwd* first, then each parent directory up to (and
     including) the git repository root.  Returns the first match, or
@@ -1319,7 +1319,7 @@ def load_soul_md() -> Optional[str]:
 
 
 def _load_sinoclaw_md(cwd_path: Path) -> str:
-    """.hermes.md / HERMES.md — walk to git root."""
+    """.sinoclaw.md / HERMES.md — walk to git root."""
     sinoclaw_md_path = _find_sinoclaw_md(cwd_path)
     if not sinoclaw_md_path:
         return ""
@@ -1335,7 +1335,7 @@ def _load_sinoclaw_md(cwd_path: Path) -> str:
             pass
         content = _scan_context_content(content, rel)
         result = f"## {rel}\n\n{content}"
-        return _truncate_content(result, ".hermes.md")
+        return _truncate_content(result, ".sinoclaw.md")
     except Exception as e:
         logger.debug("Could not read %s: %s", sinoclaw_md_path, e)
         return ""
@@ -1407,7 +1407,7 @@ def build_context_files_prompt(cwd: Optional[str] = None, skip_soul: bool = Fals
     """Discover and load context files for the system prompt.
 
     Priority (first found wins — only ONE project context type is loaded):
-      1. .hermes.md / HERMES.md  (walk to git root)
+      1. .sinoclaw.md / HERMES.md  (walk to git root)
       2. AGENTS.md / agents.md   (cwd only)
       3. CLAUDE.md / claude.md   (cwd only)
       4. .cursorrules / .cursor/rules/*.mdc  (cwd only)

@@ -19,7 +19,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".hermes"))
+SINOCLAW_HOME = Path(os.getenv("SINOCLAW_HOME", Path.home() / ".sinoclaw"))
 ENV_FILE = SINOCLAW_HOME / ".env"
 
 OK = "\033[92m\u2713\033[0m"

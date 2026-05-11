@@ -407,7 +407,7 @@ def _resolve_stdio_command(command: str, env: dict) -> tuple[str, dict]:
         elif resolved_command in {"npx", "npm", "node"}:
             sinoclaw_home = os.path.expanduser(
                 os.getenv(
-                    "SINOCLAW_HOME", os.path.join(os.path.expanduser("~"), ".hermes")
+                    "SINOCLAW_HOME", os.path.join(os.path.expanduser("~"), ".sinoclaw")
                 )
             )
             candidates = [

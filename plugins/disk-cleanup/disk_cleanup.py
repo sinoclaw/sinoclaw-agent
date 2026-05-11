@@ -35,7 +35,7 @@ except Exception:  # pragma: no cover — plugin may load before constants resol
 
     def get_sinoclaw_home() -> Path:  # type: ignore[no-redef]
         val = (os.environ.get("SINOCLAW_HOME") or "").strip()
-        return Path(val).resolve() if val else (Path.home() / ".hermes").resolve()
+        return Path(val).resolve() if val else (Path.home() / ".sinoclaw").resolve()
 
 
 logger = logging.getLogger(__name__)

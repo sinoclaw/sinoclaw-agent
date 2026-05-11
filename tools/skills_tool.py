@@ -1233,7 +1233,7 @@ def skill_view(
                     )
 
         # Read tags/related_skills with backward compat:
-        # Check metadata.hermes.* first (agentskills.io convention), fall back to top-level
+        # Check metadata.sinoclaw.* first (agentskills.io convention), fall back to top-level
         sinoclaw_meta = {}
         metadata = frontmatter.get("metadata")
         if isinstance(metadata, dict):
