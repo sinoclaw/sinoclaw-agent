@@ -862,19 +862,19 @@ def test_rebrand_text_replaces_openclaw_variants():
     assert mod.rebrand_text("I told Open Claw to use dark mode") == "I told Sinoclaw to use dark mode"
     assert mod.rebrand_text("Open-Claw config is great") == "Sinoclaw config is great"
     assert mod.rebrand_text("OPENCLAW uses tools well") == "Sinoclaw uses tools well"
-    # All-lowercase matches → lowercase ``hermes``; this preserves the
+    # All-lowercase matches → lowercase ``sinoclaw``; this preserves the
     # real filesystem path ``~/.sinoclaw`` (Sinoclaw home) when rebranding
     # memory entries that reference ``~/.openclaw`` or ``openclaw`` prose.
-    assert mod.rebrand_text("openclaw should always respond concisely") == "hermes should always respond concisely"
+    assert mod.rebrand_text("openclaw should always respond concisely") == "sinoclaw should always respond concisely"
 
 
 def test_rebrand_text_replaces_legacy_bot_names():
     mod = load_module()
     # Same case-preservation rule as above.
     assert mod.rebrand_text("ClawdBot remembers my timezone") == "Sinoclaw remembers my timezone"
-    assert mod.rebrand_text("clawdbot prefers tabs") == "hermes prefers tabs"
+    assert mod.rebrand_text("clawdbot prefers tabs") == "sinoclaw prefers tabs"
     assert mod.rebrand_text("MoltBot was configured for Spanish") == "Sinoclaw was configured for Spanish"
-    assert mod.rebrand_text("moltbot uses Python") == "hermes uses Python"
+    assert mod.rebrand_text("moltbot uses Python") == "sinoclaw uses Python"
 
 
 def test_rebrand_text_preserves_unrelated_content():
@@ -902,11 +902,11 @@ def test_rebrand_text_preserves_filesystem_path_casing():
     mod = load_module()
     assert mod.rebrand_text("config is at ~/.openclaw/config.yaml") == \
         "config is at ~/.sinoclaw/config.yaml"
-    assert mod.rebrand_text("use .openclaw directory") == "use .hermes directory"
-    assert mod.rebrand_text("Path.home() / '.openclaw'") == "Path.home() / '.hermes'"
+    assert mod.rebrand_text("use .openclaw directory") == "use .sinoclaw directory"
+    assert mod.rebrand_text("Path.home() / '.openclaw'") == "Path.home() / '.sinoclaw'"
     # Sentence with both lowercase path and capitalized prose.
     assert mod.rebrand_text("openclaw config path: ~/.openclaw/") == \
-        "hermes config path: ~/.sinoclaw/"
+        "sinoclaw config path: ~/.sinoclaw/"
 
 
 def test_migrate_memory_rebrands_entries(tmp_path):

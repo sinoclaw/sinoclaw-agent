@@ -219,10 +219,10 @@ class TestIRCAdapterMessageParsing:
         writer.drain = AsyncMock()
         adapter._writer = writer
 
-        await adapter._handle_line(":server 433 * hermes :Nickname in use")
-        assert adapter._current_nick == "sinoclaw_"
+        await adapter._handle_line(":server 433 * testbot :Nickname in use")
+        assert adapter._current_nick == "testbot_"
         sent = writer.write.call_args[0][0]
-        assert b"NICK sinoclaw_" in sent
+        assert b"NICK testbot_" in sent
 
     @pytest.mark.asyncio
     async def test_handle_addressed_channel_message(self, adapter):
@@ -375,12 +375,12 @@ class TestIRCAdapterMessageParsing:
         writer.drain = AsyncMock()
         adapter._writer = writer
 
-        await adapter._handle_line(":server 433 * hermes :Nickname in use")
-        assert adapter._current_nick == "sinoclaw_"
-        await adapter._handle_line(":server 433 * sinoclaw_ :Nickname in use")
-        assert adapter._current_nick == "sinoclaw_1"
-        await adapter._handle_line(":server 433 * sinoclaw_1 :Nickname in use")
-        assert adapter._current_nick == "sinoclaw_2"
+        await adapter._handle_line(":server 433 * testbot :Nickname in use")
+        assert adapter._current_nick == "testbot_"
+        await adapter._handle_line(":server 433 * testbot_ :Nickname in use")
+        assert adapter._current_nick == "testbot_1"
+        await adapter._handle_line(":server 433 * testbot_1 :Nickname in use")
+        assert adapter._current_nick == "testbot_2"
 
 
 class TestIRCAdapterSplitting:
