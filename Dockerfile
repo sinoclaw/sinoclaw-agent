@@ -54,7 +54,7 @@ RUN npm cache clean --force && \
     npm install --prefer-offline --no-audit && \
     (cd web && npm install --prefer-offline --no-audit) && \
     (cd ui-tui && npm install --prefer-offline --no-audit) && \
-    npx playwright install --with-deps --only-shell --ignore-scripts && \
+    npx playwright install --with-deps chromium --only-shell && \
     npm cache clean --force
 
 # ---------- Layer-cached Python dependency install ----------
