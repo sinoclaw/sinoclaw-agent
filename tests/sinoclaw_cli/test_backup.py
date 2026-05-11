@@ -147,7 +147,7 @@ class TestShouldExclude:
 class TestBackup:
     def test_creates_zip(self, tmp_path, monkeypatch):
         """Backup creates a valid zip containing expected files."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
@@ -181,7 +181,7 @@ class TestBackup:
 
     def test_excludes_sinoclaw_agent(self, tmp_path, monkeypatch):
         """Backup does NOT include sinoclaw-agent/ directory."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
@@ -201,7 +201,7 @@ class TestBackup:
 
     def test_excludes_pycache(self, tmp_path, monkeypatch):
         """Backup does NOT include __pycache__ dirs."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
@@ -221,7 +221,7 @@ class TestBackup:
 
     def test_excludes_pid_files(self, tmp_path, monkeypatch):
         """Backup does NOT include PID files."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         _make_sinoclaw_tree(sinoclaw_home)
 
@@ -241,7 +241,7 @@ class TestBackup:
 
     def test_default_output_path(self, tmp_path, monkeypatch):
         """When no output path given, zip goes to ~/sinoclaw-backup-*.zip."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -312,7 +312,7 @@ class TestImport:
 
     def test_restores_files(self, tmp_path, monkeypatch):
         """Import extracts files into hermes home."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -337,15 +337,15 @@ class TestImport:
 
     def test_strips_sinoclaw_prefix(self, tmp_path, monkeypatch):
         """Import strips .hermes/ prefix if all entries share it."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
         zip_path = tmp_path / "backup.zip"
         self._make_backup_zip(zip_path, {
-            ".hermes/config.yaml": "model: test\n",
-            ".hermes/skills/a/SKILL.md": "# A\n",
+            ".sinoclaw/config.yaml": "model: test\n",
+            ".sinoclaw/skills/a/SKILL.md": "# A\n",
         })
 
         args = Namespace(zipfile=str(zip_path), force=True)
@@ -358,7 +358,7 @@ class TestImport:
 
     def test_rejects_empty_zip(self, tmp_path, monkeypatch):
         """Import rejects an empty zip."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -375,7 +375,7 @@ class TestImport:
 
     def test_rejects_non_sinoclaw_zip(self, tmp_path, monkeypatch):
         """Import rejects a zip that doesn't look like a hermes backup."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -394,7 +394,7 @@ class TestImport:
 
     def test_blocks_path_traversal(self, tmp_path, monkeypatch):
         """Import blocks zip entries with path traversal."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -418,7 +418,7 @@ class TestImport:
 
     def test_confirmation_prompt_abort(self, tmp_path, monkeypatch):
         """Import aborts when user says no to confirmation."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         # Pre-existing config triggers the confirmation
         (sinoclaw_home / "config.yaml").write_text("existing: true\n")
@@ -441,7 +441,7 @@ class TestImport:
 
     def test_force_skips_confirmation(self, tmp_path, monkeypatch):
         """Import with --force skips confirmation and overwrites."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("existing: true\n")
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -461,7 +461,7 @@ class TestImport:
 
     def test_missing_file_exits(self, tmp_path, monkeypatch):
         """Import exits with error for nonexistent file."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
@@ -474,7 +474,7 @@ class TestImport:
     @pytest.mark.skipif(os.name != "posix", reason="POSIX file permissions only")
     def test_restores_secret_files_with_0600_perms(self, tmp_path, monkeypatch):
         """Secret files must end up at 0600 after restore (zipfile drops mode bits)."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -506,7 +506,7 @@ class TestRoundTrip:
     def test_backup_then_import(self, tmp_path, monkeypatch):
         """Full round-trip: backup -> import to a new location -> verify."""
         # Source
-        src_home = tmp_path / "source" / ".hermes"
+        src_home = tmp_path / "source" / ".sinoclaw"
         src_home.mkdir(parents=True)
         _make_sinoclaw_tree(src_home)
 
@@ -521,7 +521,7 @@ class TestRoundTrip:
         assert out_zip.exists()
 
         # Import into a different location
-        dst_home = tmp_path / "dest" / ".hermes"
+        dst_home = tmp_path / "dest" / ".sinoclaw"
         dst_home.mkdir(parents=True)
         monkeypatch.setenv("SINOCLAW_HOME", str(dst_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "dest")
@@ -617,11 +617,11 @@ class TestValidation:
 
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w") as zf:
-            zf.writestr(".hermes/config.yaml", "test")
-            zf.writestr(".hermes/skills/a/SKILL.md", "skill")
+            zf.writestr(".sinoclaw/config.yaml", "test")
+            zf.writestr(".sinoclaw/skills/a/SKILL.md", "skill")
         buf.seek(0)
         with zipfile.ZipFile(buf, "r") as zf:
-            assert _detect_prefix(zf) == ".hermes/"
+            assert _detect_prefix(zf) == ".sinoclaw/"
 
     def test_detect_prefix_none(self):
         """No prefix when entries are at root."""
@@ -644,8 +644,8 @@ class TestValidation:
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w") as zf:
             # Only directory entries (trailing slash)
-            zf.writestr(".hermes/", "")
-            zf.writestr(".hermes/skills/", "")
+            zf.writestr(".sinoclaw/", "")
+            zf.writestr(".sinoclaw/skills/", "")
         buf.seek(0)
         with zipfile.ZipFile(buf, "r") as zf:
             assert _detect_prefix(zf) == ""
@@ -670,7 +670,7 @@ class TestBackupEdgeCases:
 
     def test_output_is_directory(self, tmp_path, monkeypatch):
         """When output path is a directory, zip is created inside it."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -690,7 +690,7 @@ class TestBackupEdgeCases:
 
     def test_output_without_zip_suffix(self, tmp_path, monkeypatch):
         """Output path without .zip gets suffix appended."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -708,7 +708,7 @@ class TestBackupEdgeCases:
 
     def test_empty_sinoclaw_home(self, tmp_path, monkeypatch):
         """Backup handles empty hermes home (no files to back up)."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         # Only excluded dirs, no actual files
         (sinoclaw_home / "__pycache__").mkdir()
@@ -727,7 +727,7 @@ class TestBackupEdgeCases:
 
     def test_permission_error_during_backup(self, tmp_path, monkeypatch):
         """Backup handles permission errors gracefully."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -754,7 +754,7 @@ class TestBackupEdgeCases:
 
     def test_pre1980_timestamp_skipped(self, tmp_path, monkeypatch):
         """Backup skips files with pre-1980 timestamps (ZIP limitation)."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -782,7 +782,7 @@ class TestBackupEdgeCases:
 
     def test_skips_output_zip_inside_hermes(self, tmp_path, monkeypatch):
         """Backup skips its own output zip if it's inside hermes root."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
 
@@ -810,7 +810,7 @@ class TestImportEdgeCases:
 
     def test_not_a_zip(self, tmp_path, monkeypatch):
         """Import rejects a non-zip file."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
 
@@ -825,7 +825,7 @@ class TestImportEdgeCases:
 
     def test_eof_during_confirmation(self, tmp_path, monkeypatch):
         """Import handles EOFError during confirmation prompt."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("existing\n")
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -843,7 +843,7 @@ class TestImportEdgeCases:
 
     def test_keyboard_interrupt_during_confirmation(self, tmp_path, monkeypatch):
         """Import handles KeyboardInterrupt during confirmation prompt."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / ".env").write_text("KEY=val\n")
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -861,7 +861,7 @@ class TestImportEdgeCases:
 
     def test_permission_error_during_import(self, tmp_path, monkeypatch):
         """Import handles permission errors during extraction."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -890,7 +890,7 @@ class TestImportEdgeCases:
 
     def test_progress_with_many_files(self, tmp_path, monkeypatch):
         """Import shows progress with 500+ files."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -923,7 +923,7 @@ class TestProfileRestoration:
 
     def test_import_creates_profile_wrappers(self, tmp_path, monkeypatch):
         """Import auto-creates wrapper scripts for restored profiles."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -959,7 +959,7 @@ class TestProfileRestoration:
 
     def test_import_skips_profile_dirs_without_config(self, tmp_path, monkeypatch):
         """Import doesn't create wrappers for profile dirs without config."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -985,7 +985,7 @@ class TestProfileRestoration:
 
     def test_import_without_profiles_module(self, tmp_path, monkeypatch):
         """Import gracefully handles missing profiles module (fresh install)."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -1068,7 +1068,7 @@ class TestQuickSnapshot:
     @pytest.fixture
     def sinoclaw_home(self, tmp_path):
         """Create a fake SINOCLAW_HOME with critical state files."""
-        home = tmp_path / ".hermes"
+        home = tmp_path / ".sinoclaw"
         home.mkdir()
         (home / "config.yaml").write_text("model:\n  provider: openrouter\n")
         (home / ".env").write_text("OPENROUTER_API_KEY=test-key-123\n")
@@ -1279,7 +1279,7 @@ class TestPreUpdateBackup:
 
     @pytest.fixture
     def sinoclaw_home(self, tmp_path):
-        root = tmp_path / ".hermes"
+        root = tmp_path / ".sinoclaw"
         root.mkdir()
         _make_sinoclaw_tree(root)
         return root
@@ -1428,7 +1428,7 @@ class TestRunPreUpdateBackup:
 
     @pytest.fixture
     def sinoclaw_home(self, tmp_path, monkeypatch):
-        root = tmp_path / ".hermes"
+        root = tmp_path / ".sinoclaw"
         root.mkdir()
         _make_sinoclaw_tree(root)
         # Point SINOCLAW_HOME at the temp dir so config + backup paths resolve here
@@ -1547,7 +1547,7 @@ class TestPreMigrationBackup:
 
     @pytest.fixture
     def sinoclaw_home(self, tmp_path):
-        root = tmp_path / ".hermes"
+        root = tmp_path / ".sinoclaw"
         root.mkdir()
         _make_sinoclaw_tree(root)
         return root

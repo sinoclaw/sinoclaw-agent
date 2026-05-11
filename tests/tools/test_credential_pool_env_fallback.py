@@ -35,7 +35,7 @@ def isolated_sinoclaw_home(tmp_path, monkeypatch):
 
     Also invalidates any cached get_env_value state by patching Path.home().
     """
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.setenv("SINOCLAW_HOME", str(home))

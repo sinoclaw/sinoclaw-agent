@@ -8,7 +8,7 @@ Hermetic-test invariants enforced here (see AGENTS.md for rationale):
 2. **Isolated SINOCLAW_HOME.** SINOCLAW_HOME points to a per-test tempdir so
    code reading ``~/.sinoclaw/*`` via ``get_sinoclaw_home()`` can't see the
    real one. (We do NOT also redirect HOME — that broke subprocesses in
-   CI. Code using ``Path.home() / ".hermes"`` instead of the canonical
+   CI. Code using ``Path.home() / ".sinoclaw"`` instead of the canonical
    ``get_sinoclaw_home()`` is a bug to fix at the callsite.)
 3. **Deterministic runtime.** TZ=UTC, LANG=C.UTF-8, PYTHONHASHSEED=0.
 4. **No SINOCLAW_SESSION_* inheritance** — the agent's current gateway
@@ -266,7 +266,7 @@ def _hermetic_environment(tmp_path, monkeypatch):
     #    inherit HOME and expect it to be stable. If a test genuinely
     #    needs HOME isolated, it should set it explicitly in its own
     #    fixture. Any code in the codebase reading ``~/.sinoclaw/*`` via
-    #    ``Path.home() / ".hermes"`` instead of ``get_sinoclaw_home()``
+    #    ``Path.home() / ".sinoclaw"`` instead of ``get_sinoclaw_home()``
     #    is a bug to fix at the callsite.
     fake_sinoclaw_home = tmp_path / "sinoclaw_test"
     fake_sinoclaw_home.mkdir()

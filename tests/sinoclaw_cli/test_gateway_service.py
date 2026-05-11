@@ -1533,7 +1533,7 @@ class TestProfileArg:
 
     def test_default_sinoclaw_home_returns_empty(self, tmp_path, monkeypatch):
         """Default ~/.sinoclaw should not produce a --profile flag."""
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -1542,10 +1542,10 @@ class TestProfileArg:
 
     def test_named_profile_returns_flag(self, tmp_path, monkeypatch):
         """~/.sinoclaw/profiles/mybot should return '--profile mybot'."""
-        profile_dir = tmp_path / ".hermes" / "profiles" / "mybot"
+        profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".hermes"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(profile_dir))
         assert result == "--profile mybot"
 
@@ -1554,31 +1554,31 @@ class TestProfileArg:
         custom_home = tmp_path / "custom" / "hermes"
         custom_home.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".hermes"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(custom_home))
         assert result == ""
 
     def test_nested_profile_path_returns_empty(self, tmp_path, monkeypatch):
         """~/.sinoclaw/profiles/mybot/subdir should NOT match — too deep."""
-        nested = tmp_path / ".hermes" / "profiles" / "mybot" / "subdir"
+        nested = tmp_path / ".sinoclaw" / "profiles" / "mybot" / "subdir"
         nested.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".hermes"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(nested))
         assert result == ""
 
     def test_invalid_profile_name_returns_empty(self, tmp_path, monkeypatch):
         """Profile names with invalid chars should not match the regex."""
-        bad_profile = tmp_path / ".hermes" / "profiles" / "My Bot!"
+        bad_profile = tmp_path / ".sinoclaw" / "profiles" / "My Bot!"
         bad_profile.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
-        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".hermes"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / ".sinoclaw"))
         result = gateway_cli._profile_arg(str(bad_profile))
         assert result == ""
 
     def test_systemd_unit_includes_profile(self, tmp_path, monkeypatch):
         """generate_systemd_unit should include --profile in ExecStart for named profiles."""
-        profile_dir = tmp_path / ".hermes" / "profiles" / "mybot"
+        profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(profile_dir))
@@ -1589,7 +1589,7 @@ class TestProfileArg:
 
     def test_launchd_plist_includes_profile(self, tmp_path, monkeypatch):
         """generate_launchd_plist should include --profile in ProgramArguments for named profiles."""
-        profile_dir = tmp_path / ".hermes" / "profiles" / "mybot"
+        profile_dir = tmp_path / ".sinoclaw" / "profiles" / "mybot"
         profile_dir.mkdir(parents=True)
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
         monkeypatch.setenv("SINOCLAW_HOME", str(profile_dir))
@@ -1599,7 +1599,7 @@ class TestProfileArg:
         assert "<string>mybot</string>" in plist
 
     def test_launchd_plist_path_uses_real_user_home_not_profile_home(self, tmp_path, monkeypatch):
-        profile_dir = tmp_path / ".hermes" / "profiles" / "orcha"
+        profile_dir = tmp_path / ".sinoclaw" / "profiles" / "orcha"
         profile_dir.mkdir(parents=True)
         machine_home = tmp_path / "machine-home"
         machine_home.mkdir()
@@ -1623,10 +1623,10 @@ class TestRemapPathForUser:
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "root")
         (tmp_path / "root").mkdir()
         result = gateway_cli._remap_path_for_user(
-            str(tmp_path / "root" / ".hermes" / "sinoclaw-agent"),
+            str(tmp_path / "root" / ".sinoclaw" / "sinoclaw-agent"),
             str(tmp_path / "alice"),
         )
-        assert result == str(tmp_path / "alice" / ".hermes" / "sinoclaw-agent")
+        assert result == str(tmp_path / "alice" / ".sinoclaw" / "sinoclaw-agent")
 
     def test_keeps_system_path_unchanged(self, monkeypatch, tmp_path):
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "root")
@@ -1637,7 +1637,7 @@ class TestRemapPathForUser:
     def test_noop_when_same_user(self, monkeypatch, tmp_path):
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "alice")
         (tmp_path / "alice").mkdir()
-        original = str(tmp_path / "alice" / ".hermes" / "sinoclaw-agent")
+        original = str(tmp_path / "alice" / ".sinoclaw" / "sinoclaw-agent")
         result = gateway_cli._remap_path_for_user(original, str(tmp_path / "alice"))
         assert result == original
 
@@ -1648,7 +1648,7 @@ class TestSystemUnitPathRemapping:
     def test_system_unit_has_no_root_paths(self, monkeypatch, tmp_path):
         root_home = tmp_path / "root"
         root_home.mkdir()
-        project = root_home / ".hermes" / "sinoclaw-agent"
+        project = root_home / ".sinoclaw" / "sinoclaw-agent"
         project.mkdir(parents=True)
         venv_bin = project / "venv" / "bin"
         venv_bin.mkdir(parents=True)
@@ -1657,8 +1657,8 @@ class TestSystemUnitPathRemapping:
         target_home = "/home/alice"
 
         monkeypatch.setattr(Path, "home", lambda: root_home)
-        monkeypatch.setenv("SINOCLAW_HOME", str(root_home / ".hermes"))
-        monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: root_home / ".hermes")
+        monkeypatch.setenv("SINOCLAW_HOME", str(root_home / ".sinoclaw"))
+        monkeypatch.setattr(gateway_cli, "get_sinoclaw_home", lambda: root_home / ".sinoclaw")
         monkeypatch.setattr(gateway_cli, "PROJECT_ROOT", project)
         monkeypatch.setattr(gateway_cli, "_detect_venv_dir", lambda: project / "venv")
         monkeypatch.setattr(gateway_cli, "get_python_path", lambda: str(venv_bin / "python"))

@@ -25,7 +25,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate_home(tmp_path, monkeypatch):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     yield sinoclaw_home

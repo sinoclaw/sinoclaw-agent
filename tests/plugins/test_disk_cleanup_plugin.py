@@ -28,7 +28,7 @@ def _isolate_env(tmp_path, monkeypatch):
     but we want the plugin to work with a predictable subpath. We reset
     SINOCLAW_HOME here for clarity.
     """
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     yield sinoclaw_home

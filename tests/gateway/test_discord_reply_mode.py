@@ -402,7 +402,7 @@ class TestYamlConfigLoading:
     """Tests for reply_to_mode loaded from config.yaml discord section."""
 
     def _write_config(self, tmp_path, content: str):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(content, encoding="utf-8")
         return sinoclaw_home

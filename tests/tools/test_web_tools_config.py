@@ -140,7 +140,7 @@ class TestFirecrawlClientConfig:
     def test_nous_auth_token_respects_sinoclaw_home_override(self, tmp_path):
         """Auth lookup should read from SINOCLAW_HOME/auth.json, not ~/.sinoclaw/auth.json."""
         real_home = tmp_path / "real-home"
-        (real_home / ".hermes").mkdir(parents=True)
+        (real_home / ".sinoclaw").mkdir(parents=True)
 
         sinoclaw_home = tmp_path / "sinoclaw-home"
         sinoclaw_home.mkdir()

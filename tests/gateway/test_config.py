@@ -249,7 +249,7 @@ class TestGatewayConfigRoundtrip:
 
 class TestLoadGatewayConfig:
     def test_bridges_quick_commands_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -267,7 +267,7 @@ class TestLoadGatewayConfig:
         assert config.quick_commands == {"limits": {"type": "exec", "command": "echo ok"}}
 
     def test_bridges_group_sessions_per_user_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text("group_sessions_per_user: false\n", encoding="utf-8")
@@ -279,7 +279,7 @@ class TestLoadGatewayConfig:
         assert config.group_sessions_per_user is False
 
     def test_bridges_thread_sessions_per_user_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text("thread_sessions_per_user: true\n", encoding="utf-8")
@@ -291,7 +291,7 @@ class TestLoadGatewayConfig:
         assert config.thread_sessions_per_user is True
 
     def test_thread_sessions_per_user_defaults_to_false(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text("{}\n", encoding="utf-8")
@@ -303,7 +303,7 @@ class TestLoadGatewayConfig:
         assert config.thread_sessions_per_user is False
 
     def test_bridges_quoted_false_platform_enabled_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -321,7 +321,7 @@ class TestLoadGatewayConfig:
         assert Platform.API_SERVER not in config.get_connected_platforms()
 
     def test_bridges_quoted_false_session_notify_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -337,7 +337,7 @@ class TestLoadGatewayConfig:
         assert config.default_reset_policy.notify is False
 
     def test_bridges_quoted_false_always_log_local_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -352,7 +352,7 @@ class TestLoadGatewayConfig:
         assert config.always_log_local is False
 
     def test_bridges_discord_channel_prompts_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -373,7 +373,7 @@ class TestLoadGatewayConfig:
         }
 
     def test_bridges_telegram_channel_prompts_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -394,7 +394,7 @@ class TestLoadGatewayConfig:
         }
 
     def test_bridges_slack_channel_prompts_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -413,7 +413,7 @@ class TestLoadGatewayConfig:
         }
 
     def test_bridges_feishu_allow_bots_from_config_yaml_to_env(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -429,7 +429,7 @@ class TestLoadGatewayConfig:
         assert os.environ.get("FEISHU_ALLOW_BOTS") == "mentions"
 
     def test_feishu_allow_bots_env_takes_precedence_over_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -445,7 +445,7 @@ class TestLoadGatewayConfig:
         assert os.environ.get("FEISHU_ALLOW_BOTS") == "none"
 
     def test_invalid_quick_commands_in_config_yaml_are_ignored(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text("quick_commands: not-a-mapping\n", encoding="utf-8")
@@ -457,7 +457,7 @@ class TestLoadGatewayConfig:
         assert config.quick_commands == {}
 
     def test_bridges_unauthorized_dm_behavior_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -475,7 +475,7 @@ class TestLoadGatewayConfig:
         assert config.platforms[Platform.WHATSAPP].extra["unauthorized_dm_behavior"] == "pair"
 
     def test_bridges_telegram_disable_link_previews_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -491,7 +491,7 @@ class TestLoadGatewayConfig:
         assert config.platforms[Platform.TELEGRAM].extra["disable_link_previews"] is True
 
     def test_bridges_notice_delivery_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -507,7 +507,7 @@ class TestLoadGatewayConfig:
         assert config.get_notice_delivery(Platform.SLACK) == "private"
 
     def test_bridges_telegram_proxy_url_from_config_yaml(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(
@@ -525,7 +525,7 @@ class TestLoadGatewayConfig:
         assert os.environ.get("TELEGRAM_PROXY") == "socks5://127.0.0.1:1080"
 
     def test_telegram_proxy_env_takes_precedence_over_config(self, tmp_path, monkeypatch):
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         config_path = sinoclaw_home / "config.yaml"
         config_path.write_text(

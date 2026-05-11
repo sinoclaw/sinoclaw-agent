@@ -106,7 +106,7 @@ class TestConfigFilePermissions(unittest.TestCase):
             self.assertEqual(file_mode, 0o600)
 
     def test_ensure_sinoclaw_home_sets_0700(self):
-        home = Path(self.tmpdir) / ".hermes"
+        home = Path(self.tmpdir) / ".sinoclaw"
         with patch("sinoclaw_cli.config.get_sinoclaw_home", return_value=home):
             from sinoclaw_cli.config import ensure_sinoclaw_home
             ensure_sinoclaw_home()

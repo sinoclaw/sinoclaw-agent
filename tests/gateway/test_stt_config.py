@@ -17,7 +17,7 @@ def test_gateway_config_stt_disabled_from_dict_nested():
 
 
 def test_load_gateway_config_bridges_stt_enabled_from_config_yaml(tmp_path, monkeypatch):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     (sinoclaw_home / "config.yaml").write_text(
         yaml.dump({"stt": {"enabled": False}}),

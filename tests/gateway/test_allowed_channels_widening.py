@@ -115,7 +115,7 @@ class TestTelegramAllowedChats:
         """slack-style config.yaml → env var bridge works."""
         from gateway.config import load_gateway_config
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(
             "telegram:\n"
@@ -136,7 +136,7 @@ class TestTelegramAllowedChats:
     def test_config_bridge_env_takes_precedence(self, monkeypatch, tmp_path):
         from gateway.config import load_gateway_config
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(
             "telegram:\n"
@@ -208,7 +208,7 @@ class TestDingTalkAllowedChats:
     def test_config_bridge(self, monkeypatch, tmp_path):
         from gateway.config import load_gateway_config
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(
             "dingtalk:\n"
@@ -280,7 +280,7 @@ class TestMattermostAllowedChannels:
     def test_config_bridge(self, monkeypatch, tmp_path):
         from gateway.config import load_gateway_config
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(
             "mattermost:\n"
@@ -345,7 +345,7 @@ class TestMatrixAllowedRooms:
     def test_config_bridge(self, monkeypatch, tmp_path):
         from gateway.config import load_gateway_config
 
-        sinoclaw_home = tmp_path / ".hermes"
+        sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text(
             "matrix:\n"

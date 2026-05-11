@@ -34,7 +34,7 @@ def _make_fake_jwt(expiry_offset: int = 3600) -> str:
 @pytest.fixture()
 def sinoclaw_auth_only_env(tmp_path, monkeypatch):
     """Tokens already in Sinoclaw auth store (no Codex CLI needed)."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -80,7 +80,7 @@ def claude_code_only_env(tmp_path, monkeypatch):
     """Set up an environment where Anthropic credentials only exist in
     ~/.claude/.credentials.json (Claude Code) — not in env vars or Hermes
     auth store."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -135,7 +135,7 @@ def test_claude_code_file_detected_by_model_picker(claude_code_only_env):
 
 def test_no_codex_when_no_credentials(tmp_path, monkeypatch):
     """openai-codex should NOT appear when no credentials exist anywhere."""
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
 
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))

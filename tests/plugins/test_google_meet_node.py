@@ -19,7 +19,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate_home(tmp_path, monkeypatch):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
     yield sinoclaw_home
@@ -219,7 +219,7 @@ def test_registry_defaults_to_sinoclaw_home(tmp_path, monkeypatch):
     # registry default path must live inside that tree.
     r = NodeRegistry()
     r.add("x", "ws://x", "t")
-    expected = Path(tmp_path) / ".hermes" / "workspace" / "meetings" / "nodes.json"
+    expected = Path(tmp_path) / ".sinoclaw" / "workspace" / "meetings" / "nodes.json"
     assert expected.is_file()
 
 

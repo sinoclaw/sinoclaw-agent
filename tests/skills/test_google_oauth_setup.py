@@ -301,7 +301,7 @@ class TestSinoclawConstantsFallback:
 
     def test_fallback_display_sinoclaw_home_profile_path(self, monkeypatch):
         """Fallback display_sinoclaw_home() handles profile paths under ~/."""
-        monkeypatch.setenv("SINOCLAW_HOME", str(Path.home() / ".hermes/profiles/coder"))
+        monkeypatch.setenv("SINOCLAW_HOME", str(Path.home() / ".sinoclaw/profiles/coder"))
         module = self._load_helper(monkeypatch)
         assert module.display_sinoclaw_home() == "~/.hermes/profiles/coder"
 

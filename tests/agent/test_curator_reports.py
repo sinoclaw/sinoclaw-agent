@@ -17,7 +17,7 @@ import pytest
 @pytest.fixture
 def curator_env(tmp_path, monkeypatch):
     """Isolated SINOCLAW_HOME with a skills/ dir + reset curator module state."""
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".sinoclaw"
     home.mkdir()
     (home / "skills").mkdir()
     (home / "logs").mkdir()

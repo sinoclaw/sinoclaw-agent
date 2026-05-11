@@ -106,7 +106,7 @@ def test_invalid_regex_patterns_are_ignored():
 
 
 def test_config_bridges_whatsapp_group_settings(monkeypatch, tmp_path):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     (sinoclaw_home / "config.yaml").write_text(
         "whatsapp:\n"
@@ -247,7 +247,7 @@ def test_group_policy_open_allows_all_groups():
 # --- Config bridging tests ---
 
 def test_config_bridges_whatsapp_dm_and_group_policy(monkeypatch, tmp_path):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     (sinoclaw_home / "config.yaml").write_text(
         "whatsapp:\n"
@@ -275,7 +275,7 @@ def test_config_bridges_whatsapp_dm_and_group_policy(monkeypatch, tmp_path):
 
 
 def test_config_bridges_whatsapp_allow_from(monkeypatch, tmp_path):
-    sinoclaw_home = tmp_path / ".hermes"
+    sinoclaw_home = tmp_path / ".sinoclaw"
     sinoclaw_home.mkdir()
     (sinoclaw_home / "config.yaml").write_text(
         "whatsapp:\n"
