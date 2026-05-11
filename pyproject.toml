@@ -133,7 +133,7 @@ rl = [
   "uvicorn[standard]>=0.24.0,<1",
   "wandb>=0.15.0,<1",
 ]
-yc-bench = ["yc-bench>=0.1.0"]
+yc-bench = ["yc-bench>=0.1.0 ; python_version >= '3.12'"]
 all = [
   "sinoclaw-agent[modal]",
   "sinoclaw-agent[daytona]",
