@@ -404,29 +404,29 @@ class TestResolveActiveHost:
         with patch.dict(os.environ, {}, clear=True):
             os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             os.environ.pop("SINOCLAW_HOME", None)
-            assert resolve_active_host() == "hermes"
+            assert resolve_active_host() == "sinoclaw"
 
     def test_explicit_env_var_wins(self):
-        with patch.dict(os.environ, {"SINOCLAW_HONCHO_HOST": "hermes.coder"}):
-            assert resolve_active_host() == "hermes.coder"
+        with patch.dict(os.environ, {"SINOCLAW_HONCHO_HOST": "sinoclaw.coder"}):
+            assert resolve_active_host() == "sinoclaw.coder"
 
     def test_profile_name_derives_host(self):
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="coder"):
-                assert resolve_active_host() == "hermes.coder"
+                assert resolve_active_host() == "sinoclaw.coder"
 
     def test_default_profile_returns_hermes(self):
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="default"):
-                assert resolve_active_host() == "hermes"
+                assert resolve_active_host() == "sinoclaw"
 
     def test_custom_profile_returns_hermes(self):
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("SINOCLAW_HONCHO_HOST", None)
             with patch("sinoclaw_cli.profiles.get_active_profile_name", return_value="custom"):
-                assert resolve_active_host() == "hermes"
+                assert resolve_active_host() == "sinoclaw"
 
     def test_profiles_import_failure_falls_back(self):
         import sys
@@ -436,7 +436,7 @@ class TestResolveActiveHost:
             saved = sys.modules.get("sinoclaw_cli.profiles")
             sys.modules["sinoclaw_cli.profiles"] = None  # type: ignore
             try:
-                assert resolve_active_host() == "hermes"
+                assert resolve_active_host() == "sinoclaw"
             finally:
                 if saved is not None:
                     sys.modules["sinoclaw_cli.profiles"] = saved
@@ -447,36 +447,36 @@ class TestResolveActiveHost:
 class TestProfileScopedConfig:
     def test_from_env_uses_profile_host(self):
         with patch.dict(os.environ, {"HONCHO_API_KEY": "key"}):
-            config = HonchoClientConfig.from_env(host="hermes.coder")
-        assert config.host == "hermes.coder"
-        assert config.workspace_id == "hermes"  # shared workspace
-        assert config.ai_peer == "hermes.coder"
+            config = HonchoClientConfig.from_env(host="sinoclaw.coder")
+        assert config.host == "sinoclaw.coder"
+        assert config.workspace_id == "sinoclaw"  # shared workspace
+        assert config.ai_peer == "sinoclaw.coder"
 
     def test_from_env_default_workspace_preserved_for_default_host(self):
         with patch.dict(os.environ, {"HONCHO_API_KEY": "key"}):
-            config = HonchoClientConfig.from_env(host="hermes")
-        assert config.host == "hermes"
-        assert config.workspace_id == "hermes"
+            config = HonchoClientConfig.from_env(host="sinoclaw")
+        assert config.host == "sinoclaw"
+        assert config.workspace_id == "sinoclaw"
 
     def test_from_global_config_reads_profile_host_block(self, tmp_path):
         config_file = tmp_path / "config.json"
         config_file.write_text(json.dumps({
-            "apiKey": "shared-key",
+            "apiKey": "***",
             "hosts": {
-                "hermes": {"aiPeer": "hermes", "peerName": "alice"},
-                "hermes.coder": {
-                    "aiPeer": "hermes.coder",
+                "sinoclaw": {"aiPeer": "sinoclaw", "peerName": "alice"},
+                "sinoclaw.coder": {
+                    "aiPeer": "sinoclaw.coder",
                     "peerName": "alice-coder",
                     "workspace": "coder-ws",
                 },
             },
         }))
         config = HonchoClientConfig.from_global_config(
-            host="hermes.coder", config_path=config_file,
+            host="sinoclaw.coder", config_path=config_file,
         )
-        assert config.host == "hermes.coder"
+        assert config.host == "sinoclaw.coder"
         assert config.workspace_id == "coder-ws"
-        assert config.ai_peer == "hermes.coder"
+        assert config.ai_peer == "sinoclaw.coder"
         assert config.peer_name == "alice-coder"
 
     def test_from_global_config_auto_resolves_host(self, tmp_path):
@@ -484,12 +484,12 @@ class TestProfileScopedConfig:
         config_file.write_text(json.dumps({
             "apiKey": "key",
             "hosts": {
-                "hermes.dreamer": {"peerName": "dreamer-user"},
+                "sinoclaw.dreamer": {"peerName": "dreamer-user"},
             },
         }))
-        with patch("plugins.memory.honcho.client.resolve_active_host", return_value="hermes.dreamer"):
+        with patch("plugins.memory.honcho.client.resolve_active_host", return_value="sinoclaw.dreamer"):
             config = HonchoClientConfig.from_global_config(config_path=config_file)
-        assert config.host == "hermes.dreamer"
+        assert config.host == "sinoclaw.dreamer"
         assert config.peer_name == "dreamer-user"
 
 
