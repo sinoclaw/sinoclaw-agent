@@ -1171,7 +1171,7 @@ def test_list_profiles_on_disk(tmp_path, monkeypatch):
 def test_list_profiles_on_disk_custom_root(tmp_path, monkeypatch):
     """list_profiles_on_disk respects a custom SINOCLAW_HOME root."""
     monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path))
-    profiles = tmp_path / ".sinoclaw" / "profiles"
+    profiles = tmp_path / "profiles"
     profiles.mkdir(parents=True)
     for name in ("researcher", "writer"):
         d = profiles / name

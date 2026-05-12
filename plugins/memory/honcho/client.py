@@ -702,9 +702,9 @@ def get_honcho_client(config: HonchoClientConfig | None = None) -> Honcho:
     resolved_timeout = config.timeout
     if not resolved_base_url or resolved_timeout is None:
         try:
-            from hermes_cli.config import load_config
-            hermes_cfg = load_config()
-            honcho_cfg = hermes_cfg.get("honcho", {})
+            from sinoclaw_cli.config import load_config
+            sinoclaw_cfg = load_config()
+            honcho_cfg = sinoclaw_cfg.get("honcho", {})
             if isinstance(honcho_cfg, dict):
                 if not resolved_base_url:
                     resolved_base_url = honcho_cfg.get("base_url", "").strip() or None

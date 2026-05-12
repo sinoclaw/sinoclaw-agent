@@ -13,15 +13,24 @@ from unittest.mock import AsyncMock
 import pytest
 
 from gateway.config import Platform, PlatformConfig
-from gateway.platforms.base import BasePlatformAdapter, MessageEvent, MessageType, SendResult
+from gateway.platforms.base import BasePlatformAdapter, MessageEvent, MessageType, SendResult, _thread_metadata_for_source, _reply_anchor_for_event
 from gateway.run import GatewayRunner
 from gateway.session import SessionSource, build_session_key
+
+
+class _MockGatewayRunner:
+    """Minimal mock of GatewayRunner that provides the methods needed for media delivery."""
+    def _thread_metadata_for_source(self, source, reply_to_message_id=None):
+        return _thread_metadata_for_source(source, reply_to_message_id)
+    
+    def _reply_anchor_for_event(self, event):
+        return _reply_anchor_for_event(event)
 
 
 class _MediaRoutingAdapter(BasePlatformAdapter):
     def __init__(self):
         super().__init__(PlatformConfig(enabled=True, token="test"), Platform.TELEGRAM)
-
+    
     async def connect(self):
         return True
 
@@ -121,7 +130,7 @@ async def test_streaming_delivery_routes_telegram_flac_media_tag_to_document_sen
     )
 
     await GatewayRunner._deliver_media_from_response(
-        object(),
+    _MockGatewayRunner(),
         "MEDIA:/tmp/speech.flac",
         event,
         adapter,
@@ -150,7 +159,7 @@ async def test_streaming_delivery_routes_non_voice_telegram_ogg_media_tag_to_doc
     )
 
     await GatewayRunner._deliver_media_from_response(
-        object(),
+    _MockGatewayRunner(),
         "MEDIA:/tmp/speech.ogg",
         event,
         adapter,
@@ -181,7 +190,7 @@ async def test_streaming_delivery_routes_telegram_mp3_media_tag_to_voice_sender(
     )
 
     await GatewayRunner._deliver_media_from_response(
-        object(),
+    _MockGatewayRunner(),
         "MEDIA:/tmp/speech.mp3",
         event,
         adapter,

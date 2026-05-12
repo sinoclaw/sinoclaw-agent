@@ -239,7 +239,7 @@ class TestIRCAdapterMessageParsing:
 
         adapter._dispatch_message = capture_dispatch
 
-        await adapter._handle_line(":user!u@host PRIVMSG #test :hermes: hello there")
+        await adapter._handle_line(":user!u@host PRIVMSG #test :testbot: hello there")
         assert len(dispatched) == 1
         assert dispatched[0]["text"] == "hello there"
         assert dispatched[0]["chat_id"] == "#test"
@@ -331,7 +331,7 @@ class TestIRCAdapterMessageParsing:
         adapter._message_handler = AsyncMock()
 
         # "admin" matches "Admin" in allowlist
-        await adapter._handle_line(":admin!u@host PRIVMSG #test :hermes: hello")
+        await adapter._handle_line(":admin!u@host PRIVMSG #test :testbot: hello")
         assert len(dispatched) == 1
         assert dispatched[0]["text"] == "hello"
 
@@ -363,7 +363,7 @@ class TestIRCAdapterMessageParsing:
         adapter._dispatch_message = capture_dispatch
         adapter._message_handler = AsyncMock()
 
-        await adapter._handle_line(":eve!u@host PRIVMSG #test :hermes: hello")
+        await adapter._handle_line(":eve!u@host PRIVMSG #test :testbot: hello")
         assert len(dispatched) == 0
 
     @pytest.mark.asyncio
