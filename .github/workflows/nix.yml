@@ -39,25 +39,24 @@ jobs:
         id: flake
         if: runner.os == 'Linux'
         continue-on-error: true
-        run: nix flake check --print-build-logs --option use-daemon false
+        run: nix flake check --print-build-logs
 
       - name: Clear stale nix derivation cache
         if: runner.os == 'Linux'
         run: |
-          # The nix-daemon caches .drv files whose embedded npm-deps path can drift
-          # from the current package-lock.json.  Delete any stale .drv for the web
-          # package so nix re-evaluates from scratch.
-          DRV=$(nix --print-build-logs eval .#sinoclaw-web.drvPath 2>/dev/null || true)
-          if [ -n "$DRV" ] && [ -f "$DRV" ]; then
-            echo "Removing stale .drv: $DRV"
-            nix store delete "$DRV" 2>/dev/null || sudo nix store delete "$DRV" 2>/dev/null || true
-          fi
+          # The nix-daemon caches .drv files whose embedded npm-deps path is
+          # inconsistent with the current package-lock.json.  Delete the known
+          # stale .drv so the next build re-evaluates from scratch.
+          echo "Removing stale .drv for sinoclaw-web..."
+          nix store delete /nix/store/svzhdhdpc7h2w6d5gasipsbwrxgfm4b3-sinoclaw-web-0.0.0.drv 2>/dev/null || true
+          nix store delete /nix/store/9fjplxw0zriwvbwcn0pdk92hmhf728cc-sinoclaw-agent-0.13.0.drv 2>/dev/null || true
+          echo "Done"
 
       - name: Build package
         id: build
         if: runner.os == 'Linux'
         continue-on-error: true
-        run: nix build --print-build-logs --option use-daemon false
+        run: nix build --print-build-logs
 
       # When the real Nix build fails, run a targeted diagnostic to see if
       # the failure is specifically a stale npm lockfile hash in one of the
