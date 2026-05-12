@@ -67,7 +67,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           echo "PASS: All binaries present"
 
           echo "=== Checking version ==="
-          ${sinoclaw-agent}/bin/sinoclaw-agent version 2>&1 | grep -qi "sinoclaw" || (echo "FAIL: version check"; exit 1)
+          ${sinoclaw-agent}/bin/sinoclaw version 2>&1 | grep -qi "sinoclaw" || (echo "FAIL: version check"; exit 1)
           echo "PASS: Version check"
 
           echo "=== All checks passed ==="
@@ -79,7 +79,7 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
         entry-points-sync = pkgs.runCommand "sinoclaw-entry-points-sync" { } ''
           set -e
           echo "=== Checking entry points match pyproject.toml [project.scripts] ==="
-          for bin in sinoclaw-agent sinoclaw-acp; do
+          for bin in sinoclaw sinoclaw-agent sinoclaw-acp; do
             test -x ${sinoclaw-agent}/bin/$bin || (echo "FAIL: $bin binary missing from Nix package"; exit 1)
             echo "PASS: $bin present"
           done
