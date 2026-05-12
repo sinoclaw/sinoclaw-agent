@@ -150,4 +150,4 @@ esac
 if [ $# -gt 0 ] && command -v "$1" >/dev/null 2>&1; then
     exec "$@"
 fi
-exec sinoclaw "$@"
+exec sinoclaw-agent "$@"

@@ -59,7 +59,7 @@ class TestPinPeerNameConfigParsing:
             "apiKey": "k",
             "peerName": "Igor",
             "hosts": {
-                "hermes": {"pinPeerName": True},
+                "sinoclaw": {"pinPeerName": True},
             },
         }))
         monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "isolated"))
@@ -75,7 +75,7 @@ class TestPinPeerNameConfigParsing:
             "peerName": "Igor",
             "pinPeerName": True,
             "hosts": {
-                "hermes": {"pinPeerName": False},
+                "sinoclaw": {"pinPeerName": False},
             },
         }))
         monkeypatch.setenv("SINOCLAW_HOME", str(tmp_path / "isolated"))
