@@ -45,7 +45,7 @@ BOLD='\033[1m'
 # Configuration
 REPO_URL_SSH="git@github.com:sinoclaw/sinoclaw-agent.git"
 REPO_URL_HTTPS="https://github.com/sinoclaw/sinoclaw-agent.git"
-SINOCLAW_HOME="${SINOCLAW_HOME:-$HOME/.hermes}"
+SINOCLAW_HOME="${SINOCLAW_HOME:-$HOME/.sinoclaw}"
 # INSTALL_DIR is resolved AFTER arg parsing and OS detection so we can pick an
 # FHS-style layout for root installs.  Track whether the user gave us an
 # explicit directory — if so we never override it.
@@ -61,7 +61,7 @@ NODE_VERSION="22"
 
 # FHS-style root install layout (set by resolve_install_layout when applicable):
 #   code at /usr/local/lib/sinoclaw-agent, command at /usr/local/bin/hermes,
-#   data still at /root/.hermes (SINOCLAW_HOME).  Matches Claude Code / Codex CLI
+#   data still at /root/.sinoclaw (SINOCLAW_HOME).  Matches Claude Code / Codex CLI
 #   and keeps Docker bind-mounted /root/ volumes lean.
 ROOT_FHS_LAYOUT=false
 
@@ -123,7 +123,7 @@ while [[ $# -gt 0 ]]; do
             echo "  /usr/local/lib/sinoclaw-agent and links the command into"
             echo "  /usr/local/bin/hermes (FHS layout — matches Claude Code / Codex CLI)."
             echo "  Data, config, sessions, and logs still live in \$SINOCLAW_HOME"
-            echo "  (default /root/.hermes).  This keeps Docker bind-mounted volumes"
+            echo "  (default /root/.sinoclaw).  This keeps Docker bind-mounted volumes"
             echo "  small and ensures the command is on PATH for all shells."
             echo "  Existing installs at \$SINOCLAW_HOME/sinoclaw-agent are preserved in-place."
             exit 0
