@@ -4,7 +4,7 @@ let
   src = ../web;
   npmDeps = pkgs.fetchNpmDeps {
     inherit src;
-    hash = "sha256-3bKlnAj19IFabetC+VbedHKUsd79wKkPxu5NoI6Lgtg=";
+    hash = lib.fakeHash;
   };
 
   npm = hermesNpmLib.mkNpmPassthru { folder = "web"; attr = "web"; pname = "sinoclaw-web"; };
