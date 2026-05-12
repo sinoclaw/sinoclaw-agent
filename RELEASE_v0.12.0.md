@@ -9,13 +9,13 @@
 
 ## ✨ Highlights
 
-- **Autonomous Curator** — `hermes curator` runs as a background agent on the gateway's cron ticker (7-day cycle default). It grades your skill library, consolidates related skills, prunes dead ones, and writes per-run reports to `logs/curator/run.json` + `REPORT.md`. Archived skills are classified consolidated-vs-pruned via model + heuristic. Defense-in-depth gates protect bundled/hub skills from mutation. Unified under `auxiliary.curator` — pick the curator's model in `hermes model`, manage it from the dashboard. `hermes curator status` ranks skills by usage (most-used / least-used). ([#17277](https://github.com/NousResearch/sinoclaw-agent/pull/17277), [#17307](https://github.com/NousResearch/sinoclaw-agent/pull/17307), [#17941](https://github.com/NousResearch/sinoclaw-agent/pull/17941), [#17868](https://github.com/NousResearch/sinoclaw-agent/pull/17868), [#18033](https://github.com/NousResearch/sinoclaw-agent/pull/18033))
+- **Autonomous Curator** — `sinoclaw curator` runs as a background agent on the gateway's cron ticker (7-day cycle default). It grades your skill library, consolidates related skills, prunes dead ones, and writes per-run reports to `logs/curator/run.json` + `REPORT.md`. Archived skills are classified consolidated-vs-pruned via model + heuristic. Defense-in-depth gates protect bundled/hub skills from mutation. Unified under `auxiliary.curator` — pick the curator's model in `sinoclaw model`, manage it from the dashboard. `sinoclaw curator status` ranks skills by usage (most-used / least-used). ([#17277](https://github.com/NousResearch/sinoclaw-agent/pull/17277), [#17307](https://github.com/NousResearch/sinoclaw-agent/pull/17307), [#17941](https://github.com/NousResearch/sinoclaw-agent/pull/17941), [#17868](https://github.com/NousResearch/sinoclaw-agent/pull/17868), [#18033](https://github.com/NousResearch/sinoclaw-agent/pull/18033))
 
 - **Self-improvement loop — substantially upgraded** — The background review fork (the core of Hermes' self-improvement: after each turn it decides what memories/skills to save or update) is now class-first (rubric-based rather than free-form), active-update biased (prefers the skill the agent just loaded), handles `references/`/`templates/` sub-files, and properly inherits the parent's live runtime (provider, model, credentials actually propagate). Restricted to memory + skills toolsets so it can't sprawl. Memory providers shut down cleanly. Prior-turn tool messages excluded from the summary so the fork sees a clean context. ([#16026](https://github.com/NousResearch/sinoclaw-agent/pull/16026), [#17213](https://github.com/NousResearch/sinoclaw-agent/pull/17213), [#16099](https://github.com/NousResearch/sinoclaw-agent/pull/16099), [#16569](https://github.com/NousResearch/sinoclaw-agent/pull/16569), [#16204](https://github.com/NousResearch/sinoclaw-agent/pull/16204), [#15057](https://github.com/NousResearch/sinoclaw-agent/pull/15057))
 
 - **Skill integrations — major expansion** — **ComfyUI v5** with official CLI + REST + hardware-gated local install, moved from optional to **built-in by default** ([#17610](https://github.com/NousResearch/sinoclaw-agent/pull/17610), [#17631](https://github.com/NousResearch/sinoclaw-agent/pull/17631), [#17734](https://github.com/NousResearch/sinoclaw-agent/pull/17734)). **TouchDesigner-MCP** bundled by default, expanded with GLSL, post-FX, audio, geometry, and 9 new reference docs ([#16753](https://github.com/NousResearch/sinoclaw-agent/pull/16753), [#16624](https://github.com/NousResearch/sinoclaw-agent/pull/16624), [#16768](https://github.com/NousResearch/sinoclaw-agent/pull/16768) — @kshitijk4poor + @SHL0MS). **Humanizer** skill ports a text-cleaner that strips AI-isms ([#16787](https://github.com/NousResearch/sinoclaw-agent/pull/16787)). **claude-design** HTML artifact skill + design-md (Google DESIGN.md spec) + airtable salvage + `skill_manage` edits in `external_dirs` + direct-URL skill install + `/reload-skills` slash command. ([#16358](https://github.com/NousResearch/sinoclaw-agent/pull/16358), [#14876](https://github.com/NousResearch/sinoclaw-agent/pull/14876), [#16291](https://github.com/NousResearch/sinoclaw-agent/pull/16291), [#17512](https://github.com/NousResearch/sinoclaw-agent/pull/17512), [#16323](https://github.com/NousResearch/sinoclaw-agent/pull/16323), [#17744](https://github.com/NousResearch/sinoclaw-agent/pull/17744))
 
-- **LM Studio — first-class provider** — upgraded from a custom-endpoint alias to a full-blown native provider: dedicated auth, `hermes doctor` checks, reasoning transport, live `/models` listing. (Salvage of @kshitijk4poor's #17061.) ([#17102](https://github.com/NousResearch/sinoclaw-agent/pull/17102))
+- **LM Studio — first-class provider** — upgraded from a custom-endpoint alias to a full-blown native provider: dedicated auth, `sinoclaw doctor` checks, reasoning transport, live `/models` listing. (Salvage of @kshitijk4poor's #17061.) ([#17102](https://github.com/NousResearch/sinoclaw-agent/pull/17102))
 
 - **Four more new inference providers** — **GMI Cloud** (first-class, salvage of #11955 — @isaachuangGMICLOUD), **Azure AI Foundry** with auto-detection, **MiniMax OAuth** with PKCE browser flow (salvage #15203), **Tencent Tokenhub** (salvage of #16860). ([#16663](https://github.com/NousResearch/sinoclaw-agent/pull/16663), [#15845](https://github.com/NousResearch/sinoclaw-agent/pull/15845), [#17524](https://github.com/NousResearch/sinoclaw-agent/pull/17524), [#16960](https://github.com/NousResearch/sinoclaw-agent/pull/16960))
 
@@ -23,11 +23,11 @@
 
 - **Tencent 元宝 (Yuanbao) — 18th messaging platform** — native gateway adapter with text + media delivery. ([#16298](https://github.com/NousResearch/sinoclaw-agent/pull/16298), [#17424](https://github.com/NousResearch/sinoclaw-agent/pull/17424))
 
-- **Spotify — native tools + bundled skill + wizard** — 7 tools (play, search, queue, playlists, devices) behind PKCE OAuth, interactive setup wizard, bundled skill, surfacing in `hermes tools`, cron usage documented. ([#15121](https://github.com/NousResearch/sinoclaw-agent/pull/15121), [#15130](https://github.com/NousResearch/sinoclaw-agent/pull/15130), [#15154](https://github.com/NousResearch/sinoclaw-agent/pull/15154), [#15180](https://github.com/NousResearch/sinoclaw-agent/pull/15180))
+- **Spotify — native tools + bundled skill + wizard** — 7 tools (play, search, queue, playlists, devices) behind PKCE OAuth, interactive setup wizard, bundled skill, surfacing in `sinoclaw tools`, cron usage documented. ([#15121](https://github.com/NousResearch/sinoclaw-agent/pull/15121), [#15130](https://github.com/NousResearch/sinoclaw-agent/pull/15130), [#15154](https://github.com/NousResearch/sinoclaw-agent/pull/15154), [#15180](https://github.com/NousResearch/sinoclaw-agent/pull/15180))
 
 - **Google Meet plugin** — join calls, transcribe, speak, follow up. Realtime OpenAI transport + Node bot server, full pipeline bundled as a plugin. ([#16364](https://github.com/NousResearch/sinoclaw-agent/pull/16364))
 
-- **`hermes -z` one-shot mode + `hermes update --check`** — non-interactive `hermes -z <prompt>` with `--model`/`--provider`/`SINOCLAW_INFERENCE_MODEL`. `hermes update --check` preflight. Opt-in pre-update SINOCLAW_HOME backup. ([#15702](https://github.com/NousResearch/sinoclaw-agent/pull/15702), [#15704](https://github.com/NousResearch/sinoclaw-agent/pull/15704), [#15841](https://github.com/NousResearch/sinoclaw-agent/pull/15841), [#16539](https://github.com/NousResearch/sinoclaw-agent/pull/16539), [#16566](https://github.com/NousResearch/sinoclaw-agent/pull/16566))
+- **`sinoclaw -z` one-shot mode + `sinoclaw update --check`** — non-interactive `sinoclaw -z <prompt>` with `--model`/`--provider`/`SINOCLAW_INFERENCE_MODEL`. `sinoclaw update --check` preflight. Opt-in pre-update SINOCLAW_HOME backup. ([#15702](https://github.com/NousResearch/sinoclaw-agent/pull/15702), [#15704](https://github.com/NousResearch/sinoclaw-agent/pull/15704), [#15841](https://github.com/NousResearch/sinoclaw-agent/pull/15841), [#16539](https://github.com/NousResearch/sinoclaw-agent/pull/16539), [#16566](https://github.com/NousResearch/sinoclaw-agent/pull/16566))
 
 - **Models dashboard tab + in-browser model config** — rich per-model analytics, switch main + auxiliary models from the dashboard. ([#17745](https://github.com/NousResearch/sinoclaw-agent/pull/17745), [#17802](https://github.com/NousResearch/sinoclaw-agent/pull/17802))
 
@@ -56,11 +56,11 @@
 ## 🧠 Autonomous Curator & Self-Improvement Loop
 
 ### Curator — autonomous skill maintenance
-- **`hermes curator` as a background agent** — runs on the gateway's cron ticker, 7-day cycle by default, umbrella-first prompt, inherits parent config, unbounded iterations ([#17277](https://github.com/NousResearch/sinoclaw-agent/pull/17277) — issue #7816)
+- **`sinoclaw curator` as a background agent** — runs on the gateway's cron ticker, 7-day cycle by default, umbrella-first prompt, inherits parent config, unbounded iterations ([#17277](https://github.com/NousResearch/sinoclaw-agent/pull/17277) — issue #7816)
 - **Per-run reports** — `logs/curator/run.json` + `REPORT.md` per cycle ([#17307](https://github.com/NousResearch/sinoclaw-agent/pull/17307))
 - **Consolidated vs pruned classification** — archived skills split with model + heuristic ([#17941](https://github.com/NousResearch/sinoclaw-agent/pull/17941))
-- **`hermes curator status`** — ranks skills by usage, shows most-used and least-used ([#18033](https://github.com/NousResearch/sinoclaw-agent/pull/18033))
-- **Unified under `auxiliary.curator`** — pick the model in `hermes model`, configure from the dashboard ([#17868](https://github.com/NousResearch/sinoclaw-agent/pull/17868))
+- **`sinoclaw curator status`** — ranks skills by usage, shows most-used and least-used ([#18033](https://github.com/NousResearch/sinoclaw-agent/pull/18033))
+- **Unified under `auxiliary.curator`** — pick the model in `sinoclaw model`, configure from the dashboard ([#17868](https://github.com/NousResearch/sinoclaw-agent/pull/17868))
 - **Documentation** — dedicated curator feature page on the docs site ([#17563](https://github.com/NousResearch/sinoclaw-agent/pull/17563))
 - Fix: seed defaults on update, create `logs/curator/` directory, defer fire import ([#17927](https://github.com/NousResearch/sinoclaw-agent/pull/17927))
 - Fix: scan nested archive subdirs in `restore_skill` (@0xDevNinja) ([#17951](https://github.com/NousResearch/sinoclaw-agent/pull/17951))
@@ -91,9 +91,9 @@
 - **spike** + **sketch** — throwaway experiments + HTML mockups, adapted from gsd-build ([#17421](https://github.com/NousResearch/sinoclaw-agent/pull/17421))
 
 ### Skills UX
-- **Install skills from a direct HTTP(S) URL** — `hermes skills install <url>` ([#16323](https://github.com/NousResearch/sinoclaw-agent/pull/16323))
+- **Install skills from a direct HTTP(S) URL** — `sinoclaw skills install <url>` ([#16323](https://github.com/NousResearch/sinoclaw-agent/pull/16323))
 - **`/reload-skills`** slash command (salvage #17670) ([#17744](https://github.com/NousResearch/sinoclaw-agent/pull/17744))
-- **`hermes skills list`** shows enabled/disabled status ([#16129](https://github.com/NousResearch/sinoclaw-agent/pull/16129))
+- **`sinoclaw skills list`** shows enabled/disabled status ([#16129](https://github.com/NousResearch/sinoclaw-agent/pull/16129))
 - **`skill_manage` refuses writes on pinned skills** ([#17562](https://github.com/NousResearch/sinoclaw-agent/pull/17562))
 - **`skill_manage` edits external_dirs skills in place** (salvage #9966) ([#17512](https://github.com/NousResearch/sinoclaw-agent/pull/17512), [#17289](https://github.com/NousResearch/sinoclaw-agent/pull/17289))
 - Fix: inline-shell rendering in `skill_view` ([#15376](https://github.com/NousResearch/sinoclaw-agent/pull/15376))
@@ -127,7 +127,7 @@
 - **Configurable `prompt_caching.cache_ttl`** — 5m default, 1h opt-in (salvage #12659) ([#15065](https://github.com/NousResearch/sinoclaw-agent/pull/15065))
 - `/fast` whitelist broadened to all OpenAI + Anthropic models ([#16883](https://github.com/NousResearch/sinoclaw-agent/pull/16883))
 - `auxiliary.extra_body.reasoning` translates into Codex Responses API ([#17004](https://github.com/NousResearch/sinoclaw-agent/pull/17004))
-- `hermes fallback` command for managing fallback providers ([#16052](https://github.com/NousResearch/sinoclaw-agent/pull/16052))
+- `sinoclaw fallback` command for managing fallback providers ([#16052](https://github.com/NousResearch/sinoclaw-agent/pull/16052))
 
 ### Agent Loop & Conversation
 - **Native multimodal image routing** — based on model vision capability, not provider defaults ([#16506](https://github.com/NousResearch/sinoclaw-agent/pull/16506))
@@ -253,7 +253,7 @@
 - Fix: vision — use SINOCLAW_HOME-based cache dir instead of cwd ([#17719](https://github.com/NousResearch/sinoclaw-agent/pull/17719))
 
 ### Cron
-- **Honor `hermes tools` config for the cron platform** ([#14798](https://github.com/NousResearch/sinoclaw-agent/pull/14798))
+- **Honor `sinoclaw tools` config for the cron platform** ([#14798](https://github.com/NousResearch/sinoclaw-agent/pull/14798))
 - **Per-job `workdir`** — project-aware cron runs ([#15110](https://github.com/NousResearch/sinoclaw-agent/pull/15110))
 - **`context_from` field** — chain cron job outputs ([#15606](https://github.com/NousResearch/sinoclaw-agent/pull/15606))
 - Fix: promote `croniter` to a core dependency ([#17577](https://github.com/NousResearch/sinoclaw-agent/pull/17577))
@@ -313,10 +313,10 @@
 ## 🖱️ CLI & User Experience
 
 ### New commands
-- **`hermes -z <prompt>`** — non-interactive one-shot mode ([#15702](https://github.com/NousResearch/sinoclaw-agent/pull/15702))
-- **`hermes -z` with `--model` / `--provider` / `SINOCLAW_INFERENCE_MODEL`** ([#15704](https://github.com/NousResearch/sinoclaw-agent/pull/15704))
-- **`hermes update --check`** preflight flag ([#15841](https://github.com/NousResearch/sinoclaw-agent/pull/15841))
-- **`hermes fallback`** command for managing fallback providers ([#16052](https://github.com/NousResearch/sinoclaw-agent/pull/16052))
+- **`sinoclaw -z <prompt>`** — non-interactive one-shot mode ([#15702](https://github.com/NousResearch/sinoclaw-agent/pull/15702))
+- **`sinoclaw -z` with `--model` / `--provider` / `SINOCLAW_INFERENCE_MODEL`** ([#15704](https://github.com/NousResearch/sinoclaw-agent/pull/15704))
+- **`sinoclaw update --check`** preflight flag ([#15841](https://github.com/NousResearch/sinoclaw-agent/pull/15841))
+- **`sinoclaw fallback`** command for managing fallback providers ([#16052](https://github.com/NousResearch/sinoclaw-agent/pull/16052))
 - **`/busy`** slash command for busy input mode ([#15382](https://github.com/NousResearch/sinoclaw-agent/pull/15382))
 - **`/busy` input mode 'steer'** as a third option ([#16279](https://github.com/NousResearch/sinoclaw-agent/pull/16279))
 - **`/btw` as alias for `/background`** ([#16053](https://github.com/NousResearch/sinoclaw-agent/pull/16053))
@@ -331,12 +331,12 @@
 
 ### Update / backup
 - **Snapshot pairing data before `git pull`** ([#16383](https://github.com/NousResearch/sinoclaw-agent/pull/16383))
-- **Auto-backup SINOCLAW_HOME before `hermes update`** (opt-in, off by default) ([#16539](https://github.com/NousResearch/sinoclaw-agent/pull/16539), [#16566](https://github.com/NousResearch/sinoclaw-agent/pull/16566))
+- **Auto-backup SINOCLAW_HOME before `sinoclaw update`** (opt-in, off by default) ([#16539](https://github.com/NousResearch/sinoclaw-agent/pull/16539), [#16566](https://github.com/NousResearch/sinoclaw-agent/pull/16566))
 - **Exclude `checkpoints/` from backups** ([#16572](https://github.com/NousResearch/sinoclaw-agent/pull/16572))
 - **Exclude SQLite WAL/SHM/journal sidecars from backups** ([#16576](https://github.com/NousResearch/sinoclaw-agent/pull/16576))
 - **Installer FHS layout for root installs on Linux** ([#15608](https://github.com/NousResearch/sinoclaw-agent/pull/15608))
 - Fix: kill stale dashboards instead of warning ([#17832](https://github.com/NousResearch/sinoclaw-agent/pull/17832))
-- Fix: show correct update status on nix-built hermes ([#17550](https://github.com/NousResearch/sinoclaw-agent/pull/17550))
+- Fix: show correct update status on nix-built sinoclaw ([#17550](https://github.com/NousResearch/sinoclaw-agent/pull/17550))
 
 ### Slash-command housekeeping
 - Refactor: drop `/provider`, `/plan` handler, and clean up slash registry ([#15047](https://github.com/NousResearch/sinoclaw-agent/pull/15047))

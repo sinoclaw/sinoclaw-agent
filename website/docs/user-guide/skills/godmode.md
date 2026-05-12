@@ -137,7 +137,7 @@ agent:
     [####START OF OUTPUT####]
 ```
 
-The `agent.system_prompt` is appended **after** Hermes's own system prompt — it augments, not replaces.
+The `agent.system_prompt` is appended **after** Sinoclaw's own system prompt — it augments, not replaces.
 
 Or set via environment variable:
 
@@ -168,7 +168,7 @@ For maximum effect, combine the system prompt to set the jailbreak frame AND pre
 ## Quick Start Commands
 
 ```bash
-# Load the skill in a Hermes session
+# Load the skill in a Sinoclaw session
 /godmode
 
 # Or via CLI one-shot
@@ -249,7 +249,7 @@ Claude Sonnet 4 is robust against all current techniques for clearly harmful con
 
 5. **Always use `load_godmode.py` in execute_code** — The individual scripts (`parseltongue.py`, `godmode_race.py`, `auto_jailbreak.py`) have argparse CLI entry points. When loaded via `exec()` in execute_code, `__name__` is `'__main__'` and argparse fires, crashing the script. The loader handles this.
 
-6. **Restart Hermes after auto-jailbreak** — The CLI reads config once at startup. Gateway sessions pick up changes immediately.
+6. **Restart Sinoclaw after auto-jailbreak** — The CLI reads config once at startup. Gateway sessions pick up changes immediately.
 
 7. **execute_code sandbox lacks env vars** — Load dotenv explicitly: `from dotenv import load_dotenv; load_dotenv(os.path.expanduser("~/.sinoclaw/.env"))`
 

@@ -603,9 +603,9 @@ class HonchoClientConfig:
 
         Resolution order:
           1. Manual directory override from sessions map
-          2. Hermes session title (from /title command)
+          2. Sinoclaw session title (from /title command)
           3. Gateway session key (stable per-chat identifier from gateway platforms)
-          4. per-session strategy — Hermes session_id ({timestamp}_{hex})
+          4. per-session strategy — Sinoclaw session_id ({timestamp}_{hex})
           5. per-repo strategy — git repo root directory name
           6. per-directory strategy — directory basename
           7. global strategy — workspace name
@@ -638,7 +638,7 @@ class HonchoClientConfig:
             if sanitized:
                 return self._enforce_session_id_limit(sanitized, gateway_session_key)
 
-        # per-session: inherit Hermes session_id (new Honcho session each run)
+        # per-session: inherit Sinoclaw session_id (new Honcho session each run)
         if self.session_strategy == "per-session" and session_id:
             if self.session_peer_prefix and self.peer_name:
                 return f"{self.peer_name}-{session_id}"

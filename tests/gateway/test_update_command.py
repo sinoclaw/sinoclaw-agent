@@ -100,7 +100,7 @@ class TestHandleUpdateCommand:
 
     @pytest.mark.asyncio
     async def test_no_sinoclaw_binary(self, tmp_path):
-        """Returns error when hermes is not on PATH and sinoclaw_cli is not importable."""
+        """Returns error when sinoclaw is not on PATH and sinoclaw_cli is not importable."""
         runner = _make_runner()
         event = _make_event()
 
@@ -123,7 +123,7 @@ class TestHandleUpdateCommand:
 
     @pytest.mark.asyncio
     async def test_fallback_to_sys_executable(self, tmp_path):
-        """Falls back to sys.executable -m sinoclaw_cli.main when hermes not on PATH."""
+        """Falls back to sys.executable -m sinoclaw_cli.main when sinoclaw not on PATH."""
         runner = _make_runner()
         event = _make_event()
 
@@ -157,10 +157,10 @@ class TestHandleUpdateCommand:
         """_resolve_sinoclaw_bin returns argv parts from shutil.which when available."""
         from gateway.run import _resolve_sinoclaw_bin
 
-        with patch("shutil.which", return_value="/custom/path/hermes"):
+        with patch("shutil.which", return_value="/custom/path/sinoclaw"):
             result = _resolve_sinoclaw_bin()
 
-        assert result == ["/custom/path/hermes"]
+        assert result == ["/custom/path/sinoclaw"]
 
     @pytest.mark.asyncio
     async def test_resolve_sinoclaw_bin_fallback(self):
@@ -203,7 +203,7 @@ class TestHandleUpdateCommand:
 
         with patch("gateway.run._sinoclaw_home", sinoclaw_home), \
              patch("gateway.run.__file__", fake_file), \
-             patch("shutil.which", side_effect=lambda x: "/usr/bin/hermes" if x == "hermes" else "/usr/bin/setsid"), \
+             patch("shutil.which", side_effect=lambda x: "/usr/bin/sinoclaw" if x == "hermes" else "/usr/bin/setsid"), \
              patch("subprocess.Popen"):
             result = await runner._handle_update_command(event)
 
@@ -236,7 +236,7 @@ class TestHandleUpdateCommand:
 
         with patch("gateway.run._sinoclaw_home", sinoclaw_home), \
              patch("gateway.run.__file__", fake_file), \
-             patch("shutil.which", side_effect=lambda x: "/usr/bin/hermes" if x == "hermes" else "/usr/bin/setsid"), \
+             patch("shutil.which", side_effect=lambda x: "/usr/bin/sinoclaw" if x == "hermes" else "/usr/bin/setsid"), \
              patch("subprocess.Popen"):
             await runner._handle_update_command(event)
 
@@ -291,7 +291,7 @@ class TestHandleUpdateCommand:
 
         def which_no_setsid(x):
             if x == "hermes":
-                return "/usr/bin/hermes"
+                return "/usr/bin/sinoclaw"
             if x == "setsid":
                 return None
             return None

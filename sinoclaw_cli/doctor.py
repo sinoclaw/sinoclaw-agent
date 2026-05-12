@@ -1,5 +1,5 @@
 """
-Doctor command for hermes CLI.
+Doctor command for sinoclaw CLI.
 
 Diagnoses issues with Sinoclaw Agent setup.
 """
@@ -698,7 +698,7 @@ def run_doctor(args):
         # Native OAuth uses Hermes' own device-code flow — the Codex CLI is
         # only needed if you want to import existing tokens from
         # ~/.codex/auth.json.  Downgrade to info so users running
-        # `hermes auth openai-codex` aren't told they're missing something.
+        # `sinoclaw auth openai-codex` aren't told they're missing something.
         check_info(
             "codex CLI not installed "
             "(optional — only required to import tokens from an existing Codex CLI login)"
@@ -1061,7 +1061,7 @@ def run_doctor(args):
         if agent_browser_ok and not _is_termux():
             try:
                 # Lazy import: browser_tool is a ~150KB module we don't want
-                # to eagerly load in every `hermes doctor` invocation.
+                # to eagerly load in every `sinoclaw doctor` invocation.
                 from tools.browser_tool import (
                     _chromium_installed,
                     _is_camofox_mode,
@@ -1425,7 +1425,7 @@ def run_doctor(args):
         if q_count > 0:
             check_warn(f"{q_count} skill(s) in quarantine", "(pending review)")
     else:
-        check_warn("Skills Hub directory not initialized", "(run: hermes skills list)")
+        check_warn("Skills Hub directory not initialized", "(run: sinoclaw skills list)")
 
     from sinoclaw_cli.config import get_env_value
 
@@ -1474,11 +1474,11 @@ def run_doctor(args):
             _honcho_cfg_path = resolve_config_path()
 
             if not _honcho_cfg_path.exists():
-                check_warn("Honcho config not found", "run: hermes memory setup")
+                check_warn("Honcho config not found", "run: sinoclaw memory setup")
             elif not hcfg.enabled:
                 check_info(f"Honcho disabled (set enabled: true in {_honcho_cfg_path} to activate)")
             elif not (hcfg.api_key or hcfg.base_url):
-                check_fail("Honcho API key or base URL not set", "run: hermes memory setup")
+                check_fail("Honcho API key or base URL not set", "run: sinoclaw memory setup")
                 issues.append("No Honcho API key — run 'hermes memory setup'")
             else:
                 from plugins.memory.honcho.client import get_honcho_client, reset_honcho_client
@@ -1506,7 +1506,7 @@ def run_doctor(args):
                 check_ok("Mem0 API key configured")
                 check_info(f"user_id={mem0_cfg.get('user_id', '?')}  agent_id={mem0_cfg.get('agent_id', '?')}")
             else:
-                check_fail("Mem0 API key not set", "(set MEM0_API_KEY in .env or run hermes memory setup)")
+                check_fail("Mem0 API key not set", "(set MEM0_API_KEY in .env or run sinoclaw memory setup)")
                 issues.append("Mem0 is set as memory provider but API key is missing")
         except ImportError:
             check_fail("Mem0 plugin not loadable", "pip install mem0ai")
@@ -1521,9 +1521,9 @@ def run_doctor(args):
             if _provider and _provider.is_available():
                 check_ok(f"{_active_memory_provider} provider active")
             elif _provider:
-                check_warn(f"{_active_memory_provider} configured but not available", "run: hermes memory status")
+                check_warn(f"{_active_memory_provider} configured but not available", "run: sinoclaw memory status")
             else:
-                check_warn(f"{_active_memory_provider} plugin not found", "run: hermes memory setup")
+                check_warn(f"{_active_memory_provider} plugin not found", "run: sinoclaw memory setup")
         except Exception as _e:
             check_warn(f"{_active_memory_provider} check failed", str(_e))
 
@@ -1563,8 +1563,8 @@ def run_doctor(args):
                         continue
                     try:
                         content = wrapper.read_text()
-                        if "hermes -p" in content:
-                            _m = _re.search(r"hermes -p (\S+)", content)
+                        if "sinoclaw -p" in content:
+                            _m = _re.search(r"sinoclaw -p (\S+)", content)
                             if _m and not profile_exists(_m.group(1)):
                                 check_warn(f"Orphan alias: {wrapper.name} → profile '{_m.group(1)}' no longer exists")
                     except Exception:

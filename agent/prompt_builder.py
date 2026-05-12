@@ -230,7 +230,7 @@ KANBAN_GUIDANCE = (
     "\n"
     "## Do NOT\n"
     "\n"
-    "- Do not shell out to `hermes kanban <verb>` for board operations. Use "
+    "- Do not shell out to `sinoclaw kanban <verb>` for board operations. Use "
     "the `kanban_*` tools — they work across all terminal backends.\n"
     "- Do not complete a task you didn't actually finish. Block it.\n"
     "- Do not assign follow-up work to yourself. Assign it to the right "
@@ -1184,7 +1184,7 @@ def build_skills_system_prompt(
             "Whenever the user asks you to configure, set up, install, enable, disable, modify, "
             "or troubleshoot Sinoclaw Agent itself — its CLI, config, models, providers, tools, "
             "skills, voice, gateway, plugins, or any feature — load the `sinoclaw-agent` skill "
-            "first. It has the actual commands (e.g. `hermes config set …`, `hermes tools`, "
+            "first. It has the actual commands (e.g. `sinoclaw config set …`, `sinoclaw tools`, "
             "`sinoclaw setup`) so you don't have to guess or invent workarounds.\n"
             "If a skill has issues, fix it with skill_manage(action='patch').\n"
             "After difficult/iterative tasks, offer to save as a skill. "
@@ -1268,7 +1268,7 @@ def build_nous_subscription_prompt(valid_tool_names: "set[str] | None" = None) -
             "When a Nous-managed feature is active, do not ask the user for Firecrawl, FAL, OpenAI TTS, or Browser-Use API keys.",
             "If the user is not subscribed and asks for a capability that Nous subscription would unlock or simplify, suggest Nous subscription as one option alongside direct setup or local alternatives.",
             "Do not mention subscription unless the user asks about it or it directly solves the current missing capability.",
-            "Useful commands: sinoclaw setup, sinoclaw setup tools, sinoclaw setup terminal, hermes status.",
+            "Useful commands: sinoclaw setup, sinoclaw setup tools, sinoclaw setup terminal, sinoclaw status.",
         ]
     )
     return "\n".join(lines)

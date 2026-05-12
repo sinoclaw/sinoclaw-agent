@@ -11,7 +11,7 @@ This release also folds in all the highlights deferred from v0.10.0 (which shipp
 
 ## ✨ Highlights
 
-- **New Ink-based TUI** — `hermes --tui` is now a full React/Ink rewrite of the interactive CLI, with a Python JSON-RPC backend (`tui_gateway`). Sticky composer, live streaming with OSC-52 clipboard support, stable picker keys, status bar with per-turn stopwatch and git branch, `/clear` confirm, light-theme preset, and a subagent spawn observability overlay. ~310 commits to `ui-tui/` + `tui_gateway/`. (@OutThisLife + Teknium)
+- **New Ink-based TUI** — `sinoclaw --tui` is now a full React/Ink rewrite of the interactive CLI, with a Python JSON-RPC backend (`tui_gateway`). Sticky composer, live streaming with OSC-52 clipboard support, stable picker keys, status bar with per-turn stopwatch and git branch, `/clear` confirm, light-theme preset, and a subagent spawn observability overlay. ~310 commits to `ui-tui/` + `tui_gateway/`. (@OutThisLife + Teknium)
 
 - **Transport ABC + Native AWS Bedrock** — Format conversion and HTTP transport were extracted from `run_agent.py` into a pluggable `agent/transports/` layer. `AnthropicTransport`, `ChatCompletionsTransport`, `ResponsesApiTransport`, and `BedrockTransport` each own their own format conversion and API shape. Native AWS Bedrock support via the Converse API ships on top of the new abstraction. ([#10549](https://github.com/NousResearch/sinoclaw-agent/pull/10549), [#13347](https://github.com/NousResearch/sinoclaw-agent/pull/13347), [#13366](https://github.com/NousResearch/sinoclaw-agent/pull/13366), [#13430](https://github.com/NousResearch/sinoclaw-agent/pull/13430), [#13805](https://github.com/NousResearch/sinoclaw-agent/pull/13805), [#13814](https://github.com/NousResearch/sinoclaw-agent/pull/13814) — @kshitijk4poor + Teknium)
 
@@ -31,7 +31,7 @@ This release also folds in all the highlights deferred from v0.10.0 (which shipp
 
 - **Smarter delegation** — Subagents now have an explicit `orchestrator` role that can spawn their own workers, with configurable `max_spawn_depth` (default flat). Concurrent sibling subagents share filesystem state through a file-coordination layer so they don't clobber each other's edits. ([#13691](https://github.com/NousResearch/sinoclaw-agent/pull/13691), [#13718](https://github.com/NousResearch/sinoclaw-agent/pull/13718))
 
-- **Auxiliary models — configurable UI + main-model-first** — `hermes model` has a dedicated "Configure auxiliary models" screen for per-task overrides (compression, vision, session_search, title_generation). `auto` routing now defaults to the main model for side tasks across all users (previously aggregator users were silently routed to a cheap provider-side default). ([#11891](https://github.com/NousResearch/sinoclaw-agent/pull/11891), [#11900](https://github.com/NousResearch/sinoclaw-agent/pull/11900))
+- **Auxiliary models — configurable UI + main-model-first** — `sinoclaw model` has a dedicated "Configure auxiliary models" screen for per-task overrides (compression, vision, session_search, title_generation). `auto` routing now defaults to the main model for side tasks across all users (previously aggregator users were silently routed to a cheap provider-side default). ([#11891](https://github.com/NousResearch/sinoclaw-agent/pull/11891), [#11900](https://github.com/NousResearch/sinoclaw-agent/pull/11900))
 
 - **Dashboard plugin system + live theme switching** — The web dashboard is now extensible. Third-party plugins can add custom tabs, widgets, and views without forking. Paired with a live-switching theme system — themes now control colors, fonts, layout, and density — so users can hot-swap the dashboard look without a reload. Same theming discipline the CLI has, now on the web. ([#10951](https://github.com/NousResearch/sinoclaw-agent/pull/10951), [#10687](https://github.com/NousResearch/sinoclaw-agent/pull/10687), [#14725](https://github.com/NousResearch/sinoclaw-agent/pull/14725))
 
@@ -121,7 +121,7 @@ This release also folds in all the highlights deferred from v0.10.0 (which shipp
 
 ## 🖥️ New Ink-based TUI
 
-A full React/Ink rewrite of the interactive CLI — invoked via `hermes --tui` or `SINOCLAW_TUI=1`. Shipped across ~310 commits to `ui-tui/` and `tui_gateway/`.
+A full React/Ink rewrite of the interactive CLI — invoked via `sinoclaw --tui` or `SINOCLAW_TUI=1`. Shipped across ~310 commits to `ui-tui/` and `tui_gateway/`.
 
 ### TUI Foundations
 - New TUI based on Ink + Python JSON-RPC backend
@@ -244,7 +244,7 @@ A full React/Ink rewrite of the interactive CLI — invoked via `hermes --tui` o
 - **Project/strict execution modes** (default: project) ([#11971](https://github.com/NousResearch/sinoclaw-agent/pull/11971))
 
 ### Image Generation
-- **Multi-model FAL support** with picker in `hermes tools` ([#11265](https://github.com/NousResearch/sinoclaw-agent/pull/11265))
+- **Multi-model FAL support** with picker in `sinoclaw tools` ([#11265](https://github.com/NousResearch/sinoclaw-agent/pull/11265))
 - **Recraft V3 → V4 Pro, Nano Banana → Pro upgrades** ([#11406](https://github.com/NousResearch/sinoclaw-agent/pull/11406))
 - **GPT Image 2** in FAL catalog ([#13677](https://github.com/NousResearch/sinoclaw-agent/pull/13677))
 - **xAI image generation provider** (grok-imagine-image) ([#14765](https://github.com/NousResearch/sinoclaw-agent/pull/14765))
@@ -286,7 +286,7 @@ A full React/Ink rewrite of the interactive CLI — invoked via `hermes --tui` o
 
 ### Skill System
 - **Namespaced skill registration** for plugin bundles ([#9786](https://github.com/NousResearch/sinoclaw-agent/pull/9786))
-- **`hermes skills reset`** to un-stick bundled skills ([#11468](https://github.com/NousResearch/sinoclaw-agent/pull/11468))
+- **`sinoclaw skills reset`** to un-stick bundled skills ([#11468](https://github.com/NousResearch/sinoclaw-agent/pull/11468))
 - **Skills guard opt-in** — `config.skills.guard_agent_created` (default off) ([#14557](https://github.com/NousResearch/sinoclaw-agent/pull/14557))
 - **Bundled skill scripts runnable out of the box** ([#13384](https://github.com/NousResearch/sinoclaw-agent/pull/13384))
 - **`xitter` replaced with `xurl`** — the official X API CLI ([#12303](https://github.com/NousResearch/sinoclaw-agent/pull/12303))
@@ -335,7 +335,7 @@ A full React/Ink rewrite of the interactive CLI — invoked via `hermes --tui` o
 - **Doctor: Command Installation check** for `hermes` bin symlink ([#10112](https://github.com/NousResearch/sinoclaw-agent/pull/10112))
 - **ESC cancels secret/sudo prompts**, clearer skip messaging ([#9902](https://github.com/NousResearch/sinoclaw-agent/pull/9902))
 - Fix: agent-facing text uses `display_sinoclaw_home()` instead of hardcoded `~/.sinoclaw` ([#10285](https://github.com/NousResearch/sinoclaw-agent/pull/10285))
-- Fix: enforce `config.yaml` as sole CWD source + deprecate `.env` CWD vars + add `hermes memory reset` ([#11029](https://github.com/NousResearch/sinoclaw-agent/pull/11029))
+- Fix: enforce `config.yaml` as sole CWD source + deprecate `.env` CWD vars + add `sinoclaw memory reset` ([#11029](https://github.com/NousResearch/sinoclaw-agent/pull/11029))
 
 ---
 
@@ -345,7 +345,7 @@ A full React/Ink rewrite of the interactive CLI — invoked via `hermes --tui` o
 - **Block agent from self-destructing the gateway** via terminal (closes #6666) ([#9895](https://github.com/NousResearch/sinoclaw-agent/pull/9895))
 - **Telegram callback authorization** on update prompts ([#10536](https://github.com/NousResearch/sinoclaw-agent/pull/10536))
 - **SECURITY.md** added ([#10532](https://github.com/NousResearch/sinoclaw-agent/pull/10532), @I3eg1nner)
-- **Warn about legacy hermes.service units** during `hermes update` ([#11918](https://github.com/NousResearch/sinoclaw-agent/pull/11918))
+- **Warn about legacy sinoclaw.service units** during `sinoclaw update` ([#11918](https://github.com/NousResearch/sinoclaw-agent/pull/11918))
 - **Complete ASCII-locale UnicodeEncodeError recovery** for `api_messages`/`reasoning_content` (closes #6843) ([#10537](https://github.com/NousResearch/sinoclaw-agent/pull/10537))
 - **Prevent stale `os.environ` leak** after `clear_session_vars` ([#10527](https://github.com/NousResearch/sinoclaw-agent/pull/10527))
 - **Prevent agent hang when backgrounding processes** via terminal tool ([#10584](https://github.com/NousResearch/sinoclaw-agent/pull/10584))

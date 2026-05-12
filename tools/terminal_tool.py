@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
 # long-running subprocesses immediately instead of blocking until timeout.
 # ---------------------------------------------------------------------------
 from tools.interrupt import is_interrupted, _interrupt_event  # noqa: F401 — re-exported
-# display_sinoclaw_home imported lazily at call site (stale-module safety during hermes update)
+# display_sinoclaw_home imported lazily at call site (stale-module safety during sinoclaw update)
 
 
 
@@ -186,7 +186,7 @@ def _check_disk_usage_warning():
     try:
         scratch_dir = _get_scratch_dir()
 
-        # Get total size of hermes directories
+        # Get total size of sinoclaw directories
         total_bytes = 0
         import glob
         for path in glob.glob(str(scratch_dir / "sinoclaw-*")):
@@ -1180,7 +1180,7 @@ def _create_environment(env_type: str, image: str, cwd: str, timeout: int,
                 raise ValueError(
                     "Modal backend is configured for managed mode, but "
                     "a paid Nous subscription is required for the Tool Gateway and no direct "
-                    "Modal credentials/config were found. Log in with `hermes model` or "
+                    "Modal credentials/config were found. Log in with `sinoclaw model` or "
                     "choose TERMINAL_MODAL_MODE=direct/auto."
                 )
             if modal_state["mode"] == "managed":
@@ -2157,7 +2157,7 @@ def check_terminal_requirements() -> bool:
                     logger.error(
                         "Modal backend selected with TERMINAL_MODAL_MODE=managed, but "
                         "a paid Nous subscription is required for the Tool Gateway and no direct "
-                        "Modal credentials/config were found. Log in with `hermes model` "
+                        "Modal credentials/config were found. Log in with `sinoclaw model` "
                         "or choose TERMINAL_MODAL_MODE=direct/auto."
                     )
                     return False

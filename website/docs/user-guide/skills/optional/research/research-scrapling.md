@@ -14,7 +14,7 @@ Web scraping with Scrapling - HTTP fetching, stealth browser automation, Cloudfl
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/research/scrapling` |
+| Source | Optional — install with `sinoclaw skills install official/research/scrapling` |
 | Path | `optional-skills/research/scrapling` |
 | Version | `1.0.0` |
 | Author | FEUAZUR |

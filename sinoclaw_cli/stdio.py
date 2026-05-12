@@ -168,7 +168,7 @@ def _default_windows_editor() -> str:
        the user closes the window).  This is the "always-works" default.
 
     The prompt_toolkit buffer's ``open_in_editor`` and Hermes's
-    ``hermes config edit`` both honour ``$EDITOR``.  Users who prefer a
+    ``sinoclaw config edit`` both honour ``$EDITOR``.  Users who prefer a
     different editor can override:
 
     - VSCode: ``$env:EDITOR = "code --wait"``  (``--wait`` is critical;

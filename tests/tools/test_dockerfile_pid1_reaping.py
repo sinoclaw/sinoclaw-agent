@@ -60,7 +60,7 @@ def _run_steps(dockerfile_text: str) -> list[str]:
 def test_dockerfile_installs_an_init_for_zombie_reaping(dockerfile_text):
     """Some init (tini, dumb-init, catatonit) must be installed.
 
-    Without a PID-1 init that handles SIGCHLD, hermes accumulates zombie
+    Without a PID-1 init that handles SIGCHLD, sinoclaw accumulates zombie
     processes from MCP stdio subprocesses, git operations, browser
     daemons, etc.  In long-running Docker deployments this eventually
     exhausts the PID table.
@@ -72,7 +72,7 @@ def test_dockerfile_installs_an_init_for_zombie_reaping(dockerfile_text):
     assert installed, (
         "No PID-1 init detected in Dockerfile (looked for: "
         f"{', '.join(known_inits)}). Without an init process to reap "
-        "orphaned subprocesses, hermes accumulates zombies in Docker "
+        "orphaned subprocesses, sinoclaw accumulates zombies in Docker "
         "deployments. See issue #15012."
     )
 
@@ -100,7 +100,7 @@ def test_dockerfile_entrypoint_routes_through_the_init(dockerfile_text):
     routes_through_init = any(name in entrypoint_line for name in known_inits)
     assert routes_through_init, (
         f"ENTRYPOINT does not route through an init: {entrypoint_line!r}. "
-        "If tini is only installed but not wired into ENTRYPOINT, hermes "
+        "If tini is only installed but not wired into ENTRYPOINT, sinoclaw "
         "still runs as PID 1 and zombies will accumulate (#15012)."
     )
 

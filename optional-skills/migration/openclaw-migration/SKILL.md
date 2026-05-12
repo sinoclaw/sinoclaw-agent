@@ -84,7 +84,7 @@ With `--migrate-secrets`, it will also import a small allowlisted set of Sinocla
 
 ## User interaction protocol
 
-Hermes CLI supports the `clarify` tool for interactive prompts, but it is limited to:
+Sinoclaw CLI supports the `clarify` tool for interactive prompts, but it is limited to:
 
 - one choice at a time
 - up to 4 predefined choices

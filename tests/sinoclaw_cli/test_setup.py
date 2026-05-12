@@ -578,7 +578,7 @@ def test_offer_launch_chat_relaunches_via_bin(monkeypatch):
     from sinoclaw_cli import relaunch as relaunch_mod
 
     monkeypatch.setattr(setup_mod, "prompt_yes_no", lambda *_args, **_kwargs: True)
-    monkeypatch.setattr(relaunch_mod, "resolve_sinoclaw_bin", lambda: "/usr/local/bin/hermes")
+    monkeypatch.setattr(relaunch_mod, "resolve_sinoclaw_bin", lambda: "/usr/local/bin/sinoclaw")
 
     exec_calls = []
 
@@ -591,7 +591,7 @@ def test_offer_launch_chat_relaunches_via_bin(monkeypatch):
     with pytest.raises(SystemExit):
         setup_mod._offer_launch_chat()
 
-    assert exec_calls == [("/usr/local/bin/hermes", ["/usr/local/bin/hermes", "chat"])]
+    assert exec_calls == [("/usr/local/bin/sinoclaw", ["/usr/local/bin/sinoclaw", "chat"])]
 
 
 def test_offer_launch_chat_falls_back_to_module(monkeypatch):

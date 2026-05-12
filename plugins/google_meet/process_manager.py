@@ -98,7 +98,7 @@ def start(
 ) -> Dict[str, Any]:
     """Spawn the meet_bot subprocess for *url*.
 
-    If a bot is already running for this hermes install, leave it first —
+    If a bot is already running for this sinoclaw install, leave it first —
     we enforce single-active-meeting semantics.
 
     Returns a dict summarizing the started bot.

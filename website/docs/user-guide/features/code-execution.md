@@ -132,8 +132,8 @@ print(json.dumps(report, indent=2))
 
 | Mode | Working directory | Python interpreter |
 |------|-------------------|--------------------|
-| **`project`** (default) | The session's working directory (same as `terminal()`) | Active `VIRTUAL_ENV` / `CONDA_PREFIX` python, falling back to Hermes's own python |
-| `strict` | A temp staging directory isolated from the user's project | `sys.executable` (Hermes's own python) |
+| **`project`** (default) | The session's working directory (same as `terminal()`) | Active `VIRTUAL_ENV` / `CONDA_PREFIX` python, falling back to Sinoclaw's own python |
+| `strict` | A temp staging directory isolated from the user's project | `sys.executable` (Sinoclaw's own python) |
 
 **When to leave it on `project`:** you want `import pandas`, `from my_project import foo`, or relative paths like `open(".env")` to work the same way they do in `terminal()`. This is almost always what you want.
 

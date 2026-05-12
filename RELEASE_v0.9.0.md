@@ -23,17 +23,17 @@
 
 - **Native xAI & Xiaomi MiMo Providers** — First-class provider support for xAI (Grok) and Xiaomi MiMo, with direct API access, model catalogs, and setup wizard integration. Plus Qwen OAuth with portal request support. ([#7372](https://github.com/NousResearch/sinoclaw-agent/pull/7372), [#7855](https://github.com/NousResearch/sinoclaw-agent/pull/7855))
 
-- **Pluggable Context Engine** — Context management is now a pluggable slot via `hermes plugins`. Swap in custom context engines that control what the agent sees each turn — filtering, summarization, or domain-specific context injection. ([#7464](https://github.com/NousResearch/sinoclaw-agent/pull/7464))
+- **Pluggable Context Engine** — Context management is now a pluggable slot via `sinoclaw plugins`. Swap in custom context engines that control what the agent sees each turn — filtering, summarization, or domain-specific context injection. ([#7464](https://github.com/NousResearch/sinoclaw-agent/pull/7464))
 
 - **Unified Proxy Support** — SOCKS proxy, `DISCORD_PROXY`, and system proxy auto-detection across all gateway platforms. Hermes behind corporate firewalls just works. ([#6814](https://github.com/NousResearch/sinoclaw-agent/pull/6814))
 
 - **Comprehensive Security Hardening** — Path traversal protection in checkpoint manager, shell injection neutralization in sandbox writes, SSRF redirect guards in Slack image uploads, Twilio webhook signature validation (SMS RCE fix), API server auth enforcement, git argument injection prevention, and approval button authorization. ([#7933](https://github.com/NousResearch/sinoclaw-agent/pull/7933), [#7944](https://github.com/NousResearch/sinoclaw-agent/pull/7944), [#7940](https://github.com/NousResearch/sinoclaw-agent/pull/7940), [#7151](https://github.com/NousResearch/sinoclaw-agent/pull/7151), [#7156](https://github.com/NousResearch/sinoclaw-agent/pull/7156))
 
-- **`hermes backup` & `hermes import`** — Full backup and restore of your Hermes configuration, sessions, skills, and memory. Migrate between machines or create snapshots before major changes. ([#7997](https://github.com/NousResearch/sinoclaw-agent/pull/7997))
+- **`sinoclaw backup` & `sinoclaw import`** — Full backup and restore of your Hermes configuration, sessions, skills, and memory. Migrate between machines or create snapshots before major changes. ([#7997](https://github.com/NousResearch/sinoclaw-agent/pull/7997))
 
 - **16 Supported Platforms** — With BlueBubbles (iMessage) and WeChat joining Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Email, SMS, DingTalk, Feishu, WeCom, Mattermost, Home Assistant, and Webhooks, Hermes now runs on 16 messaging platforms out of the box.
 
-- **`/debug` & `hermes debug share`** — New debugging toolkit: `/debug` slash command across all platforms for quick diagnostics, plus `hermes debug share` to upload a full debug report to a pastebin for easy sharing when troubleshooting. ([#8681](https://github.com/NousResearch/sinoclaw-agent/pull/8681))
+- **`/debug` & `sinoclaw debug share`** — New debugging toolkit: `/debug` slash command across all platforms for quick diagnostics, plus `sinoclaw debug share` to upload a full debug report to a pastebin for easy sharing when troubleshooting. ([#8681](https://github.com/NousResearch/sinoclaw-agent/pull/8681))
 
 ---
 
@@ -57,7 +57,7 @@
 - Z.AI endpoint auto-detect via probe and cache ([#5763](https://github.com/NousResearch/sinoclaw-agent/pull/5763))
 
 ### Agent Loop & Conversation
-- **Pluggable context engine slot** via `hermes plugins` ([#7464](https://github.com/NousResearch/sinoclaw-agent/pull/7464))
+- **Pluggable context engine slot** via `sinoclaw plugins` ([#7464](https://github.com/NousResearch/sinoclaw-agent/pull/7464))
 - **Background process monitoring** — `watch_patterns` for real-time output alerts ([#7635](https://github.com/NousResearch/sinoclaw-agent/pull/7635))
 - **Improved context compression** — higher limits, tool tracking, degradation warnings, token-budget tail protection ([#6395](https://github.com/NousResearch/sinoclaw-agent/pull/6395), [#6453](https://github.com/NousResearch/sinoclaw-agent/pull/6453))
 - **`/compress <focus>`** — guided compression with a focus topic ([#8017](https://github.com/NousResearch/sinoclaw-agent/pull/8017))
@@ -137,8 +137,8 @@
 - **Live per-tool elapsed timer** restored in TUI spinner ([#7359](https://github.com/NousResearch/sinoclaw-agent/pull/7359))
 - **Stacked tool progress scrollback** in TUI ([#8201](https://github.com/NousResearch/sinoclaw-agent/pull/8201))
 - **Random tips on new session start** (CLI + gateway, 279 tips) ([#8225](https://github.com/NousResearch/sinoclaw-agent/pull/8225), [#8237](https://github.com/NousResearch/sinoclaw-agent/pull/8237))
-- **`hermes dump`** — copy-pasteable setup summary for debugging ([#6550](https://github.com/NousResearch/sinoclaw-agent/pull/6550))
-- **`hermes backup` / `hermes import`** — full config backup and restore ([#7997](https://github.com/NousResearch/sinoclaw-agent/pull/7997))
+- **`sinoclaw dump`** — copy-pasteable setup summary for debugging ([#6550](https://github.com/NousResearch/sinoclaw-agent/pull/6550))
+- **`sinoclaw backup` / `sinoclaw import`** — full config backup and restore ([#7997](https://github.com/NousResearch/sinoclaw-agent/pull/7997))
 - **WSL environment hint** in system prompt ([#8285](https://github.com/NousResearch/sinoclaw-agent/pull/8285))
 - **Profile creation UX** — seed SOUL.md + credential warning ([#8553](https://github.com/NousResearch/sinoclaw-agent/pull/8553))
 - Shell-aware sudo detection, empty password support ([#6517](https://github.com/NousResearch/sinoclaw-agent/pull/6517))
@@ -174,7 +174,7 @@
 - Guard invalid command values ([#6417](https://github.com/NousResearch/sinoclaw-agent/pull/6417))
 
 ### MCP
-- **`hermes mcp add --env` and `--preset`** support ([#7970](https://github.com/NousResearch/sinoclaw-agent/pull/7970))
+- **`sinoclaw mcp add --env` and `--preset`** support ([#7970](https://github.com/NousResearch/sinoclaw-agent/pull/7970))
 - Combine `content` and `structuredContent` when both present ([#7118](https://github.com/NousResearch/sinoclaw-agent/pull/7118))
 - MCP tool name deconfliction fixes ([#7654](https://github.com/NousResearch/sinoclaw-agent/pull/7654))
 
@@ -190,7 +190,7 @@
 - STT provider-model mismatch fix (whisper-1 vs faster-whisper) ([#7113](https://github.com/NousResearch/sinoclaw-agent/pull/7113))
 
 ### Other Tools
-- **`hermes dump`** command for setup summary ([#6550](https://github.com/NousResearch/sinoclaw-agent/pull/6550))
+- **`sinoclaw dump`** command for setup summary ([#6550](https://github.com/NousResearch/sinoclaw-agent/pull/6550))
 - TODO store enforces ID uniqueness during replace operations ([#7986](https://github.com/NousResearch/sinoclaw-agent/pull/7986))
 - List all available toolsets in `delegate_task` schema description ([#8231](https://github.com/NousResearch/sinoclaw-agent/pull/8231))
 - API server: tool progress as custom SSE event to prevent model corruption ([#7500](https://github.com/NousResearch/sinoclaw-agent/pull/7500))
@@ -250,7 +250,7 @@
 - Enable unbuffered stdout for live Docker logs ([#6749](https://github.com/NousResearch/sinoclaw-agent/pull/6749))
 - Install procps in Docker image — @HiddenPuppy ([#7032](https://github.com/NousResearch/sinoclaw-agent/pull/7032))
 - Shallow git clone for faster installation — @sosyz ([#8396](https://github.com/NousResearch/sinoclaw-agent/pull/8396))
-- `hermes update` always reset on stash conflict ([#7010](https://github.com/NousResearch/sinoclaw-agent/pull/7010))
+- `sinoclaw update` always reset on stash conflict ([#7010](https://github.com/NousResearch/sinoclaw-agent/pull/7010))
 - Write update exit code before gateway restart (cgroup kill race) ([#8288](https://github.com/NousResearch/sinoclaw-agent/pull/8288))
 - Nix: `setupSecrets` optional, tirith runtime dep — @devorun, @ethernet8023 ([#6261](https://github.com/NousResearch/sinoclaw-agent/pull/6261), [#6721](https://github.com/NousResearch/sinoclaw-agent/pull/6721))
 - launchd stop uses `bootout` so `KeepAlive` doesn't respawn ([#7119](https://github.com/NousResearch/sinoclaw-agent/pull/7119))
@@ -288,7 +288,7 @@
 - Tool-use enforcement documentation expanded ([#7984](https://github.com/NousResearch/sinoclaw-agent/pull/7984))
 - BlueBubbles pairing instructions ([#6548](https://github.com/NousResearch/sinoclaw-agent/pull/6548))
 - Telegram proxy support section ([#6348](https://github.com/NousResearch/sinoclaw-agent/pull/6348))
-- `hermes dump` and `hermes logs` CLI reference ([#6552](https://github.com/NousResearch/sinoclaw-agent/pull/6552))
+- `sinoclaw dump` and `sinoclaw logs` CLI reference ([#6552](https://github.com/NousResearch/sinoclaw-agent/pull/6552))
 - `tool_progress_overrides` configuration reference ([#6364](https://github.com/NousResearch/sinoclaw-agent/pull/6364))
 - Compression model context length warning docs ([#7879](https://github.com/NousResearch/sinoclaw-agent/pull/7879))
 

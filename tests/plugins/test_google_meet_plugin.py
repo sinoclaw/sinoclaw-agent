@@ -571,7 +571,7 @@ def test_meet_join_auto_node_ambiguous_returns_error():
 
 
 def test_cli_register_includes_node_subcommand():
-    """`hermes meet` argparse tree includes the node subtree."""
+    """`sinoclaw meet` argparse tree includes the node subtree."""
     import argparse
     from plugins.google_meet.cli import register_cli
 
@@ -722,7 +722,7 @@ def test_realtime_session_counters_initialized():
 
 
 # ---------------------------------------------------------------------------
-# hermes meet install CLI
+# sinoclaw meet install CLI
 # ---------------------------------------------------------------------------
 
 def test_cli_install_subcommand_is_registered():

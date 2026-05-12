@@ -126,7 +126,7 @@ Status code table:
 |---------|---------------|
 | Graph subscription validation fails | Public URL is reachable, `/msgraph/webhook` path matches, GET with `validationToken` echoes the token verbatim as `text/plain` within 10 seconds. |
 | Notifications POST but nothing ingests | `client_state` matches what you registered the subscription with. Re-run `openssl rand -hex 32` and create a new subscription if the value drifted. Check `accepted_resources` includes the resource path Graph is sending. |
-| Every notification 403s | `clientState` mismatch (forged, or subscription registered with a different value). Re-create the subscription with `hermes teams-pipeline subscribe --client-state "$MSGRAPH_WEBHOOK_CLIENT_STATE" ...` (ships with the pipeline runtime PR). |
+| Every notification 403s | `clientState` mismatch (forged, or subscription registered with a different value). Re-create the subscription with `sinoclaw teams-pipeline subscribe --client-state "$MSGRAPH_WEBHOOK_CLIENT_STATE" ...` (ships with the pipeline runtime PR). |
 | Listener starts but `curl http://localhost:8646/health` hangs | Port binding collision. Check `ss -tlnp \| grep 8646` and change `port:` if needed. |
 | Real Graph requests from Microsoft get 403'd | Source IP allowlist is too narrow. Remove `allowed_source_cidrs` temporarily, confirm traffic flows, then widen the list to include the current Microsoft egress ranges. |
 

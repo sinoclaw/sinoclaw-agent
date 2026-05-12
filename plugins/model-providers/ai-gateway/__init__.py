@@ -1,6 +1,6 @@
 """Vercel AI Gateway provider profile.
 
-AI Gateway routes to multiple backends. Hermes sends attribution
+AI Gateway routes to multiple backends. Sinoclaw sends attribution
 headers and full reasoning config passthrough.
 """
 

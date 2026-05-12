@@ -14,7 +14,7 @@ Provides guidance for LLM post-training with RL using slime, a Megatron+SGLang f
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/slime` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/slime` |
 | Path | `optional-skills/mlops/slime` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

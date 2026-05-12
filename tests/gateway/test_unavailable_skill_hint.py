@@ -61,7 +61,7 @@ def test_frontmatter_slug_matched_even_when_dir_name_differs(
 
     _write_skill(tmp_skills, "mlops/stable-diffusion", "Stable Diffusion Image Generation")
 
-    # Config disables by declared name (matches what `hermes skills config` writes).
+    # Config disables by declared name (matches what `sinoclaw skills config` writes).
     monkeypatch.setattr(
         "gateway.run._get_disabled_skill_names",
         lambda: {"Stable Diffusion Image Generation"},

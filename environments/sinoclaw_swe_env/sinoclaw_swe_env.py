@@ -25,7 +25,7 @@ Usage:
         --openai.base_url http://localhost:8000/v1 \\
         --openai.model_name YourModel \\
         --openai.server_type vllm \\
-        --env.tool_call_parser hermes \\
+        --env.tool_call_parser sinoclaw \\
         --env.terminal_backend modal
 """
 

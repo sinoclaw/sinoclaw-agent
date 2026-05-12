@@ -1,15 +1,15 @@
-"""``hermes slack ...`` CLI subcommands.
+"""``sinoclaw slack ...`` CLI subcommands.
 
-Today only ``hermes slack manifest`` is implemented — it generates the
+Today only ``sinoclaw slack manifest`` is implemented — it generates the
 Slack app manifest JSON for registering every gateway command as a native
 Slack slash (``/btw``, ``/stop``, ``/model``, …) so users get the same
 first-class slash UX Discord and Telegram already have.
 
 Typical workflow::
 
-    $ hermes slack manifest > slack-manifest.json
+    $ sinoclaw slack manifest > slack-manifest.json
     # or:
-    $ hermes slack manifest --write
+    $ sinoclaw slack manifest --write
 
 Then paste the printed JSON into the Slack app config (Features → App
 Manifest → Edit) and click Save. Slack diffs the manifest and prompts

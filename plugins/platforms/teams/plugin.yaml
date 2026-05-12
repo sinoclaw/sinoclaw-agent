@@ -8,7 +8,7 @@ description: >
   between Teams chats (personal DMs, group chats, channel posts) and
   the Sinoclaw agent. Supports Adaptive Card approval prompts.
 author: Aamir Jawaid
-# ``requires_env`` entries are surfaced in ``hermes config`` UI via the
+# ``requires_env`` entries are surfaced in ``sinoclaw config`` UI via the
 # platform-plugin env var injector in ``sinoclaw_cli/config.py``.
 requires_env:
   - name: TEAMS_CLIENT_ID

@@ -126,24 +126,24 @@ class TestTopLevelCwdAlias:
     def test_dot_cwd_triggers_messaging_fallback(self):
         """cwd: '.' should trigger MESSAGING_CWD fallback."""
         cfg = {"cwd": "."}
-        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/hermes"})
+        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/sinoclaw"})
         # "." is stripped but truthy, so it gets set as TERMINAL_CWD
         # Then the MESSAGING_CWD fallback does NOT trigger since TERMINAL_CWD
         # is set and not in (".", "auto", "cwd").
         # Wait — "." IS in the fallback list! So this should fall through.
         # Actually the alias sets it to ".", then the messaging fallback
         # checks if it's in (".", "auto", "cwd") and overrides.
-        assert result["TERMINAL_CWD"] == "/home/hermes"
+        assert result["TERMINAL_CWD"] == "/home/sinoclaw"
 
     def test_auto_cwd_triggers_messaging_fallback(self):
         cfg = {"cwd": "auto"}
-        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/hermes"})
-        assert result["TERMINAL_CWD"] == "/home/hermes"
+        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/sinoclaw"})
+        assert result["TERMINAL_CWD"] == "/home/sinoclaw"
 
     def test_empty_cwd_ignored(self):
         cfg = {"cwd": ""}
-        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/hermes"})
-        assert result["TERMINAL_CWD"] == "/home/hermes"
+        result = _simulate_config_bridge(cfg, {"MESSAGING_CWD": "/home/sinoclaw"})
+        assert result["TERMINAL_CWD"] == "/home/sinoclaw"
 
     def test_whitespace_only_cwd_ignored(self):
         cfg = {"cwd": "   "}

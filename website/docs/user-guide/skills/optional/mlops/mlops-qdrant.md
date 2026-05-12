@@ -14,7 +14,7 @@ High-performance vector similarity search engine for RAG and semantic search. Us
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/qdrant` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/qdrant` |
 | Path | `optional-skills/mlops/qdrant` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

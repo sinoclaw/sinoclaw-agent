@@ -17,7 +17,7 @@ Inspired by RAPTOR's 1800+ line OSS Forensics system.
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/security/oss-forensics` |
+| Source | Optional — install with `sinoclaw skills install official/security/oss-forensics` |
 | Path | `optional-skills/security/oss-forensics` |
 
 ## Reference: full SKILL.md

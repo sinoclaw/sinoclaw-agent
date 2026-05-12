@@ -14,7 +14,7 @@ Open-source embedding database for AI applications. Store embeddings and metadat
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/chroma` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/chroma` |
 | Path | `optional-skills/mlops/chroma` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

@@ -145,7 +145,7 @@ from sinoclaw_cli.config import (
     get_env_value,
     ensure_sinoclaw_home,
 )
-# display_sinoclaw_home imported lazily at call sites (stale-module safety during hermes update)
+# display_sinoclaw_home imported lazily at call sites (stale-module safety during sinoclaw update)
 
 from sinoclaw_cli.colors import Colors, color
 
@@ -185,9 +185,9 @@ def print_noninteractive_setup_guidance(reason: str | None = None) -> None:
     print_info("The interactive wizard cannot be used here.")
     print()
     print_info("Configure Hermes using environment variables or config commands:")
-    print_info("  hermes config set model.provider custom")
-    print_info("  hermes config set model.base_url http://localhost:8080/v1")
-    print_info("  hermes config set model.default your-model-name")
+    print_info("  sinoclaw config set model.provider custom")
+    print_info("  sinoclaw config set model.base_url http://localhost:8080/v1")
+    print_info("  sinoclaw config set model.default your-model-name")
     print()
     print_info("Or set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.")
     print_info("Run 'sinoclaw setup' in an interactive terminal to use the full wizard.")
@@ -515,7 +515,7 @@ def _print_setup_summary(config: dict, sinoclaw_home):
     if get_env_value("HASS_TOKEN"):
         tool_status.append(("Smart Home (Home Assistant)", True, None))
 
-    # Spotify (OAuth via hermes auth spotify — check auth.json, not env vars)
+    # Spotify (OAuth via sinoclaw auth spotify — check auth.json, not env vars)
     try:
         from sinoclaw_cli.auth import get_provider_auth_state
         _spotify_state = get_provider_auth_state("spotify") or {}
@@ -766,7 +766,7 @@ def _read_nearest_vercel_project(start: Path | None = None) -> dict[str, str]:
 
 
 # Tool categories and provider config are now in tools_config.py (shared
-# between `hermes tools` and `sinoclaw setup tools`).
+# between `sinoclaw tools` and `sinoclaw setup tools`).
 
 
 # =============================================================================
@@ -778,10 +778,10 @@ def _read_nearest_vercel_project(start: Path | None = None) -> dict[str, str]:
 def setup_model_provider(config: dict, *, quick: bool = False):
     """Configure the inference provider and default model.
 
-    Delegates to ``cmd_model()`` (the same flow used by ``hermes model``)
+    Delegates to ``cmd_model()`` (the same flow used by ``sinoclaw model``)
     for provider selection, credential prompting, and model picking.
     This ensures a single code path for all provider setup — any new
-    provider added to ``hermes model`` is automatically available here.
+    provider added to ``sinoclaw model`` is automatically available here.
 
     When *quick* is True, skips credential rotation, vision, and TTS
     configuration — used by the streamlined first-time quick setup.
@@ -793,7 +793,7 @@ def setup_model_provider(config: dict, *, quick: bool = False):
     print_info(f"   Guide: {_DOCS_BASE}/integrations/providers")
     print()
 
-    # Delegate to the shared hermes model flow — handles provider picker,
+    # Delegate to the shared sinoclaw model flow — handles provider picker,
     # credential prompting, model selection, and config persistence.
     from sinoclaw_cli.main import select_provider_and_model
     try:
@@ -804,7 +804,7 @@ def setup_model_provider(config: dict, *, quick: bool = False):
     except Exception as exc:
         logger.debug("select_provider_and_model error during setup: %s", exc)
         print_warning(f"Provider setup encountered an error: {exc}")
-        print_info("You can try again later with: hermes model")
+        print_info("You can try again later with: sinoclaw model")
 
     # Re-sync the wizard's config dict from what cmd_model saved to disk.
     # This is critical: cmd_model writes to disk via its own load/save cycle,
@@ -2014,7 +2014,7 @@ def _setup_slack():
             # new commands (e.g. /btw, /stop, ...) get registered in Slack.
             if prompt_yes_no(
                 "Regenerate the Slack app manifest with the latest command "
-                "list? (recommended after `hermes update`)",
+                "list? (recommended after `sinoclaw update`)",
                 True,
             ):
                 _write_slack_manifest_and_instruct()
@@ -2103,7 +2103,7 @@ def _write_slack_manifest_and_instruct():
             "reinstall if scopes or slash commands changed."
         )
         print_info(
-            "   Re-run `hermes slack manifest --write` anytime to refresh after "
+            "   Re-run `sinoclaw slack manifest --write` anytime to refresh after "
             "Hermes adds new commands."
         )
     except Exception as exc:  # pragma: no cover - best-effort UX helper
@@ -2241,7 +2241,7 @@ def _setup_mattermost():
     home_channel = prompt("Home channel ID (leave empty to set later with /set-home)")
     if home_channel:
         save_env_value("MATTERMOST_HOME_CHANNEL", home_channel)
-    print_info("   Open config in your editor:  hermes config edit")
+    print_info("   Open config in your editor:  sinoclaw config edit")
 
 
 def _setup_bluebubbles():
@@ -2358,8 +2358,8 @@ def _setup_webhooks():
     print_info("   Route configuration guide:")
     print_info("   https://sinoclaw-agent.nousresearch.com/docs/user-guide/messaging/webhooks/#configuring-routes")
     print()
-    print_info("   Open config in your editor:  hermes config edit")
-    print_info("   Open config in your editor:  hermes config edit")
+    print_info("   Open config in your editor:  sinoclaw config edit")
+    print_info("   Open config in your editor:  sinoclaw config edit")
 
 
 def setup_gateway(config: dict):
@@ -2438,7 +2438,7 @@ def setup_gateway(config: dict):
             print_info("   Set one later with /set-home in your chat, or:")
             for plat in missing_home:
                 print_info(
-                    f"     hermes config set {plat.upper()}_HOME_CHANNEL <channel_id>"
+                    f"     sinoclaw config set {plat.upper()}_HOME_CHANNEL <channel_id>"
                 )
 
         # Offer to install the gateway as a system service
@@ -2605,7 +2605,7 @@ def setup_gateway(config: dict):
 def setup_tools(config: dict, first_install: bool = False):
     """Configure tools — delegates to the unified tools_command() in tools_config.py.
 
-    Both `sinoclaw setup tools` and `hermes tools` use the same flow:
+    Both `sinoclaw setup tools` and `sinoclaw tools` use the same flow:
     platform selection → toolset toggles → provider/API key configuration.
 
     Args:
@@ -2905,7 +2905,7 @@ def _offer_openclaw_migration(sinoclaw_home: Path) -> bool:
 
     if not prompt_yes_no("Would you like to see what can be imported?", default=True):
         print_info(
-            "Skipping migration. You can run it later with: hermes claw migrate --dry-run"
+            "Skipping migration. You can run it later with: sinoclaw claw migrate --dry-run"
         )
         return False
 
@@ -2963,7 +2963,7 @@ def _offer_openclaw_migration(sinoclaw_home: Path) -> bool:
     # ── Phase 2: Confirm and execute ──
     if not prompt_yes_no("Proceed with migration?", default=False):
         print_info(
-            "Migration cancelled. You can run it later with: hermes claw migrate"
+            "Migration cancelled. You can run it later with: sinoclaw claw migrate"
         )
         print_info(
             "Use --dry-run to preview again, or --preset minimal for a lighter import."
@@ -3001,7 +3001,7 @@ def _offer_openclaw_migration(sinoclaw_home: Path) -> bool:
     if migrated:
         print_success(f"Imported {migrated} item(s) from OpenClaw.")
     if conflicts:
-        print_info(f"Skipped {conflicts} item(s) that already exist in Hermes (use hermes claw migrate --overwrite to force).")
+        print_info(f"Skipped {conflicts} item(s) that already exist in Hermes (use sinoclaw claw migrate --overwrite to force).")
     if skipped:
         print_info(f"Skipped {skipped} item(s) (not found or unchanged).")
     if errors:
@@ -3254,7 +3254,7 @@ def run_setup_wizard(args):
 def _offer_launch_chat():
     """Prompt the user to jump straight into chat after setup."""
     print()
-    if not prompt_yes_no("Launch hermes chat now?", True):
+    if not prompt_yes_no("Launch sinoclaw chat now?", True):
         return
 
     from sinoclaw_cli.relaunch import relaunch

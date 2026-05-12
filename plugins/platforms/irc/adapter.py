@@ -15,7 +15,7 @@ Configuration in config.yaml::
             server: irc.libera.chat
             port: 6697
             nickname: sinoclaw-bot
-            channel: "#hermes"
+            channel: "#sinoclaw"
             use_tls: true
             server_password: ""       # optional server password
             nickserv_password: ""     # optional NickServ identification
@@ -591,7 +591,7 @@ def interactive_setup() -> None:
     save_env_value("IRC_NICKNAME", nickname.strip())
 
     channel = prompt(
-        "Channel to join (e.g. #hermes — comma-separate for multiple)",
+        "Channel to join (e.g. #sinoclaw — comma-separate for multiple)",
         default=get_env_value("IRC_CHANNEL") or "",
     )
     if not channel:
@@ -726,7 +726,7 @@ async def _standalone_send(
     """Open an ephemeral IRC connection, send a PRIVMSG, and quit.
 
     Used by ``tools/send_message_tool._send_via_adapter`` when the gateway
-    runner is not in this process (e.g. ``hermes cron`` running as a
+    runner is not in this process (e.g. ``sinoclaw cron`` running as a
     separate process from ``sinoclaw gateway``).  Without this hook,
     ``deliver=irc`` cron jobs fail with ``No live adapter for platform``.
 

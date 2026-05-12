@@ -3,7 +3,7 @@
 
 Reads SINOCLAW_KANBAN_TASK from env, heartbeats periodically, does short
 work, completes via the CLI. Designed to be spawned by the dispatcher
-exactly the way `hermes chat -q` would be, minus the LLM cost.
+exactly the way `sinoclaw chat -q` would be, minus the LLM cost.
 """
 
 import json

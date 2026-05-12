@@ -1,5 +1,5 @@
 """
-Gateway subcommand for hermes CLI.
+Gateway subcommand for sinoclaw CLI.
 
 Handles: sinoclaw gateway [run|start|stop|restart|status|install|uninstall|setup]
 """
@@ -31,7 +31,7 @@ from sinoclaw_cli.config import (
     save_env_value,
 )
 # display_sinoclaw_home is imported lazily at call sites to avoid ImportError
-# when sinoclaw_constants is cached from a pre-update version during `hermes update`.
+# when sinoclaw_constants is cached from a pre-update version during `sinoclaw update`.
 from sinoclaw_cli.setup import (
     print_header, print_info, print_success, print_warning, print_error,
     prompt, prompt_choice, prompt_yes_no,
@@ -487,7 +487,7 @@ def find_gateway_pids(exclude_pids: set | None = None, all_profiles: bool = Fals
         exclude_pids: PIDs to exclude from the result (e.g. service-managed
             PIDs that should not be killed during a stale-process sweep).
         all_profiles: When ``True``, return gateway PIDs across **all**
-            profiles (the pre-7923 global behaviour).  ``hermes update``
+            profiles (the pre-7923 global behaviour).  ``sinoclaw update``
             needs this because a code update affects every profile.
             When ``False`` (default), only PIDs belonging to the current
             Hermes profile are returned.
@@ -556,7 +556,7 @@ def launch_detached_profile_gateway_restart(profile: str, old_pid: int) -> bool:
     #
     # Windows — ``start_new_session`` is silently accepted but does NOT
     # detach.  The watcher stays attached to the CLI's console and dies
-    # when the user closes the terminal, leaving ``hermes update`` users
+    # when the user closes the terminal, leaving ``sinoclaw update`` users
     # with no running gateway until they re-invoke ``sinoclaw gateway``
     # manually.  The Win32 equivalent is the ``CREATE_NEW_PROCESS_GROUP |
     # DETACHED_PROCESS | CREATE_NO_WINDOW`` creationflags bundle.
@@ -1469,7 +1469,7 @@ def has_conflicting_systemd_units() -> bool:
 # sinoclaw-gateway rename. Kept as an explicit allowlist (NOT a glob) so
 # profile units (sinoclaw-gateway-*.service) and unrelated third-party
 # "hermes" units are never matched.
-_LEGACY_SERVICE_NAMES: tuple[str, ...] = ("hermes.service",)
+_LEGACY_SERVICE_NAMES: tuple[str, ...] = ("sinoclaw.service",)
 
 # ExecStart content markers that identify a unit as running our gateway.
 # A legacy unit is only flagged when its file contains one of these.
@@ -1495,10 +1495,10 @@ def _legacy_unit_search_paths() -> list[tuple[bool, Path]]:
 
 
 def _find_legacy_sinoclaw_units() -> list[tuple[str, Path, bool]]:
-    """Return ``[(unit_name, unit_path, is_system)]`` for legacy Hermes gateway units.
+    """Return ``[(unit_name, unit_path, is_system)]`` for legacy Sinoclaw gateway units.
 
     Detects unit files installed by older Hermes versions that used a
-    different service name (e.g. ``hermes.service`` before the rename to
+    different service name (e.g. ``sinoclaw.service`` before the rename to
     ``sinoclaw-gateway.service``). When both a legacy unit and the current
     ``sinoclaw-gateway.service`` are active, they fight over the same bot
     token — the PR #5646 signal-recovery change turns this into a 30-second
@@ -1510,7 +1510,7 @@ def _find_legacy_sinoclaw_units() -> list[tuple[str, Path, bool]]:
       as ``sinoclaw-gateway-coder.service`` and unrelated third-party
       ``sinoclaw-*`` services are never matched.
     * ExecStart content check — only flag units that invoke our gateway
-      entrypoint. A user-created ``hermes.service`` running an unrelated
+      entrypoint. A user-created ``sinoclaw.service`` running an unrelated
       binary is left untouched.
     * Results are returned purely for caller inspection; this function
       never mutates or removes anything.
@@ -1533,12 +1533,12 @@ def _find_legacy_sinoclaw_units() -> list[tuple[str, Path, bool]]:
 
 
 def has_legacy_sinoclaw_units() -> bool:
-    """Return True when any legacy Hermes gateway unit files exist."""
+    """Return True when any legacy Sinoclaw gateway unit files exist."""
     return bool(_find_legacy_sinoclaw_units())
 
 
 def print_legacy_unit_warning() -> None:
-    """Warn about legacy Hermes gateway unit files if any are installed.
+    """Warn about legacy Sinoclaw gateway unit files if any are installed.
 
     Idempotent: prints nothing when no legacy units are detected. Safe to
     call from any status/install/setup path.
@@ -1560,7 +1560,7 @@ def remove_legacy_sinoclaw_units(
     interactive: bool = True,
     dry_run: bool = False,
 ) -> tuple[int, list[Path]]:
-    """Stop, disable, and remove legacy Hermes gateway unit files.
+    """Stop, disable, and remove legacy Sinoclaw gateway unit files.
 
     Iterates over whatever ``_find_legacy_sinoclaw_units()`` returns — which is
     an explicit allowlist of legacy names (not a glob). Profile units and
@@ -1578,7 +1578,7 @@ def remove_legacy_sinoclaw_units(
     """
     legacy = _find_legacy_sinoclaw_units()
     if not legacy:
-        print("No legacy Hermes gateway units found.")
+        print("No legacy Sinoclaw gateway units found.")
         return 0, []
 
     user_units = [(n, p) for n, p, is_sys in legacy if not is_sys]
@@ -2279,7 +2279,7 @@ def systemd_install(force: bool = False, system: bool = False, run_as_user: str 
     if system:
         _require_root_for_system_service("install")
 
-    # Offer to remove legacy units (hermes.service from pre-rename installs)
+    # Offer to remove legacy units (sinoclaw.service from pre-rename installs)
     # before installing the new sinoclaw-gateway.service. If both remain, they
     # flap-fight for the Telegram bot token on every gateway startup.
     # Only removes units matching _LEGACY_SERVICE_NAMES + our ExecStart
@@ -2935,7 +2935,7 @@ def _truthy_env(value: str | None) -> bool:
 
 def _is_official_docker_checkout() -> bool:
     return (
-        str(PROJECT_ROOT) == "/opt/hermes"
+        str(PROJECT_ROOT) == "/opt/sinoclaw"
         and (PROJECT_ROOT / "docker" / "entrypoint.sh").is_file()
     )
 
@@ -2997,7 +2997,7 @@ def run_gateway(verbose: int = 0, quiet: bool = False, replace: bool = False):
     # but it's STILL vulnerable to CTRL_C_EVENT broadcast by any sibling
     # `hermes` invocation (like `sinoclaw gateway status` 30 seconds later)
     # because Windows routes console events to all processes sharing the
-    # console. Every hermes CLI process after that sibling fires is a
+    # console. Every sinoclaw CLI process after that sibling fires is a
     # potential drive-by killer. So on Windows, for `gateway run`
     # specifically (never interactive by design), always install the
     # SIGINT absorber regardless of TTY state.
@@ -3251,7 +3251,7 @@ _PLATFORMS = [
             {"name": "MATRIX_ACCESS_TOKEN", "prompt": "Access token (leave empty to use password login instead)", "password": True,
              "help": "Paste your access token, or leave empty and provide user ID + password below."},
             {"name": "MATRIX_USER_ID", "prompt": "User ID (@bot:server — required for password login)", "password": False,
-             "help": "Full Matrix user ID, e.g. @hermes:matrix.example.org"},
+             "help": "Full Matrix user ID, e.g. @sinoclaw:matrix.example.org"},
             {"name": "MATRIX_ALLOWED_USERS", "prompt": "Allowed user IDs (comma-separated, e.g. @you:server)", "password": False,
              "is_allowlist": True,
              "help": "Matrix user IDs who can interact with the bot."},
@@ -3474,7 +3474,7 @@ _PLATFORMS = [
             "4. The server URL is typically http://<your-mac-ip>:1234",
             "5. Hermes connects via the BlueBubbles REST API and receives",
             "   incoming messages via a local webhook",
-            "6. To authorize users, use DM pairing: hermes pairing generate bluebubbles",
+            "6. To authorize users, use DM pairing: sinoclaw pairing generate bluebubbles",
             "   Share the code — the user sends it via iMessage to get approved",
         ],
         "vars": [
@@ -3752,7 +3752,7 @@ def _setup_standard_platform(platform: dict):
                     print_warning("  Open access enabled — anyone can use your bot!")
                 elif access_idx == 1:
                     print_success("  DM pairing mode — users will receive a code to request access.")
-                    print_info("  Approve with: hermes pairing approve <platform> <code>")
+                    print_info("  Approve with: sinoclaw pairing approve <platform> <code>")
                 else:
                     print_info("  Skipped — configure later with 'sinoclaw gateway setup'")
             continue
@@ -3957,7 +3957,7 @@ def _setup_wecom():
         elif access_idx == 1:
             save_env_value("WECOM_DM_POLICY", "pairing")
             print_success("  DM pairing mode — users will receive a code to request access.")
-            print_info("  Approve with: hermes pairing approve <platform> <code>")
+            print_info("  Approve with: sinoclaw pairing approve <platform> <code>")
         elif access_idx == 2:
             save_env_value("WECOM_DM_POLICY", "disabled")
             print_warning("  Direct messages disabled.")
@@ -4116,7 +4116,7 @@ def _setup_weixin():
         save_env_value("WEIXIN_ALLOW_ALL_USERS", "false")
         save_env_value("WEIXIN_ALLOWED_USERS", "")
         print_success("  DM pairing enabled.")
-        print_info("  Unknown DM users can request access and you approve them with `hermes pairing approve`.")
+        print_info("  Unknown DM users can request access and you approve them with `sinoclaw pairing approve`.")
     elif access_idx == 1:
         save_env_value("WEIXIN_DM_POLICY", "open")
         save_env_value("WEIXIN_ALLOW_ALL_USERS", "true")
@@ -4306,7 +4306,7 @@ def _setup_feishu():
         save_env_value("FEISHU_ALLOW_ALL_USERS", "false")
         save_env_value("FEISHU_ALLOWED_USERS", "")
         print_success("  DM pairing enabled.")
-        print_info("  Unknown users can request access; approve with `hermes pairing approve`.")
+        print_info("  Unknown users can request access; approve with `sinoclaw pairing approve`.")
     elif access_idx == 1:
         save_env_value("FEISHU_ALLOW_ALL_USERS", "true")
         save_env_value("FEISHU_ALLOWED_USERS", "")
@@ -4424,7 +4424,7 @@ def _setup_qqbot():
         else:
             save_env_value("QQ_ALLOWED_USERS", "")
         print_success("  DM pairing enabled.")
-        print_info("  Unknown users can request access; approve with `hermes pairing approve`.")
+        print_info("  Unknown users can request access; approve with `sinoclaw pairing approve`.")
     elif access_idx == 1:
         save_env_value("QQ_ALLOW_ALL_USERS", "true")
         save_env_value("QQ_ALLOWED_USERS", "")
@@ -4827,7 +4827,7 @@ def gateway_setup():
             elif is_wsl():
                 print_info("  WSL detected but systemd is not running.")
                 print_info("  Run in foreground: sinoclaw gateway run")
-                print_info("  For persistence:   tmux new -s hermes 'sinoclaw gateway run'")
+                print_info("  For persistence:   tmux new -s sinoclaw 'sinoclaw gateway run'")
                 print_info("  To enable systemd: add systemd=true to /etc/wsl.conf, then 'wsl --shutdown'")
             else:
                 if is_termux():
@@ -4901,7 +4901,7 @@ def _gateway_command_inner(args):
             if is_wsl():
                 print_warning("WSL detected — systemd services may not survive WSL restarts.")
                 print_info("  Consider running in foreground instead: sinoclaw gateway run")
-                print_info("  Or use tmux/screen for persistence: tmux new -s hermes 'sinoclaw gateway run'")
+                print_info("  Or use tmux/screen for persistence: tmux new -s sinoclaw 'sinoclaw gateway run'")
                 print()
             systemd_install(force=force, system=system, run_as_user=run_as_user)
         elif is_macos():
@@ -4915,7 +4915,7 @@ def _gateway_command_inner(args):
             print("or run the gateway in foreground mode:")
             print()
             print("  sinoclaw gateway run                              # direct foreground")
-            print("  tmux new -s hermes 'sinoclaw gateway run'         # persistent via tmux")
+            print("  tmux new -s sinoclaw 'sinoclaw gateway run'         # persistent via tmux")
             print("  nohup sinoclaw gateway run > ~/.sinoclaw/logs/gateway.log 2>&1 &  # background")
             sys.exit(1)
         elif is_container():
@@ -4986,7 +4986,7 @@ def _gateway_command_inner(args):
             print("Run the gateway in foreground mode instead:")
             print()
             print("  sinoclaw gateway run                              # direct foreground")
-            print("  tmux new -s hermes 'sinoclaw gateway run'         # persistent via tmux")
+            print("  tmux new -s sinoclaw 'sinoclaw gateway run'         # persistent via tmux")
             print("  nohup sinoclaw gateway run > ~/.sinoclaw/logs/gateway.log 2>&1 &  # background")
             print()
             print("To enable systemd: add systemd=true to /etc/wsl.conf and run 'wsl --shutdown' from PowerShell.")
@@ -5242,7 +5242,7 @@ def _gateway_command_inner(args):
                 if is_termux():
                     print("  nohup sinoclaw gateway run > ~/.sinoclaw/logs/gateway.log 2>&1 &  # Best-effort background start")
                 elif is_wsl():
-                    print("  tmux new -s hermes 'sinoclaw gateway run'         # persistent via tmux")
+                    print("  tmux new -s sinoclaw 'sinoclaw gateway run'         # persistent via tmux")
                     print("  nohup sinoclaw gateway run > ~/.sinoclaw/logs/gateway.log 2>&1 &  # background")
                 elif is_windows():
                     print("  sinoclaw gateway install  # Install as Windows Scheduled Task (auto-start on login)")
@@ -5257,8 +5257,8 @@ def _gateway_command_inner(args):
         _gateway_list()
 
     elif subcmd == "migrate-legacy":
-        # Stop, disable, and remove legacy Hermes gateway unit files from
-        # pre-rename installs (e.g. hermes.service). Profile units and
+        # Stop, disable, and remove legacy Sinoclaw gateway unit files from
+        # pre-rename installs (e.g. sinoclaw.service). Profile units and
         # unrelated third-party services are never touched.
         dry_run = getattr(args, 'dry_run', False)
         yes = getattr(args, 'yes', False)

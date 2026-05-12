@@ -39,7 +39,7 @@ def test_home_relative_cwd_collapses_home(tmp_path, monkeypatch):
     sub = tmp_path / "projects" / "hermes"
     sub.mkdir(parents=True)
     result = _home_relative_cwd(str(sub))
-    assert result == "~/projects/hermes"
+    assert result == "~/projects/sinoclaw"
 
 
 def test_home_relative_cwd_leaves_abs_path_alone(tmp_path, monkeypatch):
@@ -67,7 +67,7 @@ def test_format_footer_all_fields(monkeypatch, tmp_path):
         cwd=None,  # falls back to TERMINAL_CWD env var
         fields=("model", "context_pct", "cwd"),
     )
-    assert out == "gpt-5.4 · 68% · ~/projects/hermes"
+    assert out == "gpt-5.4 · 68% · ~/projects/sinoclaw"
 
 
 def test_format_footer_skips_missing_context_length():

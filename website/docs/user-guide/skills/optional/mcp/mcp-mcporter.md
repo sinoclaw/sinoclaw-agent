@@ -14,7 +14,7 @@ Use the mcporter CLI to list, configure, auth, and call MCP servers/tools direct
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mcp/mcporter` |
+| Source | Optional — install with `sinoclaw skills install official/mcp/mcporter` |
 | Path | `optional-skills/mcp/mcporter` |
 | Version | `1.0.0` |
 | Author | community |

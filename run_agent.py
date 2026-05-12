@@ -26,7 +26,7 @@ try:
     import sinoclaw_bootstrap  # noqa: F401
 except ModuleNotFoundError:
     # Graceful fallback when sinoclaw_bootstrap isn't registered in the venv
-    # yet — happens during partial ``hermes update`` where git-reset landed
+    # yet — happens during partial ``sinoclaw update`` where git-reset landed
     # new code but ``uv pip install -e .`` didn't finish.  Missing bootstrap
     # means UTF-8 stdio setup is skipped on Windows; POSIX is unaffected.
     pass
@@ -1683,12 +1683,12 @@ class AIAgent:
                             raise RuntimeError(
                                 f"Provider '{_explicit}' is set in config.yaml but no API key "
                                 f"was found. Set the {_env_hint} environment "
-                                f"variable, or switch to a different provider with `hermes model`."
+                                f"variable, or switch to a different provider with `sinoclaw model`."
                             )
                     if not getattr(self, "_fallback_activated", False):
                         # No provider configured — reject with a clear message.
                         raise RuntimeError(
-                            "No LLM provider configured. Run `hermes model` to "
+                            "No LLM provider configured. Run `sinoclaw model` to "
                             "select a provider, or run `sinoclaw setup` for first-time "
                             "configuration."
                         )
@@ -2712,7 +2712,7 @@ class AIAgent:
         all non-forced output is suppressed.
 
         ``suppress_status_output`` is a stricter CLI automation mode used by
-        parseable single-query flows such as ``hermes chat -q``. In that mode,
+        parseable single-query flows such as ``sinoclaw chat -q``. In that mode,
         all status/diagnostic prints routed through ``_vprint`` are suppressed
         so stdout stays machine-readable.
         """
@@ -11012,7 +11012,7 @@ class AIAgent:
         self._ensure_db_session()
 
         # Tag all log records on this thread with the session ID so
-        # ``hermes logs --session <id>`` can filter a single conversation.
+        # ``sinoclaw logs --session <id>`` can filter a single conversation.
         from sinoclaw_logging import set_session_context
         set_session_context(self.session_id)
 
@@ -12789,7 +12789,7 @@ class AIAgent:
                             print(f"{self.log_prefix}   Response: {_body_text}")
                         print(f"{self.log_prefix}   Most likely: Portal OAuth expired, account out of credits, or agent key revoked.")
                         print(f"{self.log_prefix}   Troubleshooting:")
-                        print(f"{self.log_prefix}     • Re-authenticate: hermes login --provider nous")
+                        print(f"{self.log_prefix}     • Re-authenticate: sinoclaw login --provider nous")
                         print(f"{self.log_prefix}     • Check credits / billing: https://portal.nousresearch.com")
                         print(f"{self.log_prefix}     • Verify stored credentials: {_dhh}/auth.json")
                         print(f"{self.log_prefix}     • Switch providers temporarily: /model <model> --provider openrouter")
@@ -12826,8 +12826,8 @@ class AIAgent:
                         print(f"{self.log_prefix}     • Check ANTHROPIC_API_KEY in {_dhh}/.env for API keys or legacy token values")
                         print(f"{self.log_prefix}     • For API keys: verify at https://platform.claude.com/settings/keys")
                         print(f"{self.log_prefix}     • For Claude Code: run 'claude /login' to refresh, then retry")
-                        print(f"{self.log_prefix}     • Legacy cleanup: hermes config set ANTHROPIC_TOKEN \"\"")
-                        print(f"{self.log_prefix}     • Clear stale keys: hermes config set ANTHROPIC_API_KEY \"\"")
+                        print(f"{self.log_prefix}     • Legacy cleanup: sinoclaw config set ANTHROPIC_TOKEN \"\"")
+                        print(f"{self.log_prefix}     • Clear stale keys: sinoclaw config set ANTHROPIC_API_KEY \"\"")
 
                     # ── Thinking block signature recovery ─────────────────
                     # Anthropic signs thinking blocks against the full turn
@@ -13404,7 +13404,7 @@ class AIAgent:
                                 self._vprint(f"{self.log_prefix}   💡 Codex OAuth token was rejected (HTTP 401). Your token may have been", force=True)
                                 self._vprint(f"{self.log_prefix}      refreshed by another client (Codex CLI, VS Code). To fix:", force=True)
                                 self._vprint(f"{self.log_prefix}      1. Run `codex` in your terminal to generate fresh tokens.", force=True)
-                                self._vprint(f"{self.log_prefix}      2. Then run `hermes auth` to re-authenticate.", force=True)
+                                self._vprint(f"{self.log_prefix}      2. Then run `sinoclaw auth` to re-authenticate.", force=True)
                             else:
                                 self._vprint(f"{self.log_prefix}   💡 Your API key was rejected by the provider. Check:", force=True)
                                 self._vprint(f"{self.log_prefix}      • Is the key valid? Run: sinoclaw setup", force=True)

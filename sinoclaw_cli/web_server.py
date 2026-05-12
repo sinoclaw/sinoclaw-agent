@@ -74,7 +74,7 @@ app = FastAPI(title="Sinoclaw Agent", version=__version__)
 _SESSION_TOKEN = secrets.token_urlsafe(32)
 _SESSION_HEADER_NAME = "X-Sinoclaw-Session-Token"
 
-# In-browser Chat tab (/chat, /api/pty, …).  Off unless ``hermes dashboard --tui``
+# In-browser Chat tab (/chat, /api/pty, …).  Off unless ``sinoclaw dashboard --tui``
 # or SINOCLAW_DASHBOARD_TUI=1.  Set from :func:`start_server`.
 _DASHBOARD_EMBEDDED_CHAT_ENABLED = False
 
@@ -650,7 +650,7 @@ _ACTION_PROCS: Dict[str, subprocess.Popen] = {}
 
 
 def _spawn_sinoclaw_action(subcommand: List[str], name: str) -> subprocess.Popen:
-    """Spawn ``hermes <subcommand>`` detached and record the Popen handle.
+    """Spawn ``sinoclaw <subcommand>`` detached and record the Popen handle.
 
     Uses the running interpreter's ``sinoclaw_cli.main`` module so the action
     inherits the same venv/PYTHONPATH the web server is using.
@@ -716,11 +716,11 @@ async def restart_gateway():
 
 @app.post("/api/hermes/update")
 async def update_hermes():
-    """Kick off ``hermes update`` in the background."""
+    """Kick off ``sinoclaw update`` in the background."""
     try:
         proc = _spawn_sinoclaw_action(["update"], "sinoclaw-update")
     except Exception as exc:
-        _log.exception("Failed to spawn hermes update")
+        _log.exception("Failed to spawn sinoclaw update")
         raise HTTPException(status_code=500, detail=f"Failed to start update: {exc}")
     return {
         "ok": True,
@@ -1294,7 +1294,7 @@ async def reveal_env_var(body: EnvVarReveal, request: Request):
 # connected, plus a disconnect button. The actual login flow (PKCE for
 # Anthropic, device-code for Nous/Codex) still runs in the CLI for now;
 # Phase 2 will add in-browser flows. For unconnected providers we return
-# the canonical ``hermes auth add <provider>`` command so the dashboard
+# the canonical ``sinoclaw auth add <provider>`` command so the dashboard
 # can surface a one-click copy.
 
 
@@ -1636,7 +1636,7 @@ _oauth_sessions: Dict[str, Dict[str, Any]] = {}
 _oauth_sessions_lock = threading.Lock()
 
 # Import OAuth constants from canonical source instead of duplicating.
-# Guarded so hermes web still starts if anthropic_adapter is unavailable;
+# Guarded so sinoclaw web still starts if anthropic_adapter is unavailable;
 # Phase 2 endpoints will return 501 in that case.
 try:
     from agent.anthropic_adapter import (
@@ -1681,7 +1681,7 @@ def _save_anthropic_oauth_creds(access_token: str, refresh_token: str, expires_a
     """Persist Anthropic PKCE creds to both Hermes file AND credential pool.
 
     Mirrors what auth_commands.add_command does so the dashboard flow leaves
-    the system in the same state as ``hermes auth add anthropic``.
+    the system in the same state as ``sinoclaw auth add anthropic``.
     """
     from agent.anthropic_adapter import _SINOCLAW_OAUTH_FILE
     payload = {
@@ -2965,7 +2965,7 @@ async def get_models_analytics(days: int = 30):
 # ---------------------------------------------------------------------------
 # /api/pty — PTY-over-WebSocket bridge for the dashboard "Chat" tab.
 #
-# The endpoint spawns the same ``hermes --tui`` binary the CLI uses, behind
+# The endpoint spawns the same ``sinoclaw --tui`` binary the CLI uses, behind
 # a POSIX pseudo-terminal, and forwards bytes + resize escapes across a
 # WebSocket.  The browser renders the ANSI through xterm.js (see
 # web/src/pages/ChatPage.tsx).
@@ -3034,7 +3034,7 @@ def _resolve_chat_argv(
 ) -> tuple[list[str], Optional[str], Optional[dict]]:
     """Resolve the argv + cwd + env for the chat PTY.
 
-    Default: whatever ``hermes --tui`` would run.  Tests monkeypatch this
+    Default: whatever ``sinoclaw --tui`` would run.  Tests monkeypatch this
     function to inject a tiny fake command (``cat``, ``sh -c 'printf …'``)
     so nothing has to build Node or the TUI bundle.
 
@@ -3336,7 +3336,7 @@ async def events_ws(ws: WebSocket) -> None:
 def _normalise_prefix(raw: Optional[str]) -> str:
     """Normalise an X-Forwarded-Prefix header value.
 
-    Returns a string like ``"/hermes"`` (no trailing slash) or ``""`` when
+    Returns a string like ``"/sinoclaw"`` (no trailing slash) or ``""`` when
     no prefix is set / the header is malformed. We deliberately reject
     anything containing ``..`` or non-printable bytes so a hostile proxy
     can't inject HTML via the prefix.

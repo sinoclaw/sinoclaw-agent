@@ -23,7 +23,7 @@ Open WebUI connects to Sinoclaw Agent's API server just like it would connect to
 :::important Runtime location
 The API server is a **Sinoclaw agent runtime**, not a pure LLM proxy. For each request, Hermes creates a server-side `AIAgent` on the API-server host. Tool calls run where that API server is running.
 
-For example, if a laptop points Open WebUI or another OpenAI-compatible client at a Hermes API server on a remote machine, `pwd`, file tools, browser tools, local MCP tools, and other workspace tools run on the remote API-server host, not on the laptop.
+For example, if a laptop points Open WebUI or another OpenAI-compatible client at a Sinoclaw API server on a remote machine, `pwd`, file tools, browser tools, local MCP tools, and other workspace tools run on the remote API-server host, not on the laptop.
 :::
 
 Open WebUI talks to Hermes server-to-server, so you do not need `API_SERVER_CORS_ORIGINS` for this integration.
@@ -42,7 +42,7 @@ bash scripts/setup_open_webui.sh
 What the script does:
 
 - ensures `~/.sinoclaw/.env` contains `API_SERVER_ENABLED`, `API_SERVER_HOST`, `API_SERVER_KEY`, `API_SERVER_PORT`, and `API_SERVER_MODEL_NAME`
-- restarts the Hermes gateway so the API server comes up
+- restarts the Sinoclaw gateway so the API server comes up
 - installs Open WebUI into `~/.local/open-webui-venv`
 - writes a launcher at `~/.local/bin/start-open-webui-hermes.sh`
 - on macOS, installs a `launchd` user service; on Linux with `systemd --user`, installs a user service there
@@ -75,7 +75,7 @@ hermes config set API_SERVER_ENABLED true
 hermes config set API_SERVER_KEY your-secret-key
 ```
 
-`hermes config set` auto-routes the flag to `config.yaml` and the secret to `~/.sinoclaw/.env`. If the gateway is already running, restart it so the change takes effect:
+`sinoclaw config set` auto-routes the flag to `config.yaml` and the secret to `~/.sinoclaw/.env`. If the gateway is already running, restart it so the change takes effect:
 
 ```bash
 sinoclaw gateway stop && sinoclaw gateway
@@ -277,21 +277,21 @@ To run separate Hermes instances per user — each with their own config, memory
 
 ```bash
 hermes profile create alice
-hermes -p alice config set API_SERVER_ENABLED true
-hermes -p alice config set API_SERVER_PORT 8643
-hermes -p alice config set API_SERVER_KEY alice-secret
+sinoclaw -p alice config set API_SERVER_ENABLED true
+sinoclaw -p alice config set API_SERVER_PORT 8643
+sinoclaw -p alice config set API_SERVER_KEY alice-secret
 
 hermes profile create bob
-hermes -p bob config set API_SERVER_ENABLED true
-hermes -p bob config set API_SERVER_PORT 8644
-hermes -p bob config set API_SERVER_KEY bob-secret
+sinoclaw -p bob config set API_SERVER_ENABLED true
+sinoclaw -p bob config set API_SERVER_PORT 8644
+sinoclaw -p bob config set API_SERVER_KEY bob-secret
 ```
 
 ### 2. Start each gateway
 
 ```bash
-hermes -p alice gateway &
-hermes -p bob gateway &
+sinoclaw -p alice gateway &
+sinoclaw -p bob gateway &
 ```
 
 ### 3. Add connections in Open WebUI
@@ -308,7 +308,7 @@ The model dropdown will show `alice` and `bob` as distinct models. You can assig
 :::tip Custom Model Names
 The model name defaults to the profile name. To override it, set `API_SERVER_MODEL_NAME` in the profile's `.env`:
 ```bash
-hermes -p alice config set API_SERVER_MODEL_NAME "Alice's Agent"
+sinoclaw -p alice config set API_SERVER_MODEL_NAME "Alice's Agent"
 ```
 :::
 

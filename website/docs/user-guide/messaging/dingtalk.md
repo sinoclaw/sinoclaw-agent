@@ -253,7 +253,7 @@ pip install dingtalk-stream httpx
 
 ### Bot is offline
 
-**Cause**: The Hermes gateway isn't running, or it failed to connect.
+**Cause**: The Sinoclaw gateway isn't running, or it failed to connect.
 
 **Fix**: Check that `sinoclaw gateway` is running. Look at the terminal output for error messages. Common issues: wrong credentials, app deactivated, `dingtalk-stream` or `httpx` not installed.
 

@@ -14,7 +14,7 @@ Delegate coding tasks to Blackbox AI CLI agent. Multi-model agent with built-in 
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/autonomous-ai-agents/blackbox` |
+| Source | Optional — install with `sinoclaw skills install official/autonomous-ai-agents/blackbox` |
 | Path | `optional-skills/autonomous-ai-agents/blackbox` |
 | Version | `1.0.0` |
 | Author | Sinoclaw Agent (Nous Research) |

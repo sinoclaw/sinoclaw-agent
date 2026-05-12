@@ -668,7 +668,7 @@ def auto_jailbreak(model=None, base_url=None, api_key=None,
             if verbose:
                 print(f"[LOCKED] Config written to: {config_written}")
                 print()
-                print("[DONE] Jailbreak locked in. Restart Hermes for changes to take effect.")
+                print("[DONE] Jailbreak locked in. Restart Sinoclaw for changes to take effect.")
         else:
             if verbose:
                 print("[DRY RUN] Would write config + prefill but dry_run=True")
@@ -736,7 +736,7 @@ def undo_jailbreak(verbose=True):
             print(f"[UNDO] Deleted {PREFILL_PATH}")
 
     if verbose:
-        print("[UNDO] Jailbreak removed. Restart Hermes for changes to take effect.")
+        print("[UNDO] Jailbreak removed. Restart Sinoclaw for changes to take effect.")
 
 
 # ═══════════════════════════════════════════════════════════════════

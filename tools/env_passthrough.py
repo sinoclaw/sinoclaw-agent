@@ -89,7 +89,7 @@ def register_env_passthrough(var_names: Iterable[str]) -> None:
             continue
         if _is_sinoclaw_provider_credential(name):
             logger.warning(
-                "env passthrough: refusing to register Hermes provider "
+                "env passthrough: refusing to register Sinoclaw provider "
                 "credential %r (blocked by _SINOCLAW_PROVIDER_ENV_BLOCKLIST). "
                 "Skills must not override the execute_code sandbox's "
                 "credential scrubbing; see GHSA-rhgp-j443-p4rf.",

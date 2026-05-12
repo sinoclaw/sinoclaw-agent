@@ -1,5 +1,5 @@
 """
-Cron subcommand for hermes CLI.
+Cron subcommand for sinoclaw CLI.
 
 Handles standalone cron management commands like list, create, edit,
 pause/resume/run/remove, status, and tick.
@@ -303,5 +303,5 @@ def cron_command(args):
         return _job_action("remove", args.job_id, "Removed")
 
     print(f"Unknown cron command: {subcmd}")
-    print("Usage: hermes cron [list|create|edit|pause|resume|run|remove|status|tick]")
+    print("Usage: sinoclaw cron [list|create|edit|pause|resume|run|remove|status|tick]")
     sys.exit(1)

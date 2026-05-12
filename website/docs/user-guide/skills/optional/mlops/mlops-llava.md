@@ -14,7 +14,7 @@ Large Language and Vision Assistant. Enables visual instruction tuning and image
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/llava` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/llava` |
 | Path | `optional-skills/mlops/llava` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

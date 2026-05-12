@@ -14,7 +14,7 @@ Give the agent its own dedicated email inbox via AgentMail. Send, receive, and m
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/email/agentmail` |
+| Source | Optional — install with `sinoclaw skills install official/email/agentmail` |
 | Path | `optional-skills/email/agentmail` |
 | Version | `1.0.0` |
 | Tags | `email`, `communication`, `agentmail`, `mcp` |
@@ -61,7 +61,7 @@ mcp_servers:
       AGENTMAIL_API_KEY: "am_your_key_here"
 ```
 
-### 3. Restart Hermes
+### 3. Restart Sinoclaw
 ```bash
 hermes
 ```

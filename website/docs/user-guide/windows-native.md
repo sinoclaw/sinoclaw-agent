@@ -64,8 +64,8 @@ Everything except the dashboard's embedded terminal pane runs natively on Window
 
 | Feature | Native Windows | WSL2 |
 |---|---|---|
-| CLI (`hermes chat`, `sinoclaw setup`, `sinoclaw gateway`, …) | ✓ | ✓ |
-| Interactive TUI (`hermes --tui`) | ✓ | ✓ |
+| CLI (`sinoclaw chat`, `sinoclaw setup`, `sinoclaw gateway`, …) | ✓ | ✓ |
+| Interactive TUI (`sinoclaw --tui`) | ✓ | ✓ |
 | Messaging gateway (Telegram, Discord, Slack, WhatsApp, 15+ platforms) | ✓ | ✓ |
 | Cron scheduler | ✓ | ✓ |
 | Browser tool (Chromium via Node) | ✓ | ✓ |
@@ -194,7 +194,7 @@ The browser tool uses `agent-browser` (a Node helper) to drive Chromium. On Wind
 
 - The installer puts `agent-browser` on PATH via npm.
 - `shutil.which("agent-browser", path=...)` picks up the `.cmd` shim automatically — `CreateProcessW` can't execute an extensionless shebang, so Hermes always resolves to the `.CMD` wrapper. Don't manually invoke the shebang script; always go through the `.cmd`.
-- Playwright Chromium is auto-installed on first run (`npx playwright install chromium`). If installation fails, `hermes doctor` surfaces it with a fix-it hint.
+- Playwright Chromium is auto-installed on first run (`npx playwright install chromium`). If installation fails, `sinoclaw doctor` surfaces it with a fix-it hint.
 
 ## Running Hermes on Windows — practical notes
 
@@ -205,7 +205,7 @@ The installer adds `%LOCALAPPDATA%\hermes\bin` to your **User PATH** via `[Envir
 Verify:
 
 ```powershell
-Get-Command hermes        # should print C:\Users\<you>\AppData\Local\hermes\bin\hermes.cmd
+Get-Command sinoclaw        # should print C:\Users\<you>\AppData\Local\hermes\bin\hermes.cmd
 hermes --version
 ```
 
@@ -248,7 +248,7 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
 Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 ```
 
-The `hermes uninstall` CLI subcommand also handles the case where the schtasks entry was registered under a different task name (older installs) — it searches by install path rather than by hardcoded task name.
+The `sinoclaw uninstall` CLI subcommand also handles the case where the schtasks entry was registered under a different task name (older installs) — it searches by install path rather than by hardcoded task name.
 
 ## Process management internals
 
@@ -278,7 +278,7 @@ Check `sinoclaw gateway status` — it merges the schtasks entry, the Startup-fo
 You set it in the current process only; close and reopen the shell, or set it at User scope in System Properties → Environment Variables. Verify with `echo $env:EDITOR` in a new PowerShell window.
 
 **Browser tool launches but tools time out.**
-Chromium is auto-installed on first run. If the install failed (rate-limited GitHub, Playwright CDN hiccup), run `hermes doctor` — it will surface the missing Chromium and print the exact `npx playwright install chromium` command to fix it.
+Chromium is auto-installed on first run. If the install failed (rate-limited GitHub, Playwright CDN hiccup), run `sinoclaw doctor` — it will surface the missing Chromium and print the exact `npx playwright install chromium` command to fix it.
 
 **`agent-browser` fails with a weird Node version error.**
 The installer provisions Node 22 at `%LOCALAPPDATA%\hermes\node` but your PATH may have an older system Node 18 first. Either move Hermes's node dir earlier on PATH, or delete the system install if you don't use Node elsewhere.

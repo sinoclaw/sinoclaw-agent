@@ -111,7 +111,7 @@ python -m pdb path/to/script.py arg1 arg2
 
 ## Recipe 3: Debug a pytest test
 
-The hermes test runner and pytest both support this:
+The sinoclaw test runner and pytest both support this:
 
 ```bash
 # Drop to pdb on failure (or on any raised exception):
@@ -163,7 +163,7 @@ sys.excepthook = excepthook
 
 ## Recipe 5: Remote debug with debugpy (attach to running process)
 
-For long-lived processes: Hermes gateway, tui_gateway, a daemon, a process that's already misbehaving and can't be restarted clean.
+For long-lived processes: Sinoclaw gateway, tui_gateway, a daemon, a process that's already misbehaving and can't be restarted clean.
 
 ### Setup
 
@@ -298,7 +298,7 @@ See Recipe 3. Always add `-p no:xdist` or run single tests without xdist.
 ### `run_agent.py` / CLI — one-shot
 Easiest: add `breakpoint()` near the suspect line, then run `hermes` normally. Control returns to your terminal at the pause point.
 
-### `tui_gateway` subprocess (spawned by `hermes --tui`)
+### `tui_gateway` subprocess (spawned by `sinoclaw --tui`)
 The gateway runs as a child of the Node TUI. Options:
 
 **A. Source-edit the gateway:**
@@ -308,7 +308,7 @@ import debugpy
 debugpy.listen(("127.0.0.1", 5678))
 debugpy.wait_for_client()
 ```
-Start `hermes --tui`. The TUI will appear frozen (its backend is waiting). Attach a client; execution resumes when you `continue`.
+Start `sinoclaw --tui`. The TUI will appear frozen (its backend is waiting). Attach a client; execution resumes when you `continue`.
 
 **B. Use `remote-pdb` at a specific handler:**
 ```python

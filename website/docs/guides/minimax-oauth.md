@@ -176,15 +176,15 @@ Both models support up to 200,000 tokens of context.
 
 ### Token expired — not re-logging in automatically
 
-Hermes refreshes the token on every session start if it is within 60 seconds of expiry. If the access token is already expired (for example, after a long offline period), the refresh happens automatically on the next request. If refresh fails with `refresh_token_reused` or `invalid_grant`, Hermes marks the session as requiring re-login.
+Sinoclaw refreshes the token on every session start if it is within 60 seconds of expiry. If the access token is already expired (for example, after a long offline period), the refresh happens automatically on the next request. If refresh fails with `refresh_token_reused` or `invalid_grant`, Hermes marks the session as requiring re-login.
 
-**Fix:** run `hermes auth add minimax-oauth` again to start a fresh login.
+**Fix:** run `sinoclaw auth add minimax-oauth` again to start a fresh login.
 
 ### Authorization timed out
 
 The device-code flow has a finite expiry window. If you don't approve the login in time, Hermes raises a timeout error.
 
-**Fix:** re-run `hermes auth add minimax-oauth` (or `hermes model`). The flow starts fresh.
+**Fix:** re-run `sinoclaw auth add minimax-oauth` (or `sinoclaw model`). The flow starts fresh.
 
 ### State mismatch (possible CSRF)
 
@@ -206,7 +206,7 @@ Hermes prints the URL and code. Open the URL on any device and complete the flow
 
 The auth store has no credentials for `minimax-oauth`. You have not logged in yet, or the credential file was deleted.
 
-**Fix:** run `hermes model` and select MiniMax (OAuth), or run `hermes auth add minimax-oauth`.
+**Fix:** run `sinoclaw model` and select MiniMax (OAuth), or run `sinoclaw auth add minimax-oauth`.
 
 ## Logging Out
 

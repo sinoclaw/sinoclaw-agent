@@ -10,7 +10,7 @@ class WebSearchProvider(ABC):
     """Interface for web search backends (Firecrawl, Tavily, Exa, etc.).
 
     Implementations live in sibling modules.  The user selects a provider
-    via ``hermes tools``; the choice is persisted as
+    via ``sinoclaw tools``; the choice is persisted as
     ``config["web"]["search_backend"]`` (falling back to
     ``config["web"]["backend"]``).
 
@@ -52,7 +52,7 @@ class WebExtractProvider(ABC):
     """Interface for web content extraction backends.
 
     Implementations live in sibling modules.  The user selects a provider
-    via ``hermes tools``; the choice is persisted as
+    via ``sinoclaw tools``; the choice is persisted as
     ``config["web"]["extract_backend"]`` (falling back to
     ``config["web"]["backend"]``).
 

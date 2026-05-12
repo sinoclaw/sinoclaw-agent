@@ -145,7 +145,7 @@ class TestParseResultContract:
 
     def test_tool_calls_are_proper_objects(self, parser):
         """When tool calls are found, they should be ChatCompletionMessageToolCall objects."""
-        # Use hermes format since that's universal
+        # Use sinoclaw format since that's universal
         text = '<tool_call>{"name": "terminal", "arguments": {"command": "echo hi"}}</tool_call>'
         content, tool_calls = parser.parse(text)
         if tool_calls is not None:

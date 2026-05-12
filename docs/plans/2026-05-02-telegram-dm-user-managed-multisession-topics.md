@@ -2,11 +2,11 @@
 
 > **For Hermes:** Use test-driven-development for implementation. Use subagent-driven-development only after this plan is split into small reviewed tasks.
 
-**Goal:** Add an opt-in Telegram DM multi-session mode where Telegram user-created private-chat topics become independent Hermes session lanes, while the root DM becomes a system lobby.
+**Goal:** Add an opt-in Telegram DM multi-session mode where Telegram user-created private-chat topics become independent Sinoclaw session lanes, while the root DM becomes a system lobby.
 
 **Architecture:** Rely on Telegram's native private-chat topic UI. Users create new topics with the `+` button; Hermes maps each `message_thread_id` to a separate session lane. Hermes does not create topics for normal `/new` flow and does not try to manage topic lifecycle beyond activation/status, root-lobby behavior, and restoring legacy sessions into a user-created topic.
 
-**Tech Stack:** Hermes gateway, Telegram Bot API 9.4+, python-telegram-bot adapter, SQLite SessionDB / side tables, pytest.
+**Tech Stack:** Sinoclaw gateway, Telegram Bot API 9.4+, python-telegram-bot adapter, SQLite SessionDB / side tables, pytest.
 
 ---
 
@@ -60,7 +60,7 @@ Suggested onboarding text:
 ```text
 Multi-session mode is enabled.
 
-Create new Hermes chats with the + button in this bot interface. Each Telegram topic is an independent Hermes session, so you can work on different tasks in parallel.
+Create new Hermes chats with the + button in this bot interface. Each Telegram topic is an independent Sinoclaw session, so you can work on different tasks in parallel.
 
 This main chat is reserved for system commands, status, and session management.
 
@@ -88,7 +88,7 @@ Normal user prompts in root DM do not enter the agent loop. Reply:
 ```text
 This main chat is reserved for system commands.
 
-To chat with Hermes, create a new topic using the + button in this bot interface. Each topic works as an independent Hermes session.
+To chat with Hermes, create a new topic using the + button in this bot interface. Each topic works as an independent Sinoclaw session.
 ```
 
 `/new` in root DM does not create a session/topic. Reply:
@@ -96,7 +96,7 @@ To chat with Hermes, create a new topic using the + button in this bot interface
 ```text
 To start a new parallel Hermes chat, create a new topic with the + button in this bot interface.
 
-Each topic is an independent Hermes session. Use /new inside a topic only if you want to replace that topic's current session.
+Each topic is an independent Sinoclaw session. Use /new inside a topic only if you want to replace that topic's current session.
 ```
 
 ### 2.3 First message in a user-created topic
@@ -105,7 +105,7 @@ When a user creates a Telegram topic and sends the first message there:
 
 1. Hermes receives a Telegram DM message with `message_thread_id`.
 2. Hermes derives the existing thread-aware `session_key` from `(platform=telegram, chat_type=dm, chat_id, thread_id)`.
-3. If no binding exists, Hermes creates a fresh Hermes session for this topic lane and persists the binding.
+3. If no binding exists, Hermes creates a fresh Sinoclaw session for this topic lane and persists the binding.
 4. The message runs through the normal agent loop for that lane.
 
 ### 2.4 `/new` inside a non-main topic
@@ -115,7 +115,7 @@ When a user creates a Telegram topic and sends the first message there:
 Hermes should warn:
 
 ```text
-Started a new Hermes session in this topic.
+Started a new Sinoclaw session in this topic.
 
 Tip: for parallel work, create a new topic with the + button instead of using /new here. /new replaces the session attached to the current topic.
 ```
@@ -241,7 +241,7 @@ Suggested fields:
 
 ### 3.4 `telegram_dm_topic_bindings`
 
-Stores Telegram topic/thread to Hermes session binding. Created only by `apply_telegram_topic_migration()`.
+Stores Telegram topic/thread to Sinoclaw session binding. Created only by `apply_telegram_topic_migration()`.
 
 Suggested fields:
 
@@ -462,7 +462,7 @@ Do not ship without verifying disabled-feature backwards compatibility.
 - Root DM becomes a system lobby after activation.
 - Onboarding message tells users to create new chats with the Telegram `+` button.
 - Onboarding message can be pinned in private chat.
-- User-created topics automatically become independent Hermes session lanes.
+- User-created topics automatically become independent Sinoclaw session lanes.
 - `/new` in root gives instructions, not a new agent run.
 - `/new` in a topic creates a new session in that topic and warns that `+` is preferred for parallel work.
 - `/topic` in root lists unlinked old sessions.

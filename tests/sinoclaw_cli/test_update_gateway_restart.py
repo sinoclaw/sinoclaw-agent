@@ -1,6 +1,6 @@
 """Tests for cmd_update gateway auto-restart — systemd + launchd coverage.
 
-Ensures ``hermes update`` correctly detects running gateways managed by
+Ensures ``sinoclaw update`` correctly detects running gateways managed by
 systemd (Linux) or launchd (macOS) and restarts/informs the user properly,
 rather than leaving zombie processes or telling users to manually restart
 when launchd will auto-respawn.
@@ -841,7 +841,7 @@ class TestCmdUpdateSystemService:
 class TestServicePidExclusion:
     """After restarting a service, the stale-process sweep must NOT kill
     the freshly-spawned service PID.  This was the root cause of the bug
-    where ``hermes update`` would restart the gateway and immediately kill it.
+    where ``sinoclaw update`` would restart the gateway and immediately kill it.
     """
 
     @patch("shutil.which", return_value=None)
@@ -1138,7 +1138,7 @@ class TestFindGatewayPidsExclude:
 
 
 class TestGatewayModeWritesExitCodeEarly:
-    """When running as ``hermes update --gateway``, the exit code marker must be
+    """When running as ``sinoclaw update --gateway``, the exit code marker must be
     written *before* the gateway restart attempt.  Without this, systemd's
     ``KillMode=mixed`` kills the update process (and its wrapping shell) during
     the cgroup teardown, so the shell epilogue that normally writes the exit
@@ -1250,11 +1250,11 @@ class TestGatewayModeWritesExitCodeEarly:
 
 
 class TestCmdUpdateLegacyGatewayWarning:
-    """Tests for the legacy hermes.service warning printed by `hermes update`.
+    """Tests for the legacy sinoclaw.service warning printed by `sinoclaw update`.
 
     Users who installed Sinoclaw before the service rename often have a
-    dormant ``hermes.service`` that starts flap-fighting the current
-    ``sinoclaw-gateway.service`` after PR #5646. Every ``hermes update``
+    dormant ``sinoclaw.service`` that starts flap-fighting the current
+    ``sinoclaw-gateway.service`` after PR #5646. Every ``sinoclaw update``
     should remind them to run ``sinoclaw gateway migrate-legacy`` until
     they do.
     """
@@ -1274,7 +1274,7 @@ class TestCmdUpdateLegacyGatewayWarning:
         system_dir = tmp_path / "system"
         user_dir.mkdir()
         system_dir.mkdir()
-        legacy_path = user_dir / "hermes.service"
+        legacy_path = user_dir / "sinoclaw.service"
         legacy_path.write_text(self._OUR_UNIT_TEXT, encoding="utf-8")
 
         monkeypatch.setattr(
@@ -1293,7 +1293,7 @@ class TestCmdUpdateLegacyGatewayWarning:
 
         captured = capsys.readouterr().out
         assert "Legacy Sinoclaw gateway unit(s) detected" in captured
-        assert "hermes.service" in captured
+        assert "sinoclaw.service" in captured
         assert "sinoclaw gateway migrate-legacy" in captured
         assert "(user scope)" in captured
 
@@ -1334,7 +1334,7 @@ class TestCmdUpdateLegacyGatewayWarning:
         """Profile units (sinoclaw-gateway-coder.service) must not trigger the warning.
 
         This is the core safety invariant: the legacy allowlist is
-        ``hermes.service`` only, no globs.
+        ``sinoclaw.service`` only, no globs.
         """
         user_dir = tmp_path / "user"
         system_dir = tmp_path / "system"
@@ -1376,7 +1376,7 @@ class TestCmdUpdateLegacyGatewayWarning:
         user_dir = tmp_path / "user"
         user_dir.mkdir()
         # Put a file that WOULD match if the check ran
-        (user_dir / "hermes.service").write_text(self._OUR_UNIT_TEXT, encoding="utf-8")
+        (user_dir / "sinoclaw.service").write_text(self._OUR_UNIT_TEXT, encoding="utf-8")
 
         monkeypatch.setattr(
             gateway_cli,
@@ -1407,7 +1407,7 @@ class TestCmdUpdateLegacyGatewayWarning:
         system_dir = tmp_path / "system"
         user_dir.mkdir()
         system_dir.mkdir()
-        (system_dir / "hermes.service").write_text(self._OUR_UNIT_TEXT, encoding="utf-8")
+        (system_dir / "sinoclaw.service").write_text(self._OUR_UNIT_TEXT, encoding="utf-8")
 
         monkeypatch.setattr(
             gateway_cli,
@@ -1446,7 +1446,7 @@ def _systemctl_calls(mock_run, subcommand):
 
 
 class TestCmdUpdateResetFailedBeforeRestart:
-    """`hermes update` must call `systemctl reset-failed` before every
+    """`sinoclaw update` must call `systemctl reset-failed` before every
     fallback `systemctl restart` so a systemd-parked `failed` state from
     earlier auto-restart crashes (CHDIR, OOM, filesystem race) doesn't
     permanently strand the unit.

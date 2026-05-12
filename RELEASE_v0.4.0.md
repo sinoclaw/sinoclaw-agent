@@ -16,7 +16,7 @@
 
 - **4 new inference providers** — GitHub Copilot (OAuth + token validation), Alibaba Cloud / DashScope, Kilo Code, and OpenCode Zen/Go ([#1924](https://github.com/NousResearch/sinoclaw-agent/pull/1924), [#1879](https://github.com/NousResearch/sinoclaw-agent/pull/1879) by @mchzimm, [#1673](https://github.com/NousResearch/sinoclaw-agent/pull/1673), [#1666](https://github.com/NousResearch/sinoclaw-agent/pull/1666), [#1650](https://github.com/NousResearch/sinoclaw-agent/pull/1650))
 
-- **MCP server management CLI** — `hermes mcp` commands for installing, configuring, and authenticating MCP servers with full OAuth 2.1 PKCE flow ([#2465](https://github.com/NousResearch/sinoclaw-agent/pull/2465))
+- **MCP server management CLI** — `sinoclaw mcp` commands for installing, configuring, and authenticating MCP servers with full OAuth 2.1 PKCE flow ([#2465](https://github.com/NousResearch/sinoclaw-agent/pull/2465))
 
 - **Gateway prompt caching** — Cache AIAgent instances per session, preserving Anthropic prompt cache across turns for dramatic cost reduction on long conversations ([#2282](https://github.com/NousResearch/sinoclaw-agent/pull/2282), [#2284](https://github.com/NousResearch/sinoclaw-agent/pull/2284), [#2361](https://github.com/NousResearch/sinoclaw-agent/pull/2361))
 
@@ -67,11 +67,11 @@
 - **Merge nested YAML sections** instead of replacing on config update ([#2213](https://github.com/NousResearch/sinoclaw-agent/pull/2213))
 - Fix: config.yaml provider key overrides env var silently ([#2272](https://github.com/NousResearch/sinoclaw-agent/pull/2272))
 - Fix: log warning instead of silently swallowing config.yaml errors ([#2683](https://github.com/NousResearch/sinoclaw-agent/pull/2683))
-- Fix: disabled toolsets re-enable themselves after `hermes tools` ([#2268](https://github.com/NousResearch/sinoclaw-agent/pull/2268))
+- Fix: disabled toolsets re-enable themselves after `sinoclaw tools` ([#2268](https://github.com/NousResearch/sinoclaw-agent/pull/2268))
 - Fix: platform default toolsets silently override tool deselection ([#2624](https://github.com/NousResearch/sinoclaw-agent/pull/2624))
 - Fix: honor bare YAML `approvals.mode: off` ([#2620](https://github.com/NousResearch/sinoclaw-agent/pull/2620))
-- Fix: `hermes update` use `.[all]` extras with fallback ([#1728](https://github.com/NousResearch/sinoclaw-agent/pull/1728))
-- Fix: `hermes update` prompt before resetting working tree on stash conflicts ([#2390](https://github.com/NousResearch/sinoclaw-agent/pull/2390))
+- Fix: `sinoclaw update` use `.[all]` extras with fallback ([#1728](https://github.com/NousResearch/sinoclaw-agent/pull/1728))
+- Fix: `sinoclaw update` prompt before resetting working tree on stash conflicts ([#2390](https://github.com/NousResearch/sinoclaw-agent/pull/2390))
 - Fix: use git pull --rebase in update/install to avoid divergent branch error ([#2274](https://github.com/NousResearch/sinoclaw-agent/pull/2274))
 - Fix: add zprofile fallback and create zshrc on fresh macOS installs ([#2320](https://github.com/NousResearch/sinoclaw-agent/pull/2320))
 - Fix: remove `ANTHROPIC_BASE_URL` env var to avoid collisions ([#1675](https://github.com/NousResearch/sinoclaw-agent/pull/1675))
@@ -235,7 +235,7 @@
 ### MCP Enhancements
 - **MCP server management CLI** + OAuth 2.1 PKCE auth ([#2465](https://github.com/NousResearch/sinoclaw-agent/pull/2465))
 - **Expose MCP servers as standalone toolsets** ([#1907](https://github.com/NousResearch/sinoclaw-agent/pull/1907))
-- **Interactive MCP tool configuration** in `hermes tools` ([#1694](https://github.com/NousResearch/sinoclaw-agent/pull/1694))
+- **Interactive MCP tool configuration** in `sinoclaw tools` ([#1694](https://github.com/NousResearch/sinoclaw-agent/pull/1694))
 - Fix: MCP-OAuth port mismatch, path traversal, and shared handler state ([#2552](https://github.com/NousResearch/sinoclaw-agent/pull/2552))
 - Fix: preserve MCP tool registrations across session resets ([#2124](https://github.com/NousResearch/sinoclaw-agent/pull/2124))
 - Fix: concurrent file access crash + duplicate MCP registration ([#2154](https://github.com/NousResearch/sinoclaw-agent/pull/2154))
@@ -299,7 +299,7 @@
 ## 🔌 Plugin System Enhancements
 
 - **TUI extension hooks** — Build custom CLIs on top of Hermes ([#2333](https://github.com/NousResearch/sinoclaw-agent/pull/2333))
-- **`hermes plugins install/remove/list`** commands ([#2337](https://github.com/NousResearch/sinoclaw-agent/pull/2337))
+- **`sinoclaw plugins install/remove/list`** commands ([#2337](https://github.com/NousResearch/sinoclaw-agent/pull/2337))
 - **Slash command registration** for plugins ([#2359](https://github.com/NousResearch/sinoclaw-agent/pull/2359))
 - **`session:end` lifecycle event** hook ([#1725](https://github.com/NousResearch/sinoclaw-agent/pull/1725))
 - Fix: require opt-in for project plugin discovery ([#2215](https://github.com/NousResearch/sinoclaw-agent/pull/2215))

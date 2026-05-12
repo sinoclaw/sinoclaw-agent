@@ -36,7 +36,7 @@ Hermes on Discord is not a webhook that replies statelessly. It runs through the
 5. normal Sinoclaw agent execution, including tools, memory, and slash commands
 6. response delivery back to Discord
 
-That matters because behavior in a busy server depends on both Discord routing and Hermes session policy.
+That matters because behavior in a busy server depends on both Discord routing and Sinoclaw session policy.
 
 ### Session Model in Discord
 
@@ -208,7 +208,7 @@ These are the minimum permissions your bot needs:
 You need the **Manage Server** permission on the Discord server to invite a bot. If you don't see your server in the dropdown, ask a server admin to use the invite link instead.
 :::
 
-After authorizing, the bot will appear in your server's member list (it will show as offline until you start the Hermes gateway).
+After authorizing, the bot will appear in your server's member list (it will show as offline until you start the Sinoclaw gateway).
 
 ## Step 7: Find Your Discord User ID
 
@@ -480,11 +480,11 @@ Hermes automatically registers installed skills as **native Discord Application 
 - Discord has a limit of 100 application commands per bot — if you have more skills than available slots, extra skills are skipped with a warning in the logs
 - Skills are registered during bot startup alongside built-in commands like `/model`, `/reset`, and `/background`
 
-No extra configuration is needed — any skill installed via `hermes skills install` is automatically registered as a Discord slash command on the next gateway restart.
+No extra configuration is needed — any skill installed via `sinoclaw skills install` is automatically registered as a Discord slash command on the next gateway restart.
 
 ### Disabling Slash Command Registration
 
-If you run multiple Hermes gateways against the same Discord application (e.g. staging + production), only one of them should own the global slash-command registration — otherwise the last startup wins and the registrations flap. Turn slash registration off on the "follower" gateway:
+If you run multiple Sinoclaw gateways against the same Discord application (e.g. staging + production), only one of them should own the global slash-command registration — otherwise the last startup wins and the registrations flap. Turn slash registration off on the "follower" gateway:
 
 ```yaml
 gateway:
@@ -580,7 +580,7 @@ Refreshing the directory (`/channels refresh` on platforms that expose it, or a 
 
 ### Bot is offline
 
-**Cause**: The Hermes gateway isn't running, or the token is incorrect.
+**Cause**: The Sinoclaw gateway isn't running, or the token is incorrect.
 
 **Fix**: Check that `sinoclaw gateway` is running. Verify `DISCORD_BOT_TOKEN` in your `.env` file. If you recently reset the token, update it.
 

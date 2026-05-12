@@ -195,7 +195,7 @@ def test_per_task_max_retries_overrides_dispatcher_limit(kanban_home, all_assign
 
     Three-tier resolution order:
       1. ``task.max_retries`` (set via ``create_task(max_retries=N)`` /
-         ``hermes kanban create --max-retries N``)
+         ``sinoclaw kanban create --max-retries N``)
       2. ``failure_limit`` kwarg passed by the caller (gateway threads
          this from ``kanban.failure_limit`` config)
       3. ``DEFAULT_FAILURE_LIMIT``
@@ -1254,7 +1254,7 @@ def test_parse_duration_rejects_garbage():
 
 
 def test_cli_create_max_runtime_via_duration(kanban_home):
-    """`hermes kanban create --max-runtime 2h` should persist 7200 seconds."""
+    """`sinoclaw kanban create --max-runtime 2h` should persist 7200 seconds."""
     out = run_slash("create 'long task' --max-runtime 2h --json")
     data = json.loads(out)
     tid = data["id"]
@@ -2561,7 +2561,7 @@ def test_default_spawn_auto_loads_kanban_worker_skill(kanban_home, monkeypatch):
     the profile hasn't wired it into its default skills config.
 
     We intercept Popen to capture the argv without actually spawning a
-    hermes subprocess (which would hang trying to call an LLM).
+    sinoclaw subprocess (which would hang trying to call an LLM).
     """
     captured = {}
 
@@ -2751,7 +2751,7 @@ def test_default_spawn_dedupes_kanban_worker_from_task_skills(kanban_home, monke
 
 
 def test_cli_create_skill_flag_repeatable(kanban_home):
-    """`hermes kanban create --skill a --skill b` persists the list."""
+    """`sinoclaw kanban create --skill a --skill b` persists the list."""
     out = run_slash(
         "create 'multi-skill' --assignee linguist "
         "--skill translation --skill github-code-review --json"
@@ -2773,7 +2773,7 @@ def test_cli_create_without_skill_flag_leaves_none(kanban_home):
 
 
 def test_cli_show_renders_skills(kanban_home):
-    """`hermes kanban show <id>` prints a skills row when present."""
+    """`sinoclaw kanban show <id>` prints a skills row when present."""
     out = run_slash(
         "create 'show-test' --assignee x "
         "--skill translation --json"
@@ -3179,7 +3179,7 @@ def test_cli_create_no_warn_unassigned(kanban_home, monkeypatch, capsys):
 
 
 def test_cli_daemon_without_force_prints_deprecation_exits_2(kanban_home, capsys):
-    """`hermes kanban daemon` (no --force) is a deprecation stub."""
+    """`sinoclaw kanban daemon` (no --force) is a deprecation stub."""
     from sinoclaw_cli import kanban as kb_cli
     ns = argparse.Namespace(
         force=False, interval=60.0, max=None, failure_limit=3,
@@ -3222,7 +3222,7 @@ def test_cli_daemon_help_marks_deprecated():
                     break
     assert found_deprecation, (
         "daemon subparser help should be marked DEPRECATED so users see "
-        "the migration guidance in `hermes kanban --help` output"
+        "the migration guidance in `sinoclaw kanban --help` output"
     )
 
 

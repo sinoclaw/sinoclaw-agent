@@ -986,7 +986,7 @@ class TestSinoclawHomeIsolation:
     def test_failure_marker_respects_sinoclaw_home(self):
         """_failure_marker_path must use SINOCLAW_HOME, not hardcoded ~/.sinoclaw."""
         from tools.tirith_security import _failure_marker_path
-        with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/hermes"}):
+        with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/sinoclaw"}):
             result = _failure_marker_path()
         assert result == "/custom/hermes/.tirith-install-failed"
 

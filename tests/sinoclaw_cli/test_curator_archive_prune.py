@@ -1,4 +1,4 @@
-"""Tests for `hermes curator archive` and `hermes curator prune`.
+"""Tests for `sinoclaw curator archive` and `sinoclaw curator prune`.
 
 Covers:
 - archive refuses pinned skills with an `unpin` hint

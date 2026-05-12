@@ -658,7 +658,7 @@ def get_valid_access_token(*, force_refresh: bool = False) -> str:
     creds = load_credentials()
     if creds is None:
         raise GoogleOAuthError(
-            "No Google OAuth credentials found. Run `hermes login --provider google-gemini-cli` first.",
+            "No Google OAuth credentials found. Run `sinoclaw login --provider google-gemini-cli` first.",
             code="google_oauth_not_logged_in",
         )
 
@@ -887,7 +887,7 @@ def start_oauth_flow(
         "access_type": "offline",
         "prompt": "consent",
     }
-    auth_url = AUTH_ENDPOINT + "?" + urllib.parse.urlencode(params) + "#hermes"
+    auth_url = AUTH_ENDPOINT + "?" + urllib.parse.urlencode(params) + "#sinoclaw"
 
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
@@ -964,7 +964,7 @@ def _paste_mode_login(
         "access_type": "offline",
         "prompt": "consent",
     }
-    auth_url = AUTH_ENDPOINT + "?" + urllib.parse.urlencode(params) + "#hermes"
+    auth_url = AUTH_ENDPOINT + "?" + urllib.parse.urlencode(params) + "#sinoclaw"
 
     print()
     print("Open this URL in a browser on any device:")

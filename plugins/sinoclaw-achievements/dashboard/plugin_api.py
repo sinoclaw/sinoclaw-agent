@@ -125,7 +125,7 @@ ACHIEVEMENTS: List[Dict[str, Any]] = [
     {"id": "model_sommelier", "name": "Model Sommelier", "description": "Taste enough model/provider conversations to develop preferences.", "category": "Model Lore", "kind": "lifetime", "icon": "wine", "threshold_metric": "model_events", "tiers": tiers([250, 750, 2000, 6000, 15000])},
     {"id": "claude_confidant", "name": "Claude Confidant", "description": "Bring Claude-flavored reasoning into the workflow repeatedly.", "category": "Model Lore", "kind": "lifetime", "icon": "quote", "threshold_metric": "claude_events", "tiers": tiers([50, 150, 500, 1500, 4000])},
     {"id": "gemini_cartographer", "name": "Gemini Cartographer", "description": "Map enough Gemini-related workflows to know the terrain.", "category": "Model Lore", "kind": "lifetime", "icon": "compass", "threshold_metric": "gemini_events", "tiers": tiers([50, 150, 500, 1500, 4000])},
-    {"id": "open_weights_pilgrim", "name": "Open Weights Pilgrim", "description": "Actually chat with local/open-weight models through Hermes session metadata.", "category": "Model Lore", "kind": "lifetime", "icon": "terminal", "threshold_metric": "local_model_chat_sessions", "tiers": tiers([1, 3, 10, 30, 100])},
+    {"id": "open_weights_pilgrim", "name": "Open Weights Pilgrim", "description": "Actually chat with local/open-weight models through Sinoclaw session metadata.", "category": "Model Lore", "kind": "lifetime", "icon": "terminal", "threshold_metric": "local_model_chat_sessions", "tiers": tiers([1, 3, 10, 30, 100])},
 
     # Workflow Intelligence
     {"id": "toolset_cartographer", "name": "Toolset Cartographer", "description": "Navigate Hermes toolsets deliberately instead of treating tools as a blur.", "category": "Hermes Native", "kind": "lifetime", "icon": "compass", "threshold_metric": "toolset_events", "tiers": tiers([20, 60, 200, 600, 1500])},
@@ -135,7 +135,7 @@ ACHIEVEMENTS: List[Dict[str, Any]] = [
     {"id": "screenshot_hunter", "name": "Screenshot Hunter", "description": "Capture, inspect, and polish visual proof instead of just claiming it works.", "category": "Tool Mastery", "kind": "lifetime", "icon": "eye", "threshold_metric": "screenshot_events", "tiers": tiers([50, 150, 500, 1500, 5000])},
 
     # Lifestyle
-    {"id": "marathon_operator", "name": "Marathon Operator", "description": "Accumulate a serious number of Hermes sessions.", "category": "Lifestyle", "kind": "lifetime", "icon": "marathon", "threshold_metric": "session_count", "tiers": tiers([75, 200, 500, 1500, 5000])},
+    {"id": "marathon_operator", "name": "Marathon Operator", "description": "Accumulate a serious number of Sinoclaw sessions.", "category": "Lifestyle", "kind": "lifetime", "icon": "marathon", "threshold_metric": "session_count", "tiers": tiers([75, 200, 500, 1500, 5000])},
     {"id": "weekend_warrior", "name": "Weekend Warrior", "description": "Run Hermes on weekends enough times to make it a lifestyle.", "category": "Lifestyle", "kind": "lifetime", "icon": "calendar", "threshold_metric": "weekend_sessions", "tiers": tiers([25, 75, 200, 600, 1500])},
     {"id": "night_shift_operator", "name": "Night Shift Operator", "description": "Run sessions during gremlin hours repeatedly.", "category": "Lifestyle", "kind": "lifetime", "icon": "moon", "threshold_metric": "night_sessions", "tiers": tiers([25, 75, 200, 600, 1500])},
     {"id": "cache_hit_appreciator", "name": "Cache Hit Appreciator", "description": "Notice or benefit from prompt/cache behavior.", "category": "Lifestyle", "kind": "lifetime", "icon": "cache", "secret": True, "threshold_metric": "cache_events", "tiers": tiers([100, 300, 1000, 3000, 8000])},
@@ -514,14 +514,14 @@ METRIC_LABELS = {
     "claude_events": "Claude/Anthropic model mentions",
     "gemini_events": "Gemini/Google model mentions",
     "local_model_events": "local/open-weight model mentions",
-    "local_model_chat_sessions": "Hermes sessions whose model metadata is local/open-weight",
+    "local_model_chat_sessions": "Sinoclaw sessions whose model metadata is local/open-weight",
     "toolset_events": "toolset or tool-family mentions",
     "config_events": "configuration/environment/manifest activity",
     "git_history_events": "git history operations such as rebase, merge, fetch, push, or tag",
     "test_events": "test/check/verification command mentions",
     "screenshot_events": "screenshot, Playwright, PNG, or vision-inspection activity",
     "release_events": "release, version, publish, or git tag events",
-    "session_count": "Hermes sessions",
+    "session_count": "Sinoclaw sessions",
     "weekend_sessions": "sessions started on weekends",
     "night_sessions": "sessions started late night or before dawn",
 }
@@ -562,7 +562,7 @@ def scan_sessions(
     progress_callback: Optional[Any] = None,
     progress_every: int = 250,
 ) -> Dict[str, Any]:
-    """Scan Hermes sessions and build per-session achievement stats.
+    """Scan Sinoclaw sessions and build per-session achievement stats.
 
     ``limit=None`` (the default) scans the ENTIRE session history. Prior
     versions capped this at 200, which silently reduced achievement totals

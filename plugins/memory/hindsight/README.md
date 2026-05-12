@@ -37,7 +37,7 @@ Daemon runtime logs: `~/.hindsight/profiles/<profile>.log`
 
 To open the Hindsight web UI (local embedded mode only):
 ```bash
-hindsight-embed -p hermes ui start
+hindsight-embed -p sinoclaw ui start
 ```
 
 ### Local External

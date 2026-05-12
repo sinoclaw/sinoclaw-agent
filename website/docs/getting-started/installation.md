@@ -60,7 +60,7 @@ If you want the fully explicit path, follow the dedicated [Termux guide](./termu
 :::note Windows Feature Parity (Early Beta)
 
 Native Windows is in **early beta**. Everything except the browser-based dashboard chat terminal runs natively on Windows:
-- **CLI (`hermes chat`, `sinoclaw setup`, `sinoclaw gateway`, …)** — native, uses your default terminal
+- **CLI (`sinoclaw chat`, `sinoclaw setup`, `sinoclaw gateway`, …)** — native, uses your default terminal
 - **Gateway (Telegram, Discord, Slack, …)** — native, runs as a background PowerShell process
 - **Cron scheduler** — native
 - **Browser tool** — native (Chromium via Node.js)
@@ -137,7 +137,7 @@ If you want to clone the repo and install from source — for contributing, runn
 | Problem | Solution |
 |---------|----------|
 | `hermes: command not found` | Reload your shell (`source ~/.bashrc`) or check PATH |
-| `API key not set` | Run `hermes model` to configure your provider, or `hermes config set OPENROUTER_API_KEY your_key` |
-| Missing config after update | Run `hermes config check` then `hermes config migrate` |
+| `API key not set` | Run `sinoclaw model` to configure your provider, or `sinoclaw config set OPENROUTER_API_KEY your_key` |
+| Missing config after update | Run `sinoclaw config check` then `sinoclaw config migrate` |
 
-For more diagnostics, run `hermes doctor` — it will tell you exactly what's missing and how to fix it.
+For more diagnostics, run `sinoclaw doctor` — it will tell you exactly what's missing and how to fix it.

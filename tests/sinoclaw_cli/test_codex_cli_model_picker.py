@@ -7,7 +7,7 @@ Covers:
 
 Note: auto-import from ~/.codex/auth.json was removed in #12360 — Hermes
 now owns its own openai-codex auth state, and users explicitly adopt
-existing Codex CLI tokens via `hermes auth openai-codex`. The old
+existing Codex CLI tokens via `sinoclaw auth openai-codex`. The old
 "Codex CLI shared file" discovery tests were removed with that change.
 """
 

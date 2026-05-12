@@ -20,7 +20,7 @@
 
 - **CLI Skin/Theme Engine** — Data-driven visual customization: banners, spinners, colors, branding. 7 built-in skins + custom YAML skins.
 
-- **Git Worktree Isolation** — `hermes -w` launches isolated agent sessions in git worktrees for safe parallel work on the same repo. ([#654](https://github.com/NousResearch/sinoclaw-agent/pull/654))
+- **Git Worktree Isolation** — `sinoclaw -w` launches isolated agent sessions in git worktrees for safe parallel work on the same repo. ([#654](https://github.com/NousResearch/sinoclaw-agent/pull/654))
 
 - **Filesystem Checkpoints & Rollback** — Automatic snapshots before destructive operations with `/rollback` to restore. ([#824](https://github.com/NousResearch/sinoclaw-agent/pull/824))
 
@@ -151,9 +151,9 @@
 - Config migration system (currently v7)
 - API keys properly routed to .env instead of config.yaml ([#469](https://github.com/NousResearch/sinoclaw-agent/pull/469)) — @ygd58
 - Atomic write for .env to prevent API key loss on crash ([#954](https://github.com/NousResearch/sinoclaw-agent/pull/954))
-- `hermes tools` — per-platform tool enable/disable with curses UI
-- `hermes doctor` for health checks across all configured providers
-- `hermes update` with auto-restart for gateway service
+- `sinoclaw tools` — per-platform tool enable/disable with curses UI
+- `sinoclaw doctor` for health checks across all configured providers
+- `sinoclaw update` with auto-restart for gateway service
 - Show update-available notice in CLI banner
 - Multiple named custom providers
 - Shell config detection improvement for PATH setup ([#317](https://github.com/NousResearch/sinoclaw-agent/pull/317)) — @mehmetkr-31
@@ -170,7 +170,7 @@
 - Resource and prompt discovery
 - Automatic reconnection and security hardening
 - Banner integration, `/reload-mcp` command
-- `hermes tools` UI integration
+- `sinoclaw tools` UI integration
 
 ### Browser
 - Local browser backend — zero-cost headless Chromium (no Browserbase needed)
@@ -200,7 +200,7 @@
 - Conditional skill activation based on tool availability ([#785](https://github.com/NousResearch/sinoclaw-agent/pull/785)) — @teyrebaz33
 - Skill prerequisites — hide skills with unmet dependencies ([#659](https://github.com/NousResearch/sinoclaw-agent/pull/659)) — @kshitijk4poor
 - Optional skills — shipped but not activated by default
-- `hermes skills browse` — paginated hub browsing
+- `sinoclaw skills browse` — paginated hub browsing
 - Skills sub-category organization
 - Platform-conditional skill loading
 - Atomic skill file writes ([#551](https://github.com/NousResearch/sinoclaw-agent/pull/551)) — @aydnOktay
@@ -289,7 +289,7 @@
 - Fix SQLite session transcript accumulating duplicate messages — 3-4x token inflation ([#860](https://github.com/NousResearch/sinoclaw-agent/issues/860))
 - Fix setup wizard skipping API key prompts on first install ([#748](https://github.com/NousResearch/sinoclaw-agent/pull/748))
 - Fix setup wizard showing OpenRouter model list for Nous Portal ([#575](https://github.com/NousResearch/sinoclaw-agent/pull/575)) — @PercyDikec
-- Fix provider selection not persisting when switching via hermes model ([#881](https://github.com/NousResearch/sinoclaw-agent/pull/881))
+- Fix provider selection not persisting when switching via sinoclaw model ([#881](https://github.com/NousResearch/sinoclaw-agent/pull/881))
 - Fix Docker backend failing when docker not in PATH on macOS ([#889](https://github.com/NousResearch/sinoclaw-agent/pull/889))
 - Fix ClawHub Skills Hub adapter for API endpoint changes ([#286](https://github.com/NousResearch/sinoclaw-agent/pull/286)) — @BP602
 - Fix Honcho auto-enable when API key is present ([#243](https://github.com/NousResearch/sinoclaw-agent/pull/243)) — @Bartok9

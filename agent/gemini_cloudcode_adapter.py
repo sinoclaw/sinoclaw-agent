@@ -700,7 +700,7 @@ class GeminiCloudCodeClient:
             "Accept": "application/json",
             "Authorization": f"Bearer {access_token}",
             "User-Agent": "sinoclaw-agent (gemini-cli-compat)",
-            "X-Goog-Api-Client": "gl-python/hermes",
+            "X-Goog-Api-Client": "gl-python/sinoclaw",
             "x-activity-request-id": str(uuid.uuid4()),
         }
         headers.update(self._default_headers)

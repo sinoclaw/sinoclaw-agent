@@ -14,7 +14,7 @@ Give Hermes phone capabilities without core tool changes. Provision and persist 
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/productivity/telephony` |
+| Source | Optional — install with `sinoclaw skills install official/productivity/telephony` |
 | Path | `optional-skills/productivity/telephony` |
 | Version | `1.0.0` |
 | Author | Nous Research |

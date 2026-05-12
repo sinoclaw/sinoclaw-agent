@@ -14,7 +14,7 @@ Optimizes transformer attention with Flash Attention for 2-4x speedup and 10-20x
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/flash-attention` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/flash-attention` |
 | Path | `optional-skills/mlops/flash-attention` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

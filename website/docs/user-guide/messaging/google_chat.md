@@ -86,7 +86,7 @@ After creation, the topic's detail page has a **Subscriptions** tab. Create one:
 
 - Subscription ID: `sinoclaw-chat-events-sub`
 - Delivery type: **Pull**
-- Message retention: **7 days** (so backlog survives a hermes restart)
+- Message retention: **7 days** (so backlog survives a sinoclaw restart)
 - Leave the rest default.
 
 ---
@@ -207,7 +207,7 @@ automatically split across multiple messages.
 
 Thread support: when a user replies inside a thread, Hermes detects the
 `thread.name` and posts its reply in the same thread, so each thread gets a
-separate Hermes session.
+separate Sinoclaw session.
 
 ---
 

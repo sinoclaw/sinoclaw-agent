@@ -145,7 +145,7 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "session-config": {
         "label": "Session configuration",
-        "description": "Import session reset policies (daily/idle) into Hermes session_reset config.",
+        "description": "Import session reset policies (daily/idle) into Sinoclaw session_reset config.",
     },
     "full-providers": {
         "label": "Full model provider definitions",
@@ -1083,7 +1083,7 @@ class Migrator:
                 else "Review the migration report."
             )
             steps.append(
-                "Start a new Hermes session (or /reset) to pick up the imported config."
+                "Start a new Sinoclaw session (or /reset) to pick up the imported config."
             )
         if summary.get("conflict", 0) > 0:
             steps.append(
@@ -1533,7 +1533,7 @@ class Migrator:
                             None,
                             "skipped",
                             f"Provider '{provider_name}' uses a {raw_key['source']}-backed SecretRef "
-                            f"that cannot be auto-migrated. Add this key manually via: hermes config set",
+                            f"that cannot be auto-migrated. Add this key manually via: sinoclaw config set",
                         )
                     continue
 
@@ -2897,25 +2897,25 @@ class Migrator:
             "directories, it may read/write to them instead of the Hermes state, causing",
             "confusion (e.g., cron jobs reading a different todo list than interactive sessions).",
             "",
-            "**Strongly recommended:** Run `hermes claw cleanup` to rename the OpenClaw",
+            "**Strongly recommended:** Run `sinoclaw claw cleanup` to rename the OpenClaw",
             "directory to `.openclaw.pre-migration`. This prevents the agent from finding it.",
             "The directory is renamed, not deleted — you can undo this at any time.",
             "",
             "If you skip this step and notice the agent getting confused about workspaces",
-            "or todo lists, run `hermes claw cleanup` to fix it.",
+            "or todo lists, run `sinoclaw claw cleanup` to fix it.",
             "",
             "## Sinoclaw-Specific Setup",
             "",
             "After migration, you may want to:",
-            "- Run `hermes claw cleanup` to archive the OpenClaw directory (prevents state confusion)",
+            "- Run `sinoclaw claw cleanup` to archive the OpenClaw directory (prevents state confusion)",
             "- Run `sinoclaw setup` to configure any remaining settings",
-            "- Run `hermes mcp list` to verify MCP servers were imported correctly",
+            "- Run `sinoclaw mcp list` to verify MCP servers were imported correctly",
         ])
 
         if has_cron_config_archive:
-            notes.append("- Run `hermes cron` to recreate scheduled tasks (see archive/cron-config.json)")
+            notes.append("- Run `sinoclaw cron` to recreate scheduled tasks (see archive/cron-config.json)")
         elif has_cron_store_archive:
-            notes.append("- Run `hermes cron` to recreate scheduled tasks (see archived cron-store)")
+            notes.append("- Run `sinoclaw cron` to recreate scheduled tasks (see archived cron-store)")
 
         # Check if skills were imported
         has_skills = any(i.kind == "skills" and i.status == "migrated" for i in self.items)
@@ -2940,7 +2940,7 @@ class Migrator:
                 "WhatsApp uses QR-code pairing, not token-based auth. Your allowlist",
                 "was migrated, but you must re-pair the device by running:",
                 "",
-                "    hermes whatsapp",
+                "    sinoclaw whatsapp",
                 "",
             ])
 
@@ -3114,9 +3114,9 @@ def main() -> int:
         print()
         print("  Next steps:")
         print("    1. Review ~/.sinoclaw/config.yaml")
-        print("    2. Run: hermes mcp list")
+        print("    2. Run: sinoclaw mcp list")
         if any(i["kind"] == "cron-jobs" and i["status"] == "archived" for i in items):
-            print("    3. Recreate cron jobs: hermes cron")
+            print("    3. Recreate cron jobs: sinoclaw cron")
         if report.get("output_dir"):
             print(f"    → Full report: {report['output_dir']}/MIGRATION_NOTES.md")
     elif not args.execute:

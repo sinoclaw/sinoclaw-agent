@@ -419,7 +419,7 @@ def get_provider(name: str) -> Optional[ProviderDef]:
         base_url_env = overlay.base_url_env_var if overlay else ""
         base_url_override = overlay.base_url_override if overlay else ""
 
-        # Combine env vars: models.dev env + hermes extra
+        # Combine env vars: models.dev env + sinoclaw extra
         env_vars = list(mdev_info.env)
         if overlay and overlay.extra_env_vars:
             for ev in overlay.extra_env_vars:

@@ -14,7 +14,7 @@ Embed alibaba/page-agent into your own web application — a pure-JavaScript in-
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/web-development/page-agent` |
+| Source | Optional — install with `sinoclaw skills install official/web-development/page-agent` |
 | Path | `optional-skills/web-development/page-agent` |
 | Version | `1.0.0` |
 | Author | Sinoclaw Agent |

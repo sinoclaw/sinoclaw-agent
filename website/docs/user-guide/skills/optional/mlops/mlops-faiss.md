@@ -14,7 +14,7 @@ Facebook's library for efficient similarity search and clustering of dense vecto
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/faiss` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/faiss` |
 | Path | `optional-skills/mlops/faiss` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

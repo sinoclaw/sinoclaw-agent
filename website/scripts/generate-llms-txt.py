@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate llms.txt and llms-full.txt for the Hermes docs site.
+"""Generate llms.txt and llms-full.txt for the Sinoclaw docs site.
 
 Outputs:
   website/static/llms.txt        — short curated index of the docs, one link per page,

@@ -14,7 +14,7 @@ Fast tokenizers optimized for research and production. Rust-based implementation
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/huggingface-tokenizers` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/huggingface-tokenizers` |
 | Path | `optional-skills/mlops/huggingface-tokenizers` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

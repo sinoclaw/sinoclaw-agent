@@ -6,7 +6,7 @@ description: "Complete reference of all environment variables used by Sinoclaw A
 
 # Environment Variables Reference
 
-All variables go in `~/.sinoclaw/.env`. You can also set them with `hermes config set VAR value`.
+All variables go in `~/.sinoclaw/.env`. You can also set them with `sinoclaw config set VAR value`.
 
 ## LLM Providers
 
@@ -94,7 +94,7 @@ All variables go in `~/.sinoclaw/.env`. You can also set them with `hermes confi
 | `SINOCLAW_HOME` | Override Hermes config directory (default: `~/.sinoclaw`). Also scopes the gateway PID file and systemd service name, so multiple installations can run concurrently |
 | `SINOCLAW_GIT_BASH_PATH` | **Windows only.** Override `bash.exe` discovery for the terminal tool. Points at any bash — full Git-for-Windows install, WSL bash via symlink, MSYS2, Cygwin. The installer sets this automatically to the PortableGit it provisioned. See the [Windows (Native) Guide](../user-guide/windows-native.md#how-sinoclaw-runs-shell-commands-on-windows) |
 | `SINOCLAW_DISABLE_WINDOWS_UTF8` | **Windows only.** Set to `1` to disable the UTF-8 stdio shim (`configure_windows_stdio()`) and fall back to the console's locale code page. Useful for bisecting encoding bugs; rarely the right setting in normal operation |
-| `SINOCLAW_KANBAN_HOME` | Override the shared Hermes root that anchors the kanban board (db + workspaces + worker logs). Falls back to `get_default_sinoclaw_root()` (the parent of any active profile). Useful for tests and unusual deployments |
+| `SINOCLAW_KANBAN_HOME` | Override the shared Sinoclaw root that anchors the kanban board (db + workspaces + worker logs). Falls back to `get_default_sinoclaw_root()` (the parent of any active profile). Useful for tests and unusual deployments |
 | `SINOCLAW_KANBAN_BOARD` | Pin the active kanban board for this process. Takes precedence over `~/.sinoclaw/kanban/current`; the dispatcher injects this into worker subprocess env so workers physically cannot see tasks on other boards. Defaults to `default`. Slug validation: lowercase alphanumerics + hyphens + underscores, 1-64 chars |
 | `SINOCLAW_KANBAN_DB` | Pin the kanban database file path directly (highest precedence; beats `SINOCLAW_KANBAN_BOARD` and `SINOCLAW_KANBAN_HOME`). The dispatcher injects this into worker subprocess env so profile workers converge on the dispatcher's board |
 | `SINOCLAW_KANBAN_WORKSPACES_ROOT` | Pin the kanban workspaces root directly (highest precedence for workspaces; beats `SINOCLAW_KANBAN_HOME`). The dispatcher injects this into worker subprocess env |
@@ -154,7 +154,7 @@ For native Anthropic auth, Hermes prefers Claude Code's own credential files whe
 
 ### Langfuse Observability
 
-Environment variables for the bundled [`observability/langfuse`](/docs/user-guide/features/built-in-plugins#observabilitylangfuse) plugin. Set these with `hermes tools → Langfuse Observability` or manually in `~/.sinoclaw/.env`. The plugin must also be enabled (`hermes plugins enable observability/langfuse`) before any of these take effect.
+Environment variables for the bundled [`observability/langfuse`](/docs/user-guide/features/built-in-plugins#observabilitylangfuse) plugin. Set these with `sinoclaw tools → Langfuse Observability` or manually in `~/.sinoclaw/.env`. The plugin must also be enabled (`sinoclaw plugins enable observability/langfuse`) before any of these take effect.
 
 | Variable | Description |
 |----------|-------------|
@@ -170,7 +170,7 @@ Environment variables for the bundled [`observability/langfuse`](/docs/user-guid
 
 ### Nous Tool Gateway
 
-These variables configure the [Tool Gateway](/docs/user-guide/features/tool-gateway) for paid Nous subscribers or self-hosted gateway deployments. Most users don't need to set these — the gateway is configured automatically via `hermes model` or `hermes tools`.
+These variables configure the [Tool Gateway](/docs/user-guide/features/tool-gateway) for paid Nous subscribers or self-hosted gateway deployments. Most users don't need to set these — the gateway is configured automatically via `sinoclaw model` or `sinoclaw tools`.
 
 | Variable | Description |
 |----------|-------------|
@@ -379,7 +379,7 @@ For cloud sandbox backends, persistence is filesystem-oriented. `TERMINAL_LIFETI
 | `MATTERMOST_REPLY_MODE` | Reply style: `thread` (threaded replies) or `off` (flat messages, default) |
 | `MATRIX_HOMESERVER` | Matrix homeserver URL (e.g. `https://matrix.org`) |
 | `MATRIX_ACCESS_TOKEN` | Matrix access token for bot authentication |
-| `MATRIX_USER_ID` | Matrix user ID (e.g. `@hermes:matrix.org`) — required for password login, optional with access token |
+| `MATRIX_USER_ID` | Matrix user ID (e.g. `@sinoclaw:matrix.org`) — required for password login, optional with access token |
 | `MATRIX_PASSWORD` | Matrix password (alternative to access token) |
 | `MATRIX_ALLOWED_USERS` | Comma-separated Matrix user IDs allowed to message the bot (e.g. `@alice:matrix.org`) |
 | `MATRIX_HOME_ROOM` | Room ID for proactive message delivery (e.g. `!abc123:matrix.org`) |
@@ -402,7 +402,7 @@ For cloud sandbox backends, persistence is filesystem-oriented. `TERMINAL_LIFETI
 | `API_SERVER_PORT` | Port for the API server (default: `8642`) |
 | `API_SERVER_HOST` | Host/bind address for the API server (default: `127.0.0.1`). Use `0.0.0.0` for network access — requires `API_SERVER_KEY` and a narrow `API_SERVER_CORS_ORIGINS` allowlist. |
 | `API_SERVER_MODEL_NAME` | Model name advertised on `/v1/models`. Defaults to the profile name (or `sinoclaw-agent` for the default profile). Useful for multi-user setups where frontends like Open WebUI need distinct model names per connection. |
-| `GATEWAY_PROXY_URL` | URL of a remote Hermes API server to forward messages to ([proxy mode](/docs/user-guide/messaging/matrix#proxy-mode-e2ee-on-macos)). When set, the gateway handles platform I/O only — all agent work is delegated to the remote server. Also configurable via `gateway.proxy_url` in `config.yaml`. |
+| `GATEWAY_PROXY_URL` | URL of a remote Sinoclaw API server to forward messages to ([proxy mode](/docs/user-guide/messaging/matrix#proxy-mode-e2ee-on-macos)). When set, the gateway handles platform I/O only — all agent work is delegated to the remote server. Also configurable via `gateway.proxy_url` in `config.yaml`. |
 | `GATEWAY_PROXY_KEY` | Bearer token for authenticating with the remote API server in proxy mode. Must match `API_SERVER_KEY` on the remote host. |
 | `MESSAGING_CWD` | Working directory for terminal commands in messaging mode (default: `~`) |
 | `GATEWAY_ALLOWED_USERS` | Comma-separated user IDs allowed across all platforms |
@@ -527,9 +527,9 @@ Advanced per-platform knobs for throttling the outbound message batcher. Most us
 |----------|-------------|
 | `SINOCLAW_TUI` | Launch the [TUI](../user-guide/tui.md) instead of the classic CLI when set to `1`. Equivalent to passing `--tui`. |
 | `SINOCLAW_TUI_DIR` | Path to a prebuilt `ui-tui/` directory (must contain `dist/entry.js` and populated `node_modules`). Used by distros and Nix to skip the first-launch `npm install`. |
-| `SINOCLAW_TUI_RESUME` | Resume a specific TUI session by ID on launch. When set, `hermes --tui` skips forging a fresh session and picks up the named session instead — useful for re-attaching after a disconnect or terminal crash. |
+| `SINOCLAW_TUI_RESUME` | Resume a specific TUI session by ID on launch. When set, `sinoclaw --tui` skips forging a fresh session and picks up the named session instead — useful for re-attaching after a disconnect or terminal crash. |
 | `SINOCLAW_TUI_THEME` | Force the TUI color theme: `light`, `dark`, or a raw 6-character background hex (e.g. `ffffff` or `1a1a2e`). When unset, Hermes auto-detects using `COLORFGBG` and terminal background queries; this variable overrides detection on terminals (Ghostty, Warp, iTerm2, etc.) that don't set `COLORFGBG`. |
-| `SINOCLAW_INFERENCE_MODEL` | Force the model for `hermes -z` / `hermes chat` without mutating `config.yaml`. Pairs with `SINOCLAW_INFERENCE_PROVIDER`. Useful for scripted callers (sweeper, CI, batch runners) that need to override the default model per run. |
+| `SINOCLAW_INFERENCE_MODEL` | Force the model for `sinoclaw -z` / `sinoclaw chat` without mutating `config.yaml`. Pairs with `SINOCLAW_INFERENCE_PROVIDER`. Useful for scripted callers (sweeper, CI, batch runners) that need to override the default model per run. |
 
 ## Session Settings
 
@@ -597,5 +597,5 @@ These go in `~/.sinoclaw/config.yaml` under the `provider_routing` section:
 | `data_collection` | `"allow"` (default) or `"deny"` to exclude data-storing providers |
 
 :::tip
-Use `hermes config set` to set environment variables — it automatically saves them to the right file (`.env` for secrets, `config.yaml` for everything else).
+Use `sinoclaw config set` to set environment variables — it automatically saves them to the right file (`.env` for secrets, `config.yaml` for everything else).
 :::

@@ -48,7 +48,7 @@ Setting `approvals.mode: off` disables all safety prompts. Use only in trusted e
 
 YOLO mode bypasses **all** dangerous command approval prompts for the current session. It can be activated three ways:
 
-1. **CLI flag**: Start a session with `hermes --yolo` or `hermes chat --yolo`
+1. **CLI flag**: Start a session with `sinoclaw --yolo` or `sinoclaw chat --yolo`
 2. **Slash command**: Type `/yolo` during a session to toggle it on/off
 3. **Environment variable**: Set `SINOCLAW_YOLO_MODE=1`
 
@@ -183,7 +183,7 @@ command_allowlist:
 These patterns are loaded at startup and silently approved in all future sessions.
 
 :::tip
-Use `hermes config edit` to review or remove patterns from your permanent allowlist.
+Use `sinoclaw config edit` to review or remove patterns from your permanent allowlist.
 :::
 
 ## User Authorization (Gateway)
@@ -240,7 +240,7 @@ For more flexible authorization, Hermes includes a code-based pairing system. In
 
 1. An unknown user sends a DM to the bot
 2. The bot replies with an 8-character pairing code
-3. The bot owner runs `hermes pairing approve <platform> <code>` on the CLI
+3. The bot owner runs `sinoclaw pairing approve <platform> <code>` on the CLI
 4. The user is permanently approved for that platform
 
 Control how unauthorized direct messages are handled in `~/.sinoclaw/config.yaml`:
@@ -568,7 +568,7 @@ Blocked files show a warning:
 7. **Set `MESSAGING_CWD`** — don't let the agent operate from sensitive directories
 8. **Run as non-root** — never run the gateway as root
 9. **Monitor logs** — check `~/.sinoclaw/logs/` for unauthorized access attempts
-10. **Keep updated** — run `hermes update` regularly for security patches
+10. **Keep updated** — run `sinoclaw update` regularly for security patches
 
 ### Securing API Keys
 

@@ -313,7 +313,7 @@ For eval benchmarks, follow the pattern in `terminalbench2_env.py`:
 
 | Field | Description | Default |
 |-------|-------------|---------|
-| `enabled_toolsets` | Which hermes toolsets to enable | `None` (all) |
+| `enabled_toolsets` | Which sinoclaw toolsets to enable | `None` (all) |
 | `disabled_toolsets` | Toolsets to disable | `None` |
 | `distribution` | Probabilistic toolset distribution name | `None` |
 | `max_agent_turns` | Max LLM calls per rollout | `30` |

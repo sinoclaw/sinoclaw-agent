@@ -9,7 +9,7 @@ Sinoclaw Agent does **not** operate a bug bounty program. Security issues should
 ### Required Submission Details
 - **Title & Severity:** Concise description and CVSS score/rating.
 - **Affected Component:** Exact file path and line range (e.g., `tools/approval.py:120-145`).
-- **Environment:** Output of `hermes version`, commit SHA, OS, and Python version.
+- **Environment:** Output of `sinoclaw version`, commit SHA, OS, and Python version.
 - **Reproduction:** Step-by-step Proof-of-Concept (PoC) against `main` or the latest release.
 - **Impact:** Explanation of what trust boundary was crossed.
 

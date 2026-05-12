@@ -283,17 +283,17 @@ else
 fi
 
 # ============================================================================
-# PATH setup — symlink hermes into a user-facing bin dir
+# PATH setup — symlink sinoclaw into a user-facing bin dir
 # ============================================================================
 
-echo -e "${CYAN}→${NC} Setting up hermes command..."
+echo -e "${CYAN}→${NC} Setting up sinoclaw command..."
 
-SINOCLAW_BIN="$SCRIPT_DIR/venv/bin/hermes"
+SINOCLAW_BIN="$SCRIPT_DIR/venv/bin/sinoclaw"
 COMMAND_LINK_DIR="$(get_command_link_dir)"
 COMMAND_LINK_DISPLAY_DIR="$(get_command_link_display_dir)"
 mkdir -p "$COMMAND_LINK_DIR"
-ln -sf "$SINOCLAW_BIN" "$COMMAND_LINK_DIR/hermes"
-echo -e "${GREEN}✓${NC} Symlinked hermes → $COMMAND_LINK_DISPLAY_DIR/hermes"
+ln -sf "$SINOCLAW_BIN" "$COMMAND_LINK_DIR/sinoclaw"
+echo -e "${GREEN}✓${NC} Symlinked sinoclaw → $COMMAND_LINK_DISPLAY_DIR/sinoclaw"
 
 if is_termux; then
     export PATH="$COMMAND_LINK_DIR:$PATH"
@@ -383,14 +383,14 @@ else
     echo ""
 fi
 echo "Other commands:"
-echo "  hermes status        # Check configuration"
+echo "  sinoclaw status        # Check configuration"
 if is_termux; then
     echo "  sinoclaw gateway       # Run gateway in foreground"
 else
     echo "  sinoclaw gateway install # Install gateway service (messaging + cron)"
 fi
-echo "  hermes cron list     # View scheduled jobs"
-echo "  hermes doctor        # Diagnose issues"
+echo "  sinoclaw cron list     # View scheduled jobs"
+echo "  sinoclaw doctor        # Diagnose issues"
 echo ""
 
 # Ask if they want to run setup wizard now

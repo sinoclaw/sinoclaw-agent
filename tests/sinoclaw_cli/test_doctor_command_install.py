@@ -1,4 +1,4 @@
-"""Tests for the Command Installation check in hermes doctor."""
+"""Tests for the Command Installation check in sinoclaw doctor."""
 
 import os
 import sys
@@ -206,7 +206,7 @@ class TestDoctorCommandInstallation:
 
         out = _run_doctor(fix=False)
         assert "Venv entry point exists" in out
-        assert ".venv/bin/hermes" in out
+        assert ".venv/bin/sinoclaw" in out
 
     @pytest.mark.skipif(sys.platform == "win32", reason="Symlink check is Unix-only")
     def test_non_symlink_regular_file_shows_ok(self, monkeypatch, tmp_path):

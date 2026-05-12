@@ -271,7 +271,7 @@ If this returns your bot's user info, the token is valid. If it returns an error
 
 ### Bot is offline
 
-**Cause**: The Hermes gateway isn't running, or it failed to connect.
+**Cause**: The Sinoclaw gateway isn't running, or it failed to connect.
 
 **Fix**: Check that `sinoclaw gateway` is running. Look at the terminal output for error messages. Common issues: wrong URL, expired token, Mattermost server unreachable.
 

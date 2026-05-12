@@ -14,7 +14,7 @@ Expert guidance for Fully Sharded Data Parallel training with PyTorch FSDP - par
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/pytorch-fsdp` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/pytorch-fsdp` |
 | Path | `optional-skills/mlops/pytorch-fsdp` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

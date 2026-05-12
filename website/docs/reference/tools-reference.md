@@ -103,7 +103,7 @@ Scoped to the Feishu document-comment handler. Drives comment read/write operati
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|
-| `computer_use` | Background macOS desktop control via cua-driver — screenshots (SOM / vision / AX), click / drag / scroll / type / key / wait, list_apps, focus_app. Does NOT steal the user's cursor or keyboard focus. Works with any tool-capable model. macOS only. | `cua-driver` on `$PATH` (install via `hermes tools`). |
+| `computer_use` | Background macOS desktop control via cua-driver — screenshots (SOM / vision / AX), click / drag / scroll / type / key / wait, list_apps, focus_app. Does NOT steal the user's cursor or keyboard focus. Works with any tool-capable model. macOS only. | `cua-driver` on `$PATH` (install via `sinoclaw tools`). |
 
 
 :::note
@@ -213,7 +213,7 @@ Registered on the `sinoclaw-discord` platform toolset. Moderation actions requir
 
 ## `spotify` toolset
 
-Registered by the bundled `spotify` plugin. Requires an OAuth token — run `hermes spotify setup` once to authorize.
+Registered by the bundled `spotify` plugin. Requires an OAuth token — run `sinoclaw spotify setup` once to authorize.
 
 | Tool | Description | Requires environment |
 |------|-------------|----------------------|

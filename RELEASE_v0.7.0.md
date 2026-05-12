@@ -12,7 +12,7 @@
 
 - **Same-Provider Credential Pools** — Configure multiple API keys for the same provider with automatic rotation. Thread-safe `least_used` strategy distributes load across keys, and 401 failures trigger automatic rotation to the next credential. Set up via the setup wizard or `credential_pool` config. ([#4188](https://github.com/NousResearch/sinoclaw-agent/pull/4188), [#4300](https://github.com/NousResearch/sinoclaw-agent/pull/4300), [#4361](https://github.com/NousResearch/sinoclaw-agent/pull/4361))
 
-- **Camofox Anti-Detection Browser Backend** — New local browser backend using Camoufox for stealth browsing. Persistent sessions with VNC URL discovery for visual debugging, configurable SSRF bypass for local backends, auto-install via `hermes tools`. ([#4008](https://github.com/NousResearch/sinoclaw-agent/pull/4008), [#4419](https://github.com/NousResearch/sinoclaw-agent/pull/4419), [#4292](https://github.com/NousResearch/sinoclaw-agent/pull/4292))
+- **Camofox Anti-Detection Browser Backend** — New local browser backend using Camoufox for stealth browsing. Persistent sessions with VNC URL discovery for visual debugging, configurable SSRF bypass for local backends, auto-install via `sinoclaw tools`. ([#4008](https://github.com/NousResearch/sinoclaw-agent/pull/4008), [#4419](https://github.com/NousResearch/sinoclaw-agent/pull/4419), [#4292](https://github.com/NousResearch/sinoclaw-agent/pull/4292))
 
 - **Inline Diff Previews** — File write and patch operations now show inline diffs in the tool activity feed, giving you visual confirmation of what changed before the agent moves on. ([#4411](https://github.com/NousResearch/sinoclaw-agent/pull/4411), [#4423](https://github.com/NousResearch/sinoclaw-agent/pull/4423))
 
@@ -43,11 +43,11 @@
 - **Non-sk-ant keys** treated as regular API keys, not OAuth tokens ([#4093](https://github.com/NousResearch/sinoclaw-agent/pull/4093))
 - **Claude-sonnet-4.6** added to OpenRouter and Nous model lists ([#4157](https://github.com/NousResearch/sinoclaw-agent/pull/4157))
 - **Qwen 3.6 Plus Preview** added to model lists ([#4376](https://github.com/NousResearch/sinoclaw-agent/pull/4376))
-- **MiniMax M2.7** added to hermes model picker and OpenCode ([#4208](https://github.com/NousResearch/sinoclaw-agent/pull/4208))
+- **MiniMax M2.7** added to sinoclaw model picker and OpenCode ([#4208](https://github.com/NousResearch/sinoclaw-agent/pull/4208))
 - **Auto-detect models from server probe** in custom endpoint setup ([#4218](https://github.com/NousResearch/sinoclaw-agent/pull/4218))
 - **Config.yaml single source of truth** for endpoint URLs — no more env var vs config.yaml conflicts ([#4165](https://github.com/NousResearch/sinoclaw-agent/pull/4165))
 - **Setup wizard no longer overwrites** custom endpoint config ([#4180](https://github.com/NousResearch/sinoclaw-agent/pull/4180), closes [#4172](https://github.com/NousResearch/sinoclaw-agent/issues/4172))
-- **Unified setup wizard provider selection** with `hermes model` — single code path for both flows ([#4200](https://github.com/NousResearch/sinoclaw-agent/pull/4200))
+- **Unified setup wizard provider selection** with `sinoclaw model` — single code path for both flows ([#4200](https://github.com/NousResearch/sinoclaw-agent/pull/4200))
 - **Root-level provider config** no longer overrides `model.provider` ([#4329](https://github.com/NousResearch/sinoclaw-agent/pull/4329))
 - **Rate-limit pairing rejection messages** to prevent spam ([#4081](https://github.com/NousResearch/sinoclaw-agent/pull/4081))
 
@@ -131,7 +131,7 @@
 - **TUI pinned to bottom** on startup — no more large blank spaces between response and input ([#4412](https://github.com/NousResearch/sinoclaw-agent/pull/4412), [#4359](https://github.com/NousResearch/sinoclaw-agent/pull/4359), closes [#4398](https://github.com/NousResearch/sinoclaw-agent/issues/4398), [#4421](https://github.com/NousResearch/sinoclaw-agent/issues/4421))
 - **`/history` and `/resume`** now surface recent sessions directly instead of requiring search ([#4728](https://github.com/NousResearch/sinoclaw-agent/pull/4728))
 - **Cache tokens shown** in `/insights` overview so total adds up ([#4428](https://github.com/NousResearch/sinoclaw-agent/pull/4428))
-- **`--max-turns` CLI flag** for `hermes chat` to limit agent iterations ([#4314](https://github.com/NousResearch/sinoclaw-agent/pull/4314))
+- **`--max-turns` CLI flag** for `sinoclaw chat` to limit agent iterations ([#4314](https://github.com/NousResearch/sinoclaw-agent/pull/4314))
 - **Detect dragged file paths** instead of treating them as slash commands ([#4533](https://github.com/NousResearch/sinoclaw-agent/pull/4533)) — @rolme
 - **Allow empty strings and falsy values** in `config set` ([#4310](https://github.com/NousResearch/sinoclaw-agent/pull/4310), closes [#4277](https://github.com/NousResearch/sinoclaw-agent/issues/4277))
 - **Voice mode in WSL** when PulseAudio bridge is configured ([#4317](https://github.com/NousResearch/sinoclaw-agent/pull/4317))
@@ -151,9 +151,9 @@
 - **Scopes field written** to Claude Code credentials on token refresh ([#4126](https://github.com/NousResearch/sinoclaw-agent/pull/4126))
 
 ### Update System
-- **Fork detection and upstream sync** in `hermes update` ([#4744](https://github.com/NousResearch/sinoclaw-agent/pull/4744))
+- **Fork detection and upstream sync** in `sinoclaw update` ([#4744](https://github.com/NousResearch/sinoclaw-agent/pull/4744))
 - **Preserve working optional extras** when one extra fails during update ([#4550](https://github.com/NousResearch/sinoclaw-agent/pull/4550))
-- **Handle conflicted git index** during hermes update ([#4735](https://github.com/NousResearch/sinoclaw-agent/pull/4735))
+- **Handle conflicted git index** during sinoclaw update ([#4735](https://github.com/NousResearch/sinoclaw-agent/pull/4735))
 - **Avoid launchd restart race** on macOS ([#4736](https://github.com/NousResearch/sinoclaw-agent/pull/4736))
 - **Missing subprocess.run() timeouts** added to doctor and status commands ([#4009](https://github.com/NousResearch/sinoclaw-agent/pull/4009))
 
@@ -162,7 +162,7 @@
 ## 🔧 Tool System
 
 ### Browser
-- **Camofox anti-detection browser backend** — local stealth browsing with auto-install via `hermes tools` ([#4008](https://github.com/NousResearch/sinoclaw-agent/pull/4008))
+- **Camofox anti-detection browser backend** — local stealth browsing with auto-install via `sinoclaw tools` ([#4008](https://github.com/NousResearch/sinoclaw-agent/pull/4008))
 - **Persistent Camofox sessions** with VNC URL discovery for visual debugging ([#4419](https://github.com/NousResearch/sinoclaw-agent/pull/4419))
 - **Skip SSRF check for local backends** (Camofox, headless Chromium) ([#4292](https://github.com/NousResearch/sinoclaw-agent/pull/4292))
 - **Configurable SSRF check** via `browser.allow_private_urls` ([#4198](https://github.com/NousResearch/sinoclaw-agent/pull/4198)) — @nils010485

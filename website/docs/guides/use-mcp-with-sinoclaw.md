@@ -152,7 +152,7 @@ After saving the server:
 hermes mcp test chrome-devtools-win
 ```
 
-Then start a fresh Hermes session or run:
+Then start a fresh Sinoclaw session or run:
 
 ```text
 /reload-mcp

@@ -100,7 +100,7 @@ If you run your own homeserver (Synapse, Conduit, Dendrite):
 register_new_matrix_user -c /etc/synapse/homeserver.yaml http://localhost:8008
 ```
 
-2. Choose a username like `hermes` — the full user ID will be `@hermes:your-server.org`.
+2. Choose a username like `hermes` — the full user ID will be `@sinoclaw:your-server.org`.
 
 ### Option B: Use matrix.org or Another Public Homeserver
 
@@ -132,7 +132,7 @@ curl -X POST https://your-server/_matrix/client/v3/login \
   -H "Content-Type: application/json" \
   -d '{
     "type": "m.login.password",
-    "user": "@hermes:your-server.org",
+    "user": "@sinoclaw:your-server.org",
     "password": "your-password"
   }'
 ```
@@ -148,7 +148,7 @@ The access token gives full access to the bot's Matrix account. Never share it p
 Instead of providing an access token, you can give Hermes the bot's user ID and password. Hermes will log in automatically on startup. This is simpler but means the password is stored in your `.env` file.
 
 ```bash
-MATRIX_USER_ID=@hermes:your-server.org
+MATRIX_USER_ID=@sinoclaw:your-server.org
 MATRIX_PASSWORD=your-password
 ```
 
@@ -190,7 +190,7 @@ MATRIX_HOMESERVER=https://matrix.example.org
 MATRIX_ACCESS_TOKEN=***
 
 # Optional: user ID (auto-detected from token if omitted)
-# MATRIX_USER_ID=@hermes:matrix.example.org
+# MATRIX_USER_ID=@sinoclaw:matrix.example.org
 
 # Security: restrict who can interact with the bot
 MATRIX_ALLOWED_USERS=@alice:matrix.example.org
@@ -204,7 +204,7 @@ MATRIX_ALLOWED_USERS=@alice:matrix.example.org
 ```bash
 # Required
 MATRIX_HOMESERVER=https://matrix.example.org
-MATRIX_USER_ID=@hermes:matrix.example.org
+MATRIX_USER_ID=@sinoclaw:matrix.example.org
 MATRIX_PASSWORD=***
 
 # Security
@@ -245,7 +245,7 @@ E2EE requires the `mautrix` library with encryption extras and the `libolm` C li
 # Install mautrix with E2EE support
 pip install 'mautrix[encryption]'
 
-# Or install with hermes extras
+# Or install with sinoclaw extras
 pip install 'sinoclaw-agent[matrix]'
 ```
 
@@ -302,10 +302,10 @@ Hermes detects this condition on startup and refuses to enable E2EE, logging: `d
    ```bash
    sudo systemctl stop matrix-synapse
    sudo sqlite3 /var/lib/matrix-synapse/homeserver.db "
-     DELETE FROM e2e_device_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@hermes:your-server';
-     DELETE FROM e2e_one_time_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@hermes:your-server';
-     DELETE FROM e2e_fallback_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@hermes:your-server';
-     DELETE FROM devices WHERE device_id = 'DEVICE_ID' AND user_id = '@hermes:your-server';
+     DELETE FROM e2e_device_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@sinoclaw:your-server';
+     DELETE FROM e2e_one_time_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@sinoclaw:your-server';
+     DELETE FROM e2e_fallback_keys_json WHERE device_id = 'DEVICE_ID' AND user_id = '@sinoclaw:your-server';
+     DELETE FROM devices WHERE device_id = 'DEVICE_ID' AND user_id = '@sinoclaw:your-server';
    "
    sudo systemctl start matrix-synapse
    ```
@@ -426,7 +426,7 @@ changed identity keys for the same device as suspicious.
      -H "Content-Type: application/json" \
      -d '{
        "type": "m.login.password",
-       "identifier": {"type": "m.id.user", "user": "@hermes:your-server.org"},
+       "identifier": {"type": "m.id.user", "user": "@sinoclaw:your-server.org"},
        "password": "***",
        "initial_device_display_name": "Sinoclaw Agent"
      }'
@@ -590,7 +590,7 @@ Proxy mode is configured on the **container side** (the thin gateway):
 
 | Setting | Description |
 |---------|-------------|
-| `GATEWAY_PROXY_URL` | URL of the remote Hermes API server (e.g., `http://192.168.1.100:8642`) |
+| `GATEWAY_PROXY_URL` | URL of the remote Sinoclaw API server (e.g., `http://192.168.1.100:8642`) |
 | `GATEWAY_PROXY_KEY` | Bearer token for authentication (must match `API_SERVER_KEY` on the host) |
 | `gateway.proxy_url` | Same as `GATEWAY_PROXY_URL` but in `config.yaml` |
 
@@ -623,7 +623,7 @@ Session continuity is maintained via the `X-Sinoclaw-Session-Id` header. The hos
 
 ### Bot is offline
 
-**Cause**: The Hermes gateway isn't running, or it failed to connect.
+**Cause**: The Sinoclaw gateway isn't running, or it failed to connect.
 
 **Fix**: Check that `sinoclaw gateway` is running. Look at the terminal output for error messages. Common issues: wrong homeserver URL, expired access token, homeserver unreachable.
 

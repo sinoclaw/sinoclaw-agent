@@ -258,7 +258,7 @@ EOF
 install_systemd_user_service() {
   require_cmd systemctl
   local unit_dir="$HOME/.config/systemd/user"
-  local unit="$unit_dir/openwebui-hermes.service"
+  local unit="$unit_dir/openwebui-sinoclaw.service"
   mkdir -p "$unit_dir"
   cat > "$unit" <<EOF
 [Unit]
@@ -278,7 +278,7 @@ StandardError=append:%h/.sinoclaw/logs/openwebui.error.log
 WantedBy=default.target
 EOF
   systemctl --user daemon-reload
-  systemctl --user enable --now openwebui-hermes.service
+  systemctl --user enable --now openwebui-sinoclaw.service
 }
 
 start_foreground_hint() {
@@ -299,7 +299,7 @@ main() {
     api_key="$(generate_secret)"
   fi
 
-  log 'Ensuring Hermes API server is configured...'
+  log 'Ensuring Sinoclaw API server is configured...'
   upsert_env API_SERVER_ENABLED true "$SINOCLAW_ENV_FILE"
   upsert_env API_SERVER_HOST "$SINOCLAW_API_HOST" "$SINOCLAW_ENV_FILE"
   upsert_env API_SERVER_PORT "$SINOCLAW_API_PORT" "$SINOCLAW_ENV_FILE"
@@ -307,11 +307,11 @@ main() {
   upsert_env API_SERVER_KEY "$api_key" "$SINOCLAW_ENV_FILE"
   ensure_env_permissions
 
-  log 'Restarting Hermes gateway so API server settings take effect...'
+  log 'Restarting Sinoclaw gateway so API server settings take effect...'
   sinoclaw gateway restart >/dev/null 2>&1 || true
   sleep 4
   if ! curl -fsS "http://${SINOCLAW_API_CONNECT_HOST}:${SINOCLAW_API_PORT}/health" >/dev/null; then
-    log 'Hermes API server did not answer on the first check. Trying to start gateway in the background...'
+    log 'Sinoclaw API server did not answer on the first check. Trying to start gateway in the background...'
     nohup sinoclaw gateway run >/dev/null 2>&1 &
     sleep 6
   fi

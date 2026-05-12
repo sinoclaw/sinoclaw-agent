@@ -14,7 +14,7 @@ Roleplay the most difficult, tech-resistant user for your product. Browse the ap
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/dogfood/adversarial-ux-test` |
+| Source | Optional — install with `sinoclaw skills install official/dogfood/adversarial-ux-test` |
 | Path | `optional-skills/dogfood/adversarial-ux-test` |
 | Version | `1.0.0` |
 | Author | Omni @ Comelse |

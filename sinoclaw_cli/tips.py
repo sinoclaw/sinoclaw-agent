@@ -16,7 +16,7 @@ TIPS = [
     "/rollback lists filesystem checkpoints — restore files the agent modified to any prior state.",
     "/rollback diff 2 previews what changed since checkpoint 2 without restoring anything.",
     "/rollback 2 src/file.py restores a single file from a specific checkpoint.",
-    "/title \"my project\" names your session — resume it later with /resume or hermes -c.",
+    "/title \"my project\" names your session — resume it later with /resume or sinoclaw -c.",
     "/resume picks up where you left off in a previously named session.",
     "/queue <prompt> queues a message for the next turn without interrupting the current one.",
     "/undo removes the last user/assistant exchange from the conversation.",
@@ -63,7 +63,7 @@ TIPS = [
     "Pasting 5+ lines auto-saves to a file and inserts a compact reference instead.",
 
     # --- CLI Flags ---
-    "hermes -c resumes your most recent CLI session. hermes -c \"project name\" resumes by title.",
+    "hermes -c resumes your most recent CLI session. sinoclaw -c \"project name\" resumes by title.",
     "hermes -w creates an isolated git worktree — perfect for parallel agent workflows.",
     "hermes -w -q \"Fix issue #42\" combines worktree isolation with a one-shot query.",
     "hermes chat -t web,terminal enables only specific toolsets for a focused session.",
@@ -72,8 +72,8 @@ TIPS = [
     "hermes chat --max-turns 200 overrides the default 90-iteration limit per turn.",
     "hermes chat --checkpoints enables filesystem snapshots before every destructive file change.",
     "hermes --yolo bypasses all dangerous command approval prompts for the entire session.",
-    "hermes chat --source telegram tags the session for filtering in hermes sessions list.",
-    "hermes -p work chat runs under a specific profile without changing your default.",
+    "hermes chat --source telegram tags the session for filtering in sinoclaw sessions list.",
+    "sinoclaw -p work chat runs under a specific profile without changing your default.",
 
     # --- CLI Subcommands ---
     "hermes doctor --fix diagnoses and auto-repairs config and dependency issues.",
@@ -100,7 +100,7 @@ TIPS = [
     "sinoclaw gateway install sets up Hermes as a system service (systemd/launchd).",
     "hermes memory setup lets you configure an external memory provider (Honcho, Mem0, etc.).",
     "hermes webhook subscribe creates event-driven webhook routes with HMAC validation.",
-    "Save money: hermes tools disables unused tools, hermes skills config trims skills down.",
+    "Save money: sinoclaw tools disables unused tools, sinoclaw skills config trims skills down.",
     "/reasoning low or /reasoning minimal cuts thinking depth below the default (medium) — faster, cheaper responses.",
     "hermes models routes vision, compression, and aux tasks to cheaper models — cuts background token cost 85%+ without downgrading your main chat model.",
 
@@ -118,7 +118,7 @@ TIPS = [
     "Set fallback_model in config.yaml to automatically fail over to a backup provider.",
     "Set privacy.redact_pii: true to hash user IDs and phone numbers before sending to the LLM.",
     "Set browser.record_sessions: true to auto-record browser sessions as WebM videos.",
-    "Set worktree: true in config.yaml to always create a git worktree (same as hermes -w).",
+    "Set worktree: true in config.yaml to always create a git worktree (same as sinoclaw -w).",
     "Set security.website_blocklist.enabled: true to block specific domains from web tools.",
     "Set cron.wrap_response: false to deliver raw agent output without the cron header/footer.",
     "SINOCLAW_TIMEZONE overrides the server timezone with any IANA timezone string.",
@@ -178,7 +178,7 @@ TIPS = [
     "The plan skill saves markdown plans under .sinoclaw/plans/ in the active workspace.",
 
     # --- Cron & Scheduling ---
-    "Cron jobs can attach skills: hermes cron add --skill blogwatcher \"Check for new posts\".",
+    "Cron jobs can attach skills: sinoclaw cron add --skill blogwatcher \"Check for new posts\".",
     "Cron delivery targets include telegram, discord, slack, email, sms, and 12+ more platforms.",
     "If a cron response starts with [SILENT], delivery is suppressed — useful for monitoring-only jobs.",
     "Cron supports relative delays (30m), intervals (every 2h), cron expressions, and ISO timestamps.",
@@ -229,7 +229,7 @@ TIPS = [
     # --- MCP ---
     "MCP servers are configured in config.yaml — both stdio and HTTP transports supported.",
     "Per-server tool filtering: tools.include whitelists and tools.exclude blacklists specific tools.",
-    "MCP servers auto-generate toolsets at runtime — hermes tools can toggle them per platform.",
+    "MCP servers auto-generate toolsets at runtime — sinoclaw tools can toggle them per platform.",
     "MCP OAuth support: auth: oauth enables browser-based authorization with PKCE.",
 
     # --- Checkpoints & Rollback ---
@@ -330,7 +330,7 @@ TIPS = [
     "Slash commands never trigger the large-paste collapse — /command with big arguments works correctly.",
     "In interrupt mode, slash commands typed during agent execution bypass interrupt logic and run immediately.",
     "SINOCLAW_DEV=1 bypasses container mode detection for local development.",
-    "Each MCP server gets its own toolset (mcp-servername) that can be toggled independently via hermes tools.",
+    "Each MCP server gets its own toolset (mcp-servername) that can be toggled independently via sinoclaw tools.",
     "MCP ${ENV_VAR} placeholders in config are resolved at server spawn — including vars from ~/.sinoclaw/.env.",
     "Skills from trusted repos (NousResearch) get a 'trusted' security level; community skills get extra scanning.",
     "The skills quarantine at ~/.sinoclaw/skills/.hub/quarantine/ holds skills pending security review.",
@@ -428,14 +428,14 @@ TIPS = [
     'hermes chat --pass-session-id injects the session ID into the system prompt so the agent can self-reference it.',
     'hermes chat --image path/to/pic.png attaches a local image to a single -q query without a separate upload step.',
     'hermes chat --ignore-user-config skips ~/.sinoclaw/config.yaml — reproducible bug reports and CI runs.',
-    "hermes chat --source tool tags programmatic chats so they don't clutter hermes sessions list.",
+    "hermes chat --source tool tags programmatic chats so they don't clutter sinoclaw sessions list.",
     'hermes dump --show-keys includes redacted API key fingerprints for deeper support debugging.',
-    'hermes sessions rename <ID> "new title" renames any past session; hermes sessions delete <ID> removes one.',
+    'hermes sessions rename <ID> "new title" renames any past session; sinoclaw sessions delete <ID> removes one.',
     'hermes import restores a session export or profile archive produced by sessions export or profile export.',
     'hermes fallback manages the fallback_model chain interactively — no hand-editing config.yaml.',
     'hermes pairing rotates the DM pairing token — the first messager after rotation claims access to the bot.',
     'sinoclaw setup walks first-time users through provider, keys, and platform wiring in one interactive flow.',
-    'hermes status --deep runs the full health sweep across every component; plain hermes status is the quick view.',
+    'hermes status --deep runs the full health sweep across every component; plain sinoclaw status is the quick view.',
 
     # --- Agent Behavior Env Vars ---
     'SINOCLAW_AGENT_TIMEOUT=0 disables the gateway inactivity kill for a running agent — use for long research runs.',
@@ -466,7 +466,7 @@ TIPS = [
     'TIRITH_FAIL_OPEN env var overrides the tirith_fail_open config — a quick toggle without editing config.yaml.',
 
     # --- Sessions & Source Tags ---
-    '--source tool chats are excluded from hermes sessions list by default — set --source explicitly to see them.',
+    '--source tool chats are excluded from sinoclaw sessions list by default — set --source explicitly to see them.',
     'Session IDs are timestamp-prefixed (20250305_091523_abcd) so sorting works naturally in ls and jq.',
 
     # --- Misc ---

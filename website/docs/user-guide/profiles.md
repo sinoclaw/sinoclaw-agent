@@ -73,19 +73,19 @@ coder skills list             # list coder's skills
 coder config set model.default anthropic/claude-sonnet-4
 ```
 
-The alias works with every hermes subcommand — it's just `hermes -p <name>` under the hood.
+The alias works with every sinoclaw subcommand — it's just `sinoclaw -p <name>` under the hood.
 
 ### The `-p` flag
 
 You can also target a profile explicitly with any command:
 
 ```bash
-hermes -p coder chat
+sinoclaw -p coder chat
 hermes --profile=coder doctor
 hermes chat -p coder -q "hello"    # works in any position
 ```
 
-### Sticky default (`hermes profile use`)
+### Sticky default (`sinoclaw profile use`)
 
 ```bash
 hermes profile use coder
@@ -102,7 +102,7 @@ The CLI always shows which profile is active:
 
 - **Prompt**: `coder ❯` instead of `❯`
 - **Banner**: Shows `Profile: coder` on startup
-- **`hermes profile`**: Shows current profile name, path, model, gateway status
+- **`sinoclaw profile`**: Shows current profile name, path, model, gateway status
 
 ## Profiles vs workspaces vs sandboxing
 
@@ -185,7 +185,7 @@ coder config set terminal.cwd /absolute/path/to/project
 
 ## Updating
 
-`hermes update` pulls code once (shared) and syncs new bundled skills to **all** profiles automatically:
+`sinoclaw update` pulls code once (shared) and syncs new bundled skills to **all** profiles automatically:
 
 ```bash
 hermes update
@@ -213,10 +213,10 @@ hermes profile delete coder
 
 This stops the gateway, removes the systemd/launchd service, removes the command alias, and deletes all profile data. You'll be asked to type the profile name to confirm.
 
-Use `--yes` to skip confirmation: `hermes profile delete coder --yes`
+Use `--yes` to skip confirmation: `sinoclaw profile delete coder --yes`
 
 :::note
-You cannot delete the default profile (`~/.sinoclaw`). To remove everything, use `hermes uninstall`.
+You cannot delete the default profile (`~/.sinoclaw`). To remove everything, use `sinoclaw uninstall`.
 :::
 
 ## Tab completion

@@ -1110,7 +1110,7 @@ class TestBuildSkillsSystemPromptConditional:
         skill_dir = tmp_path / "skills" / "general" / "nested-null"
         skill_dir.mkdir(parents=True)
         (skill_dir / "SKILL.md").write_text(
-            "---\nname: nested-null\ndescription: Null hermes key\nmetadata:\n  hermes:\n---\n"
+            "---\nname: nested-null\ndescription: Null sinoclaw key\nmetadata:\n  hermes:\n---\n"
         )
         result = build_skills_system_prompt(
             available_tools=set(),

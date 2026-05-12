@@ -2,7 +2,7 @@
 
 Hermes can control Spotify directly — playback, queue, search, playlists, saved tracks/albums, and listening history — using Spotify's official Web API with PKCE OAuth. Tokens are stored in `~/.sinoclaw/auth.json` and refreshed automatically on 401; you only log in once per machine.
 
-Unlike Hermes' built-in OAuth integrations (Google, GitHub Copilot, Codex), Spotify requires every user to register their own lightweight developer app. Spotify does not let third parties ship a public OAuth app that anyone can use. It takes about two minutes and `hermes auth spotify` walks you through it.
+Unlike Hermes' built-in OAuth integrations (Google, GitHub Copilot, Codex), Spotify requires every user to register their own lightweight developer app. Spotify does not let third parties ship a public OAuth app that anyone can use. It takes about two minutes and `sinoclaw auth spotify` walks you through it.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Unlike Hermes' built-in OAuth integrations (Google, GitHub Copilot, Codex), Spot
 
 ## Setup
 
-### One-shot: `hermes tools`
+### One-shot: `sinoclaw tools`
 
 The fastest path. Run:
 
@@ -76,7 +76,7 @@ If `SSH_CLIENT` or `SSH_TTY` is set, Hermes skips the automatic browser open dur
 hermes auth status spotify
 ```
 
-Shows whether tokens are present and when the access token expires. Refresh is automatic: when any Spotify API call returns 401, the client exchanges the refresh token and retries once. Refresh tokens persist across Hermes restarts, so you only re-auth if you revoke the app in your Spotify account settings or run `hermes auth logout spotify`.
+Shows whether tokens are present and when the access token expires. Refresh is automatic: when any Spotify API call returns 401, the client exchanges the refresh token and retries once. Refresh tokens persist across Hermes restarts, so you only re-auth if you revoke the app in your Spotify account settings or run `sinoclaw auth logout spotify`.
 
 ## Using it
 
@@ -171,7 +171,7 @@ Read-only tools work on Free accounts. Anything that mutates playback or the que
 
 ## Scheduling: Spotify + cron
 
-Because Spotify tools are regular Hermes tools, a cron job running in a Hermes session can trigger playback on any schedule. No new code needed.
+Because Spotify tools are regular Hermes tools, a cron job running in a Sinoclaw session can trigger playback on any schedule. No new code needed.
 
 ### Morning wake-up playlist
 
@@ -183,7 +183,7 @@ hermes cron add \
 ```
 
 What happens at 7am every weekday:
-1. Cron spins up a headless Hermes session.
+1. Cron spins up a headless Sinoclaw session.
 2. Agent reads the prompt, calls `spotify_devices list` to find "kitchen speaker" by name, then `spotify_devices transfer` → `spotify_playback set_volume` → `spotify_playback set_shuffle` → `spotify_search` + `spotify_playback play`.
 3. Music starts on the target speaker. Total cost: one session, a few tool calls, no human input.
 
@@ -200,7 +200,7 @@ hermes cron add \
 
 - **An active device must exist when the cron fires.** If no Spotify client is running (phone/desktop/Connect speaker), playback actions return `403 no active device`. For morning playlists, the trick is to target a device that's always on (Sonos, Echo, a smart speaker) rather than your phone.
 - **Premium required for anything that mutates playback** — play, pause, skip, volume, transfer. Read-only cron jobs (scheduled "email me my recently played tracks") work fine on Free.
-- **The cron agent inherits your active toolsets.** Spotify must be enabled in `hermes tools` for the cron session to see the Spotify tools.
+- **The cron agent inherits your active toolsets.** Spotify must be enabled in `sinoclaw tools` for the cron session to see the Spotify tools.
 - **Cron jobs run with `skip_memory=True`** so they don't write to your memory store.
 
 Full cron reference: [Cron Jobs](./cron).
@@ -227,7 +227,7 @@ To revoke the app on Spotify's side, visit [Apps connected to your account](http
 
 **`429 Too Many Requests`** — Spotify's rate limit. Hermes returns a friendly error; wait a minute and retry. If this persists, you're probably running a tight loop in a script — Spotify's quota resets roughly every 30 seconds.
 
-**`401 Unauthorized` keeps coming back** — Your refresh token was revoked (usually because you removed the app from your account, or the app was deleted). Run `hermes auth spotify` again.
+**`401 Unauthorized` keeps coming back** — Your refresh token was revoked (usually because you removed the app from your account, or the app was deleted). Run `sinoclaw auth spotify` again.
 
 **Wizard doesn't open the browser** — If you're over SSH or in a container without a display, Hermes detects it and skips the auto-open. Copy the dashboard URL it prints and open it manually.
 

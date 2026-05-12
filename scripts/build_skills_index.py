@@ -4,7 +4,7 @@
 This script crawls every skill source (skills.sh, GitHub taps, official,
 clawhub, lobehub, claude-marketplace) and writes a JSON index with resolved
 GitHub paths. The index is served as a static file on the docs site so that
-`hermes skills search/install` can use it without hitting the GitHub API.
+`sinoclaw skills search/install` can use it without hitting the GitHub API.
 
 Usage:
     # Local (uses gh CLI or GITHUB_TOKEN for auth)

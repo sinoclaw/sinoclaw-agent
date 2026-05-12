@@ -3,12 +3,12 @@
 Traces Hermes conversations, LLM calls, and tool usage to Langfuse.
 
 Activation is handled by the Hermes plugin system — standalone plugins only
-load when listed in ``plugins.enabled`` (via ``hermes plugins enable
-observability/langfuse`` or ``hermes tools → Langfuse Observability``). At
+load when listed in ``plugins.enabled`` (via ``sinoclaw plugins enable
+observability/langfuse`` or ``sinoclaw tools → Langfuse Observability``). At
 runtime the plugin also requires the ``langfuse`` SDK and credentials; if
 either is missing the hooks are inert.
 
-Required env vars (set via ``hermes tools`` or ~/.sinoclaw/.env):
+Required env vars (set via ``sinoclaw tools`` or ~/.sinoclaw/.env):
   SINOCLAW_LANGFUSE_PUBLIC_KEY  - Langfuse project public key (pk-lf-...)
   SINOCLAW_LANGFUSE_SECRET_KEY  - Langfuse project secret key (sk-lf-...)
   SINOCLAW_LANGFUSE_BASE_URL    - Langfuse server URL (default: https://cloud.langfuse.com)

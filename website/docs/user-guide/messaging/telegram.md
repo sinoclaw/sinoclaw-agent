@@ -420,7 +420,7 @@ Topics created outside of the config (e.g., by manually calling the Telegram API
 
 ## Multi-session DM mode (`/topic`)
 
-A ChatGPT-style multi-session DM — one bot, many parallel conversations. Unlike the operator-curated `extra.dm_topics` above, this mode is **user-driven**: no config, no pre-declared topic names. The end user flips it on with `/topic`, then taps the Telegram **+** button to create as many topics as they want, each one a fully independent Hermes session.
+A ChatGPT-style multi-session DM — one bot, many parallel conversations. Unlike the operator-curated `extra.dm_topics` above, this mode is **user-driven**: no config, no pre-declared topic names. The end user flips it on with `/topic`, then taps the Telegram **+** button to create as many topics as they want, each one a fully independent Sinoclaw session.
 
 ### `/topic` subcommands
 
@@ -441,7 +441,7 @@ Only authorized users (allowlist via `TELEGRAM_ALLOWED_USERS` / platform auth co
 |---|---|---|
 | Who activates it | Operator, in `config.yaml` | End user, by sending `/topic` |
 | Topic list | Fixed set declared in config | User creates/deletes topics freely |
-| Topic names | Chosen by operator | Chosen by user; auto-renamed to match Hermes session title |
+| Topic names | Chosen by operator | Chosen by user; auto-renamed to match Sinoclaw session title |
 | Root DM behavior | Unchanged — normal chat | Becomes a system lobby (non-command messages are rejected) |
 | Primary use case | Permanent workspaces with optional skill binding | Ad-hoc parallel sessions |
 | Persistence | `extra.dm_topics` in config | `telegram_dm_topic_mode` + `telegram_dm_topic_bindings` SQLite tables |
@@ -455,7 +455,7 @@ In **@BotFather**, open your bot → **Bot Settings → Threads Settings**:
 1. Turn on **Threaded Mode** (enables `has_topics_enabled`)
 2. Do **not** disable users creating topics (keeps `allows_users_to_create_topics` on)
 
-When the user first runs `/topic`, Hermes calls `getMe` to verify both flags. If either is off, Hermes sends a screenshot of the BotFather Threads Settings page and explains what to toggle — no activation happens until prerequisites are met.
+When the user first runs `/topic`, Hermes calls `getMe` to verify both flags. If either is off, Sinoclaw sends a screenshot of the BotFather Threads Settings page and explains what to toggle — no activation happens until prerequisites are met.
 
 ### Activation flow
 
@@ -499,7 +499,7 @@ Inside a topic, send:
 /topic <session-id>
 ```
 
-This binds the current topic to an existing Hermes session instead of starting fresh. Useful for continuing a conversation that started before topic mode was enabled. Restrictions:
+This binds the current topic to an existing Sinoclaw session instead of starting fresh. Useful for continuing a conversation that started before topic mode was enabled. Restrictions:
 
 - The target session must belong to the same Telegram user
 - The target session must not already be bound to another topic

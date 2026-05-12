@@ -1,14 +1,14 @@
 """
-Hermes CLI - Unified command-line interface for Sinoclaw Agent.
+Sinoclaw CLI - Unified command-line interface for Sinoclaw Agent.
 
 Provides subcommands for:
-- hermes chat          - Interactive chat (same as ./hermes)
+- sinoclaw chat          - Interactive chat (same as ./hermes)
 - sinoclaw gateway       - Run gateway in foreground
 - sinoclaw gateway start - Start gateway service
 - sinoclaw gateway stop  - Stop gateway service
 - sinoclaw setup         - Interactive setup wizard
-- hermes status        - Show status of all components
-- hermes cron          - Manage cron jobs
+- sinoclaw status        - Show status of all components
+- sinoclaw cron          - Manage cron jobs
 """
 
 import os

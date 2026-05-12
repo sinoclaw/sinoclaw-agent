@@ -14,7 +14,7 @@ Control LLM output with regex and grammars, guarantee valid JSON/XML/code genera
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/guidance` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/guidance` |
 | Path | `optional-skills/mlops/guidance` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

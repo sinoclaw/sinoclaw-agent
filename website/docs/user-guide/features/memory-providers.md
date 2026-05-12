@@ -16,7 +16,7 @@ hermes memory status     # check what's active
 hermes memory off        # disable external provider
 ```
 
-You can also select the active memory provider via `hermes plugins` → Provider Plugins → Memory Provider.
+You can also select the active memory provider via `sinoclaw plugins` → Provider Plugins → Memory Provider.
 
 Or set manually in `~/.sinoclaw/config.yaml`:
 
@@ -136,8 +136,8 @@ hermes memory setup        # select "honcho"
 
 </details>
 
-:::tip Migrating from `hermes honcho`
-If you previously used `hermes honcho setup`, your config and all server-side data are intact. Just re-enable through the setup wizard again or manually set `memory.provider: honcho` to reactivate via the new system.
+:::tip Migrating from `sinoclaw honcho`
+If you previously used `sinoclaw honcho setup`, your config and all server-side data are intact. Just re-enable through the setup wizard again or manually set `memory.provider: honcho` to reactivate via the new system.
 :::
 
 **Multi-peer setup:**
@@ -346,7 +346,7 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.sinoclaw/.env
 
 The setup wizard installs dependencies automatically and only installs what's needed for the selected mode (`hindsight-client` for cloud, `hindsight-all` for local). Requires `hindsight-client >= 0.4.22` (auto-upgraded on session start if outdated).
 
-**Local mode UI:** `hindsight-embed -p hermes ui start`
+**Local mode UI:** `hindsight-embed -p sinoclaw ui start`
 
 **Config:** `$SINOCLAW_HOME/hindsight/config.json`
 

@@ -14,7 +14,7 @@ Manage Docker containers, images, volumes, networks, and Compose stacks — life
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/devops/docker-management` |
+| Source | Optional — install with `sinoclaw skills install official/devops/docker-management` |
 | Path | `optional-skills/devops/docker-management` |
 | Version | `1.0.0` |
 | Author | sprmn24 |

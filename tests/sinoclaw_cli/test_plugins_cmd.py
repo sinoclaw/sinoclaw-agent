@@ -1,4 +1,4 @@
-"""Tests for sinoclaw_cli.plugins_cmd — the ``hermes plugins`` CLI subcommand."""
+"""Tests for sinoclaw_cli.plugins_cmd — the ``sinoclaw plugins`` CLI subcommand."""
 
 from __future__ import annotations
 

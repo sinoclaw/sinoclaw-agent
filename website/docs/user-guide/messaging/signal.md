@@ -128,7 +128,7 @@ sudo sinoclaw gateway install --system   # Linux only: boot-time system service
 DM access follows the same pattern as all other Hermes platforms:
 
 1. **`SIGNAL_ALLOWED_USERS` set** → only those users can message
-2. **No allowlist set** → unknown users get a DM pairing code (approve via `hermes pairing approve signal CODE`)
+2. **No allowlist set** → unknown users get a DM pairing code (approve via `sinoclaw pairing approve signal CODE`)
 3. **`SIGNAL_ALLOW_ALL_USERS=true`** → anyone can message (use with caution)
 
 ### Group Access
@@ -189,7 +189,7 @@ The bot sends typing indicators while processing messages, refreshing every 8 se
 
 All phone numbers are automatically redacted in logs:
 - `+15551234567` → `+155****4567`
-- This applies to both Hermes gateway logs and the global redaction system
+- This applies to both Sinoclaw gateway logs and the global redaction system
 
 ### Note to Self (Single-Number Setup)
 

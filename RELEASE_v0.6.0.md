@@ -8,9 +8,9 @@
 
 ## ✨ Highlights
 
-- **Profiles — Multi-Instance Hermes** — Run multiple isolated Hermes instances from the same installation. Each profile gets its own config, memory, sessions, skills, and gateway service. Create with `hermes profile create`, switch with `hermes -p <name>`, export/import for sharing. Full token-lock isolation prevents two profiles from using the same bot credential. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
+- **Profiles — Multi-Instance Hermes** — Run multiple isolated Hermes instances from the same installation. Each profile gets its own config, memory, sessions, skills, and gateway service. Create with `sinoclaw profile create`, switch with `sinoclaw -p <name>`, export/import for sharing. Full token-lock isolation prevents two profiles from using the same bot credential. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
 
-- **MCP Server Mode** — Expose Hermes conversations and sessions to any MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.) via `hermes mcp serve`. Browse conversations, read messages, search across sessions, and manage attachments — all through the Model Context Protocol. Supports both stdio and Streamable HTTP transports. ([#3795](https://github.com/NousResearch/sinoclaw-agent/pull/3795))
+- **MCP Server Mode** — Expose Hermes conversations and sessions to any MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.) via `sinoclaw mcp serve`. Browse conversations, read messages, search across sessions, and manage attachments — all through the Model Context Protocol. Supports both stdio and Streamable HTTP transports. ([#3795](https://github.com/NousResearch/sinoclaw-agent/pull/3795))
 
 - **Docker Container** — Official Dockerfile for running Sinoclaw Agent in a container. Supports both CLI and gateway modes with volume-mounted config. ([#3668](https://github.com/NousResearch/sinoclaw-agent/pull/3668), closes [#850](https://github.com/NousResearch/sinoclaw-agent/issues/850))
 
@@ -20,7 +20,7 @@
 
 - **WeCom (Enterprise WeChat) Platform Support** — New gateway adapter for WeCom (企业微信) with text/image/voice messages, group chats, and callback verification. ([#3847](https://github.com/NousResearch/sinoclaw-agent/pull/3847))
 
-- **Slack Multi-Workspace OAuth** — Connect a single Hermes gateway to multiple Slack workspaces via OAuth token file. Each workspace gets its own bot token, resolved dynamically per incoming event. ([#3903](https://github.com/NousResearch/sinoclaw-agent/pull/3903))
+- **Slack Multi-Workspace OAuth** — Connect a single Sinoclaw gateway to multiple Slack workspaces via OAuth token file. Each workspace gets its own bot token, resolved dynamically per incoming event. ([#3903](https://github.com/NousResearch/sinoclaw-agent/pull/3903))
 
 - **Telegram Webhook Mode & Group Controls** — Run the Telegram adapter in webhook mode as an alternative to polling — faster response times and better for production deployments behind a reverse proxy. New group mention gating controls when the bot responds: always, only when @mentioned, or via regex triggers. ([#3880](https://github.com/NousResearch/sinoclaw-agent/pull/3880), [#3870](https://github.com/NousResearch/sinoclaw-agent/pull/3870))
 
@@ -34,7 +34,7 @@
 
 ### Provider & Model Support
 - **Ordered fallback provider chain** — automatic failover across multiple configured providers ([#3813](https://github.com/NousResearch/sinoclaw-agent/pull/3813))
-- **Fix api_mode on provider switch** — switching providers via `hermes model` now correctly clears stale `api_mode` instead of hardcoding `chat_completions`, fixing 404s for providers with Anthropic-compatible endpoints ([#3726](https://github.com/NousResearch/sinoclaw-agent/pull/3726), [#3857](https://github.com/NousResearch/sinoclaw-agent/pull/3857), closes [#3685](https://github.com/NousResearch/sinoclaw-agent/issues/3685))
+- **Fix api_mode on provider switch** — switching providers via `sinoclaw model` now correctly clears stale `api_mode` instead of hardcoding `chat_completions`, fixing 404s for providers with Anthropic-compatible endpoints ([#3726](https://github.com/NousResearch/sinoclaw-agent/pull/3726), [#3857](https://github.com/NousResearch/sinoclaw-agent/pull/3857), closes [#3685](https://github.com/NousResearch/sinoclaw-agent/issues/3685))
 - **Stop silent OpenRouter fallback** — when no provider is configured, Hermes now raises a clear error instead of silently routing to OpenRouter ([#3807](https://github.com/NousResearch/sinoclaw-agent/pull/3807), [#3862](https://github.com/NousResearch/sinoclaw-agent/pull/3862))
 - **Gemini 3.1 preview models** — added to OpenRouter and Nous Portal catalogs ([#3803](https://github.com/NousResearch/sinoclaw-agent/pull/3803), closes [#3753](https://github.com/NousResearch/sinoclaw-agent/issues/3753))
 - **Gemini direct API context length** — full context length resolution for direct Google AI endpoints ([#3876](https://github.com/NousResearch/sinoclaw-agent/pull/3876))
@@ -50,9 +50,9 @@
 - **Omit empty tools param** — sends no `tools` parameter when empty instead of `None`, fixing compatibility with strict providers ([#3820](https://github.com/NousResearch/sinoclaw-agent/pull/3820))
 
 ### Profiles & Multi-Instance
-- **Profiles system** — `hermes profile create/list/switch/delete/export/import/rename`. Each profile gets isolated SINOCLAW_HOME, gateway service, CLI wrapper. Token locks prevent credential collisions. Tab completion for profile names. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
+- **Profiles system** — `sinoclaw profile create/list/switch/delete/export/import/rename`. Each profile gets isolated SINOCLAW_HOME, gateway service, CLI wrapper. Token locks prevent credential collisions. Tab completion for profile names. ([#3681](https://github.com/NousResearch/sinoclaw-agent/pull/3681))
 - **Profile-aware display paths** — all user-facing `~/.sinoclaw` paths replaced with `display_sinoclaw_home()` to show the correct profile directory ([#3623](https://github.com/NousResearch/sinoclaw-agent/pull/3623))
-- **Lazy display_sinoclaw_home imports** — prevents `ImportError` during `hermes update` when modules cache stale bytecode ([#3776](https://github.com/NousResearch/sinoclaw-agent/pull/3776))
+- **Lazy display_sinoclaw_home imports** — prevents `ImportError` during `sinoclaw update` when modules cache stale bytecode ([#3776](https://github.com/NousResearch/sinoclaw-agent/pull/3776))
 - **SINOCLAW_HOME for protected paths** — `.env` write-deny path now respects SINOCLAW_HOME instead of hardcoded `~/.sinoclaw` ([#3840](https://github.com/NousResearch/sinoclaw-agent/pull/3840))
 
 ---
@@ -108,7 +108,7 @@
 
 ### Interactive CLI
 - **Configurable tool preview length** — show full file paths by default instead of truncating at 40 chars ([#3841](https://github.com/NousResearch/sinoclaw-agent/pull/3841))
-- **Tool token context display** — `hermes tools` checklist now shows estimated token cost per toolset ([#3805](https://github.com/NousResearch/sinoclaw-agent/pull/3805))
+- **Tool token context display** — `sinoclaw tools` checklist now shows estimated token cost per toolset ([#3805](https://github.com/NousResearch/sinoclaw-agent/pull/3805))
 - **/bg spinner TUI fix** — route background task spinner through the TUI widget to prevent status bar collision ([#3643](https://github.com/NousResearch/sinoclaw-agent/pull/3643))
 - **Prevent status bar wrapping** into duplicate rows ([#3883](https://github.com/NousResearch/sinoclaw-agent/pull/3883)) — @kshitijk4poor
 - **Handle closed stdout ValueError** in safe print paths — fixes crashes when stdout is closed during gateway thread shutdown ([#3843](https://github.com/NousResearch/sinoclaw-agent/pull/3843), closes [#3534](https://github.com/NousResearch/sinoclaw-agent/issues/3534))
@@ -122,14 +122,14 @@
 - **Auto-install matrix-nio** during `sinoclaw setup` when Matrix is selected ([#3802](https://github.com/NousResearch/sinoclaw-agent/pull/3802), [#3873](https://github.com/NousResearch/sinoclaw-agent/pull/3873))
 - **Session export stdout support** — export sessions to stdout with `-` for piping ([#3641](https://github.com/NousResearch/sinoclaw-agent/pull/3641), closes [#3609](https://github.com/NousResearch/sinoclaw-agent/issues/3609))
 - **Configurable approval timeouts** — set how long dangerous command approval prompts wait before auto-denying ([#3886](https://github.com/NousResearch/sinoclaw-agent/pull/3886), closes [#3765](https://github.com/NousResearch/sinoclaw-agent/issues/3765))
-- **Clear __pycache__ during update** — prevents stale bytecode ImportError after `hermes update` ([#3819](https://github.com/NousResearch/sinoclaw-agent/pull/3819))
+- **Clear __pycache__ during update** — prevents stale bytecode ImportError after `sinoclaw update` ([#3819](https://github.com/NousResearch/sinoclaw-agent/pull/3819))
 
 ---
 
 ## 🔧 Tool System
 
 ### MCP
-- **MCP Server Mode** — `hermes mcp serve` exposes conversations, sessions, and attachments to MCP clients via stdio or Streamable HTTP ([#3795](https://github.com/NousResearch/sinoclaw-agent/pull/3795))
+- **MCP Server Mode** — `sinoclaw mcp serve` exposes conversations, sessions, and attachments to MCP clients via stdio or Streamable HTTP ([#3795](https://github.com/NousResearch/sinoclaw-agent/pull/3795))
 - **Dynamic tool discovery** — respond to `notifications/tools/list_changed` events to pick up new tools from MCP servers without reconnecting ([#3812](https://github.com/NousResearch/sinoclaw-agent/pull/3812))
 - **Non-deprecated HTTP transport** — switched from `sse_client` to `streamable_http_client` ([#3646](https://github.com/NousResearch/sinoclaw-agent/pull/3646))
 
@@ -175,7 +175,7 @@
 - **one-three-one-rule** — communication framework skill ([#3797](https://github.com/NousResearch/sinoclaw-agent/pull/3797))
 
 ### Plugin System
-- **Plugin enable/disable commands** — `hermes plugins enable/disable <name>` for managing plugin state without removing them ([#3747](https://github.com/NousResearch/sinoclaw-agent/pull/3747))
+- **Plugin enable/disable commands** — `sinoclaw plugins enable/disable <name>` for managing plugin state without removing them ([#3747](https://github.com/NousResearch/sinoclaw-agent/pull/3747))
 - **Plugin message injection** — plugins can now inject messages into the conversation stream on behalf of the user via `ctx.inject_message()` ([#3778](https://github.com/NousResearch/sinoclaw-agent/pull/3778)) — @winglian
 - **Honcho self-hosted support** — allow local Honcho instances without requiring an API key ([#3644](https://github.com/NousResearch/sinoclaw-agent/pull/3644))
 
@@ -193,7 +193,7 @@
 ### Reliability
 - **Atomic config.yaml writes** — prevent data loss during gateway crashes ([#3800](https://github.com/NousResearch/sinoclaw-agent/pull/3800))
 - **Clear __pycache__ on update** — prevent stale bytecode from causing ImportError after updates ([#3819](https://github.com/NousResearch/sinoclaw-agent/pull/3819))
-- **Lazy imports for update safety** — prevent ImportError chains during `hermes update` when modules reference new functions ([#3776](https://github.com/NousResearch/sinoclaw-agent/pull/3776))
+- **Lazy imports for update safety** — prevent ImportError chains during `sinoclaw update` when modules reference new functions ([#3776](https://github.com/NousResearch/sinoclaw-agent/pull/3776))
 - **Restore terminalbench2 from patch corruption** — recovered file damaged by patch tool's secret redaction ([#3801](https://github.com/NousResearch/sinoclaw-agent/pull/3801))
 - **Terminal timeout preserves partial output** — no more lost command output on timeout ([#3868](https://github.com/NousResearch/sinoclaw-agent/pull/3868))
 
@@ -210,7 +210,7 @@
 - **Email connection leaks** — properly close SMTP/IMAP connections on error ([#3804](https://github.com/NousResearch/sinoclaw-agent/pull/3804))
 - **_safe_print ValueError** — no more gateway thread crashes on closed stdout ([#3843](https://github.com/NousResearch/sinoclaw-agent/pull/3843))
 - **Tool schema KeyError 'name'** — ensure name field always present in tool definitions ([#3811](https://github.com/NousResearch/sinoclaw-agent/pull/3811))
-- **api_mode stale on provider switch** — correctly clear when switching providers via `hermes model` ([#3857](https://github.com/NousResearch/sinoclaw-agent/pull/3857))
+- **api_mode stale on provider switch** — correctly clear when switching providers via `sinoclaw model` ([#3857](https://github.com/NousResearch/sinoclaw-agent/pull/3857))
 
 ---
 

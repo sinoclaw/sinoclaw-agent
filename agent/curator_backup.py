@@ -546,7 +546,7 @@ def rollback(backup_id: Optional[str] = None) -> Tuple[bool, str, Optional[Path]
             False,
             f"no matching backup found"
             + (f" for id '{backup_id}'" if backup_id else "")
-            + " (use `hermes curator rollback --list` to see available snapshots)",
+            + " (use `sinoclaw curator rollback --list` to see available snapshots)",
             None,
         )
     archive = target / "skills.tar.gz"

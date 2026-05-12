@@ -24,9 +24,9 @@ The curator is triggered by an inactivity check, not a cron daemon. On CLI sessi
 If both are true, it spawns a background fork of `AIAgent` — the same pattern used by the memory/skill self-improvement nudges. The fork runs in its own prompt cache and never touches the active conversation.
 
 :::info First-run behavior
-On a brand-new install (or the first time a pre-curator install ticks after `hermes update`), the curator **does not run immediately**. The first observation seeds `last_run_at` to "now" and defers the first real pass by one full `interval_hours`. This gives you a full interval to review your skill library, pin anything important, or opt out entirely before the curator ever touches it.
+On a brand-new install (or the first time a pre-curator install ticks after `sinoclaw update`), the curator **does not run immediately**. The first observation seeds `last_run_at` to "now" and defers the first real pass by one full `interval_hours`. This gives you a full interval to review your skill library, pin anything important, or opt out entirely before the curator ever touches it.
 
-If you want to see what the curator *would* do before it runs for real, run `hermes curator run --dry-run` — it produces the same review report without mutating the library.
+If you want to see what the curator *would* do before it runs for real, run `sinoclaw curator run --dry-run` — it produces the same review report without mutating the library.
 :::
 
 A run has two phases:
@@ -55,7 +55,7 @@ To disable entirely, set `curator.enabled: false`.
 
 The curator's LLM review pass is a regular auxiliary task slot — `auxiliary.curator` — alongside Vision, Compression, Session Search, etc. "Auto" means "use my main chat model"; override the slot to pin a specific provider + model for the review pass instead.
 
-**Easiest — `hermes model`:**
+**Easiest — `sinoclaw model`:**
 
 ```bash
 hermes model                   # → "Auxiliary models — side-task routing"
@@ -77,7 +77,7 @@ auxiliary:
 Leaving `provider: auto` (the default) routes the review pass through whatever your main chat model is, matching the behavior of every other auxiliary task.
 
 :::note Legacy config
-Earlier releases used a one-off `curator.auxiliary.{provider,model}` block. That path still works but emits a deprecation log line — please migrate to `auxiliary.curator` above so the curator shares the same plumbing (`hermes model`, dashboard Models tab, `base_url`, `api_key`, `timeout`, `extra_body`) as every other aux task.
+Earlier releases used a one-off `curator.auxiliary.{provider,model}` block. That path still works but emits a deprecation log line — please migrate to `auxiliary.curator` above so the curator shares the same plumbing (`sinoclaw model`, dashboard Models tab, `base_url`, `api_key`, `timeout`, `extra_body`) as every other aux task.
 :::
 
 ## CLI
@@ -111,7 +111,7 @@ hermes curator rollback --list # see all snapshots with reason + size
 
 The rollback itself is reversible: before replacing the skills tree, Hermes takes another snapshot tagged `pre-rollback to <target-id>`, so a mistaken rollback can be undone by rolling forward to that one with `--id`.
 
-You can also take manual snapshots at any time with `hermes curator backup --reason "before-refactor"`. The `--reason` string lands in the snapshot's `manifest.json` and is shown in `--list`.
+You can also take manual snapshots at any time with `sinoclaw curator backup --reason "before-refactor"`. The `--reason` string lands in the snapshot's `manifest.json` and is shown in `--list`.
 
 Snapshots are pruned to `curator.backup.keep` (default 5) to keep disk usage bounded:
 
@@ -122,9 +122,9 @@ curator:
     keep: 5
 ```
 
-Set `curator.backup.enabled: false` to disable automatic snapshotting. The manual `hermes curator backup` command still works when backups are disabled only if you set `enabled: true` first — the flag gates both paths symmetrically so there's no way to accidentally skip the pre-run snapshot on mutating runs.
+Set `curator.backup.enabled: false` to disable automatic snapshotting. The manual `sinoclaw curator backup` command still works when backups are disabled only if you set `enabled: true` first — the flag gates both paths symmetrically so there's no way to accidentally skip the pre-run snapshot on mutating runs.
 
-`hermes curator status` also lists the five least-recently-used skills — a quick way to see what's likely to become stale next.
+`sinoclaw curator status` also lists the five least-recently-used skills — a quick way to see what's likely to become stale next.
 
 The same subcommands are available as the `/curator` slash command inside a running session (CLI or gateway platforms).
 
@@ -133,7 +133,7 @@ The same subcommands are available as the `/curator` slash command inside a runn
 A skill is considered agent-created if its name is **not** in:
 
 - `~/.sinoclaw/skills/.bundled_manifest` (skills copied from the repo on install), and
-- `~/.sinoclaw/skills/.hub/lock.json` (skills installed via `hermes skills install`).
+- `~/.sinoclaw/skills/.hub/lock.json` (skills installed via `sinoclaw skills install`).
 
 Everything else in `~/.sinoclaw/skills/` is fair game for the curator. This includes:
 
@@ -146,21 +146,21 @@ Provenance here is **binary** (bundled/hub vs. everything else). The curator can
 
 Before the first real pass (7 days after installation by default), take a moment to:
 
-1. Run `hermes curator run --dry-run` to see exactly what the curator would propose.
-2. Use `hermes curator pin <name>` to fence off anything you don't want touched.
+1. Run `sinoclaw curator run --dry-run` to see exactly what the curator would propose.
+2. Use `sinoclaw curator pin <name>` to fence off anything you don't want touched.
 3. Or set `curator.enabled: false` in `config.yaml` if you'd rather manage the library yourself.
 
-Archives are always recoverable via `hermes curator restore <name>`, but it's easier to pin up-front than to chase down a consolidation after the fact.
+Archives are always recoverable via `sinoclaw curator restore <name>`, but it's easier to pin up-front than to chase down a consolidation after the fact.
 :::
 
-If you want to protect a specific skill from ever being touched — for example a hand-authored skill you rely on — use `hermes curator pin <name>`. See the next section.
+If you want to protect a specific skill from ever being touched — for example a hand-authored skill you rely on — use `sinoclaw curator pin <name>`. See the next section.
 
 ## Pinning a skill
 
 Pinning protects a skill from deletion — both the curator's automated archive passes and the agent's `skill_manage(action="delete")` tool call. Once a skill is pinned:
 
 - The **curator** skips it during auto-transitions (`active → stale → archived`), and its LLM review pass is instructed to leave it alone.
-- The **agent's `skill_manage` tool** refuses `delete` on it, pointing the user at `hermes curator unpin <name>`. Patches and edits still go through, so the agent can improve a pinned skill's content as pitfalls come up without a pin/unpin/re-pin dance.
+- The **agent's `skill_manage` tool** refuses `delete` on it, pointing the user at `sinoclaw curator unpin <name>`. Patches and edits still go through, so the agent can improve a pinned skill's content as pitfalls come up without a pin/unpin/re-pin dance.
 
 Pin and unpin with:
 
@@ -171,7 +171,7 @@ hermes curator unpin <skill>
 
 The flag is stored as `"pinned": true` on the skill's entry in `~/.sinoclaw/skills/.usage.json`, so it survives across sessions.
 
-Only **agent-created** skills can be pinned — bundled and hub-installed skills are never subject to curator mutation in the first place, and `hermes curator pin` will refuse with an explanatory message if you try.
+Only **agent-created** skills can be pinned — bundled and hub-installed skills are never subject to curator mutation in the first place, and `sinoclaw curator pin` will refuse with an explanatory message if you try.
 
 If you want a stronger guarantee than "no deletion" — for instance, freezing a skill's content entirely while the agent still reads it — edit `~/.sinoclaw/skills/<name>/SKILL.md` directly with your editor. The pin guards tool-driven deletion, not your own filesystem access.
 
@@ -232,7 +232,7 @@ This moves the skill back from `~/.sinoclaw/skills/.archive/` to the active tree
 The curator is on by default. To turn it off:
 
 - **For one profile only:** edit `~/.sinoclaw/config.yaml` (or the active profile's config) and set `curator.enabled: false`.
-- **For just one run:** `hermes curator pause` — the pause persists across sessions; use `resume` to re-enable.
+- **For just one run:** `sinoclaw curator pause` — the pause persists across sessions; use `resume` to re-enable.
 
 The curator also refuses to run if `min_idle_hours` hasn't elapsed, so on an active dev machine it naturally only runs during quiet stretches.
 

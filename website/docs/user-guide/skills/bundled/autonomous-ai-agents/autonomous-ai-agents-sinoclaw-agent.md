@@ -339,7 +339,7 @@ Profiles use `~/.sinoclaw/profiles/<name>/` with the same layout.
 
 ### Config Sections
 
-Edit with `hermes config edit` or `hermes config set section.key value`.
+Edit with `sinoclaw config edit` or `sinoclaw config set section.key value`.
 
 | Section | Key options |
 |---------|-------------|
@@ -359,14 +359,14 @@ Full config reference: https://sinoclaw-agent.nousresearch.com/docs/user-guide/c
 
 ### Providers
 
-20+ providers supported. Set via `hermes model` or `sinoclaw setup`.
+20+ providers supported. Set via `sinoclaw model` or `sinoclaw setup`.
 
 | Provider | Auth | Key env var |
 |----------|------|-------------|
 | OpenRouter | API key | `OPENROUTER_API_KEY` |
 | Anthropic | API key | `ANTHROPIC_API_KEY` |
-| Nous Portal | OAuth | `hermes auth` |
-| OpenAI Codex | OAuth | `hermes auth` |
+| Nous Portal | OAuth | `sinoclaw auth` |
+| OpenAI Codex | OAuth | `sinoclaw auth` |
 | GitHub Copilot | Token | `COPILOT_GITHUB_TOKEN` |
 | Google Gemini | API key | `GOOGLE_API_KEY` or `GEMINI_API_KEY` |
 | DeepSeek | API key | `DEEPSEEK_API_KEY` |
@@ -382,7 +382,7 @@ Full config reference: https://sinoclaw-agent.nousresearch.com/docs/user-guide/c
 | AI Gateway (Vercel) | API key | `AI_GATEWAY_API_KEY` |
 | OpenCode Zen | API key | `OPENCODE_ZEN_API_KEY` |
 | OpenCode Go | API key | `OPENCODE_GO_API_KEY` |
-| Qwen OAuth | OAuth | `hermes login --provider qwen-oauth` |
+| Qwen OAuth | OAuth | `sinoclaw login --provider qwen-oauth` |
 | Custom endpoint | Config | `model.base_url` + `model.api_key` in config.yaml |
 | GitHub Copilot ACP | External | `COPILOT_CLI_PATH` or Copilot CLI |
 
@@ -390,7 +390,7 @@ Full provider docs: https://sinoclaw-agent.nousresearch.com/docs/integrations/pr
 
 ### Toolsets
 
-Enable/disable via `hermes tools` (interactive) or `hermes tools enable/disable NAME`.
+Enable/disable via `sinoclaw tools` (interactive) or `sinoclaw tools enable/disable NAME`.
 
 | Toolset | What it provides |
 |---------|-----------------|
@@ -431,7 +431,7 @@ Secret redaction is **off by default** — tool output (terminal stdout, `read_f
 hermes config set security.redact_secrets true       # enable globally
 ```
 
-**Restart required.** `security.redact_secrets` is snapshotted at import time — toggling it mid-session (e.g. via `export SINOCLAW_REDACT_SECRETS=true` from a tool call) will NOT take effect for the running process. Tell the user to run `hermes config set security.redact_secrets true` in a terminal, then start a new session. This is deliberate — it prevents an LLM from flipping the toggle on itself mid-task.
+**Restart required.** `security.redact_secrets` is snapshotted at import time — toggling it mid-session (e.g. via `export SINOCLAW_REDACT_SECRETS=true` from a tool call) will NOT take effect for the running process. Tell the user to run `sinoclaw config set security.redact_secrets true` in a terminal, then start a new session. This is deliberate — it prevents an LLM from flipping the toggle on itself mid-task.
 
 Disable again with:
 ```bash
@@ -461,7 +461,7 @@ hermes config set approvals.mode off         # bypass everything (not recommende
 ```
 
 Per-invocation bypass without changing config:
-- `hermes --yolo …`
+- `sinoclaw --yolo …`
 - `export SINOCLAW_YOLO_MODE=1`
 
 Note: YOLO / `approvals.mode: off` does NOT turn off secret redaction. They are independent.
@@ -472,7 +472,7 @@ Some shell-hook integrations require explicit allowlisting before they fire. Man
 
 ### Disabling the web/browser/image-gen tools
 
-To keep the model away from network or media tools entirely, open `hermes tools` and toggle per-platform. Takes effect on next session (`/reset`). See the Tools & Skills section above.
+To keep the model away from network or media tools entirely, open `sinoclaw tools` and toggle per-platform. Takes effect on next session (`/reset`). See the Tools & Skills section above.
 
 ---
 
@@ -514,7 +514,7 @@ Voice commands: `/voice on` (voice-to-voice), `/voice tts` (always voice), `/voi
 
 ## Spawning Additional Hermes Instances
 
-Run additional Hermes processes as fully independent subprocesses — separate sessions, tools, and environments.
+Run additional Sinoclaw processes as fully independent subprocesses — separate sessions, tools, and environments.
 
 ### When to Use This vs delegate_task
 
@@ -587,7 +587,7 @@ terminal(command="tmux new-session -d -s resumed 'hermes --resume 20260225_14305
 - **Prefer `delegate_task` for quick subtasks** — less overhead than spawning a full process
 - **Use `-w` (worktree mode)** when spawning agents that edit code — prevents git conflicts
 - **Set timeouts** for one-shot mode — complex tasks can take 5-10 minutes
-- **Use `hermes chat -q` for fire-and-forget** — no PTY needed
+- **Use `sinoclaw chat -q` for fire-and-forget** — no PTY needed
 - **Use tmux for interactive sessions** — raw PTY mode has `\r` vs `\n` issues with prompt_toolkit
 - **For scheduled tasks**, use the `cronjob` tool instead of spawning — handles delivery and retry
 
@@ -601,15 +601,15 @@ terminal(command="tmux new-session -d -s resumed 'hermes --resume 20260225_14305
 3. In gateway: `/restart`. In CLI: exit and relaunch.
 
 ### Tool not available
-1. `hermes tools` — check if toolset is enabled for your platform
+1. `sinoclaw tools` — check if toolset is enabled for your platform
 2. Some tools need env vars (check `.env`)
 3. `/reset` after enabling tools
 
 ### Model/provider issues
-1. `hermes doctor` — check config and dependencies
-2. `hermes login` — re-authenticate OAuth providers
+1. `sinoclaw doctor` — check config and dependencies
+2. `sinoclaw login` — re-authenticate OAuth providers
 3. Check `.env` has the right API key
-4. **Copilot 403**: `gh auth login` tokens do NOT work for Copilot API. You must use the Copilot-specific OAuth device code flow via `hermes model` → GitHub Copilot.
+4. **Copilot 403**: `gh auth login` tokens do NOT work for Copilot API. You must use the Copilot-specific OAuth device code flow via `sinoclaw model` → GitHub Copilot.
 
 ### Changes not taking effect
 - **Tools/skills:** `/reset` starts a new session with updated toolset
@@ -617,9 +617,9 @@ terminal(command="tmux new-session -d -s resumed 'hermes --resume 20260225_14305
 - **Code changes:** Restart the CLI or gateway process
 
 ### Skills not showing
-1. `hermes skills list` — verify installed
-2. `hermes skills config` — check platform enablement
-3. Load explicitly: `/skill name` or `hermes -s name`
+1. `sinoclaw skills list` — verify installed
+2. `sinoclaw skills config` — check platform enablement
+3. Load explicitly: `/skill name` or `sinoclaw -s name`
 
 ### Gateway issues
 Check logs first:
@@ -650,20 +650,20 @@ hermes config set auxiliary.vision.model <model_name>
 
 | Looking for... | Location |
 |----------------|----------|
-| Config options | `hermes config edit` or [Configuration docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/configuration) |
-| Available tools | `hermes tools list` or [Tools reference](https://sinoclaw-agent.nousresearch.com/docs/reference/tools-reference) |
+| Config options | `sinoclaw config edit` or [Configuration docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/configuration) |
+| Available tools | `sinoclaw tools list` or [Tools reference](https://sinoclaw-agent.nousresearch.com/docs/reference/tools-reference) |
 | Slash commands | `/help` in session or [Slash commands reference](https://sinoclaw-agent.nousresearch.com/docs/reference/slash-commands) |
-| Skills catalog | `hermes skills browse` or [Skills catalog](https://sinoclaw-agent.nousresearch.com/docs/reference/skills-catalog) |
-| Provider setup | `hermes model` or [Providers guide](https://sinoclaw-agent.nousresearch.com/docs/integrations/providers) |
+| Skills catalog | `sinoclaw skills browse` or [Skills catalog](https://sinoclaw-agent.nousresearch.com/docs/reference/skills-catalog) |
+| Provider setup | `sinoclaw model` or [Providers guide](https://sinoclaw-agent.nousresearch.com/docs/integrations/providers) |
 | Platform setup | `sinoclaw gateway setup` or [Messaging docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/messaging/) |
-| MCP servers | `hermes mcp list` or [MCP guide](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/mcp) |
-| Profiles | `hermes profile list` or [Profiles docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/profiles) |
-| Cron jobs | `hermes cron list` or [Cron docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/cron) |
-| Memory | `hermes memory status` or [Memory docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/memory) |
-| Env variables | `hermes config env-path` or [Env vars reference](https://sinoclaw-agent.nousresearch.com/docs/reference/environment-variables) |
-| CLI commands | `hermes --help` or [CLI reference](https://sinoclaw-agent.nousresearch.com/docs/reference/cli-commands) |
+| MCP servers | `sinoclaw mcp list` or [MCP guide](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/mcp) |
+| Profiles | `sinoclaw profile list` or [Profiles docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/profiles) |
+| Cron jobs | `sinoclaw cron list` or [Cron docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/cron) |
+| Memory | `sinoclaw memory status` or [Memory docs](https://sinoclaw-agent.nousresearch.com/docs/user-guide/features/memory) |
+| Env variables | `sinoclaw config env-path` or [Env vars reference](https://sinoclaw-agent.nousresearch.com/docs/reference/environment-variables) |
+| CLI commands | `sinoclaw --help` or [CLI reference](https://sinoclaw-agent.nousresearch.com/docs/reference/cli-commands) |
 | Gateway logs | `~/.sinoclaw/logs/gateway.log` |
-| Session files | `~/.sinoclaw/sessions/` or `hermes sessions browse` |
+| Session files | `~/.sinoclaw/sessions/` or `sinoclaw sessions browse` |
 | Source code | `~/.sinoclaw/sinoclaw-agent/` |
 
 ---

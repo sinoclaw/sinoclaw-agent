@@ -265,7 +265,7 @@ class TestHistoryDisplay:
             {
                 "id": "20260401_201329_d85961",
                 "title": "Checking Running Sinoclaw Agent",
-                "preview": "check running gateways for hermes agent",
+                "preview": "check running gateways for sinoclaw agent",
                 "last_active": 0,
             },
         ]
@@ -293,7 +293,7 @@ class TestHistoryDisplay:
             {
                 "id": "20260401_201329_d85961",
                 "title": "Checking Running Sinoclaw Agent",
-                "preview": "check running gateways for hermes agent",
+                "preview": "check running gateways for sinoclaw agent",
                 "last_active": 0,
             },
         ]

@@ -55,7 +55,7 @@ Field notes:
 
 | When | What happens |
 |---|---|
-| `/model` or `hermes model` | Fetches if disk cache is stale, else uses cache |
+| `/model` or `sinoclaw model` | Fetches if disk cache is stale, else uses cache |
 | Disk cache fresh (< TTL) | No network hit |
 | Network failure with cache | Silent fallback to cache, one log line |
 | Network failure, no cache | Silent fallback to in-repo snapshot |

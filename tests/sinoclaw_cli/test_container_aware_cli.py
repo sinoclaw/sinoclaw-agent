@@ -35,7 +35,7 @@ def container_env(tmp_path, monkeypatch):
         "backend=podman\n"
         "container_name=sinoclaw-agent\n"
         "exec_user=hermes\n"
-        "sinoclaw_bin=/data/current-package/bin/hermes\n"
+        "sinoclaw_bin=/data/current-package/bin/sinoclaw\n"
     )
     return sinoclaw_home
 
@@ -49,7 +49,7 @@ def test_get_container_exec_info_returns_metadata(container_env):
     assert info["backend"] == "podman"
     assert info["container_name"] == "sinoclaw-agent"
     assert info["exec_user"] == "hermes"
-    assert info["sinoclaw_bin"] == "/data/current-package/bin/hermes"
+    assert info["sinoclaw_bin"] == "/data/current-package/bin/sinoclaw"
 
 
 def test_get_container_exec_info_none_inside_container(container_env):
@@ -114,7 +114,7 @@ def test_get_container_exec_info_defaults():
         assert info["backend"] == "docker"
         assert info["container_name"] == "sinoclaw-agent"
         assert info["exec_user"] == "hermes"
-        assert info["sinoclaw_bin"] == "/data/current-package/bin/hermes"
+        assert info["sinoclaw_bin"] == "/data/current-package/bin/sinoclaw"
 
 
 def test_get_container_exec_info_docker_backend(container_env):
@@ -132,7 +132,7 @@ def test_get_container_exec_info_docker_backend(container_env):
     assert info["backend"] == "docker"
     assert info["container_name"] == "sinoclaw-custom"
     assert info["exec_user"] == "myuser"
-    assert info["sinoclaw_bin"] == "/opt/hermes/bin/hermes"
+    assert info["sinoclaw_bin"] == "/opt/hermes/bin/sinoclaw"
 
 
 def test_get_container_exec_info_crashes_on_permission_error(container_env):
@@ -154,7 +154,7 @@ def docker_container_info():
         "backend": "docker",
         "container_name": "sinoclaw-agent",
         "exec_user": "hermes",
-        "sinoclaw_bin": "/data/current-package/bin/hermes",
+        "sinoclaw_bin": "/data/current-package/bin/sinoclaw",
     }
 
 
@@ -164,7 +164,7 @@ def podman_container_info():
         "backend": "podman",
         "container_name": "sinoclaw-agent",
         "exec_user": "hermes",
-        "sinoclaw_bin": "/data/current-package/bin/hermes",
+        "sinoclaw_bin": "/data/current-package/bin/sinoclaw",
     }
 
 
@@ -196,7 +196,7 @@ def test_exec_in_container_calls_execvp(docker_container_info):
     assert "TERM=xterm-256color" in e_values
     assert "LANG=en_US.UTF-8" in e_values
     assert "sinoclaw-agent" in cmd
-    assert "/data/current-package/bin/hermes" in cmd
+    assert "/data/current-package/bin/sinoclaw" in cmd
     assert "chat" in cmd
 
 
