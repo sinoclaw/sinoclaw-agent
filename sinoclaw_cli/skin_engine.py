@@ -1,4 +1,4 @@
-"""Hermes CLI skin/theme engine.
+"""Sinoclaw CLI skin/theme engine.
 
 A data-driven skin system that lets users customize the CLI's visual appearance.
 Skins are defined as YAML files in ~/.sinoclaw/skins/ or as built-in presets.
@@ -68,7 +68,7 @@ All fields are optional. Missing values inherit from the ``default`` skin.
       agent_name: "Sinoclaw Agent"          # Banner title, status display
       welcome: "Welcome message"          # Shown at CLI startup
       goodbye: "Goodbye! ⚕"              # Shown on exit
-      response_label: " ⚕ Hermes "       # Response box header label
+      response_label: " ⚕ Sinoclaw "       # Response box header label
       prompt_symbol: "❯"                 # Input prompt symbol (bare token; renderers add trailing space)
       help_header: "(^_^)? Commands"      # /help header text
 
@@ -98,7 +98,7 @@ USAGE
 BUILT-IN SKINS
 ==============
 
-- ``default`` — Classic Hermes gold/kawaii (the current look)
+- ``default`` — Classic Sinoclaw gold/kawaii (the current look)
 - ``ares``    — Crimson/bronze war-god theme with custom spinner wings
 - ``mono``    — Clean grayscale monochrome
 - ``slate``   — Cool blue developer-focused theme
@@ -164,7 +164,7 @@ class SkinConfig:
 _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     "default": {
         "name": "default",
-        "description": "Classic Hermes — gold and kawaii",
+        "description": "Classic Sinoclaw — gold and kawaii",
         "colors": {
             "banner_border": "#CD7F32",
             "banner_title": "#FFD700",
@@ -190,7 +190,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "agent_name": "Sinoclaw Agent",
             "welcome": "Welcome to Sinoclaw Agent! Type your message or /help for commands.",
             "goodbye": "Goodbye! ⚕",
-            "response_label": " ⚕ Hermes ",
+            "response_label": " ⚕ Sinoclaw ",
             "prompt_symbol": "❯",
             "help_header": "(^_^)? Available Commands",
         },
@@ -301,7 +301,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "agent_name": "Sinoclaw Agent",
             "welcome": "Welcome to Sinoclaw Agent! Type your message or /help for commands.",
             "goodbye": "Goodbye! ⚕",
-            "response_label": " ⚕ Hermes ",
+            "response_label": " ⚕ Sinoclaw ",
             "prompt_symbol": "❯",
             "help_header": "[?] Available Commands",
         },
@@ -340,7 +340,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "agent_name": "Sinoclaw Agent",
             "welcome": "Welcome to Sinoclaw Agent! Type your message or /help for commands.",
             "goodbye": "Goodbye! ⚕",
-            "response_label": " ⚕ Hermes ",
+            "response_label": " ⚕ Sinoclaw ",
             "prompt_symbol": "❯",
             "help_header": "(^_^)? Available Commands",
         },
@@ -377,7 +377,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "agent_name": "Sinoclaw Agent",
             "welcome": "Welcome to Sinoclaw Agent! Type your message or /help for commands.",
             "goodbye": "Goodbye! ⚕",
-            "response_label": " ⚕ Hermes ",
+            "response_label": " ⚕ Sinoclaw ",
             "prompt_symbol": "❯",
             "help_header": "[?] Available Commands",
         },
@@ -414,7 +414,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "agent_name": "Sinoclaw Agent",
             "welcome": "Welcome to Sinoclaw Agent! Type your message or /help for commands.",
             "goodbye": "Goodbye! \u2695",
-            "response_label": " \u2695 Hermes ",
+            "response_label": " \u2695 Sinoclaw ",
             "prompt_symbol": "\u276f",
             "help_header": "(^_^)? Available Commands",
         },
