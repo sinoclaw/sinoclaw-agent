@@ -39,7 +39,7 @@ jobs:
         id: flake
         if: runner.os == 'Linux'
         continue-on-error: true
-        run: nix flake check --print-build-logs
+        run: nix flake check --print-build-logs --option use-daemon false
 
       - name: Clear stale nix derivation cache
         if: runner.os == 'Linux'
@@ -57,7 +57,7 @@ jobs:
         id: build
         if: runner.os == 'Linux'
         continue-on-error: true
-        run: nix build --print-build-logs
+        run: nix build --print-build-logs --option use-daemon false
 
       # When the real Nix build fails, run a targeted diagnostic to see if
       # the failure is specifically a stale npm lockfile hash in one of the
