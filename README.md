@@ -14,7 +14,7 @@
 
 **The self-improving AI agent built by [Nous Research](https://nousresearch.com).** It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. Run it on a $5 VPS, a GPU cluster, or serverless infrastructure that costs nearly nothing when idle. It's not tied to your laptop — talk to it from Telegram while it works on a cloud VM.
 
-Use any model you want — [Nous Portal](https://portal.nousresearch.com), [OpenRouter](https://openrouter.ai) (200+ models), [NVIDIA NIM](https://build.nvidia.com) (Nemotron), [Xiaomi MiMo](https://platform.xiaomimimo.com), [z.ai/GLM](https://z.ai), [Kimi/Moonshot](https://platform.moonshot.ai), [MiniMax](https://www.minimax.io), [Hugging Face](https://huggingface.co), OpenAI, or your own endpoint. Switch with `hermes model` — no code changes, no lock-in.
+Use any model you want — [Nous Portal](https://portal.nousresearch.com), [OpenRouter](https://openrouter.ai) (200+ models), [NVIDIA NIM](https://build.nvidia.com) (Nemotron), [Xiaomi MiMo](https://platform.xiaomimimo.com), [z.ai/GLM](https://z.ai), [Kimi/Moonshot](https://platform.moonshot.ai), [MiniMax](https://www.minimax.io), [Hugging Face](https://huggingface.co), OpenAI, or your own endpoint. Switch with `sinoclaw model` — no code changes, no lock-in.
 
 <table>
 <tr><td><b>A real terminal interface</b></td><td>Full TUI with multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output.</td></tr>
@@ -46,19 +46,19 @@ Run this in PowerShell:
 irm https://raw.githubusercontent.com/sinoclaw/sinoclaw-agent/main/scripts/install.ps1 | iex
 ```
 
-The installer handles everything: uv, Python 3.11, Node.js, ripgrep, ffmpeg, **and a portable Git Bash** (MinGit, unpacked to `%LOCALAPPDATA%\hermes\git` — no admin required, completely isolated from any system Git install).  Hermes uses this bundled Git Bash to run shell commands.
+The installer handles everything: uv, Python 3.11, Node.js, ripgrep, ffmpeg, **and a portable Git Bash** (MinGit, unpacked to `%LOCALAPPDATA%\sinoclaw\git` — no admin required, completely isolated from any system Git install).  Sinoclaw uses this bundled Git Bash to run shell commands.
 
 If you already have Git installed, the installer detects it and uses that instead.  Otherwise a ~45MB MinGit download is all you need — it won't touch or interfere with any system Git.
 
-> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://sinoclaw-agent.nousresearch.com/docs/getting-started/termux). On Termux, Hermes installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
+> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://sinoclaw-agent.nousresearch.com/docs/getting-started/termux). On Termux, Sinoclaw installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
 >
-> **Windows:** Native Windows is supported as an **early beta** — the PowerShell one-liner above installs everything, but expect rough edges and please file issues when you hit them. If you'd rather use WSL2 (our most battle-tested Windows path), the Linux command works there too. Native Windows install lives under `%LOCALAPPDATA%\hermes`; WSL2 installs under `~/.sinoclaw` as on Linux.  The only Hermes feature that currently needs WSL2 specifically is the browser-based dashboard chat pane (it uses a POSIX PTY — classic CLI and gateway both run natively).
+> **Windows:** Native Windows is supported as an **early beta** — the PowerShell one-liner above installs everything, but expect rough edges and please file issues when you hit them. If you'd rather use WSL2 (our most battle-tested Windows path), the Linux command works there too. Native Windows install lives under `%LOCALAPPDATA%\sinoclaw`; WSL2 installs under `~/.sinoclaw` as on Linux.  The only Sinoclaw feature that currently needs WSL2 specifically is the browser-based dashboard chat pane (it uses a POSIX PTY — classic CLI and gateway both run natively).
 
 After installation:
 
 ```bash
 source ~/.bashrc    # reload shell (or: source ~/.zshrc)
-hermes              # start chatting!
+sinoclaw              # start chatting!
 ```
 
 ---
@@ -66,26 +66,26 @@ hermes              # start chatting!
 ## Getting Started
 
 ```bash
-hermes              # Interactive CLI — start a conversation
-hermes model        # Choose your LLM provider and model
-hermes tools        # Configure which tools are enabled
-hermes config set   # Set individual config values
+sinoclaw              # Interactive CLI — start a conversation
+sinoclaw model        # Choose your LLM provider and model
+sinoclaw tools        # Configure which tools are enabled
+sinoclaw config set   # Set individual config values
 sinoclaw gateway      # Start the messaging gateway (Telegram, Discord, etc.)
 sinoclaw setup        # Run the full setup wizard (configures everything at once)
-hermes claw migrate # Migrate from OpenClaw (if coming from OpenClaw)
-hermes update       # Update to the latest version
-hermes doctor       # Diagnose any issues
+sinoclaw claw migrate # Migrate from OpenClaw (if coming from OpenClaw)
+sinoclaw update       # Update to the latest version
+sinoclaw doctor       # Diagnose any issues
 ```
 
 📖 **[Full documentation →](https://sinoclaw-agent.nousresearch.com/docs/)**
 
 ## CLI vs Messaging Quick Reference
 
-Hermes has two entry points: start the terminal UI with `hermes`, or run the gateway and talk to it from Telegram, Discord, Slack, WhatsApp, Signal, or Email. Once you're in a conversation, many slash commands are shared across both interfaces.
+Sinoclaw has two entry points: start the terminal UI with `sinoclaw`, or run the gateway and talk to it from Telegram, Discord, Slack, WhatsApp, Signal, or Email. Once you're in a conversation, many slash commands are shared across both interfaces.
 
 | Action | CLI | Messaging platforms |
 |---------|-----|---------------------|
-| Start chatting | `hermes` | Run `sinoclaw gateway setup` + `sinoclaw gateway start`, then send the bot a message |
+| Start chatting | `sinoclaw` | Run `sinoclaw gateway setup` + `sinoclaw gateway start`, then send the bot a message |
 | Start fresh conversation | `/new` or `/reset` | `/new` or `/reset` |
 | Change model | `/model [provider:model]` | `/model [provider:model]` |
 | Set a personality | `/personality [name]` | `/personality [name]` |
@@ -125,17 +125,17 @@ All documentation lives at **[sinoclaw-agent.nousresearch.com/docs](https://sino
 
 ## Migrating from OpenClaw
 
-If you're coming from OpenClaw, Hermes can automatically import your settings, memories, skills, and API keys.
+If you're coming from OpenClaw, Sinoclaw can automatically import your settings, memories, skills, and API keys.
 
 **During first-time setup:** The setup wizard (`sinoclaw setup`) automatically detects `~/.openclaw` and offers to migrate before configuration begins.
 
 **Anytime after install:**
 
 ```bash
-hermes claw migrate              # Interactive migration (full preset)
-hermes claw migrate --dry-run    # Preview what would be migrated
-hermes claw migrate --preset user-data   # Migrate without secrets
-hermes claw migrate --overwrite  # Overwrite existing conflicts
+sinoclaw claw migrate              # Interactive migration (full preset)
+sinoclaw claw migrate --dry-run    # Preview what would be migrated
+sinoclaw claw migrate --preset user-data   # Migrate without secrets
+sinoclaw claw migrate --overwrite  # Overwrite existing conflicts
 ```
 
 What gets imported:
@@ -148,7 +148,7 @@ What gets imported:
 - **TTS assets** — workspace audio files
 - **Workspace instructions** — AGENTS.md (with `--workspace-target`)
 
-See `hermes claw migrate --help` for all options, or use the `openclaw-migration` skill for an interactive agent-guided migration with dry-run previews.
+See `sinoclaw claw migrate --help` for all options, or use the `openclaw-migration` skill for an interactive agent-guided migration with dry-run previews.
 
 ---
 
@@ -156,13 +156,13 @@ See `hermes claw migrate --help` for all options, or use the `openclaw-migration
 
 We welcome contributions! See the [Contributing Guide](https://sinoclaw-agent.nousresearch.com/docs/developer-guide/contributing) for development setup, code style, and PR process.
 
-Quick start for contributors — clone and go with `setup-hermes.sh`:
+Quick start for contributors — clone and go with `setup-sinoclaw.sh`:
 
 ```bash
 git clone https://github.com/sinoclaw/sinoclaw-agent.git
 cd sinoclaw-agent
-./setup-hermes.sh     # installs uv, creates venv, installs .[all], symlinks ~/.local/bin/hermes
-./hermes              # auto-detects the venv, no need to `source` first
+./setup-sinoclaw.sh     # installs uv, creates venv, installs .[all], symlinks ~/.local/bin/sinoclaw
+./sinoclaw              # auto-detects the venv, no need to `source` first
 ```
 
 Manual path (equivalent to the above):
