@@ -93,9 +93,9 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           set -e
           export HOME=$(mktemp -d)
 
-          echo "=== Checking sinoclaw-agent --help ==="
-          ${sinoclaw-agent}/bin/sinoclaw-agent --help 2>&1 | grep -q "gateway" || (echo "FAIL: gateway subcommand missing"; exit 1)
-          ${sinoclaw-agent}/bin/sinoclaw-agent --help 2>&1 | grep -q "config" || (echo "FAIL: config subcommand missing"; exit 1)
+          echo "=== Checking sinoclaw --help ==="
+          ${sinoclaw-agent}/bin/sinoclaw --help 2>&1 | grep -q "gateway" || (echo "FAIL: gateway subcommand missing"; exit 1)
+          ${sinoclaw-agent}/bin/sinoclaw --help 2>&1 | grep -q "config" || (echo "FAIL: config subcommand missing"; exit 1)
           echo "PASS: All subcommands accessible"
 
           echo "=== All CLI checks passed ==="

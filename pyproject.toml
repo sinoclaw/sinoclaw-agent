@@ -164,8 +164,8 @@ all = [
 ]
 
 [project.scripts]
+sinoclaw = "sinoclaw_cli.main:main"
 sinoclaw-agent = "run_agent:main"
-sinoclaw = "run_agent:main"
 sinoclaw-acp = "acp_adapter.entry:main"
 
 [tool.setuptools]
