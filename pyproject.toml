@@ -82,6 +82,7 @@ sms = ["aiohttp>=3.9.0,<4"]
 # to it, which is already provided by the `mcp` extra.
 computer-use = ["mcp>=1.2.0,<2"]
 acp = ["agent-client-protocol>=0.9.0,<1.0"]
+mistral = ["mistralai>=2.3.0,<3"]
 bedrock = ["boto3>=1.35.0,<2"]
 termux = [
   # Baseline Android / Termux path for reliable fresh installs.
@@ -108,6 +109,7 @@ termux-all = [
   "sinoclaw-agent[dingtalk]",
   "sinoclaw-agent[feishu]",
   "sinoclaw-agent[google]",
+  "sinoclaw-agent[mistral]",
   "sinoclaw-agent[bedrock]",
   "sinoclaw-agent[homeassistant]",
   "sinoclaw-agent[sms]",
@@ -156,6 +158,7 @@ all = [
   "sinoclaw-agent[dingtalk]",
   "sinoclaw-agent[feishu]",
   "sinoclaw-agent[google]",
+  "sinoclaw-agent[mistral]",
   "sinoclaw-agent[bedrock]",
   "sinoclaw-agent[web]",
 ]
