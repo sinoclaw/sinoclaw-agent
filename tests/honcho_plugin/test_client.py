@@ -22,8 +22,8 @@ from plugins.memory.honcho.client import (
 class TestHonchoClientConfigDefaults:
     def test_default_values(self):
         config = HonchoClientConfig()
-        assert config.host == "hermes"
-        assert config.workspace_id == "hermes"
+        assert config.host == "sinoclaw"
+        assert config.workspace_id == "sinoclaw"
         assert config.api_key is None
         assert config.environment == "production"
         assert config.timeout is None
@@ -109,7 +109,7 @@ class TestFromGlobalConfig:
             "sessionPeerPrefix": True,
             "sessions": {"/home/user/proj": "my-session"},
             "hosts": {
-                "hermes": {
+                "sinoclaw": {
                     "workspace": "override-ws",
                     "aiPeer": "override-ai",
                 }
@@ -137,7 +137,7 @@ class TestFromGlobalConfig:
             "workspace": "root-ws",
             "aiPeer": "root-ai",
             "hosts": {
-                "hermes": {
+                "sinoclaw": {
                     "workspace": "host-ws",
                     "aiPeer": "host-ai",
                 }
@@ -194,7 +194,7 @@ class TestFromGlobalConfig:
         config_file.write_text(json.dumps({
             "apiKey": "key",
             "contextTokens": 1000,
-            "hosts": {"hermes": {"contextTokens": 2000}},
+            "hosts": {"sinoclaw": {"contextTokens": 2000}},
         }))
         config = HonchoClientConfig.from_global_config(config_path=config_file)
         assert config.context_tokens == 2000
@@ -205,7 +205,7 @@ class TestFromGlobalConfig:
         config_file.write_text(json.dumps({
             "apiKey": "key",
             "recallMode": "tools",
-            "hosts": {"hermes": {"recallMode": "context"}},
+            "hosts": {"sinoclaw": {"recallMode": "context"}},
         }))
         config = HonchoClientConfig.from_global_config(config_path=config_file)
         assert config.recall_mode == "context"
@@ -256,7 +256,7 @@ class TestFromGlobalConfig:
         config_file = tmp_path / "config.json"
         config_file.write_text(json.dumps({
             "baseUrl": "http://root:9000",
-            "hosts": {"hermes": {"baseUrl": "http://host-block:9001"}},
+            "hosts": {"sinoclaw": {"baseUrl": "http://host-block:9001"}},
         }))
 
         config = HonchoClientConfig.from_global_config(config_path=config_file)
@@ -340,7 +340,7 @@ class TestResolveSessionName:
 
 class TestResolveConfigPath:
     def test_prefers_sinoclaw_home_when_exists(self, tmp_path):
-        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home = tmp_path / "sinoclaw"
         sinoclaw_home.mkdir()
         local_cfg = sinoclaw_home / "honcho.json"
         local_cfg.write_text('{"apiKey": "local"}')
@@ -350,7 +350,7 @@ class TestResolveConfigPath:
         assert result == local_cfg
 
     def test_falls_back_to_global_when_no_local(self, tmp_path):
-        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home = tmp_path / "sinoclaw"
         sinoclaw_home.mkdir()
         # No honcho.json in SINOCLAW_HOME — also isolate ~/.sinoclaw so
         # the default-profile fallback doesn't hit the real filesystem.
@@ -375,7 +375,7 @@ class TestResolveConfigPath:
     def test_global_fallback_uses_home_at_call_time(self, tmp_path):
         fake_home = tmp_path / "fakehome"
         fake_home.mkdir()
-        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home = tmp_path / "sinoclaw"
         sinoclaw_home.mkdir()
 
         with patch.dict(os.environ, {"SINOCLAW_HOME": str(sinoclaw_home)}), \
@@ -384,7 +384,7 @@ class TestResolveConfigPath:
             assert resolve_config_path() == fake_home / ".honcho" / "config.json"
 
     def test_from_global_config_uses_local_path(self, tmp_path):
-        sinoclaw_home = tmp_path / "hermes"
+        sinoclaw_home = tmp_path / "sinoclaw"
         sinoclaw_home.mkdir()
         local_cfg = sinoclaw_home / "honcho.json"
         local_cfg.write_text(json.dumps({
@@ -501,7 +501,7 @@ class TestObservationModeMigration:
         cfg_file = tmp_path / "config.json"
         cfg_file.write_text(json.dumps({
             "apiKey": "k",
-            "hosts": {"hermes": {"enabled": True, "aiPeer": "hermes"}},
+            "hosts": {"sinoclaw": {"enabled": True, "aiPeer": "sinoclaw"}},
         }))
         cfg = HonchoClientConfig.from_global_config(config_path=cfg_file)
         assert cfg.observation_mode == "unified"
@@ -518,7 +518,7 @@ class TestObservationModeMigration:
         cfg_file = tmp_path / "config.json"
         cfg_file.write_text(json.dumps({
             "apiKey": "k",
-            "hosts": {"hermes": {"enabled": True, "observationMode": "directional"}},
+            "hosts": {"sinoclaw": {"enabled": True, "observationMode": "directional"}},
         }))
         cfg = HonchoClientConfig.from_global_config(config_path=cfg_file)
         assert cfg.observation_mode == "directional"
@@ -529,7 +529,7 @@ class TestObservationModeMigration:
         cfg_file.write_text(json.dumps({
             "apiKey": "k",
             "observationMode": "unified",
-            "hosts": {"hermes": {"enabled": True}},
+            "hosts": {"sinoclaw": {"enabled": True}},
         }))
         cfg = HonchoClientConfig.from_global_config(config_path=cfg_file)
         assert cfg.observation_mode == "unified"
@@ -539,7 +539,7 @@ class TestObservationModeMigration:
         cfg_file = tmp_path / "config.json"
         cfg_file.write_text(json.dumps({
             "apiKey": "k",
-            "hosts": {"hermes": {
+            "hosts": {"sinoclaw": {
                 "enabled": True,
                 "observation": {
                     "user": {"observeMe": True, "observeOthers": False},
@@ -569,7 +569,7 @@ class TestGetHonchoClient:
         cfg = HonchoClientConfig(
             api_key="test-key",
             timeout=91.0,
-            workspace_id="hermes",
+            workspace_id="sinoclaw",
             environment="production",
         )
 
@@ -588,7 +588,7 @@ class TestGetHonchoClient:
         fake_honcho = MagicMock(name="Honcho")
         cfg = HonchoClientConfig(
             api_key="test-key",
-            workspace_id="hermes",
+            workspace_id="sinoclaw",
             environment="production",
         )
 
@@ -610,7 +610,7 @@ class TestGetHonchoClient:
         fake_honcho = MagicMock(name="Honcho")
         cfg = HonchoClientConfig(
             api_key="test-key",
-            workspace_id="hermes",
+            workspace_id="sinoclaw",
             environment="production",
         )
 
@@ -630,7 +630,7 @@ class TestGetHonchoClient:
         fake_honcho = MagicMock(name="Honcho")
         cfg = HonchoClientConfig(
             api_key="test-key",
-            workspace_id="hermes",
+            workspace_id="sinoclaw",
             environment="production",
         )
 
@@ -795,7 +795,7 @@ class TestDialecticDepthParsing:
         config_file.write_text(json.dumps({
             "apiKey": "***",
             "dialecticDepth": 1,
-            "hosts": {"hermes": {"dialecticDepth": 3}},
+            "hosts": {"sinoclaw": {"dialecticDepth": 3}},
         }))
         config = HonchoClientConfig.from_global_config(config_path=config_file)
         assert config.dialectic_depth == 3
