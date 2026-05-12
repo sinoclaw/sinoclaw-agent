@@ -663,7 +663,7 @@ function Install-Repository {
             } catch {
                 Write-Err "Could not remove $InstallDir : $_"
                 Write-Info "Close any programs that might be using files in $InstallDir (editors,"
-                Write-Info "terminals, running hermes processes) and try again."
+                Write-Info "terminals, running sinoclaw processes) and try again."
                 throw
             }
         }
@@ -806,7 +806,7 @@ function Install-Dependencies {
     #         bedrock, dingtalk, feishu, modal, daytona, vercel).  Drops [rl]
     #         and [matrix] (linux-only) which are the usual failure culprits.
     # Tier 3: [web,mcp,cron,cli,messaging,dev] — the minimum we strongly
-    #         believe a user expects `hermes dashboard` / slash commands /
+    #         believe a user expects `sinoclaw dashboard` / slash commands /
     #         cron / messaging platforms to work out of the box.
     # Tier 4: bare `.` — last-resort so at least the core CLI launches.
     $installTiers = @(
@@ -832,7 +832,7 @@ function Install-Dependencies {
     }
 
     # Verify the dashboard deps specifically — they're the most common thing
-    # users hit and lazy-import errors from `hermes dashboard` are confusing.
+    # users hit and lazy-import errors from `sinoclaw dashboard` are confusing.
     # If tier 1 failed (the common case), [web] was still picked up by tiers
     # 2-3; only tier 4 leaves you without it.
     $pythonExe = if (-not $NoVenv) { "$InstallDir\venv\Scripts\python.exe" } else { (& $UvCmd python find $PythonVersion) }
@@ -843,11 +843,11 @@ function Install-Dependencies {
             if ($LASTEXITCODE -eq 0) { $webOk = $true }
         } catch { }
         if (-not $webOk) {
-            Write-Warn "fastapi/uvicorn not importable — `hermes dashboard` will not work."
+            Write-Warn "fastapi/uvicorn not importable — `sinoclaw dashboard` will not work."
             Write-Info "Attempting targeted install of [web] extra as last resort..."
             & $UvCmd pip install -e ".[web]"
             if ($LASTEXITCODE -eq 0) {
-                Write-Success "[web] extra installed; `hermes dashboard` should now work."
+                Write-Success "[web] extra installed; `sinoclaw dashboard` should now work."
             } else {
                 Write-Warn "Could not install [web] extra. Run manually: uv pip install --python `"$pythonExe`" `"fastapi>=0.104,<1`" `"uvicorn[standard]>=0.24,<1`""
             }
@@ -874,7 +874,7 @@ function Install-Dependencies {
 }
 
 function Set-PathVariable {
-    Write-Info "Setting up hermes command..."
+    Write-Info "Setting up sinoclaw command..."
     
     if ($NoVenv) {
         $hermesBin = "$InstallDir"
@@ -882,7 +882,7 @@ function Set-PathVariable {
         $hermesBin = "$InstallDir\venv\Scripts"
     }
     
-    # Add the venv Scripts dir to user PATH so hermes is globally available
+    # Add the venv Scripts dir to user PATH so sinoclaw is globally available
     # On Windows, the hermes.exe in venv\Scripts\ has the venv Python baked in
     $currentPath = [Environment]::GetEnvironmentVariable("Path", "User")
     
@@ -910,7 +910,7 @@ function Set-PathVariable {
     # Update current session
     $env:Path = "$hermesBin;$env:Path"
     
-    Write-Success "hermes command ready"
+    Write-Success "sinoclaw command ready"
 }
 
 function Copy-ConfigTemplates {
@@ -1029,7 +1029,7 @@ function Install-NodeDeps {
     $npmCmd = Get-Command npm -ErrorAction SilentlyContinue
     if (-not $npmCmd) {
         Write-Warn "npm not found on PATH — skipping Node.js dependencies."
-        Write-Info "Open a new PowerShell window and re-run 'hermes setup tools' later."
+        Write-Info "Open a new PowerShell window and re-run 'sinoclaw setup tools' later."
         return
     }
     $npmExe = $npmCmd.Source
@@ -1316,7 +1316,7 @@ function Start-GatewayIfConfigured {
     if ($whatsappEnabled -and -not (Test-Path $whatsappSession)) {
         Write-Host ""
         Write-Info "WhatsApp is enabled but not yet paired."
-        Write-Info "Running 'hermes whatsapp' to pair via QR code..."
+        Write-Info "Running 'sinoclaw whatsapp' to pair via QR code..."
         Write-Host ""
         $response = Read-Host "Pair WhatsApp now? [Y/n]"
         if ($response -eq "" -or $response -match "^[Yy]") {
@@ -1346,10 +1346,10 @@ function Start-GatewayIfConfigured {
             Write-Info "Logs: $logFile"
             Write-Info "To stop: close the gateway process from Task Manager"
         } catch {
-            Write-Warn "Failed to start gateway. Run manually: hermes gateway"
+            Write-Warn "Failed to start gateway. Run manually: sinoclaw gateway"
         }
     } else {
-        Write-Info "Skipped. Start the gateway later with: hermes gateway"
+        Write-Info "Skipped. Start the gateway later with: sinoclaw gateway"
     }
 }
 
@@ -1377,7 +1377,7 @@ function Write-Completion {
     Write-Host ""
     Write-Host "🚀 Commands:" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "   hermes              " -NoNewline -ForegroundColor Green
+    Write-Host "   sinoclaw              " -NoNewline -ForegroundColor Green
     Write-Host "Start chatting"
     Write-Host "   hermes setup        " -NoNewline -ForegroundColor Green
     Write-Host "Configure API keys & settings"
