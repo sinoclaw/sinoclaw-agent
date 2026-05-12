@@ -130,7 +130,7 @@ class TestBasePlatformTopicSessions:
             {
                 "chat_id": "-1001",
                 "content": "ack",
-                "reply_to": "1",
+                "reply_to": None,
                 "metadata": {"thread_id": "17585"},
             }
         ]

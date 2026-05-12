@@ -158,6 +158,7 @@ stdenv.mkDerivation {
       [
         "sinoclaw-agent"
         "sinoclaw-acp"
+        "sinoclaw"
       ]
     }
 
