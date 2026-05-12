@@ -290,14 +290,14 @@ def extract_skill_conditions(frontmatter: Dict[str, Any]) -> Dict[str, List]:
     # Handle cases where metadata is not a dict (e.g., a string from malformed YAML)
     if not isinstance(metadata, dict):
         metadata = {}
-    sinoclaw = metadata.get("hermes") or {}
-    if not isinstance(hermes, dict):
+    sinoclaw = metadata.get("sinoclaw") or {}
+    if not isinstance(sinoclaw, dict):
         sinoclaw = {}
     return {
-        "fallback_for_toolsets": hermes.get("fallback_for_toolsets", []),
-        "requires_toolsets": hermes.get("requires_toolsets", []),
-        "fallback_for_tools": hermes.get("fallback_for_tools", []),
-        "requires_tools": hermes.get("requires_tools", []),
+        "fallback_for_toolsets": sinoclaw.get("fallback_for_toolsets", []),
+        "requires_toolsets": sinoclaw.get("requires_toolsets", []),
+        "fallback_for_tools": sinoclaw.get("fallback_for_tools", []),
+        "requires_tools": sinoclaw.get("requires_tools", []),
     }
 
 
@@ -323,10 +323,10 @@ def extract_skill_config_vars(frontmatter: Dict[str, Any]) -> List[Dict[str, Any
     metadata = frontmatter.get("metadata")
     if not isinstance(metadata, dict):
         return []
-    sinoclaw = metadata.get("hermes")
-    if not isinstance(hermes, dict):
+    sinoclaw = metadata.get("sinoclaw")
+    if not isinstance(sinoclaw, dict):
         return []
-    raw = hermes.get("config")
+    raw = sinoclaw.get("config")
     if not raw:
         return []
     if isinstance(raw, dict):
