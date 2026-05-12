@@ -85,7 +85,7 @@ def test_save_conversation_writes_under_sinoclaw_home(sinoclaw_home, tmp_path, m
     # User-facing message must include the absolute path AND the resume hint.
     out = capsys.readouterr().out
     assert str(files[0]) in out, out
-    assert "hermes --resume 20260101_120000_abc123" in out, out
+    assert "sinoclaw --resume 20260101_120000_abc123" in out, out
 
 
 def test_save_conversation_empty_history_does_nothing(sinoclaw_home, capsys):
