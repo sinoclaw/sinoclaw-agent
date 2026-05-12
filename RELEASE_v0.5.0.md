@@ -37,7 +37,7 @@
 
 ### Provider & Model Improvements
 - `/model` command overhaul — extracted shared `switch_model()` pipeline for CLI and gateway, custom endpoint support, provider-aware routing ([#2795](https://github.com/NousResearch/sinoclaw-agent/pull/2795), [#2799](https://github.com/NousResearch/sinoclaw-agent/pull/2799))
-- Removed `/model` slash command from CLI and gateway in favor of `hermes model` subcommand ([#3080](https://github.com/NousResearch/sinoclaw-agent/pull/3080))
+- Removed `/model` slash command from CLI and gateway in favor of `sinoclaw model` subcommand ([#3080](https://github.com/NousResearch/sinoclaw-agent/pull/3080))
 - Preserve `custom` provider instead of silently remapping to `openrouter` ([#2792](https://github.com/NousResearch/sinoclaw-agent/pull/2792))
 - Read root-level `provider` and `base_url` from config.yaml into model config ([#3112](https://github.com/NousResearch/sinoclaw-agent/pull/3112))
 - Align Nous Portal model slugs with OpenRouter naming ([#3253](https://github.com/NousResearch/sinoclaw-agent/pull/3253))
@@ -94,7 +94,7 @@
 - **Remove mini-swe-agent dependency** — Inline Docker and Modal backends directly ([#2804](https://github.com/NousResearch/sinoclaw-agent/pull/2804))
 - **Replace swe-rex with native Modal SDK** for Modal backend ([#3538](https://github.com/NousResearch/sinoclaw-agent/pull/3538))
 - **Plugin lifecycle hooks** — `pre_llm_call`, `post_llm_call`, `on_session_start`, `on_session_end` now fire in the agent loop ([#3542](https://github.com/NousResearch/sinoclaw-agent/pull/3542))
-- Fix plugin toolsets invisible in `hermes tools` and standalone processes ([#3457](https://github.com/NousResearch/sinoclaw-agent/pull/3457))
+- Fix plugin toolsets invisible in `sinoclaw tools` and standalone processes ([#3457](https://github.com/NousResearch/sinoclaw-agent/pull/3457))
 - Consolidate `get_sinoclaw_home()` and `parse_reasoning_effort()` ([#3062](https://github.com/NousResearch/sinoclaw-agent/pull/3062))
 - Remove unused Sinoclaw-native PKCE OAuth flow ([#3107](https://github.com/NousResearch/sinoclaw-agent/pull/3107))
 - Remove ~100 unused imports across 55 files ([#3016](https://github.com/NousResearch/sinoclaw-agent/pull/3016))
@@ -148,7 +148,7 @@
 - Add media download retry to Mattermost, Slack, and base cache ([#3323](https://github.com/NousResearch/sinoclaw-agent/pull/3323))
 - Detect virtualenv path instead of hardcoding `venv/` ([#2797](https://github.com/NousResearch/sinoclaw-agent/pull/2797))
 - Use `TERMINAL_CWD` for context file discovery, not process cwd ([untagged commit](https://github.com/NousResearch/sinoclaw-agent))
-- Stop loading hermes repo AGENTS.md into gateway sessions (~10k wasted tokens) ([#2891](https://github.com/NousResearch/sinoclaw-agent/pull/2891))
+- Stop loading sinoclaw repo AGENTS.md into gateway sessions (~10k wasted tokens) ([#2891](https://github.com/NousResearch/sinoclaw-agent/pull/2891))
 
 ---
 
@@ -184,7 +184,7 @@
 ### Setup & Configuration
 - Use explicit key mapping for returning-user menu dispatch instead of positional index ([#3083](https://github.com/NousResearch/sinoclaw-agent/pull/3083))
 - Use `sys.executable` for pip in update commands to fix PEP 668 ([#3099](https://github.com/NousResearch/sinoclaw-agent/pull/3099))
-- Harden `hermes update` against diverged history, non-main branches, and gateway edge cases ([#3492](https://github.com/NousResearch/sinoclaw-agent/pull/3492))
+- Harden `sinoclaw update` against diverged history, non-main branches, and gateway edge cases ([#3492](https://github.com/NousResearch/sinoclaw-agent/pull/3492))
 - OpenClaw migration overwrites defaults and setup wizard skips imported sections — fixed ([#3282](https://github.com/NousResearch/sinoclaw-agent/pull/3282))
 - Stop recursive AGENTS.md walk, load top-level only ([#3110](https://github.com/NousResearch/sinoclaw-agent/pull/3110))
 - Add macOS Homebrew paths to browser and terminal PATH resolution ([#2713](https://github.com/NousResearch/sinoclaw-agent/pull/2713))
@@ -293,7 +293,7 @@
 - Fix Telegram "Message thread not found" killing progress messages ([#3390](https://github.com/NousResearch/sinoclaw-agent/pull/3390))
 - Fix OpenClaw migration overwriting defaults ([#3282](https://github.com/NousResearch/sinoclaw-agent/pull/3282))
 - Fix returning-user setup menu dispatching wrong section ([#3083](https://github.com/NousResearch/sinoclaw-agent/pull/3083))
-- Fix `hermes update` PEP 668 "externally-managed-environment" error ([#3099](https://github.com/NousResearch/sinoclaw-agent/pull/3099))
+- Fix `sinoclaw update` PEP 668 "externally-managed-environment" error ([#3099](https://github.com/NousResearch/sinoclaw-agent/pull/3099))
 - Fix subagents hitting `max_iterations` prematurely via shared budget ([#3004](https://github.com/NousResearch/sinoclaw-agent/pull/3004))
 - Fix YAML boolean handling for `tool_progress` config ([#3300](https://github.com/NousResearch/sinoclaw-agent/pull/3300))
 - Fix `config.get()` crashes on YAML null values ([#3377](https://github.com/NousResearch/sinoclaw-agent/pull/3377))

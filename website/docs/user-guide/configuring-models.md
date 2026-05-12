@@ -35,7 +35,7 @@ The picker has two columns:
 
 Type in the filter box to narrow by provider name, slug, or model ID.
 
-Pick a model, hit **Switch**, and Hermes writes it to `~/.sinoclaw/config.yaml` under the `model` section. **This applies to new sessions only** — any chat tab you already have open keeps running whatever model it started with. To hot-swap the current chat, use the `/model` slash command inside it.
+Pick a model, hit **Switch**, and Sinoclaw writes it to `~/.sinoclaw/config.yaml` under the `model` section. **This applies to new sessions only** — any chat tab you already have open keeps running whatever model it started with. To hot-swap the current chat, use the `/model` slash command inside it.
 
 ## Setting auxiliary models
 
@@ -55,7 +55,7 @@ Every auxiliary task defaults to `auto` — meaning Hermes uses your main model 
 | **Session Search** | When recall queries fan out — default max_concurrency is 3. A cheap model keeps the bill predictable. |
 | **Approval** | For `approval_mode: smart` — a fast/cheap model (haiku, flash, gpt-5-mini) decides whether to auto-approve low-risk commands. Expensive models here are waste. |
 | **Web Extract** | When you use `web_extract` heavily. Same logic as compression — summarization doesn't need reasoning. |
-| **Skills Hub** | `hermes skills search` uses this. Usually fine at `auto`. |
+| **Skills Hub** | `sinoclaw skills search` uses this. Usually fine at `auto`. |
 | **MCP** | MCP tool routing. Usually fine at `auto`. |
 
 ### Per-task override
@@ -82,7 +82,7 @@ Cards are badged with `main` or `aux · <task>` when they're currently assigned 
 
 ## What gets written to `config.yaml`
 
-When you save via the dashboard, Hermes writes to `~/.sinoclaw/config.yaml`:
+When you save via the dashboard, Sinoclaw writes to `~/.sinoclaw/config.yaml`:
 
 **Main model:**
 ```yaml
@@ -120,7 +120,7 @@ auxiliary:
 
 ## When does it take effect?
 
-- **CLI** (`hermes chat`): next `hermes chat` invocation.
+- **CLI** (`sinoclaw chat`): next `sinoclaw chat` invocation.
 - **Gateway** (Telegram, Discord, Slack, etc.): next *new* session. Existing sessions keep their model. Restart the gateway (`sinoclaw gateway restart`) if you want to force all sessions to pick up the change.
 - **Dashboard chat tab** (`/chat`): next new PTY. The currently-open chat keeps its model — use `/model` inside it to hot-swap.
 
@@ -152,7 +152,7 @@ On OpenRouter (or any aggregator), bare model names resolve *within* the aggrega
 
 ### CLI slash command
 
-Inside any `hermes chat` session:
+Inside any `sinoclaw chat` session:
 
 ```
 /model gpt-5.4 --provider openrouter             # session-only
@@ -185,7 +185,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 
 Then `/model fav` or `/model grok` in chat. User aliases shadow built-in short names (`sonnet`, `kimi`, `opus`, etc.). See [Custom model aliases](/docs/reference/slash-commands#custom-model-aliases) for the full reference.
 
-### `hermes model` subcommand
+### `sinoclaw model` subcommand
 
 ```bash
 hermes model list                   # list authenticated providers + models

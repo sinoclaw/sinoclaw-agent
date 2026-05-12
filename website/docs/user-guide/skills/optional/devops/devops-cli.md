@@ -14,7 +14,7 @@ Run 150+ AI apps via inference.sh CLI (infsh) — image generation, video creati
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/devops/cli` |
+| Source | Optional — install with `sinoclaw skills install official/devops/cli` |
 | Path | `optional-skills/devops/cli` |
 | Version | `1.0.0` |
 | Author | okaris |

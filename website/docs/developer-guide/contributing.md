@@ -72,7 +72,7 @@ echo 'OPENROUTER_API_KEY=sk-or-v1-your-key' >> ~/.sinoclaw/.env
 ```bash
 # Symlink for global access
 mkdir -p ~/.local/bin
-ln -sf "$(pwd)/venv/bin/hermes" ~/.local/bin/hermes
+ln -sf "$(pwd)/venv/bin/sinoclaw" ~/.local/bin/hermes
 
 # Verify
 hermes doctor
@@ -228,7 +228,7 @@ fix(security): prevent shell injection in sudo password piping
 ## Reporting Issues
 
 - Use [GitHub Issues](https://github.com/sinoclaw/sinoclaw-agent/issues)
-- Include: OS, Python version, Hermes version (`hermes version`), full error traceback
+- Include: OS, Python version, Hermes version (`sinoclaw version`), full error traceback
 - Include steps to reproduce
 - Check existing issues before creating duplicates
 - For security vulnerabilities, please report privately

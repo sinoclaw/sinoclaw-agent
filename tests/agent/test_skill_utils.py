@@ -4,7 +4,7 @@ from agent.skill_utils import extract_skill_conditions
 
 
 def test_metadata_as_dict_with_hermes():
-    """Normal case: metadata is a dict containing hermes keys."""
+    """Normal case: metadata is a dict containing sinoclaw keys."""
     frontmatter = {
         "metadata": {
             "hermes": {

@@ -47,7 +47,7 @@ When someone messages your iMessage, Hermes automatically sends them a pairing c
 ```bash
 hermes pairing approve bluebubbles <CODE>
 ```
-Use `hermes pairing list` to see pending codes and approved users.
+Use `sinoclaw pairing list` to see pending codes and approved users.
 
 **Pre-authorize specific users** (in `~/.sinoclaw/.env`):
 ```bash
@@ -75,7 +75,7 @@ Hermes → BlueBubbles REST API → Messages.app → iMessage
 ```
 
 - **Inbound:** BlueBubbles sends webhook events to a local listener when new messages arrive. No polling — instant delivery.
-- **Outbound:** Hermes sends messages via the BlueBubbles REST API.
+- **Outbound:** Sinoclaw sends messages via the BlueBubbles REST API.
 - **Media:** Images, voice messages, videos, and documents are supported in both directions. Inbound attachments are downloaded and cached locally for the agent to process.
 
 ## Environment Variables
@@ -136,7 +136,7 @@ Without the Private API, basic text messaging and media still work.
 ### Messages not arriving
 - Check that the webhook is registered in BlueBubbles Server → Settings → API → Webhooks
 - Verify the webhook URL is reachable from the Mac
-- Check `hermes logs gateway` for webhook errors (or `hermes logs -f` to follow in real-time)
+- Check `sinoclaw logs gateway` for webhook errors (or `sinoclaw logs -f` to follow in real-time)
 
 ### "Private API helper not connected"
 - Install the Private API helper: [docs.bluebubbles.app](https://docs.bluebubbles.app/helper-bundle/installation)

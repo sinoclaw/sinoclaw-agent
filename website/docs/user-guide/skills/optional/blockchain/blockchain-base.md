@@ -14,7 +14,7 @@ Query Base (Ethereum L2) blockchain data with USD pricing — wallet balances, t
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/blockchain/base` |
+| Source | Optional — install with `sinoclaw skills install official/blockchain/base` |
 | Path | `optional-skills/blockchain/base` |
 | Version | `0.1.0` |
 | Author | youssefea |

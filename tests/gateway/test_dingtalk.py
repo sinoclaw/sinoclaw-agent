@@ -494,7 +494,7 @@ class TestMentionPatterns:
             monkeypatch, extra={"mention_patterns": ["^hermes"]}
         )
         assert adapter._message_matches_mention_patterns("hermes please help") is True
-        assert adapter._message_matches_mention_patterns("please hermes help") is False
+        assert adapter._message_matches_mention_patterns("please sinoclaw help") is False
 
     def test_pattern_is_case_insensitive(self, monkeypatch):
         adapter = _make_gating_adapter(

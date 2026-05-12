@@ -14,7 +14,7 @@ Provides PyTorch-native distributed LLM pretraining using torchtitan with 4D par
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/torchtitan` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/torchtitan` |
 | Path | `optional-skills/mlops/torchtitan` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

@@ -1,4 +1,4 @@
-"""Tests for hermes backup and import commands."""
+"""Tests for sinoclaw backup and import commands."""
 
 import json
 import os
@@ -311,7 +311,7 @@ class TestImport:
                     zf.writestr(name, content)
 
     def test_restores_files(self, tmp_path, monkeypatch):
-        """Import extracts files into hermes home."""
+        """Import extracts files into sinoclaw home."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -374,7 +374,7 @@ class TestImport:
             run_import(args)
 
     def test_rejects_non_sinoclaw_zip(self, tmp_path, monkeypatch):
-        """Import rejects a zip that doesn't look like a hermes backup."""
+        """Import rejects a zip that doesn't look like a sinoclaw backup."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
@@ -413,7 +413,7 @@ class TestImport:
 
         # config.yaml should be restored
         assert (sinoclaw_home / "config.yaml").exists()
-        # traversal file should NOT exist outside hermes home
+        # traversal file should NOT exist outside sinoclaw home
         assert not (tmp_path / "etc" / "passwd").exists()
 
     def test_confirmation_prompt_abort(self, tmp_path, monkeypatch):
@@ -598,7 +598,7 @@ class TestValidation:
         assert ok
 
     def test_validate_rejects_random(self):
-        """Zip without hermes markers fails validation."""
+        """Zip without sinoclaw markers fails validation."""
         import io
         from sinoclaw_cli.backup import _validate_backup_zip
 
@@ -657,7 +657,7 @@ class TestValidation:
 
 class TestBackupEdgeCases:
     def test_nonexistent_sinoclaw_home(self, tmp_path, monkeypatch):
-        """Backup exits when hermes home doesn't exist."""
+        """Backup exits when sinoclaw home doesn't exist."""
         fake_home = tmp_path / "nonexistent" / ".hermes"
         monkeypatch.setenv("SINOCLAW_HOME", str(fake_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "nonexistent")
@@ -707,7 +707,7 @@ class TestBackupEdgeCases:
         assert (tmp_path / "mybackup.tar.zip").exists()
 
     def test_empty_sinoclaw_home(self, tmp_path, monkeypatch):
-        """Backup handles empty hermes home (no files to back up)."""
+        """Backup handles empty sinoclaw home (no files to back up)."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         # Only excluded dirs, no actual files
@@ -781,7 +781,7 @@ class TestBackupEdgeCases:
             assert "ancient.txt" not in names
 
     def test_skips_output_zip_inside_hermes(self, tmp_path, monkeypatch):
-        """Backup skips its own output zip if it's inside hermes root."""
+        """Backup skips its own output zip if it's inside sinoclaw root."""
         sinoclaw_home = tmp_path / ".sinoclaw"
         sinoclaw_home.mkdir()
         (sinoclaw_home / "config.yaml").write_text("model: test\n")
@@ -789,7 +789,7 @@ class TestBackupEdgeCases:
         monkeypatch.setenv("SINOCLAW_HOME", str(sinoclaw_home))
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
-        # Output inside hermes home
+        # Output inside sinoclaw home
         out_zip = sinoclaw_home / "backup.zip"
         args = Namespace(output=str(out_zip))
 
@@ -955,7 +955,7 @@ class TestProfileRestoration:
 
         # Wrappers should contain the right content
         coder_wrapper = (wrapper_dir / "coder").read_text()
-        assert "hermes -p coder" in coder_wrapper
+        assert "sinoclaw -p coder" in coder_wrapper
 
     def test_import_skips_profile_dirs_without_config(self, tmp_path, monkeypatch):
         """Import doesn't create wrappers for profile dirs without config."""
@@ -1274,7 +1274,7 @@ class TestQuickSnapshot:
 # ---------------------------------------------------------------------------
 
 class TestPreUpdateBackup:
-    """Tests for create_pre_update_backup — the auto-backup ``hermes update``
+    """Tests for create_pre_update_backup — the auto-backup ``sinoclaw update``
     runs before touching anything."""
 
     @pytest.fixture
@@ -1295,7 +1295,7 @@ class TestPreUpdateBackup:
 
     def test_backup_contents_match_full_backup(self, sinoclaw_home):
         """Pre-update backup should include the same user data that
-        ``hermes backup`` would, and should exclude the same directories."""
+        ``sinoclaw backup`` would, and should exclude the same directories."""
         from sinoclaw_cli.backup import create_pre_update_backup
         out = create_pre_update_backup(sinoclaw_home=sinoclaw_home)
         assert out is not None
@@ -1543,7 +1543,7 @@ class TestRunPreUpdateBackup:
 
 class TestPreMigrationBackup:
     """Tests for create_pre_migration_backup — the auto-backup
-    ``hermes claw migrate`` runs before mutating ~/.sinoclaw/."""
+    ``sinoclaw claw migrate`` runs before mutating ~/.sinoclaw/."""
 
     @pytest.fixture
     def sinoclaw_home(self, tmp_path):
@@ -1565,7 +1565,7 @@ class TestPreMigrationBackup:
 
     def test_backup_uses_shared_exclusion_rules(self, sinoclaw_home):
         """Pre-migration backup reuses the same exclusion rules as
-        ``hermes backup`` / ``create_pre_update_backup`` — no drift."""
+        ``sinoclaw backup`` / ``create_pre_update_backup`` — no drift."""
         from sinoclaw_cli.backup import create_pre_migration_backup
         out = create_pre_migration_backup(sinoclaw_home=sinoclaw_home)
         assert out is not None
@@ -1581,8 +1581,8 @@ class TestPreMigrationBackup:
         assert "gateway.pid" not in names
 
     def test_restorable_with_sinoclaw_import(self, sinoclaw_home, tmp_path):
-        """The zip produced by pre-migration backup must be a valid Hermes
-        backup — `hermes import` should accept it."""
+        """The zip produced by pre-migration backup must be a valid Sinoclaw
+        backup — `sinoclaw import` should accept it."""
         from sinoclaw_cli.backup import create_pre_migration_backup, _validate_backup_zip
         out = create_pre_migration_backup(sinoclaw_home=sinoclaw_home)
         assert out is not None

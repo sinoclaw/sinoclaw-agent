@@ -336,7 +336,7 @@ def normalize_model_for_provider(model_input: str, target_provider: str) -> str:
             Can be bare (``"claude-sonnet-4.6"``), vendor-prefixed
             (``"anthropic/claude-sonnet-4.6"``), or already in native
             format (``"claude-sonnet-4-6"``).
-        target_provider: The canonical Hermes provider id, e.g.
+        target_provider: The canonical Sinoclaw provider id, e.g.
             ``"openrouter"``, ``"anthropic"``, ``"copilot"``,
             ``"deepseek"``, ``"custom"``.  Should already be normalised
             via ``sinoclaw_cli.models.normalize_provider()``.

@@ -120,7 +120,7 @@ def _resolve_model_override(model_obj: Optional[Dict[str, Any]]) -> tuple:
     """Resolve a model override object into (provider, model) for job storage.
 
     If provider is omitted, pins the current main provider from config so the
-    job doesn't drift when the user later changes their default via hermes model.
+    job doesn't drift when the user later changes their default via sinoclaw model.
 
     Returns (provider_str_or_none, model_str_or_none).
     """

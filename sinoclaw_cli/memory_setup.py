@@ -16,7 +16,7 @@ from sinoclaw_constants import get_sinoclaw_home
 
 
 # ---------------------------------------------------------------------------
-# Curses-based interactive picker (same pattern as hermes tools)
+# Curses-based interactive picker (same pattern as sinoclaw tools)
 # ---------------------------------------------------------------------------
 
 def _curses_select(title: str, items: list[tuple[str, str]], default: int = 0) -> int:
@@ -105,7 +105,7 @@ def _install_dependencies(provider_name: str) -> None:
     if not uv_path:
         print(f"  ⚠ uv not found — cannot install dependencies")
         print(f"  Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh")
-        print(f"  Then re-run: hermes memory setup")
+        print(f"  Then re-run: sinoclaw memory setup")
         return
 
     try:

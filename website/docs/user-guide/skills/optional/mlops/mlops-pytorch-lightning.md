@@ -14,7 +14,7 @@ High-level PyTorch framework with Trainer class, automatic distributed training 
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/pytorch-lightning` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/pytorch-lightning` |
 | Path | `optional-skills/mlops/pytorch-lightning` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

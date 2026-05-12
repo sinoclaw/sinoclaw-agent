@@ -14,7 +14,7 @@ Build, test, inspect, install, and deploy MCP servers with FastMCP in Python. Us
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mcp/fastmcp` |
+| Source | Optional — install with `sinoclaw skills install official/mcp/fastmcp` |
 | Path | `optional-skills/mcp/fastmcp` |
 | Version | `1.0.0` |
 | Author | Sinoclaw Agent |

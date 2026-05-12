@@ -442,7 +442,7 @@ def _mcp_image_extension_for_mime_type(mime_type: str) -> str:
 
 def _cache_mcp_image_block(block) -> str:
     """Cache an MCP ``ImageContent`` block to the shared image cache and
-    return a ``MEDIA:<path>`` tag that Hermes gateways know how to render.
+    return a ``MEDIA:<path>`` tag that Sinoclaw gateways know how to render.
 
     Returns an empty string when *block* is not an image, when the base64
     payload is malformed, or when the cache helper rejects the bytes (e.g.
@@ -1823,7 +1823,7 @@ def _handle_auth_error_and_retry(
     return json.dumps({
         "error": (
             f"MCP server '{server_name}' requires re-authentication. "
-            f"Run `hermes mcp login {server_name}` (or delete the tokens "
+            f"Run `sinoclaw mcp login {server_name}` (or delete the tokens "
             f"file under ~/.sinoclaw/mcp-tokens/ and restart). Do NOT retry "
             f"this tool — ask the user to re-authenticate."
         ),
@@ -3220,7 +3220,7 @@ def get_mcp_status() -> List[dict]:
 def probe_mcp_server_tools() -> Dict[str, List[tuple]]:
     """Temporarily connect to configured MCP servers and list their tools.
 
-    Designed for ``hermes tools`` interactive configuration — connects to each
+    Designed for ``sinoclaw tools`` interactive configuration — connects to each
     enabled server, grabs tool names and descriptions, then disconnects.
     Does NOT register tools in the Hermes registry.
 

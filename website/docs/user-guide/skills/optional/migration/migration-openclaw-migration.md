@@ -14,7 +14,7 @@ Migrate a user's OpenClaw customization footprint into Sinoclaw Agent. Imports S
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/migration/openclaw-migration` |
+| Source | Optional — install with `sinoclaw skills install official/migration/openclaw-migration` |
 | Path | `optional-skills/migration/openclaw-migration` |
 | Version | `1.0.0` |
 | Author | Sinoclaw Agent (Nous Research) |
@@ -101,7 +101,7 @@ With `--migrate-secrets`, it will also import a small allowlisted set of Sinocla
 
 ## User interaction protocol
 
-Hermes CLI supports the `clarify` tool for interactive prompts, but it is limited to:
+Sinoclaw CLI supports the `clarify` tool for interactive prompts, but it is limited to:
 
 - one choice at a time
 - up to 4 predefined choices

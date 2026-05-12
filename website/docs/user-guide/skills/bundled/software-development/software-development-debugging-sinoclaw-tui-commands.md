@@ -158,7 +158,7 @@ After fixing:
 
 2. Run the TUI and test the command:
    ```bash
-   hermes --tui
+   sinoclaw --tui
    ```
 
 3. Type `/` and verify the command appears in autocomplete suggestions with the expected description and args hint.

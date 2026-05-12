@@ -450,7 +450,7 @@ In addition to connecting **to** MCP servers, Hermes can also **be** an MCP serv
 
 - You want Claude Code, Cursor, or another coding agent to send and read Telegram/Discord/Slack messages through Hermes
 - You want a single MCP server that bridges to all of Hermes's connected messaging platforms at once
-- You already have a running Hermes gateway with connected platforms
+- You already have a running Sinoclaw gateway with connected platforms
 
 ### Quick start
 
@@ -481,7 +481,7 @@ Or if you installed Hermes in a specific location:
 {
   "mcpServers": {
     "hermes": {
-      "command": "/home/user/.sinoclaw/sinoclaw-agent/venv/bin/hermes",
+      "command": "/home/user/.sinoclaw/sinoclaw-agent/venv/bin/sinoclaw",
       "args": ["mcp", "serve"]
     }
   }

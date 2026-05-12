@@ -27,7 +27,7 @@ cua-driver is the open-source equivalent.
 
 ## Enabling
 
-1. Run `hermes tools`, pick `🖱️ Computer Use (macOS)` → `cua-driver (background)`.
+1. Run `sinoclaw tools`, pick `🖱️ Computer Use (macOS)` → `cua-driver (background)`.
 2. The setup runs the upstream installer:
    `curl -fsSL https://raw.githubusercontent.com/trycua/cua/main/libs/cua-driver/scripts/install.sh`.
 3. Grant macOS permissions when prompted:
@@ -37,7 +37,7 @@ cua-driver is the open-source equivalent.
      the same.
 4. Start a session with the toolset enabled:
    ```
-   hermes -t computer_use chat
+   sinoclaw -t computer_use chat
    ```
    or add `computer_use` to your enabled toolsets in `~/.sinoclaw/config.yaml`.
 
@@ -143,7 +143,7 @@ SINOCLAW_COMPUTER_USE_BACKEND=noop   # records calls, no side effects
 ## Troubleshooting
 
 **`computer_use backend unavailable: cua-driver is not installed`** — Run
-`hermes tools` and enable Computer Use.
+`sinoclaw tools` and enable Computer Use.
 
 **Clicks seem to have no effect** — Capture and verify. A modal you
 didn't see may be blocking input. Dismiss it with `escape` or the close

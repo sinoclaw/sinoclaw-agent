@@ -191,7 +191,7 @@ def _load_direct_aliases() -> dict[str, DirectAlias]:
             provider: custom
             base_url: "https://ollama.com/v1"
 
-    Also reads ``model.aliases`` (set by ``hermes config set model.aliases.xxx``)
+    Also reads ``model.aliases`` (set by ``sinoclaw config set model.aliases.xxx``)
     and converts simple string entries (``ds-flash: deepseek/deepseek-v4-flash``)
     into DirectAlias objects.  The provider is parsed from the ``provider/``
     prefix in the value; if no slash, the current provider is used.
@@ -1158,7 +1158,7 @@ def list_authenticated_providers(
 
     data = fetch_models_dev()
 
-    # Build curated model lists keyed by hermes provider ID
+    # Build curated model lists keyed by sinoclaw provider ID
     curated: dict[str, list[str]] = dict(_PROVIDER_MODELS)
     curated["openrouter"] = [mid for mid, _ in OPENROUTER_MODELS]
     # "nous" shares OpenRouter's curated list if not separately defined
@@ -1239,7 +1239,7 @@ def list_authenticated_providers(
         # Use curated list, falling back to models.dev if no curated list.
         # For preferred providers, merge models.dev entries into the curated
         # catalog so newly released models (e.g. mimo-v2.5-pro on opencode-go)
-        # show up in the picker without requiring a Hermes release.
+        # show up in the picker without requiring a Sinoclaw release.
         model_ids = curated.get(sinoclaw_id, [])
         if sinoclaw_id in _MODELS_DEV_PREFERRED:
             model_ids = _merge_with_models_dev(sinoclaw_id, model_ids)
@@ -1267,7 +1267,7 @@ def list_authenticated_providers(
     from sinoclaw_cli.providers import SINOCLAW_OVERLAYS
     from sinoclaw_cli.auth import PROVIDER_REGISTRY as _auth_registry
 
-    # Build reverse mapping: models.dev ID → Hermes provider ID.
+    # Build reverse mapping: models.dev ID → Sinoclaw provider ID.
     # SINOCLAW_OVERLAYS keys may be models.dev IDs (e.g. "github-copilot")
     # while _PROVIDER_MODELS and config.yaml use Hermes IDs ("copilot").
     _mdev_to_hermes = {v: k for k, v in PROVIDER_TO_MODELS_DEV.items()}
@@ -1276,7 +1276,7 @@ def list_authenticated_providers(
         if pid.lower() in seen_slugs:
             continue
 
-        # Resolve Hermes slug — e.g. "github-copilot" → "copilot"
+        # Resolve Sinoclaw slug — e.g. "github-copilot" → "copilot"
         sinoclaw_slug = _mdev_to_hermes.get(pid, pid)
         if sinoclaw_slug.lower() in seen_slugs:
             continue
@@ -1355,7 +1355,7 @@ def list_authenticated_providers(
             except Exception:
                 model_ids = curated.get(sinoclaw_slug, []) or curated.get(pid, [])
         else:
-            # Use curated list — look up by Hermes slug, fall back to overlay key
+            # Use curated list — look up by Sinoclaw slug, fall back to overlay key
             model_ids = curated.get(sinoclaw_slug, []) or curated.get(pid, [])
             # Merge with models.dev for preferred providers (same rationale as above).
             if sinoclaw_slug in _MODELS_DEV_PREFERRED:
@@ -1379,7 +1379,7 @@ def list_authenticated_providers(
     # --- 2b. Cross-check canonical provider list ---
     # Catches providers that are in CANONICAL_PROVIDERS but weren't found
     # in PROVIDER_TO_MODELS_DEV or SINOCLAW_OVERLAYS (keeps /model in sync
-    # with `hermes model`).
+    # with `sinoclaw model`).
     try:
         from sinoclaw_cli.models import CANONICAL_PROVIDERS as _canon_provs
     except ImportError:
@@ -1483,7 +1483,7 @@ def list_authenticated_providers(
             if default_model:
                 models_list.append(default_model)
             # Also include the full models list from config.
-            # Hermes writes ``models:`` as a dict keyed by model id
+            # Sinoclaw writes ``models:`` as a dict keyed by model id
             # (see sinoclaw_cli/main.py::_save_custom_provider); older
             # configs or hand-edited files may still use a list.
             cfg_models = ep_cfg.get("models", [])
@@ -1584,7 +1584,7 @@ def list_authenticated_providers(
             if group_key not in groups:
                 # Strip per-model suffix so "Ollama — GLM 5.1" becomes
                 # "Ollama" for the grouped row. Em dash is the convention
-                # Hermes's own writer uses; a hyphen variant is accepted
+                # Sinoclaw's own writer uses; a hyphen variant is accepted
                 # for hand-edited configs.
                 display_name = raw_name
                 for sep in ("—", " - "):
@@ -1618,7 +1618,7 @@ def list_authenticated_providers(
                 }
 
             # The singular ``model:`` field only holds the currently
-            # active model. Hermes's own writer (main.py::_save_custom_provider)
+            # active model. Sinoclaw's own writer (main.py::_save_custom_provider)
             # stores every configured model as a dict under ``models:``;
             # downstream readers (agent/models_dev.py, gateway/run.py,
             # run_agent.py, sinoclaw_cli/config.py) already consume that dict.

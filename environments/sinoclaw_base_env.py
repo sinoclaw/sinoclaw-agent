@@ -87,7 +87,7 @@ class SinoclawAgentEnvConfig(BaseEnvConfig):
     # Mutually exclusive: use either enabled_toolsets OR distribution
     enabled_toolsets: Optional[List[str]] = Field(
         default=None,
-        description="Explicit list of hermes toolsets to enable (e.g., ['terminal', 'file', 'web']). "
+        description="Explicit list of sinoclaw toolsets to enable (e.g., ['terminal', 'file', 'web']). "
         "If None and distribution is also None, all available toolsets are enabled.",
     )
     disabled_toolsets: Optional[List[str]] = Field(
@@ -252,7 +252,7 @@ class SinoclawAgentBaseEnv(BaseEnv):
     ):
         super().__init__(config, server_configs, slurm, testing)
 
-        # Set terminal environment variables so hermes tools pick them up.
+        # Set terminal environment variables so sinoclaw tools pick them up.
         # These can all be overridden per-environment via config fields instead
         # of requiring users to set shell env vars.
         if config.terminal_backend:

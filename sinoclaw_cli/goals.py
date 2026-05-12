@@ -2,7 +2,7 @@
 
 A goal is a free-form user objective that stays active across turns. After
 each turn completes, a small judge call asks an auxiliary model "is this
-goal satisfied by the assistant's last response?". If not, Hermes feeds a
+goal satisfied by the assistant's last response?". If not, Sinoclaw feeds a
 continuation prompt back into the same session and keeps working until the
 goal is done, turn budget is exhausted, the user pauses/clears it, or the
 user sends a new message (which takes priority and pauses the goal loop).

@@ -26,7 +26,7 @@ Sinoclaw Agent works with any OpenAI-compatible API. Supported providers include
 - **MiniMax** — global and China endpoints
 - **Local models** — via [Ollama](https://ollama.com/), [vLLM](https://docs.vllm.ai/), [llama.cpp](https://github.com/ggerganov/llama.cpp), [SGLang](https://github.com/sgl-project/sglang), or any OpenAI-compatible server
 
-Set your provider with `hermes model` or by editing `~/.sinoclaw/.env`. See the [Environment Variables](./environment-variables.md) reference for all provider keys.
+Set your provider with `sinoclaw model` or by editing `~/.sinoclaw/.env`. See the [Environment Variables](./environment-variables.md) reference for all provider keys.
 
 ### Does it work on Windows?
 
@@ -74,7 +74,7 @@ API calls go **only to the LLM provider you configure** (e.g., OpenRouter, your 
 
 ### Can I use it offline / with local models?
 
-Yes. Run `hermes model`, select **Custom endpoint**, and enter your server's URL:
+Yes. Run `sinoclaw model`, select **Custom endpoint**, and enter your server's URL:
 
 ```bash
 hermes model
@@ -236,7 +236,7 @@ curl -fsSL https://raw.githubusercontent.com/NousResearch/sinoclaw-agent/main/sc
 
 **Cause:** `/model` (inside a chat session) can only switch between providers you've **already configured**. If you've only set up OpenRouter, that's all `/model` will show.
 
-**Solution:** Exit your session and use `hermes model` from your terminal to add new providers:
+**Solution:** Exit your session and use `sinoclaw model` from your terminal to add new providers:
 
 ```bash
 # Exit the Hermes chat session first (Ctrl+C or /quit)
@@ -247,13 +247,13 @@ hermes model
 # This lets you: add providers, run OAuth, enter API keys, configure endpoints
 ```
 
-After adding a new provider via `hermes model`, start a new chat session — `/model` will now show all your configured providers.
+After adding a new provider via `sinoclaw model`, start a new chat session — `/model` will now show all your configured providers.
 
 :::tip Quick reference
 | Want to... | Use |
 |-----------|-----|
-| Add a new provider | `hermes model` (from terminal) |
-| Enter/change API keys | `hermes model` (from terminal) |
+| Add a new provider | `sinoclaw model` (from terminal) |
+| Enter/change API keys | `sinoclaw model` (from terminal) |
 | Switch model mid-session | `/model <name>` (inside session) |
 | Switch to different configured provider | `/model provider:model` (inside session) |
 :::
@@ -301,7 +301,7 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 **Solution:** Wait a moment and retry. For sustained usage, consider:
 - Upgrading your provider plan
 - Switching to a different model or provider
-- Using `hermes chat --provider <alternative>` to route to a different backend
+- Using `sinoclaw chat --provider <alternative>` to route to a different backend
 
 #### Context length exceeded
 
@@ -368,7 +368,7 @@ This is working as intended — Hermes never silently runs destructive commands.
 **Solution:**
 - Avoid `sudo` in messaging — ask the agent to find alternatives
 - If you must use `sudo`, configure passwordless sudo for specific commands in `/etc/sudoers`
-- Or switch to the terminal interface for administrative tasks: `hermes chat`
+- Or switch to the terminal interface for administrative tasks: `sinoclaw chat`
 
 #### Docker backend not connecting
 
@@ -457,7 +457,7 @@ hermes config show
 sinoclaw gateway run
 
 # Option 2: Persistent via tmux (survives terminal close)
-tmux new -s hermes 'sinoclaw gateway run'
+tmux new -s sinoclaw 'sinoclaw gateway run'
 # Reattach later: tmux attach -t hermes
 
 # Option 3: Background via nohup
@@ -508,8 +508,8 @@ You can verify the plist has the correct PATH:
 **Cause:** Large model, distant API server, or heavy system prompt with many tools.
 
 **Solution:**
-- Try a faster/smaller model: `hermes chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
-- Reduce active toolsets: `hermes chat -t "terminal"`
+- Try a faster/smaller model: `sinoclaw chat --model openrouter/meta-llama/llama-3.1-8b-instruct`
+- Reduce active toolsets: `sinoclaw chat -t "terminal"`
 - Check your network latency to the provider
 - For local models, ensure you have enough GPU VRAM
 
@@ -590,7 +590,7 @@ mcp_servers:
 # Verify MCP servers are configured
 hermes config show | grep -A 12 mcp_servers
 
-# Restart Hermes or reload MCP after config changes
+# Restart Sinoclaw or reload MCP after config changes
 hermes chat
 ```
 
@@ -626,11 +626,11 @@ No. Each messaging platform (Telegram, Discord, etc.) requires exclusive access 
 
 ### Do profiles share memory or sessions?
 
-No. Each profile has its own memory store, session database, and skills directory. They are completely isolated. If you want to start a new profile with existing memories and sessions, use `hermes profile create newname --clone-all` to copy everything from the current profile.
+No. Each profile has its own memory store, session database, and skills directory. They are completely isolated. If you want to start a new profile with existing memories and sessions, use `sinoclaw profile create newname --clone-all` to copy everything from the current profile.
 
-### What happens when I run `hermes update`?
+### What happens when I run `sinoclaw update`?
 
-`hermes update` pulls the latest code and reinstalls dependencies **once** (not per-profile). It then syncs updated skills to all profiles automatically. You only need to run `hermes update` once — it covers every profile on the machine.
+`sinoclaw update` pulls the latest code and reinstalls dependencies **once** (not per-profile). It then syncs updated skills to all profiles automatically. You only need to run `sinoclaw update` once — it covers every profile on the machine.
 
 
 ### How many profiles can I run?
@@ -712,9 +712,9 @@ display:
 
 ### Managing skills on Telegram (slash command limit)
 
-**Scenario:** Telegram has a 100 slash command limit, and your skills are pushing past it. You want to disable skills you don't need on Telegram, but `hermes skills config` settings don't seem to take effect.
+**Scenario:** Telegram has a 100 slash command limit, and your skills are pushing past it. You want to disable skills you don't need on Telegram, but `sinoclaw skills config` settings don't seem to take effect.
 
-**Solution:** Use `hermes skills config` to disable skills per-platform. This writes to `config.yaml`:
+**Solution:** Use `sinoclaw skills config` to disable skills per-platform. This writes to `config.yaml`:
 
 ```yaml
 skills:
@@ -756,7 +756,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
 
 2. On the **source machine**, create a full backup:
    ```bash
-   hermes backup
+   sinoclaw backup
    ```
    This creates a zip of your entire `~/.sinoclaw/` directory — config, API keys, memories, skills, sessions, and profiles — saved to your home directory as `~/sinoclaw-backup-<timestamp>.zip`.
 
@@ -766,7 +766,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
    scp ~/sinoclaw-backup-<timestamp>.zip newmachine:~/
 
    # On the new machine
-   hermes import ~/sinoclaw-backup-<timestamp>.zip
+   sinoclaw import ~/sinoclaw-backup-<timestamp>.zip
    ```
 
 4. On the new machine, run `sinoclaw setup` to verify API keys and provider config are working.
@@ -785,9 +785,9 @@ hermes profile import ./work-backup.tar.gz work
 
 The imported profile will have all config, memories, sessions, and skills from the export. You may need to update paths or re-authenticate with providers if the new machine has a different setup.
 
-### `hermes backup` vs `hermes profile export`
+### `sinoclaw backup` vs `sinoclaw profile export`
 
-| Feature | `hermes backup` | `hermes profile export` |
+| Feature | `sinoclaw backup` | `sinoclaw profile export` |
 | :--- | :--- | :--- |
 | **Use Case** | **Full machine migration** | **Porting/sharing a specific profile** |
 | **Scope** | Global (entire `~/.sinoclaw` directory) | Local (single profile directory) |
@@ -801,7 +801,7 @@ rsync -av --exclude='sinoclaw-agent' ~/.sinoclaw/ newmachine:~/.sinoclaw/
 ```
 
 :::tip
-`hermes backup` produces a consistent snapshot even while Hermes is actively running. The restored archive excludes machine-local runtime files like `gateway.pid` and `cron.pid`.
+`sinoclaw backup` produces a consistent snapshot even while Hermes is actively running. The restored archive excludes machine-local runtime files like `gateway.pid` and `cron.pid`.
 :::
 
 ### Permission denied when reloading shell after install
@@ -857,4 +857,4 @@ If your issue isn't covered here:
 
 1. **Search existing issues:** [GitHub Issues](https://github.com/NousResearch/sinoclaw-agent/issues)
 2. **Ask the community:** [Nous Research Discord](https://discord.gg/nousresearch)
-3. **File a bug report:** Include your OS, Python version (`python3 --version`), Hermes version (`hermes --version`), and the full error message
+3. **File a bug report:** Include your OS, Python version (`python3 --version`), Hermes version (`sinoclaw --version`), and the full error message

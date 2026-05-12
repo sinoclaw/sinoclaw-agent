@@ -17,7 +17,7 @@ from sinoclaw_cli.completion import _walk, generate_bash, generate_zsh, generate
 # ---------------------------------------------------------------------------
 
 def _make_parser() -> argparse.ArgumentParser:
-    """Build a minimal parser that mirrors the real hermes structure."""
+    """Build a minimal parser that mirrors the real sinoclaw structure."""
     p = argparse.ArgumentParser(prog="hermes")
     p.add_argument("--version", "-V", action="store_true")
     p.add_argument("-p", "--profile", help="Profile name")
@@ -148,7 +148,7 @@ class TestGenerateZsh:
 class TestGenerateFish:
     def test_disables_file_completion(self):
         out = generate_fish(_make_parser())
-        assert "complete -c hermes -f" in out
+        assert "complete -c sinoclaw -f" in out
 
     def test_top_level_commands_present(self):
         out = generate_fish(_make_parser())

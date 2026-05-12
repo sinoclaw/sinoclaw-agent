@@ -14,7 +14,7 @@ Reserved and on-demand GPU cloud instances for ML training and inference. Use wh
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/lambda-labs` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/lambda-labs` |
 | Path | `optional-skills/mlops/lambda-labs` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

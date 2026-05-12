@@ -14,7 +14,7 @@ Serverless GPU cloud platform for running ML workloads. Use when you need on-dem
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/modal` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/modal` |
 | Path | `optional-skills/mlops/modal` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

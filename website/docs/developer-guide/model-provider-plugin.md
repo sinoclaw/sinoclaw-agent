@@ -31,7 +31,7 @@ plugins/model-providers/my-provider/
 └── README.md         # Setup instructions (optional)
 ```
 
-The only required file is `__init__.py`. `plugin.yaml` is used by `hermes plugins` for introspection and by the general PluginManager to route the plugin to the right loader; without it, the general loader falls back to a source-text heuristic.
+The only required file is `__init__.py`. `plugin.yaml` is used by `sinoclaw plugins` for introspection and by the general PluginManager to route the plugin to the right loader; without it, the general loader falls back to a source-text heuristic.
 
 ## Minimal example — a simple API-key provider
 
@@ -75,8 +75,8 @@ That's it. After dropping these two files, the following **auto-wire** with no o
 |---|---|---|
 | Credential resolution | `sinoclaw_cli/auth.py` | `PROVIDER_REGISTRY["acme-inference"]` populated from profile |
 | `--provider` CLI flag | `sinoclaw_cli/main.py` | Accepts `acme-inference` |
-| `hermes model` picker | `sinoclaw_cli/models.py` | Appears in `CANONICAL_PROVIDERS`, model list fetched from `{base_url}/models` |
-| `hermes doctor` | `sinoclaw_cli/doctor.py` | Health check for `ACME_API_KEY` + `{base_url}/models` probe |
+| `sinoclaw model` picker | `sinoclaw_cli/models.py` | Appears in `CANONICAL_PROVIDERS`, model list fetched from `{base_url}/models` |
+| `sinoclaw doctor` | `sinoclaw_cli/doctor.py` | Health check for `ACME_API_KEY` + `{base_url}/models` probe |
 | `sinoclaw setup` | `sinoclaw_cli/config.py` | `ACME_API_KEY` appears in `OPTIONAL_ENV_VARS` and the setup wizard |
 | URL reverse-mapping | `agent/model_metadata.py` | Hostname → provider name for auto-detection |
 | Auxiliary model | `agent/auxiliary_client.py` | Uses `default_aux_model` for compression / summarization |
@@ -92,7 +92,7 @@ Full definition in `providers/base.py`. The most useful ones:
 | `name` | str | Canonical id — matches `--provider` choices and `SINOCLAW_INFERENCE_PROVIDER` |
 | `aliases` | `tuple[str, ...]` | Alternative names resolved by `get_provider_profile()` (e.g. `grok` → `xai`) |
 | `api_mode` | str | `chat_completions` \| `codex_responses` \| `anthropic_messages` \| `bedrock_converse` |
-| `display_name` | str | Human label shown in `hermes model` picker |
+| `display_name` | str | Human label shown in `sinoclaw model` picker |
 | `description` | str | Picker subtitle |
 | `signup_url` | str | Shown during first-run setup ("get an API key here") |
 | `env_vars` | `tuple[str, ...]` | API-key env vars in priority order; a final `*_BASE_URL` entry is used as the user base-URL override |
@@ -243,7 +243,7 @@ hermes -z "hello" --provider my-provider -m some-model
 
 ## General PluginManager integration
 
-The general `PluginManager` (the thing `hermes plugins` operates on) **sees** model-provider plugins but does not import them — `providers/__init__.py` owns their lifecycle. The manager records the manifest for introspection and categorizes by `kind: model-provider`. When you drop an unlabeled user plugin into `$SINOCLAW_HOME/plugins/` that happens to call `register_provider` with a `ProviderProfile`, the manager auto-coerces it to `kind: model-provider` via a source-text heuristic — so the plugin still routes correctly even without `plugin.yaml`.
+The general `PluginManager` (the thing `sinoclaw plugins` operates on) **sees** model-provider plugins but does not import them — `providers/__init__.py` owns their lifecycle. The manager records the manifest for introspection and categorizes by `kind: model-provider`. When you drop an unlabeled user plugin into `$SINOCLAW_HOME/plugins/` that happens to call `register_provider` with a `ProviderProfile`, the manager auto-coerces it to `kind: model-provider` via a source-text heuristic — so the plugin still routes correctly even without `plugin.yaml`.
 
 ## Distribute via pip
 

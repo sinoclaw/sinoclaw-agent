@@ -2,7 +2,7 @@
 
 Runs as a standalone subprocess spawned by ``process_manager.py``. Reads config
 from env vars, writes status + transcript to files under
-``$SINOCLAW_HOME/workspace/meetings/<meeting-id>/``. The main hermes process
+``$SINOCLAW_HOME/workspace/meetings/<meeting-id>/``. The main sinoclaw process
 reads those files via the ``meet_*`` tools — no IPC beyond filesystem.
 
 The scraping strategy mirrors OpenUtter (sumansid/openutter): we don't parse

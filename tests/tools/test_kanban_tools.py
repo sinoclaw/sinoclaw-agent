@@ -19,7 +19,7 @@ import pytest
 # ---------------------------------------------------------------------------
 
 def test_kanban_tools_hidden_without_env_var(monkeypatch, tmp_path):
-    """Normal `hermes chat` sessions (no SINOCLAW_KANBAN_TASK) must have
+    """Normal `sinoclaw chat` sessions (no SINOCLAW_KANBAN_TASK) must have
     zero kanban_* tools in their schema."""
     monkeypatch.delenv("SINOCLAW_KANBAN_TASK", raising=False)
     home = tmp_path / ".sinoclaw"

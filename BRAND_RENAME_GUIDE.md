@@ -41,7 +41,7 @@ import subprocess
 # 黑名单：不改模型名和 Meta 三方库
 # ========================================
 BLACKLIST_STRINGS = [
-    "facebook/hermes",      # Meta 的 JS 引擎
+    "facebook/sinoclaw",      # Meta 的 JS 引擎
     "meta-llama/Hermes",    # 模型名
     "hermes-2-pro",         # 模型名
     "hermes-3",             # 模型名
@@ -148,7 +148,7 @@ REPLACEMENTS = [
     (" Hermes'", " Sinoclaw'"),
     
     ('@Hermes', '@Sinoclaw'),
-    ('@hermes:', '@sinoclaw:'),
+    ('@sinoclaw:', '@sinoclaw:'),
     ('@hermes_', '@sinoclaw_'),
 ]
 
@@ -178,7 +178,7 @@ RENAMES = [
     ('skills/software-development/hermes-agent-skill-authoring', 'skills/software-development/hermes-agent-skill-authoring'),
     
     # 文件
-    ('hermes', 'sinoclaw'),  # 根目录的 hermes 可执行文件
+    ('hermes', 'sinoclaw'),  # 根目录的 sinoclaw 可执行文件
     ('hermes_bootstrap.py', 'sinoclaw_bootstrap.py'),
     ('hermes_constants.py', 'sinoclaw_constants.py'),
     ('hermes_logging.py', 'sinoclaw_logging.py'),
@@ -282,7 +282,7 @@ def main():
                 remaining.append(line)
     
     if len(remaining) == 0:
-        print("✅ 完美！没有任何 hermes 残留！")
+        print("✅ 完美！没有任何 sinoclaw 残留！")
     else:
         print(f"⚠️  还有 {len(remaining)} 处残留：")
         for line in remaining[:20]:
@@ -351,7 +351,7 @@ if __name__ == "__main__":
 
 ### ❌ 坑 5：不要向后兼容！
 **问题：** 之前加了 `get_hermes_home = get_sinoclaw_home` 这种别名，结果代码混乱
-**解决：** 品牌更名就是独立项目，所有地方统一成 Sinoclaw，不要 hermes 的任何东西
+**解决：** 品牌更名就是独立项目，所有地方统一成 Sinoclaw，不要 sinoclaw 的任何东西
 
 ---
 

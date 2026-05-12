@@ -19,7 +19,7 @@ try:
     import sinoclaw_bootstrap  # noqa: F401
 except ModuleNotFoundError:
     # Graceful fallback when sinoclaw_bootstrap isn't registered in the venv
-    # yet — happens during partial ``hermes update`` where git-reset landed
+    # yet — happens during partial ``sinoclaw update`` where git-reset landed
     # new code but ``uv pip install -e .`` didn't finish.  Missing bootstrap
     # means UTF-8 stdio setup is skipped on Windows; POSIX is unaffected.
     pass
@@ -122,7 +122,7 @@ def _coerce_gateway_timestamp(value: Any) -> Optional[float]:
     if isinstance(value, bool):  # bool is a subclass of int — skip it
         return None
     if isinstance(value, (int, float)):
-        # Some platform events use milliseconds; Hermes state rows use seconds.
+        # Some platform events use milliseconds; Sinoclaw state rows use seconds.
         return float(value) / 1000.0 if float(value) > 10_000_000_000 else float(value)
     if isinstance(value, str):
         text = value.strip()
@@ -505,7 +505,7 @@ if _config_path.exists():
         )
         print(
             "  Gateway will fall back to .env values, which may not match "
-            "your current config.yaml. Run `hermes doctor` to investigate.",
+            "your current config.yaml. Run `sinoclaw doctor` to investigate.",
             file=sys.stderr,
         )
 
@@ -829,7 +829,7 @@ def _check_unavailable_skill(command_name: str) -> str | None:
                 if slug == normalized and declared_name in disabled:
                     return (
                         f"The **{command_name}** skill is installed but disabled.\n"
-                        f"Enable it with: `hermes skills config`"
+                        f"Enable it with: `sinoclaw skills config`"
                     )
 
         # Check optional skills (shipped with repo but not installed)
@@ -848,7 +848,7 @@ def _check_unavailable_skill(command_name: str) -> str | None:
                     install_path = f"official/{'/'.join(parts)}"
                     return (
                         f"The **{command_name}** skill is available but not installed.\n"
-                        f"Install it with: `hermes skills install {install_path}`"
+                        f"Install it with: `sinoclaw skills install {install_path}`"
                     )
     except Exception:
         pass
@@ -915,18 +915,18 @@ def _resolve_gateway_model(config: dict | None = None) -> str:
 
 
 def _resolve_sinoclaw_bin() -> Optional[list[str]]:
-    """Resolve the Hermes update command as argv parts.
+    """Resolve the Sinoclaw update command as argv parts.
 
     Tries in order:
-    1. ``shutil.which("hermes")`` — standard PATH lookup
-    2. ``sys.executable -m sinoclaw_cli.main`` — fallback when Hermes is running
-       from a venv/module invocation and the ``hermes`` shim is not on PATH
+    1. ``shutil.which("sinoclaw")`` — standard PATH lookup
+    2. ``sys.executable -m sinoclaw_cli.main`` — fallback when Sinoclaw is running
+       from a venv/module invocation and the ``sinoclaw`` shim is not on PATH
 
     Returns argv parts ready for quoting/joining, or ``None`` if neither works.
     """
     import shutil
 
-    sinoclaw_bin = shutil.which("hermes")
+    sinoclaw_bin = shutil.which("sinoclaw")
     if sinoclaw_bin:
         return [sinoclaw_bin]
 
@@ -1673,7 +1673,7 @@ class GatewayRunner:
 
     def _telegram_topic_root_new_message(self) -> str:
         return (
-            "To start a new parallel Hermes chat, open the All Messages topic "
+            "To start a new parallel Sinoclaw chat, open the All Messages topic "
             "at the top of this bot interface and send any message there. "
             "Telegram will create a new topic for it.\n\n"
             "Each topic is an independent Sinoclaw session. Use /new inside an "
@@ -1772,7 +1772,7 @@ class GatewayRunner:
             )
 
         # When the config has no model.default but a provider was resolved
-        # (e.g. user ran `hermes auth add openai-codex` without `hermes model`),
+        # (e.g. user ran `sinoclaw auth add openai-codex` without `sinoclaw model`),
         # fall back to the provider's first catalog model so the API call
         # doesn't fail with "model must be a non-empty string".
         if not model and runtime_kwargs.get("provider"):
@@ -2934,7 +2934,7 @@ class GatewayRunner:
 
         sinoclaw_cmd = _resolve_sinoclaw_bin()
         if not sinoclaw_cmd:
-            logger.error("Could not locate hermes binary for detached /restart")
+            logger.error("Could not locate sinoclaw binary for detached /restart")
             return
 
         current_pid = os.getpid()
@@ -3298,7 +3298,7 @@ class GatewayRunner:
         #
         # SKIP suspension after a clean (graceful) shutdown — the previous
         # process already drained active agents, so sessions aren't stuck.
-        # This prevents unwanted auto-resets after `hermes update`,
+        # This prevents unwanted auto-resets after `sinoclaw update`,
         # `sinoclaw gateway restart`, or `/restart`.
         _clean_marker = _sinoclaw_home / ".clean_shutdown"
         if _clean_marker.exists():
@@ -3559,7 +3559,7 @@ class GatewayRunner:
 
         # Start background kanban dispatcher — spawns workers for ready
         # tasks. Gated by `kanban.dispatch_in_gateway` (default True).
-        # When false, users run `hermes kanban daemon` externally or
+        # When false, users run `sinoclaw kanban daemon` externally or
         # simply don't use kanban; this loop becomes a no-op.
         asyncio.create_task(self._kanban_dispatcher_watcher())
 
@@ -4003,7 +4003,7 @@ class GatewayRunner:
 
         Gated by `kanban.dispatch_in_gateway` in config.yaml (default True).
         When true, the gateway hosts the single dispatcher for this profile:
-        no separate `hermes kanban daemon` process needed. When false, the
+        no separate `sinoclaw kanban daemon` process needed. When false, the
         loop exits immediately and an external daemon is expected.
 
         Each tick calls :func:`kanban_db.dispatch_once` inside
@@ -4138,7 +4138,7 @@ class GatewayRunner:
 
         def _ready_nonempty() -> bool:
             """Cheap probe: is there at least one ready+assigned+unclaimed
-            task on ANY board whose assignee maps to a real Hermes profile
+            task on ANY board whose assignee maps to a real Sinoclaw profile
             (i.e. one the dispatcher would actually spawn for)?
 
             Tasks assigned to control-plane lanes (e.g. ``orion-cc``,
@@ -4146,7 +4146,7 @@ class GatewayRunner:
             ``claim_task`` directly and never spawnable, so a queue full
             of those is "correctly idle", not "stuck". Filtering them out
             here keeps the stuck-warn fire only on real failures (broken
-            PATH, missing venv, credential loss for a real Hermes profile).
+            PATH, missing venv, credential loss for a real Sinoclaw profile).
             """
             try:
                 boards = _kb.list_boards(include_archived=False)
@@ -4205,7 +4205,7 @@ class GatewayRunner:
                             "kanban dispatcher stuck: ready queue non-empty for "
                             "%d consecutive ticks but 0 workers spawned. Check "
                             "profile health (venv, PATH, credentials) and "
-                            "`hermes kanban list --status ready`.",
+                            "`sinoclaw kanban list --status ready`.",
                             bad_ticks,
                         )
                         last_warn_at = now
@@ -5194,7 +5194,7 @@ class GatewayRunner:
                             f"Hi~ I don't recognize you yet!\n\n"
                             f"Here's your pairing code: `{code}`\n\n"
                             f"Ask the bot owner to run:\n"
-                            f"`hermes pairing approve {platform_name} {code}`"
+                            f"`sinoclaw pairing approve {platform_name} {code}`"
                         )
                 else:
                     adapter = self.adapters.get(source.platform)
@@ -5985,7 +5985,7 @@ class GatewayRunner:
                         if _skill_name in _get_plat_disabled(platform=_plat):
                             return (
                                 f"The **{_skill_name}** skill is disabled for {_plat}.\n"
-                                f"Enable it with: `hermes skills config`"
+                                f"Enable it with: `sinoclaw skills config`"
                             )
                     user_instruction = event.get_command_args().strip()
                     msg = build_skill_invocation_message(
@@ -6186,7 +6186,7 @@ class GatewayRunner:
                                 "🎤 I received your voice message but can't transcribe it — "
                                 "no speech-to-text provider is configured.\n\n"
                                 "To enable voice: install faster-whisper "
-                                "(`pip install faster-whisper` in the Hermes venv) "
+                                "(`pip install faster-whisper` in the Sinoclaw venv) "
                                 "and set `stt.enabled: true` in config.yaml, "
                                 "then /restart the gateway."
                             )
@@ -6851,17 +6851,17 @@ class GatewayRunner:
             platform_name = source.platform.value
             env_key = _home_target_env_var(platform_name)
             if not os.getenv(env_key):
-                # Slack dispatches all Hermes commands through a single
-                # parent slash command `/hermes`; bare `/sethome` is not
+                # Slack dispatches all Sinoclaw commands through a single
+                # parent slash command `/sinoclaw`; bare `/sethome` is not
                 # registered and would fail with "app did not respond".
                 sethome_cmd = (
-                    "/hermes sethome"
+                    "/sinoclaw sethome"
                     if source.platform == Platform.SLACK
                     else "/sethome"
                 )
                 notice = (
                     f"📬 No home channel is set for {platform_name.title()}. "
-                    f"A home channel is where Hermes delivers cron job results "
+                    f"A home channel is where Sinoclaw delivers cron job results "
                     f"and cross-platform messages.\n\n"
                     f"Type {sethome_cmd} to make this chat your home channel, "
                     f"or ignore to skip."
@@ -7699,7 +7699,7 @@ class GatewayRunner:
         # Gateway messages have practical length caps; truncate long
         # listings to keep the UX reasonable.
         if len(output) > 3800:
-            output = output[:3800] + "\n… (truncated; use `hermes kanban …` in your terminal for full output)"
+            output = output[:3800] + "\n… (truncated; use `sinoclaw kanban …` in your terminal for full output)"
         return output or "(no output)"
 
     async def _handle_status_command(self, event: MessageEvent) -> str:
@@ -10231,7 +10231,7 @@ class GatewayRunner:
         session_id: str,
         title: str,
     ) -> None:
-        """Best-effort rename of a Telegram DM topic when Hermes auto-titles a session."""
+        """Best-effort rename of a Telegram DM topic when Sinoclaw auto-titles a session."""
         if not self._is_telegram_topic_lane(source) or not source.chat_id or not source.thread_id:
             return
 
@@ -10366,7 +10366,7 @@ class GatewayRunner:
             "  /topic <id>        Inside a topic: restore a previous session by ID\n"
             "\n"
             "How it works:\n"
-            "1. Run /topic once in this DM — Hermes checks BotFather Threads\n"
+            "1. Run /topic once in this DM — Sinoclaw checks BotFather Threads\n"
             "   Settings are enabled and flips on multi-session mode.\n"
             "2. Tap All Messages at the top of the bot and send any message.\n"
             "   Telegram creates a new topic for that message; each topic is\n"
@@ -10410,7 +10410,7 @@ class GatewayRunner:
             "Multi-session topic mode is now OFF for this chat.\n\n"
             "Existing topics in Telegram aren't removed — they'll just stop "
             "being gated as independent sessions. The root DM works as a "
-            "normal Hermes chat again. Run /topic to re-enable later."
+            "normal Sinoclaw chat again. Run /topic to re-enable later."
         )
 
     async def _handle_topic_command(self, event: MessageEvent, args: str = "") -> str:
@@ -10531,7 +10531,7 @@ class GatewayRunner:
         lines = [
             "Telegram multi-session topics are enabled.",
             "",
-            "To create a new Hermes chat, open All Messages at the top of this "
+            "To create a new Sinoclaw chat, open All Messages at the top of this "
             "bot interface and send any message there. Telegram will create a "
             "new topic for it.",
             "",
@@ -11520,7 +11520,7 @@ class GatewayRunner:
 
         Gateway uploads ONLY the summary report (system info + log tails),
         NOT full log files, to protect conversation privacy.  Users who need
-        full log uploads should use ``hermes debug share`` from the CLI.
+        full log uploads should use ``sinoclaw debug share`` from the CLI.
         """
         import asyncio
         from sinoclaw_cli.debug import (
@@ -11553,8 +11553,8 @@ class GatewayRunner:
 
             lines.append("")
             lines.append("⏱ Pastes will auto-delete in 6 hours.")
-            lines.append("For full log uploads, use `hermes debug share` from the CLI.")
-            lines.append("Share these links with the Hermes team for support.")
+            lines.append("For full log uploads, use `sinoclaw debug share` from the CLI.")
+            lines.append("Share these links with the Sinoclaw team for support.")
             return "\n".join(lines)
 
         return await loop.run_in_executor(None, _collect_and_upload)
@@ -11562,8 +11562,8 @@ class GatewayRunner:
     async def _handle_update_command(self, event: MessageEvent) -> str:
         """Handle /update command — update Sinoclaw Agent to the latest version.
 
-        Spawns ``hermes update`` in a detached session (via ``setsid``) so it
-        survives the gateway restart that ``hermes update`` may trigger. Marker
+        Spawns ``sinoclaw update`` in a detached session (via ``setsid``) so it
+        survives the gateway restart that ``sinoclaw update`` may trigger. Marker
         files are written so either the current gateway process or the next one
         can notify the user when the update finishes.
         """
@@ -11582,9 +11582,9 @@ class GatewayRunner:
                 from gateway.platform_registry import platform_registry
                 entry = platform_registry.get(platform.value)
                 if not entry or not entry.allow_update_command:
-                    return "✗ /update is only available from messaging platforms. Run `hermes update` from the terminal."
+                    return "✗ /update is only available from messaging platforms. Run `sinoclaw update` from the terminal."
             except Exception:
-                return "✗ /update is only available from messaging platforms. Run `hermes update` from the terminal."
+                return "✗ /update is only available from messaging platforms. Run `sinoclaw update` from the terminal."
 
         if is_managed():
             return f"✗ {format_managed_message('update Sinoclaw Agent')}"
@@ -11601,7 +11601,7 @@ class GatewayRunner:
                 "✗ Could not locate the `sinoclaw` command. "
                 "Sinoclaw is running, but the update command could not find the "
                 "executable on PATH or via the current Python interpreter. "
-                "Try running `hermes update` manually in your terminal."
+                "Try running `sinoclaw update` manually in your terminal."
             )
 
         pending_path = _sinoclaw_home / ".update_pending.json"
@@ -11622,7 +11622,7 @@ class GatewayRunner:
         _tmp_pending.replace(pending_path)
         exit_code_path.unlink(missing_ok=True)
 
-        # Spawn `hermes update --gateway` detached so it survives gateway restart.
+        # Spawn `sinoclaw update --gateway` detached so it survives gateway restart.
         # --gateway enables file-based IPC for interactive prompts (stash
         # restore, config migration) so the gateway can forward them to the
         # user instead of silently skipping them.
@@ -11630,7 +11630,7 @@ class GatewayRunner:
         # where systemd-run --user fails due to missing D-Bus session).
         # PYTHONUNBUFFERED ensures output is flushed line-by-line so the
         # gateway can stream it to the messenger in near-real-time.
-        # Spawn `hermes update --gateway` detached so it survives gateway restart.
+        # Spawn `sinoclaw update --gateway` detached so it survives gateway restart.
         # --gateway enables file-based IPC for interactive prompts (stash
         # restore, config migration) so the gateway can forward them to the
         # user instead of silently skipping them.
@@ -11639,7 +11639,7 @@ class GatewayRunner:
         # PYTHONUNBUFFERED ensures output is flushed line-by-line so the
         # gateway can stream it to the messenger in near-real-time.
         #
-        # Windows: no bash/setsid chain.  Run `hermes update --gateway`
+        # Windows: no bash/setsid chain.  Run `sinoclaw update --gateway`
         # directly via sys.executable; redirect stdout/stderr to the same
         # output files via Popen file handles; write the exit code in a
         # follow-up write.  A tiny Python watcher would be cleaner but
@@ -11729,7 +11729,7 @@ class GatewayRunner:
         stream_interval: float = 4.0,
         timeout: float = 1800.0,
     ) -> None:
-        """Watch ``hermes update --gateway``, streaming output + forwarding prompts.
+        """Watch ``sinoclaw update --gateway``, streaming output + forwarding prompts.
 
         Polls ``.update_output.txt`` for new content and sends chunks to the
         user periodically.  Detects ``.update_prompt.json`` (written by the
@@ -11830,11 +11830,11 @@ class GatewayRunner:
                     exit_code_raw = exit_code_path.read_text().strip() or "1"
                     exit_code = int(exit_code_raw)
                     if exit_code == 0:
-                        await adapter.send(chat_id, "✅ Hermes update finished.", metadata=metadata)
+                        await adapter.send(chat_id, "✅ Sinoclaw update finished.", metadata=metadata)
                     else:
                         await adapter.send(
                             chat_id,
-                            "❌ Hermes update failed (exit code {}).".format(exit_code),
+                            "❌ Sinoclaw update failed (exit code {}).".format(exit_code),
                             metadata=metadata,
                         )
                     logger.info("Update finished (exit=%s), notified %s", exit_code, session_key)
@@ -11922,7 +11922,7 @@ class GatewayRunner:
             try:
                 await adapter.send(
                     chat_id,
-                    "❌ Hermes update timed out after 30 minutes.",
+                    "❌ Sinoclaw update timed out after 30 minutes.",
                     metadata=metadata,
                 )
             except Exception:
@@ -11995,14 +11995,14 @@ class GatewayRunner:
                     if len(output) > 3500:
                         output = "…" + output[-3500:]
                     if exit_code == 0:
-                        msg = f"✅ Hermes update finished.\n\n```\n{output}\n```"
+                        msg = f"✅ Sinoclaw update finished.\n\n```\n{output}\n```"
                     else:
-                        msg = f"❌ Hermes update failed.\n\n```\n{output}\n```"
+                        msg = f"❌ Sinoclaw update failed.\n\n```\n{output}\n```"
                 else:
                     if exit_code == 0:
-                        msg = "✅ Hermes update finished successfully."
+                        msg = "✅ Sinoclaw update finished successfully."
                     else:
-                        msg = "❌ Hermes update failed. Check the gateway logs or run `hermes update` manually for details."
+                        msg = "❌ Sinoclaw update failed. Check the gateway logs or run `sinoclaw update` manually for details."
                 await adapter.send(chat_id, msg, metadata=metadata)
                 logger.info(
                     "Sent post-update notification to %s:%s (exit=%s)",
@@ -12291,7 +12291,7 @@ class GatewayRunner:
             if self._has_setup_skill():
                 disabled_note += (
                     " You have a skill called sinoclaw-agent-setup that can help "
-                    "users configure Hermes features including voice, tools, and more."
+                    "users configure Sinoclaw features including voice, tools, and more."
                 )
             disabled_note += "]"
             if user_text:
@@ -12326,7 +12326,7 @@ class GatewayRunner:
                         if self._has_setup_skill():
                             _no_stt_note += (
                                 " You have a skill called sinoclaw-agent-setup "
-                                "that can help users configure Hermes features "
+                                "that can help users configure Sinoclaw features "
                                 "including voice, tools, and more."
                             )
                         _no_stt_note += "]"
@@ -13069,7 +13069,7 @@ class GatewayRunner:
         return len(to_evict)
 
     # ------------------------------------------------------------------
-    # Proxy mode: forward messages to a remote Hermes API server
+    # Proxy mode: forward messages to a remote Sinoclaw API server
     # ------------------------------------------------------------------
 
     def _get_proxy_url(self) -> Optional[str]:
@@ -13098,7 +13098,7 @@ class GatewayRunner:
         run_generation: Optional[int] = None,
         event_message_id: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Forward the message to a remote Hermes API server instead of
+        """Forward the message to a remote Sinoclaw API server instead of
         running a local AIAgent.
 
         When ``GATEWAY_PROXY_URL`` (or ``gateway.proxy_url`` in config.yaml)
@@ -15330,13 +15330,13 @@ def _start_cron_ticker(stop_event: threading.Event, adapters=None, loop=None, in
     Background thread that ticks the cron scheduler at a regular interval.
     
     Runs inside the gateway process so cronjobs fire automatically without
-    needing a separate `hermes cron daemon` or system cron entry.
+    needing a separate `sinoclaw cron daemon` or system cron entry.
 
     When ``adapters`` and ``loop`` are provided, passes them through to the
     cron delivery path so live adapters can be used for E2EE rooms.
 
     Also refreshes the channel directory every 5 minutes and prunes the
-    image/audio/document cache + expired ``hermes debug share`` pastes
+    image/audio/document cache + expired ``sinoclaw debug share`` pastes
     once per hour.
     """
     from cron.scheduler import tick as cron_tick
@@ -15586,7 +15586,7 @@ async def start_gateway(config: Optional[GatewayConfig] = None, replace: bool = 
         # before sending SIGTERM. If present, treat the signal as a
         # planned shutdown and exit 0 so systemd's Restart=on-failure
         # doesn't revive us (which would flap-fight the replacer when
-        # both services are enabled, e.g. hermes.service + sinoclaw-
+        # both services are enabled, e.g. sinoclaw.service + sinoclaw-
         # gateway.service from pre-rename installs).
         planned_takeover = False
         try:
@@ -15621,7 +15621,7 @@ async def start_gateway(config: Optional[GatewayConfig] = None, replace: bool = 
             _signal_initiated_shutdown = True
             logger.info("Received SIGTERM/SIGINT — initiating shutdown")
         # Diagnostic: log all sinoclaw-related processes so we can identify
-        # what triggered the signal (hermes update, sinoclaw gateway restart,
+        # what triggered the signal (sinoclaw update, sinoclaw gateway restart,
         # a stale detached subprocess, etc.).
         try:
             import subprocess as _sp
@@ -15631,16 +15631,16 @@ async def start_gateway(config: Optional[GatewayConfig] = None, replace: bool = 
             )
             _sinoclaw_procs = [
                 line for line in _ps.stdout.splitlines()
-                if ("hermes" in line.lower() or "gateway" in line.lower())
+                if ("sinoclaw" in line.lower() or "gateway" in line.lower())
                 and str(os.getpid()) not in line.split()[1:2]  # exclude self
             ]
             if _sinoclaw_procs:
                 logger.warning(
-                    "Shutdown diagnostic — other hermes processes running:\n  %s",
+                    "Shutdown diagnostic — other sinoclaw processes running:\n  %s",
                     "\n  ".join(_sinoclaw_procs),
                 )
             else:
-                logger.info("Shutdown diagnostic — no other hermes processes found")
+                logger.info("Shutdown diagnostic — no other sinoclaw processes found")
         except Exception:
             pass
         asyncio.create_task(runner.stop())
@@ -15753,7 +15753,7 @@ async def start_gateway(config: Optional[GatewayConfig] = None, replace: bool = 
     # When an unexpected SIGTERM caused the shutdown and it wasn't a planned
     # restart (/restart, /update, SIGUSR1), exit non-zero so systemd's
     # Restart=on-failure revives the process.  This covers:
-    #   - hermes update killing the gateway mid-work
+    #   - sinoclaw update killing the gateway mid-work
     #   - External kill commands
     #   - WSL2/container runtime sending unexpected signals
     # `sinoclaw gateway stop` and interactive Ctrl+C are handled above as

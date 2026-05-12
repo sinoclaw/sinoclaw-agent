@@ -34,7 +34,7 @@ Key capabilities:
 ## Setup
 
 :::tip Nous Subscribers
-If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. Run `hermes model` or `hermes tools` to enable it.
+If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. Run `sinoclaw model` or `sinoclaw tools` to enable it.
 :::
 
 ### Browserbase cloud mode
@@ -185,7 +185,7 @@ Then set in `~/.sinoclaw/.env`:
 CAMOFOX_URL=http://localhost:9377
 ```
 
-Or configure via `hermes tools` → Browser Automation → Camofox.
+Or configure via `sinoclaw tools` → Browser Automation → Camofox.
 
 When `CAMOFOX_URL` is set, all browser tools automatically route through Camofox instead of Browserbase or agent-browser.
 
@@ -244,7 +244,7 @@ When Camofox runs in headed mode (with a visible browser window), it exposes a V
 Instead of a cloud provider, you can attach Hermes browser tools to your own running Chrome instance via the Chrome DevTools Protocol (CDP). This is useful when you want to see what the agent is doing in real-time, interact with pages that require your own cookies/sessions, or avoid cloud browser costs.
 
 :::note
-`/browser connect` is an **interactive-CLI slash command** — it is not dispatched by the gateway. If you try to run it inside a WebUI, Telegram, Discord, or other gateway chat, the message will be sent to the agent as plain text and the command will not execute. Start Hermes from the terminal (`hermes` or `hermes chat`) and issue `/browser connect` there.
+`/browser connect` is an **interactive-CLI slash command** — it is not dispatched by the gateway. If you try to run it inside a WebUI, Telegram, Discord, or other gateway chat, the message will be sent to the agent as plain text and the command will not execute. Start Hermes from the terminal (`hermes` or `sinoclaw chat`) and issue `/browser connect` there.
 :::
 
 In the CLI, use:
@@ -277,7 +277,7 @@ google-chrome \
   --no-default-browser-check &
 ```
 
-Then launch the Hermes CLI and run `/browser connect`.
+Then launch the Sinoclaw CLI and run `/browser connect`.
 
 **Why `--user-data-dir`?** Without it, launching Chrome while a regular Chrome instance is already running typically opens a new window on the existing process — and that existing process was not started with `--remote-debugging-port`, so port 9222 never opens. A dedicated user-data-dir forces a fresh Chrome process where the debug port actually listens. `--no-first-run --no-default-browser-check` skips the first-launch wizard for the fresh profile.
 :::
@@ -333,7 +333,7 @@ npm install
 ```
 
 :::info
-The `browser` toolset must be included in your config's `toolsets` list or enabled via `hermes config set toolsets '["sinoclaw-cli", "browser"]'`.
+The `browser` toolset must be included in your config's `toolsets` list or enabled via `sinoclaw config set toolsets '["sinoclaw-cli", "browser"]'`.
 :::
 
 ## Available Tools

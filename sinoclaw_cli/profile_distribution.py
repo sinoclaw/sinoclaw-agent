@@ -9,7 +9,7 @@ Where this fits relative to the existing pieces:
 
 * ``sinoclaw profile export/import`` — local backup / restore for a profile
   on your own machine. NOT a distribution format. Stays as-is.
-* ``hermes skills install <url>`` — the URL install pattern we're mirroring,
+* ``sinoclaw skills install <url>`` — the URL install pattern we're mirroring,
   but at the profile granularity.
 
 Subcommands (all live under ``sinoclaw profile``, not a parallel tree):

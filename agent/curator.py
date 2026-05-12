@@ -207,9 +207,9 @@ def should_run_now(now: Optional[datetime] = None) -> bool:
     install that predates the curator), we DO NOT run immediately. The
     curator is designed to run after at least ``interval_hours`` (7 days by
     default) of skill activity, not on the first background tick after
-    ``hermes update``. On first observation we seed ``last_run_at`` to "now"
+    ``sinoclaw update``. On first observation we seed ``last_run_at`` to "now"
     and defer the first real pass by one full interval. Users who want to
-    run it sooner can always invoke ``hermes curator run`` (with or without
+    run it sooner can always invoke ``sinoclaw curator run`` (with or without
     ``--dry-run``) explicitly — that path bypasses this gate.
 
     The idle check (min_idle_hours) is applied at the call site where we know
@@ -233,7 +233,7 @@ def should_run_now(now: Optional[datetime] = None) -> bool:
             state["last_run_at"] = now.isoformat()
             state["last_run_summary"] = (
                 "deferred first run — curator seeded, will run after one "
-                "interval; use `hermes curator run --dry-run` to preview now"
+                "interval; use `sinoclaw curator run --dry-run` to preview now"
             )
             save_state(state)
         except Exception as e:  # pragma: no cover — best-effort persistence
@@ -318,7 +318,7 @@ CURATOR_DRY_RUN_BANNER = (
     "produce on a live run — but describe the actions you WOULD take, "
     "not actions you took. A downstream reviewer will read the report "
     "and decide whether to approve a live run with "
-    "`hermes curator run` (no flag).\n"
+    "`sinoclaw curator run` (no flag).\n"
     "\n"
     "If you accidentally take a mutating action, say so explicitly in "
     "the summary so the reviewer can revert it.\n"
@@ -644,7 +644,7 @@ def _parse_structured_summary(
 
     body = match.group(1)
 
-    # Prefer PyYAML when available — every hermes install already has it
+    # Prefer PyYAML when available — every sinoclaw install already has it
     # (config.yaml loader). Fall back to a hand parser for paranoia.
     try:
         import yaml  # type: ignore
@@ -1122,7 +1122,7 @@ def _render_report_markdown(p: Dict[str, Any]) -> str:
             "_These skills were **absorbed into another skill** during this run — "
             "their content still lives, just under a different name. "
             "The original directory was moved to `~/.sinoclaw/skills/.archive/` for "
-            "safety and can be restored via `hermes curator restore <name>` if the "
+            "safety and can be restored via `sinoclaw curator restore <name>` if the "
             "consolidation was wrong._\n"
         )
         SHOW = 50
@@ -1158,7 +1158,7 @@ def _render_report_markdown(p: Dict[str, Any]) -> str:
             "_These skills were archived without being merged into an umbrella "
             "(e.g. stale, unused, or judged irrelevant). "
             "Directories live under `~/.sinoclaw/skills/.archive/`. "
-            "Restore any via `hermes curator restore <name>`._\n"
+            "Restore any via `sinoclaw curator restore <name>`._\n"
         )
         SHOW = 50
         for entry in pruned[:SHOW]:
@@ -1243,7 +1243,7 @@ def _render_report_markdown(p: Dict[str, Any]) -> str:
 
     # Recovery footer
     lines.append("## Recovery\n")
-    lines.append("- Restore an archived skill: `hermes curator restore <name>`")
+    lines.append("- Restore an archived skill: `sinoclaw curator restore <name>`")
     lines.append("- All archives live under `~/.sinoclaw/skills/.archive/` and are recoverable by `mv`")
     lines.append("- See `run.json` in this directory for the full machine-readable record.")
     lines.append("")
@@ -1341,7 +1341,7 @@ def run_curator_review(
     # Persist state before the LLM pass so a crash mid-review still records
     # the run and doesn't immediately re-trigger. In dry-run we do NOT bump
     # last_run_at or run_count — a preview shouldn't push the next scheduled
-    # real pass out. We still record a summary so `hermes curator status`
+    # real pass out. We still record a summary so `sinoclaw curator status`
     # shows that a preview ran.
     state = load_state()
     if not dry_run:
@@ -1405,7 +1405,7 @@ def run_curator_review(
 
         # Write the per-run report. Runs in a best-effort try so a
         # reporting bug never breaks the curator itself. Report path is
-        # recorded in state so `hermes curator status` can point at it.
+        # recorded in state so `sinoclaw curator status` can point at it.
         try:
             after_report = skill_usage.agent_created_report()
         except Exception:
@@ -1497,7 +1497,7 @@ def _resolve_review_model(cfg: Dict[str, Any]) -> tuple[str, str]:
     """Pick (provider, model) for the curator review fork.
 
     Curator is a regular auxiliary task slot — ``auxiliary.curator.{provider,model}``
-    — so it participates in the canonical aux-model plumbing (``hermes model`` →
+    — so it participates in the canonical aux-model plumbing (``sinoclaw model`` →
     auxiliary picker, the dashboard Models tab, ``auxiliary.curator.{timeout,
     base_url,api_key,extra_body}``). ``provider: "auto"`` with an empty model
     means "use the main chat model" — same default as every other aux task.
@@ -1549,7 +1549,7 @@ def _run_llm_review(prompt: str) -> Dict[str, Any]:
     # providers and for pool-backed credentials.
     #
     # `_resolve_review_runtime()` honors `auxiliary.curator.{provider,model,...}`
-    # (canonical aux-task slot, wired through `hermes model` → auxiliary
+    # (canonical aux-task slot, wired through `sinoclaw model` → auxiliary
     # picker and the dashboard Models tab), with a legacy fallback to
     # `curator.auxiliary.{provider,model,...}`. See docs/user-guide/features/curator.md.
     _api_key = None

@@ -201,7 +201,7 @@ class TestAppMentionHandler:
         slash_matcher = registered_commands[0]
         import re as _re
         assert isinstance(slash_matcher, _re.Pattern)
-        for expected in ("/hermes", "/btw", "/stop", "/model", "/help"):
+        for expected in ("/sinoclaw", "/btw", "/stop", "/model", "/help"):
             assert slash_matcher.match(expected), (
                 f"Slack slash regex does not match {expected}"
             )
@@ -2294,7 +2294,7 @@ class TestSlashCommands:
         legacy form must keep working during the transition.
         """
         command = {
-            "command": "/hermes",
+            "command": "/sinoclaw",
             "text": "btw run the tests",
             "user_id": "U1",
             "channel_id": "C1",
@@ -2307,7 +2307,7 @@ class TestSlashCommands:
     async def test_legacy_sinoclaw_freeform_question(self, adapter):
         """/hermes <free-form text> must stay as the raw text (non-command)."""
         command = {
-            "command": "/hermes",
+            "command": "/sinoclaw",
             "text": "what's the weather today?",
             "user_id": "U1",
             "channel_id": "C1",
@@ -3000,7 +3000,7 @@ class TestSlashEphemeralAck:
     async def test_legacy_sinoclaw_slash_stashes_context(self, adapter):
         """Legacy /hermes <subcommand> also stashes context."""
         command = {
-            "command": "/hermes",
+            "command": "/sinoclaw",
             "text": "help",
             "user_id": "U_H",
             "channel_id": "C_H",
@@ -3015,7 +3015,7 @@ class TestSlashEphemeralAck:
     async def test_freeform_sinoclaw_question_does_not_stash_context(self, adapter):
         """Free-form /hermes <question> must NOT route agent reply ephemeral."""
         command = {
-            "command": "/hermes",
+            "command": "/sinoclaw",
             "text": "what's the weather",
             "user_id": "U_FREE",
             "channel_id": "C_FREE",

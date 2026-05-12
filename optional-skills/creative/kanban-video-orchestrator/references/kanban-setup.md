@@ -60,13 +60,13 @@ Example: `q3-product-teaser`, `ascii-mood-loop`, `interview-cut-2026-q1`.
 The setup script does six things in order:
 
 1. **Create workspace tree** — all directories above
-2. **Create profiles** — `hermes profile create <name> --clone`
+2. **Create profiles** — `sinoclaw profile create <name> --clone`
 3. **Configure profiles** — patch each profile's
    `~/.sinoclaw/profiles/<name>/config.yaml` to set toolsets, always_load skills,
    and `cwd`
 4. **Write SOUL.md per profile** — the personality + role definition
 5. **Copy any provided assets + write `brief.md`, `TEAM.md`, and `taste/`**
-6. **Fire the initial kanban task** — `hermes kanban create` assigned to the director
+6. **Fire the initial kanban task** — `sinoclaw kanban create` assigned to the director
 
 See `assets/setup.sh.tmpl` for the skeleton.
 
@@ -237,8 +237,8 @@ check_key() {
     return 1
 }
 
-check_key ELEVENLABS_API_KEY hermes ELEVENLABS_API_KEY || exit 1
-check_key OPENROUTER_API_KEY hermes OPENROUTER_API_KEY || exit 1
+check_key ELEVENLABS_API_KEY sinoclaw ELEVENLABS_API_KEY || exit 1
+check_key OPENROUTER_API_KEY sinoclaw OPENROUTER_API_KEY || exit 1
 # ...
 ```
 

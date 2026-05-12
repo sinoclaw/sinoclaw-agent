@@ -61,7 +61,7 @@ curl http://localhost:8644/health
 
 ## Commands
 
-All management is via the `hermes webhook` CLI command:
+All management is via the `sinoclaw webhook` CLI command:
 
 ### Create a subscription
 ```bash
@@ -187,7 +187,7 @@ Requires `--deliver` to be a real target (telegram, discord, slack, github_comme
 
 ## How It Works
 
-1. `hermes webhook subscribe` writes to `~/.sinoclaw/webhook_subscriptions.json`
+1. `sinoclaw webhook subscribe` writes to `~/.sinoclaw/webhook_subscriptions.json`
 2. The webhook adapter hot-reloads this file on each incoming request (mtime-gated, negligible overhead)
 3. When a POST arrives matching a route, the adapter formats the prompt and triggers an agent run
 4. The agent's response is delivered to the configured target (Telegram, Discord, GitHub comment, etc.)
@@ -199,6 +199,6 @@ If webhooks aren't working:
 1. **Is the gateway running?** Check with `systemctl --user status sinoclaw-gateway` or `ps aux | grep gateway`
 2. **Is the webhook server listening?** `curl http://localhost:8644/health` should return `{"status": "ok"}`
 3. **Check gateway logs:** `grep webhook ~/.sinoclaw/logs/gateway.log | tail -20`
-4. **Signature mismatch?** Verify the secret in your service matches the one from `hermes webhook list`. GitHub sends `X-Hub-Signature-256`, GitLab sends `X-Gitlab-Token`.
+4. **Signature mismatch?** Verify the secret in your service matches the one from `sinoclaw webhook list`. GitHub sends `X-Hub-Signature-256`, GitLab sends `X-Gitlab-Token`.
 5. **Firewall/NAT?** The webhook URL must be reachable from the service. For local development, use a tunnel (ngrok, cloudflared).
-6. **Wrong event type?** Check `--events` filter matches what the service sends. Use `hermes webhook test <name>` to verify the route works.
+6. **Wrong event type?** Check `--events` filter matches what the service sends. Use `sinoclaw webhook test <name>` to verify the route works.

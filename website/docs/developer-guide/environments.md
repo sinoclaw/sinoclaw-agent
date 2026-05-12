@@ -420,7 +420,7 @@ See `environments/benchmarks/yc_bench/yc_bench_env.py` for a clean, well-documen
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `enabled_toolsets` | `List[str]` | `None` (all) | Which hermes toolsets to enable |
+| `enabled_toolsets` | `List[str]` | `None` (all) | Which sinoclaw toolsets to enable |
 | `disabled_toolsets` | `List[str]` | `None` | Toolsets to filter out |
 | `distribution` | `str` | `None` | Probabilistic toolset distribution name |
 | `max_agent_turns` | `int` | `30` | Max LLM calls per rollout |

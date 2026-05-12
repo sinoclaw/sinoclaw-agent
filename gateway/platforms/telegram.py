@@ -1630,7 +1630,7 @@ class TelegramAdapter(BasePlatformAdapter):
     ) -> SendResult:
         """Send an inline-keyboard update prompt (Yes / No buttons).
 
-        Used by the gateway ``/update`` watcher when ``hermes update --gateway``
+        Used by the gateway ``/update`` watcher when ``sinoclaw update --gateway``
         needs user input (stash restore, config migration).
         """
         if not self._bot:

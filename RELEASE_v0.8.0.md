@@ -24,7 +24,7 @@
 
 - **MCP OAuth 2.1 PKCE + OSV Malware Scanning** — Full standards-compliant OAuth for MCP server authentication, plus automatic malware scanning of MCP extension packages via the OSV vulnerability database. ([#5420](https://github.com/NousResearch/sinoclaw-agent/pull/5420), [#5305](https://github.com/NousResearch/sinoclaw-agent/pull/5305))
 
-- **Centralized Logging & Config Validation** — Structured logging to `~/.sinoclaw/logs/` (agent.log + errors.log) with the `hermes logs` command for tailing and filtering. Config structure validation catches malformed YAML at startup before it causes cryptic failures. ([#5430](https://github.com/NousResearch/sinoclaw-agent/pull/5430), [#5426](https://github.com/NousResearch/sinoclaw-agent/pull/5426))
+- **Centralized Logging & Config Validation** — Structured logging to `~/.sinoclaw/logs/` (agent.log + errors.log) with the `sinoclaw logs` command for tailing and filtering. Config structure validation catches malformed YAML at startup before it causes cryptic failures. ([#5430](https://github.com/NousResearch/sinoclaw-agent/pull/5430), [#5426](https://github.com/NousResearch/sinoclaw-agent/pull/5426))
 
 - **Plugin System Expansion** — Plugins can now register CLI subcommands, receive request-scoped API hooks with correlation IDs, prompt for required env vars during install, and hook into session lifecycle events (finalize/reset). ([#5295](https://github.com/NousResearch/sinoclaw-agent/pull/5295), [#5427](https://github.com/NousResearch/sinoclaw-agent/pull/5427), [#5470](https://github.com/NousResearch/sinoclaw-agent/pull/5470), [#6129](https://github.com/NousResearch/sinoclaw-agent/pull/6129))
 
@@ -183,15 +183,15 @@
 
 ### Setup & Configuration
 - **Config structure validation** — detect malformed YAML at startup with actionable error messages ([#5426](https://github.com/NousResearch/sinoclaw-agent/pull/5426))
-- **Centralized logging** to `~/.sinoclaw/logs/` — agent.log (INFO+), errors.log (WARNING+) with `hermes logs` command ([#5430](https://github.com/NousResearch/sinoclaw-agent/pull/5430))
+- **Centralized logging** to `~/.sinoclaw/logs/` — agent.log (INFO+), errors.log (WARNING+) with `sinoclaw logs` command ([#5430](https://github.com/NousResearch/sinoclaw-agent/pull/5430))
 - **Docs links added** to setup wizard sections ([#5283](https://github.com/NousResearch/sinoclaw-agent/pull/5283))
 - **Doctor diagnostics** — sync provider checks, config migration, WAL and mem0 diagnostics ([#5077](https://github.com/NousResearch/sinoclaw-agent/pull/5077))
 - **Timeout debug logging** and user-facing diagnostics improved ([#5370](https://github.com/NousResearch/sinoclaw-agent/pull/5370))
 - **Reasoning effort unified** to config.yaml only ([#6118](https://github.com/NousResearch/sinoclaw-agent/pull/6118))
 - **Permanent command allowlist** loaded on startup ([#5076](https://github.com/NousResearch/sinoclaw-agent/pull/5076))
-- **`hermes auth remove`** now clears env-seeded credentials permanently ([#5285](https://github.com/NousResearch/sinoclaw-agent/pull/5285))
+- **`sinoclaw auth remove`** now clears env-seeded credentials permanently ([#5285](https://github.com/NousResearch/sinoclaw-agent/pull/5285))
 - **Bundled skills synced to all profiles** during update ([#5795](https://github.com/NousResearch/sinoclaw-agent/pull/5795))
-- **`hermes update` no longer kills** freshly-restarted gateway service ([#5448](https://github.com/NousResearch/sinoclaw-agent/pull/5448))
+- **`sinoclaw update` no longer kills** freshly-restarted gateway service ([#5448](https://github.com/NousResearch/sinoclaw-agent/pull/5448))
 - **Subprocess.run() timeouts** added to all gateway CLI commands ([#5424](https://github.com/NousResearch/sinoclaw-agent/pull/5424))
 - **Actionable error message** when Codex refresh token is reused — @tymrtn ([#5612](https://github.com/NousResearch/sinoclaw-agent/pull/5612))
 - **Google-workspace skill scripts** can now run directly — @xinbenlv ([#5624](https://github.com/NousResearch/sinoclaw-agent/pull/5624))

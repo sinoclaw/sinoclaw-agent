@@ -20,7 +20,7 @@ This page shows how to combine worktrees with Hermes so each session has a clean
 
 Hermes treats the **current working directory** as the project root:
 
-- CLI: the directory where you run `hermes` or `hermes chat`
+- CLI: the directory where you run `hermes` or `sinoclaw chat`
 - Messaging gateways: the directory set by `MESSAGING_CWD`
 
 If you run multiple agents in the **same checkout**, their changes can interfere with each other:
@@ -137,7 +137,7 @@ Notes:
 - **Avoid running Hermes from the bare repo root when using worktrees**
   - Prefer the worktree directories instead, so each agent has a clear scope.
 
-## Using `hermes -w` (Automatic Worktree Mode)
+## Using `sinoclaw -w` (Automatic Worktree Mode)
 
 Hermes has a built‑in `-w` flag that **automatically creates a disposable git worktree** with its own branch. You don't need to set up worktrees manually — just `cd` into your repo and run:
 
@@ -158,11 +158,11 @@ This is the easiest way to get worktree isolation. You can also combine it with 
 hermes -w -q "Fix issue #123"
 ```
 
-For parallel agents, open multiple terminals and run `hermes -w` in each — every invocation gets its own worktree and branch automatically.
+For parallel agents, open multiple terminals and run `sinoclaw -w` in each — every invocation gets its own worktree and branch automatically.
 
 ## Putting It All Together
 
-- Use **git worktrees** to give each Hermes session its own clean checkout.
+- Use **git worktrees** to give each Sinoclaw session its own clean checkout.
 - Use **branches** to capture the high‑level history of your experiments.
 - Use **checkpoints + `/rollback`** to recover from mistakes inside each worktree.
 

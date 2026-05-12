@@ -14,7 +14,7 @@ Publish static sites to &#123;slug&#125;.here.now and store private files in clo
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/productivity/here-now` |
+| Source | Optional — install with `sinoclaw skills install official/productivity/here-now` |
 | Path | `optional-skills/productivity/here-now` |
 | Version | `1.15.3` |
 | Author | here.now |

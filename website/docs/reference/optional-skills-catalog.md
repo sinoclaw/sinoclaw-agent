@@ -1,7 +1,7 @@
 ---
 sidebar_position: 9
 title: "Optional Skills Catalog"
-description: "Official optional skills shipped with sinoclaw-agent — install via hermes skills install official/<category>/<skill>"
+description: "Official optional skills shipped with sinoclaw-agent — install via sinoclaw skills install official/<category>/<skill>"
 ---
 
 # Optional Skills Catalog

@@ -14,7 +14,7 @@ State-of-the-art text-to-image generation with Stable Diffusion models via Huggi
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/stable-diffusion` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/stable-diffusion` |
 | Path | `optional-skills/mlops/stable-diffusion` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

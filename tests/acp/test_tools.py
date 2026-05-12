@@ -30,7 +30,7 @@ COMMON_SINOCLAW_TOOLS = ["read_file", "search_files", "terminal", "patch", "writ
 
 class TestToolKindMap:
     def test_all_sinoclaw_tools_have_kind(self):
-        """Every common hermes tool should appear in TOOL_KIND_MAP."""
+        """Every common sinoclaw tool should appear in TOOL_KIND_MAP."""
         for tool in COMMON_SINOCLAW_TOOLS:
             assert tool in TOOL_KIND_MAP, f"{tool} missing from TOOL_KIND_MAP"
 

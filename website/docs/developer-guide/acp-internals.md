@@ -147,7 +147,7 @@ Instead it reuses Hermes' runtime resolver:
 - `acp_adapter/auth.py`
 - `sinoclaw_cli/runtime_provider.py`
 
-So ACP advertises and uses the currently configured Hermes provider/credentials.
+So ACP advertises and uses the currently configured Sinoclaw provider/credentials.
 
 ## Working directory binding
 
@@ -178,5 +178,5 @@ ACP temporarily installs an approval callback on the terminal tool during prompt
 
 - `tests/acp/` — ACP test suite
 - `toolsets.py` — `sinoclaw-acp` toolset definition
-- `sinoclaw_cli/main.py` — `hermes acp` CLI subcommand
+- `sinoclaw_cli/main.py` — `sinoclaw acp` CLI subcommand
 - `pyproject.toml` — `[acp]` optional dependency + `sinoclaw-acp` script

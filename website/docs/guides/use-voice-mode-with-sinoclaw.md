@@ -345,7 +345,7 @@ Useful when you want private interaction without server-channel mention behavior
 
 This is the most advanced mode.
 
-Hermes joins a Discord VC, listens to user speech, transcribes it, runs the normal agent pipeline, and speaks replies back into the channel.
+Sinoclaw joins a Discord VC, listens to user speech, transcribes it, runs the normal agent pipeline, and speaks replies back into the channel.
 
 ## Required Discord permissions
 

@@ -216,7 +216,7 @@ The fallback system also covers auxiliary tasks independently — vision, compre
 After each turn:
 - Messages are saved to the session store (SQLite via `sinoclaw_state.py`)
 - Memory changes are flushed to `MEMORY.md` / `USER.md`
-- The session can be resumed later via `/resume` or `hermes chat --resume`
+- The session can be resumed later via `/resume` or `sinoclaw chat --resume`
 
 ## Key Source Files
 

@@ -38,7 +38,7 @@ Mode — all at once.
 
 1. Generate the manifest:
    ```bash
-   hermes slack manifest --write
+   sinoclaw slack manifest --write
    ```
    This writes `~/.sinoclaw/slack-manifest.json` and prints paste-in
    instructions.
@@ -242,7 +242,7 @@ through the WebSocket regardless of the manifest's `url` field.
 
 ### Refreshing slash commands after updates
 
-When Hermes adds new commands (e.g. after `hermes update`), regenerate
+When Hermes adds new commands (e.g. after `sinoclaw update`), regenerate
 the manifest and update your Slack app:
 
 ```bash

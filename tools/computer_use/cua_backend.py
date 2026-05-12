@@ -87,7 +87,7 @@ def cua_driver_install_hint() -> str:
         "cua-driver is not installed. Install with:\n"
         '  /bin/bash -c "$(curl -fsSL '
         'https://raw.githubusercontent.com/trycua/cua/main/libs/cua-driver/scripts/install.sh)"\n'
-        "Or run `hermes tools` and enable the Computer Use toolset to install it automatically."
+        "Or run `sinoclaw tools` and enable the Computer Use toolset to install it automatically."
     )
 
 
@@ -338,7 +338,7 @@ class CuaDriverBackend(ComputerUseBackend):
     def capture(self, mode: str = "som", app: Optional[str] = None) -> CaptureResult:
         """Capture the frontmost on-screen window (optionally filtered by app name).
 
-        Maps hermes `capture(mode, app)` → cua-driver `list_windows` +
+        Maps sinoclaw `capture(mode, app)` → cua-driver `list_windows` +
         `get_window_state` (ax/som) or `screenshot` (vision).
         """
         # Step 1: enumerate on-screen windows to find target pid/window_id.

@@ -175,7 +175,7 @@ tail -f "${SINOCLAW_HOME:-$HOME/.hermes}/logs/gateway.log"
 ```
 
 :::note
-`hermes webhook test <name>` only works for **dynamic subscriptions** created with `hermes webhook subscribe`. It does not read routes from `config.yaml`.
+`sinoclaw webhook test <name>` only works for **dynamic subscriptions** created with `sinoclaw webhook subscribe`. It does not read routes from `config.yaml`.
 :::
 
 ---

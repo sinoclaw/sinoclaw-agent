@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hermes CLI - Main entry point.
+Sinoclaw CLI - Main entry point.
 
 Usage:
     sinoclaw-agent                     # Interactive chat (default)
@@ -3100,7 +3100,7 @@ def _model_flow_custom(config):
     else:
         print(
             f"Warning: could not verify this endpoint via {probe.get('probed_url')}. "
-            f"Hermes will still save it."
+            f"Sinoclaw will still save it."
         )
         if probe.get("suggested_base_url"):
             suggested = probe["suggested_base_url"]
@@ -5222,7 +5222,7 @@ def _model_flow_anthropic(config, current_model=""):
 
 
 def cmd_login(args):
-    """Authenticate Hermes CLI with a provider."""
+    """Authenticate Sinoclaw CLI with a provider."""
     from sinoclaw_cli.auth import login_command
 
     login_command(args)
@@ -8073,7 +8073,7 @@ def _cmd_update_impl(args, gateway_mode: bool):
         except Exception as e:
             logger.debug("Gateway restart during update failed: %s", e)
 
-        # Warn if legacy Hermes gateway unit files are still installed.
+        # Warn if legacy Sinoclaw gateway unit files are still installed.
         # When both sinoclaw-agent.service (from a pre-rename install) and the
         # current sinoclaw-gateway.service are enabled, they SIGTERM-fight
         # for the same bot token (see PR #11909). Flagging here means
@@ -9195,7 +9195,7 @@ def main():
         "migrate-legacy",
         help="Remove legacy sinoclaw-agent.service units from pre-rename installs",
         description=(
-            "Stop, disable, and remove legacy Hermes gateway unit files "
+            "Stop, disable, and remove legacy Sinoclaw gateway unit files "
             "(e.g. sinoclaw-agent.service) left over from older installs. Profile "
             "units (sinoclaw-gateway-<profile>.service) and unrelated "
             "third-party services are never touched."
@@ -9320,7 +9320,7 @@ def main():
     login_parser = subparsers.add_parser(
         "login",
         help="Authenticate with an inference provider",
-        description="Run OAuth device authorization flow for Hermes CLI",
+        description="Run OAuth device authorization flow for Sinoclaw CLI",
     )
     login_parser.add_argument(
         "--provider",

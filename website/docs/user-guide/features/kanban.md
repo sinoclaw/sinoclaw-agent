@@ -14,8 +14,8 @@ Hermes Kanban is a durable task board, shared across all your Hermes profiles, t
 
 The board has two front doors, both backed by the same `~/.sinoclaw/kanban.db`:
 
-- **Agents drive the board through a dedicated `kanban_*` toolset** — `kanban_show`, `kanban_complete`, `kanban_block`, `kanban_heartbeat`, `kanban_comment`, `kanban_create`, `kanban_link`. The dispatcher spawns each worker with these tools already in its schema; the model reads its task and hands work off by calling them directly, *not* by shelling out to `hermes kanban`. See [How workers interact with the board](#how-workers-interact-with-the-board) below.
-- **You (and scripts, and cron) drive the board through `hermes kanban …`** on the CLI, `/kanban …` as a slash command, or the dashboard. These are for humans and automation — the places without a tool-calling model behind them.
+- **Agents drive the board through a dedicated `kanban_*` toolset** — `kanban_show`, `kanban_complete`, `kanban_block`, `kanban_heartbeat`, `kanban_comment`, `kanban_create`, `kanban_link`. The dispatcher spawns each worker with these tools already in its schema; the model reads its task and hands work off by calling them directly, *not* by shelling out to `sinoclaw kanban`. See [How workers interact with the board](#how-workers-interact-with-the-board) below.
+- **You (and scripts, and cron) drive the board through `sinoclaw kanban …`** on the CLI, `/kanban …` as a slash command, or the dashboard. These are for humans and automation — the places without a tool-calling model behind them.
 
 Both surfaces route through the same `kanban_db` layer, so reads see a consistent view and writes can't drift. The rest of this page shows CLI examples because they're easy to copy-paste, but every CLI verb has a tool-call equivalent the model uses.
 
@@ -125,7 +125,7 @@ Board resolution order (highest precedence first):
 1. Explicit `--board <slug>` on the CLI call.
 2. `SINOCLAW_KANBAN_BOARD` env var (set by the dispatcher when spawning a
    worker, so workers can't see other boards).
-3. `~/.sinoclaw/kanban/current` — the slug persisted by `hermes kanban
+3. `~/.sinoclaw/kanban/current` — the slug persisted by `sinoclaw kanban
    boards switch`.
 4. `default`.
 
@@ -136,7 +136,7 @@ so path-traversal tricks can't name a board.
 
 ### Managing boards from the dashboard
 
-`hermes dashboard` → Kanban tab shows a board switcher at the top as soon
+`sinoclaw dashboard` → Kanban tab shows a board switcher at the top as soon
 as more than one board exists (or any board has tasks). Single-board users
 see only a small `+ New board` button; the switcher is hidden until it
 matters.
@@ -177,7 +177,7 @@ hermes kanban list
 hermes kanban stats
 ```
 
-When the dispatcher picks up `t_abcd` and spawns the `researcher` profile, the very first thing that worker's model does is call `kanban_show()` to read its task. It doesn't run `hermes kanban show t_abcd`.
+When the dispatcher picks up `t_abcd` and spawns the `researcher` profile, the very first thing that worker's model does is call `kanban_show()` to read its task. It doesn't run `sinoclaw kanban show t_abcd`.
 
 ### Gateway-embedded dispatcher (default)
 
@@ -196,10 +196,10 @@ Override the config flag at runtime via `SINOCLAW_KANBAN_DISPATCH_IN_GATEWAY=0`
 for debugging. Standard gateway supervision applies: run `sinoclaw gateway
 start` directly, or wire the gateway up as a systemd user unit (see the
 gateway docs). Without a running gateway, `ready` tasks stay where they are
-until one comes up — `hermes kanban create` warns about this at creation
+until one comes up — `sinoclaw kanban create` warns about this at creation
 time.
 
-Running `hermes kanban daemon` as a separate process is **deprecated**;
+Running `sinoclaw kanban daemon` as a separate process is **deprecated**;
 use the gateway. If you truly cannot run the gateway (headless host
 policy forbids long-lived services, etc.) a `--force` escape hatch keeps
 the old standalone daemon alive for one release cycle, but running both
@@ -231,7 +231,7 @@ hermes kanban block    t_abc "need input" --ids t_def t_hij
 
 ## How workers interact with the board
 
-**Workers do not shell out to `hermes kanban`.** When the dispatcher spawns a worker it sets `SINOCLAW_KANBAN_TASK=t_abcd` in the child's env, and that env var flips on a dedicated **kanban toolset** in the model's schema — seven tools that read and mutate the board directly via the Python `kanban_db` layer, same as the CLI does. A running worker calls these like any other tool; it never sees or needs the `hermes kanban` CLI.
+**Workers do not shell out to `sinoclaw kanban`.** When the dispatcher spawns a worker it sets `SINOCLAW_KANBAN_TASK=t_abcd` in the child's env, and that env var flips on a dedicated **kanban toolset** in the model's schema — seven tools that read and mutate the board directly via the Python `kanban_db` layer, same as the CLI does. A running worker calls these like any other tool; it never sees or needs the `sinoclaw kanban` CLI.
 
 | Tool | Purpose | Required params |
 |---|---|---|
@@ -280,15 +280,15 @@ kanban_complete(summary="decomposed into 2 research tasks + 1 writer; linked dep
 
 The three "(Orchestrators)" tools — `kanban_create`, `kanban_link`, and `kanban_comment` on foreign tasks — are available to every worker; the convention (enforced by the `kanban-orchestrator` skill) is that worker profiles don't fan out and orchestrator profiles don't execute.
 
-### Why tools instead of shelling to `hermes kanban`
+### Why tools instead of shelling to `sinoclaw kanban`
 
 Three reasons:
 
-1. **Backend portability.** Workers whose terminal tool points at a remote backend (Docker / Modal / Singularity / SSH) would run `hermes kanban complete` *inside* the container, where `hermes` isn't installed and `~/.sinoclaw/kanban.db` isn't mounted. The kanban tools run in the agent's own Python process and always reach `~/.sinoclaw/kanban.db` regardless of terminal backend.
+1. **Backend portability.** Workers whose terminal tool points at a remote backend (Docker / Modal / Singularity / SSH) would run `sinoclaw kanban complete` *inside* the container, where `hermes` isn't installed and `~/.sinoclaw/kanban.db` isn't mounted. The kanban tools run in the agent's own Python process and always reach `~/.sinoclaw/kanban.db` regardless of terminal backend.
 2. **No shell-quoting fragility.** Passing `--metadata '{"files": [...]}'` through shlex + argparse is a latent footgun. Structured tool args skip it entirely.
 3. **Better errors.** Tool results are structured JSON the model can reason about, not stderr strings it has to parse.
 
-**Zero schema footprint on normal sessions.** A regular `hermes chat` session has zero `kanban_*` tools in its schema. The `check_fn` on each tool only returns True when `SINOCLAW_KANBAN_TASK` is set, which only happens when the dispatcher spawned this process. No tool bloat for users who never touch kanban.
+**Zero schema footprint on normal sessions.** A regular `sinoclaw chat` session has zero `kanban_*` tools in its schema. The `check_fn` on each tool only returns True when `SINOCLAW_KANBAN_TASK` is set, which only happens when the dispatcher spawned this process. No tool bloat for users who never touch kanban.
 
 The `kanban-worker` and `kanban-orchestrator` skills teach the model which tool to call when and in what order.
 
@@ -341,13 +341,13 @@ whichever profile you use for kanban workers (`researcher`, `writer`, `ops`,
 etc.):
 
 ```bash
-hermes -p <your-worker-profile> skills list | grep kanban-worker
+sinoclaw -p <your-worker-profile> skills list | grep kanban-worker
 ```
 
 If the bundled copy is missing, restore it for that profile:
 
 ```bash
-hermes -p <your-worker-profile> skills reset kanban-worker --restore
+sinoclaw -p <your-worker-profile> skills reset kanban-worker --restore
 ```
 
 The dispatcher also auto-passes `--skills kanban-worker` when spawning every worker, so the worker always has the pattern library available even if a profile's default skills config doesn't include it.
@@ -387,7 +387,7 @@ hermes kanban create "audit auth flow" \
 
 **From the dashboard**, type the skills comma-separated into the **skills** field of the inline create form.
 
-These skills are **additive** to the built-in `kanban-worker` — the dispatcher emits one `--skills <name>` flag for each (and for the built-in), so the worker spawns with all of them loaded. The skill names must match skills that are actually installed on the assignee's profile (run `hermes skills list` to see what's available); there's no runtime install.
+These skills are **additive** to the built-in `kanban-worker` — the dispatcher emits one `--skills <name>` flag for each (and for the built-in), so the worker spawns with all of them loaded. The skill names must match skills that are actually installed on the assignee's profile (run `sinoclaw skills list` to see what's available); there's no runtime install.
 
 ### The orchestrator skill
 
@@ -417,13 +417,13 @@ install and update, so there is no separate Skills Hub install step. Verify it i
 present in your orchestrator profile:
 
 ```bash
-hermes -p orchestrator skills list | grep kanban-orchestrator
+sinoclaw -p orchestrator skills list | grep kanban-orchestrator
 ```
 
 If the bundled copy is missing, restore it for that profile:
 
 ```bash
-hermes -p orchestrator skills reset kanban-orchestrator --restore
+sinoclaw -p orchestrator skills reset kanban-orchestrator --restore
 ```
 
 For best results, pair it with a profile whose toolsets are restricted to board operations (`kanban`, `gateway`, `memory`) so the orchestrator literally cannot execute implementation tasks even if it tries.
@@ -442,7 +442,7 @@ hermes dashboard        # "Kanban" tab appears in the nav, after "Skills"
 ### What the plugin gives you
 
 - A **Kanban** tab showing one column per status: `triage`, `todo`, `ready`, `running`, `blocked`, `done` (plus `archived` when the toggle is on).
-  - `triage` is the parking column for rough ideas a specifier is expected to flesh out. Tasks created with `hermes kanban create --triage` (or via the Triage column's inline create) land here and the dispatcher leaves them alone until a human or specifier promotes them to `todo` / `ready`. Run `hermes kanban specify <id>` to have the auxiliary LLM expand a triage task into a concrete spec (title + body with goal, approach, acceptance criteria) and promote it to `todo` in one shot; `--all` sweeps every triage task at once. Configure which model runs the specifier under `auxiliary.triage_specifier` in `config.yaml`.
+  - `triage` is the parking column for rough ideas a specifier is expected to flesh out. Tasks created with `sinoclaw kanban create --triage` (or via the Triage column's inline create) land here and the dispatcher leaves them alone until a human or specifier promotes them to `todo` / `ready`. Run `sinoclaw kanban specify <id>` to have the auxiliary LLM expand a triage task into a concrete spec (title + body with goal, approach, acceptance criteria) and promote it to `todo` in one shot; `--all` sweeps every triage task at once. Configure which model runs the specifier under `auxiliary.triage_specifier` in `config.yaml`.
 - Cards show the task id, title, priority badge, tenant tag, assigned profile, comment/link counts, a **progress pill** (`N/M` children done when the task has dependents), and "created N ago". A per-card checkbox enables multi-select.
 - **Per-profile lanes inside Running** — toolbar checkbox toggles sub-grouping of the Running column by assignee.
 - **Live updates via WebSocket** — the plugin tails the append-only `task_events` table on a short poll interval; the board reflects changes the instant any profile (CLI, gateway, or another dashboard tab) acts. Reloads are debounced so a burst of events triggers a single refetch.
@@ -454,7 +454,7 @@ hermes dashboard        # "Kanban" tab appears in the nav, after "Skills"
   - **Editable assignee / priority** — click the meta row to rewrite.
   - **Editable description** — markdown-rendered by default (headings, bold, italic, inline code, fenced code, `http(s)` / `mailto:` links, bullet lists), with an "edit" button that swaps in a textarea. Markdown rendering is a tiny, XSS-safe renderer — every substitution runs on HTML-escaped input, only `http(s)` / `mailto:` links pass through, and `target="_blank"` + `rel="noopener noreferrer"` are always set.
   - **Dependency editor** — chip list of parents and children, each with an `×` to unlink, plus dropdowns over every other task to add a new parent or child. Cycle attempts are rejected server-side with a clear message.
-  - **Status action row** (→ triage / → ready / → running / block / unblock / complete / archive) with confirm prompts for destructive transitions. For cards in the **Triage** column the row also exposes a **✨ Specify** button that calls the auxiliary LLM (`auxiliary.triage_specifier` in `config.yaml`) to expand the one-liner into a concrete spec (title + body with goal, approach, acceptance criteria) and promote the task to `todo`. The same behaviour is reachable from the CLI (`hermes kanban specify <id>` / `--all`), from any gateway platform (`/kanban specify <id>`), and programmatically via `POST /api/plugins/kanban/tasks/:id/specify`.
+  - **Status action row** (→ triage / → ready / → running / block / unblock / complete / archive) with confirm prompts for destructive transitions. For cards in the **Triage** column the row also exposes a **✨ Specify** button that calls the auxiliary LLM (`auxiliary.triage_specifier` in `config.yaml`) to expand the one-liner into a concrete spec (title + body with goal, approach, acceptance criteria) and promote the task to `todo`. The same behaviour is reachable from the CLI (`sinoclaw kanban specify <id>` / `--all`), from any gateway platform (`/kanban specify <id>`), and programmatically via `POST /api/plugins/kanban/tasks/:id/specify`.
   - Result section (also markdown-rendered), comment thread with Enter-to-submit, the last 20 events.
 - **Toolbar filters** — free-text search, tenant dropdown (defaults to `dashboard.kanban.default_tenant` from `config.yaml`), assignee dropdown, "show archived" toggle, "lanes by profile" toggle, and a **Nudge dispatcher** button so you don't have to wait for the next 60 s tick.
 
@@ -503,7 +503,7 @@ All routes are mounted under `/api/plugins/kanban/` and protected by the dashboa
 | `GET` | `/config` | Read `dashboard.kanban` preferences from `config.yaml` — `default_tenant`, `lane_by_profile`, `include_archived_by_default`, `render_markdown` |
 | `WS` | `/events?since=<event_id>` | Live stream of `task_events` rows |
 
-Every handler is a thin wrapper — the plugin is ~700 lines of Python (router + WebSocket tail + bulk batcher + config reader) and adds no new business logic. A tiny `_conn()` helper auto-initializes `kanban.db` on every read and write, so a fresh install works whether the user opened the dashboard first, hit the REST API directly, or ran `hermes kanban init`.
+Every handler is a thin wrapper — the plugin is ~700 lines of Python (router + WebSocket tail + bulk batcher + config reader) and adds no new business logic. A tiny `_conn()` helper auto-initializes `kanban.db` on every read and write, so a fresh install works whether the user opened the dashboard first, hit the REST API directly, or ran `sinoclaw kanban init`.
 
 ### Dashboard config
 
@@ -526,9 +526,9 @@ The dashboard's HTTP auth middleware [explicitly skips `/api/plugins/`](./extend
 
 The WebSocket takes one additional step: it requires the dashboard's ephemeral session token as a `?token=…` query parameter (browsers can't set `Authorization` on an upgrade request), matching the pattern used by the in-browser PTY bridge.
 
-If you run `hermes dashboard --host 0.0.0.0`, every plugin route — kanban included — becomes reachable from the network. **Don't do that on a shared host.** The board contains task bodies, comments, and workspace paths; an attacker reaching these routes gets read access to your entire collaboration surface and can also create / reassign / archive tasks.
+If you run `sinoclaw dashboard --host 0.0.0.0`, every plugin route — kanban included — becomes reachable from the network. **Don't do that on a shared host.** The board contains task bodies, comments, and workspace paths; an attacker reaching these routes gets read access to your entire collaboration surface and can also create / reassign / archive tasks.
 
-Tasks in `~/.sinoclaw/kanban.db` are profile-agnostic on purpose (that's the coordination primitive). If you open the dashboard with `hermes -p <profile> dashboard`, the board still shows tasks created by any other profile on the host. Same user owns all profiles, but this is worth knowing if multiple personas coexist.
+Tasks in `~/.sinoclaw/kanban.db` are profile-agnostic on purpose (that's the coordination primitive). If you open the dashboard with `sinoclaw -p <profile> dashboard`, the board still shows tasks created by any other profile on the host. Same user owns all profiles, but this is worth knowing if multiple personas coexist.
 
 ### Live updates
 
@@ -599,7 +599,7 @@ All commands are also available as a slash command in the interactive CLI and in
 
 ## `/kanban` slash command {#kanban-slash-command}
 
-Every `hermes kanban <action>` verb is also reachable as `/kanban <action>` — from inside an interactive `hermes chat` session **and** from any gateway platform (Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Mattermost, email, SMS). Both surfaces call the exact same `sinoclaw_cli.kanban.run_slash()` entry point that reuses the `hermes kanban` argparse tree, so the argument surface, flags, and output format are identical across CLI, `/kanban`, and `hermes kanban`. You don't have to leave the chat to drive the board.
+Every `sinoclaw kanban <action>` verb is also reachable as `/kanban <action>` — from inside an interactive `sinoclaw chat` session **and** from any gateway platform (Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Mattermost, email, SMS). Both surfaces call the exact same `sinoclaw_cli.kanban.run_slash()` entry point that reuses the `sinoclaw kanban` argparse tree, so the argument surface, flags, and output format are identical across CLI, `/kanban`, and `sinoclaw kanban`. You don't have to leave the chat to drive the board.
 
 ```
 /kanban list
@@ -643,7 +643,7 @@ Subscriptions auto-remove themselves once the task reaches `done` or `archived`.
 
 ### Output truncation in messaging
 
-Gateway platforms have practical message-length caps. If `/kanban list`, `/kanban show`, or `/kanban tail` produce more than ~3800 characters of output, the response is truncated with a `… (truncated; use \`hermes kanban …\` in your terminal for full output)` footer. The CLI surface has no such cap.
+Gateway platforms have practical message-length caps. If `/kanban list`, `/kanban show`, or `/kanban tail` produce more than ~3800 characters of output, the response is truncated with a `… (truncated; use \`sinoclaw kanban …\` in your terminal for full output)` footer. The CLI surface has no such cap.
 
 ### Autocomplete
 
@@ -663,7 +663,7 @@ The board supports these eight patterns without any new primitives:
 | **P6 `@mention`** | inline routing from prose | `@reviewer look at this` |
 | **P7 Thread-scoped workspace** | `/kanban here` in a thread | per-project gateway threads |
 | **P8 Fleet farming** | one profile, N subjects | 50 social accounts |
-| **P9 Triage specifier** | rough idea → `triage` → `hermes kanban specify` expands body → `todo` | "turn this one-liner into a spec'd task" |
+| **P9 Triage specifier** | rough idea → `triage` → `sinoclaw kanban specify` expands body → `todo` | "turn this one-liner into a spec'd task" |
 
 For worked examples of each, see `docs/sinoclaw-kanban-v1-spec.pdf`.
 
@@ -738,11 +738,11 @@ hermes kanban runs t_abcd
 
 Runs are exposed on the dashboard (Run History section in the drawer, one coloured row per attempt) and on the REST API (`GET /api/plugins/kanban/tasks/:id` returns a `runs[]` array). `PATCH /api/plugins/kanban/tasks/:id` with `{status: "done", summary, metadata}` forwards both to the kernel, so the dashboard's "mark done" button is CLI-equivalent. `task_events` rows carry the `run_id` they belong to so the UI can group them by attempt, and the `completed` event embeds the first-line summary in its payload (capped at 400 chars) so gateway notifiers can render structured handoffs without a second SQL round-trip.
 
-**Bulk close caveat.** `hermes kanban complete a b c --summary X` is refused — structured handoff is per-run, so copy-pasting the same summary to N tasks is almost always wrong. Bulk close *without* `--summary` / `--metadata` still works for the common "I finished a pile of admin tasks" case.
+**Bulk close caveat.** `sinoclaw kanban complete a b c --summary X` is refused — structured handoff is per-run, so copy-pasting the same summary to N tasks is almost always wrong. Bulk close *without* `--summary` / `--metadata` still works for the common "I finished a pile of admin tasks" case.
 
 **Reclaimed runs from status changes.** If you drag a running task off `running` in the dashboard (back to `ready`, or straight to `todo`), or archive a task that was still running, the in-flight run closes with `outcome='reclaimed'` rather than being orphaned. The `task_runs` row is always in a terminal state when `tasks.current_run_id` is `NULL`, and vice versa — that invariant holds across CLI, dashboard, dispatcher, and notifier.
 
-**Synthetic runs for never-claimed completions.** Completing or blocking a task that was never claimed (e.g. a human closes a `ready` task from the dashboard with a summary, or a CLI user runs `hermes kanban complete <ready-task> --summary X`) would otherwise drop the handoff. Instead the kernel inserts a zero-duration run row (`started_at == ended_at`) carrying the summary / metadata / reason so attempt history stays complete. The `completed` / `blocked` event's `run_id` points at that row.
+**Synthetic runs for never-claimed completions.** Completing or blocking a task that was never claimed (e.g. a human closes a `ready` task from the dashboard with a summary, or a CLI user runs `sinoclaw kanban complete <ready-task> --summary X`) would otherwise drop the handoff. Instead the kernel inserts a zero-duration run row (`started_at == ended_at`) carrying the summary / metadata / reason so attempt history stays complete. The `completed` / `blocked` event's `run_id` points at that row.
 
 **Live drawer refresh.** When the dashboard's WebSocket event stream reports new events for the task the user is currently viewing, the drawer reloads itself (via a per-task event counter threaded into its `useEffect` dependency list). Closing and reopening is no longer required to see a run's new row or updated outcome.
 
@@ -752,7 +752,7 @@ Two nullable columns on `tasks` are reserved for v2 workflow routing: `workflow_
 
 ## Event reference
 
-Every transition appends a row to `task_events`. Each row carries an optional `run_id` so UIs can group events by attempt. Kinds group into three clusters so filtering is easy (`hermes kanban watch --kinds completed,gave_up,timed_out`):
+Every transition appends a row to `task_events`. Each row carries an optional `run_id` so UIs can group events by attempt. Kinds group into three clusters so filtering is easy (`sinoclaw kanban watch --kinds completed,gave_up,timed_out`):
 
 **Lifecycle** (what changed about the task as a logical unit):
 
@@ -780,14 +780,14 @@ Every transition appends a row to `task_events`. Each row carries an optional `r
 | Kind | Payload | When |
 |---|---|---|
 | `spawned` | `{pid}` | Dispatcher successfully started a worker process. |
-| `heartbeat` | `{note?}` | Worker called `hermes kanban heartbeat $TASK` to signal liveness during long operations. |
+| `heartbeat` | `{note?}` | Worker called `sinoclaw kanban heartbeat $TASK` to signal liveness during long operations. |
 | `reclaimed` | `{stale_lock}` | Claim TTL expired without a completion; task goes back to `ready`. |
 | `crashed` | `{pid, claimer}` | Worker PID no longer alive but TTL hadn't expired yet. |
 | `timed_out` | `{pid, elapsed_seconds, limit_seconds, sigkill}` | `max_runtime_seconds` exceeded; dispatcher SIGTERM'd (then SIGKILL'd after 5 s grace) and re-queued. |
 | `spawn_failed` | `{error, failures}` | One spawn attempt failed (missing PATH, workspace unmountable, …). Counter increments; task returns to `ready` for retry. |
 | `gave_up` | `{failures, error}` | Circuit breaker fired after N consecutive `spawn_failed`. Task auto-blocks with the last error. Default N = 5; override via `--failure-limit`. |
 
-`hermes kanban tail <id>` shows these for a single task. `hermes kanban watch` streams them board-wide.
+`sinoclaw kanban tail <id>` shows these for a single task. `sinoclaw kanban watch` streams them board-wide.
 
 ## Out of scope
 

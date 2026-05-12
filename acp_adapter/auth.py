@@ -1,4 +1,4 @@
-"""ACP auth helpers — detect the currently configured Hermes provider."""
+"""ACP auth helpers — detect the currently configured Sinoclaw provider."""
 
 from __future__ import annotations
 

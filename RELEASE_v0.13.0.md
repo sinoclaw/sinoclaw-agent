@@ -23,7 +23,7 @@
 
 - **Sessions survive restarts** — gateway bounces mid-agent, `/update` restarts, source-file reloads — conversations auto-resume when the gateway comes back. ([#21192](https://github.com/NousResearch/sinoclaw-agent/pull/21192))
 
-- **Security wave — 8 P0 closures** — redaction ON by default, Discord role-allowlists guild-scoped (CVSS 8.1 cross-guild DM bypass closed), WhatsApp rejects strangers by default, TOCTOU windows closed across `auth.json` and MCP OAuth, browser enforces cloud-metadata SSRF floor, cron prompt-injection scans assembled skill content, `hermes debug share` redacts at upload. ([#21193](https://github.com/NousResearch/sinoclaw-agent/pull/21193), [#21241](https://github.com/NousResearch/sinoclaw-agent/pull/21241), [#21291](https://github.com/NousResearch/sinoclaw-agent/pull/21291), [#21176](https://github.com/NousResearch/sinoclaw-agent/pull/21176), [#21194](https://github.com/NousResearch/sinoclaw-agent/pull/21194), [#21228](https://github.com/NousResearch/sinoclaw-agent/pull/21228), [#21350](https://github.com/NousResearch/sinoclaw-agent/pull/21350), [#19318](https://github.com/NousResearch/sinoclaw-agent/pull/19318))
+- **Security wave — 8 P0 closures** — redaction ON by default, Discord role-allowlists guild-scoped (CVSS 8.1 cross-guild DM bypass closed), WhatsApp rejects strangers by default, TOCTOU windows closed across `auth.json` and MCP OAuth, browser enforces cloud-metadata SSRF floor, cron prompt-injection scans assembled skill content, `sinoclaw debug share` redacts at upload. ([#21193](https://github.com/NousResearch/sinoclaw-agent/pull/21193), [#21241](https://github.com/NousResearch/sinoclaw-agent/pull/21241), [#21291](https://github.com/NousResearch/sinoclaw-agent/pull/21291), [#21176](https://github.com/NousResearch/sinoclaw-agent/pull/21176), [#21194](https://github.com/NousResearch/sinoclaw-agent/pull/21194), [#21228](https://github.com/NousResearch/sinoclaw-agent/pull/21228), [#21350](https://github.com/NousResearch/sinoclaw-agent/pull/21350), [#19318](https://github.com/NousResearch/sinoclaw-agent/pull/19318))
 
 - **Checkpoints v2** — state persistence rewritten. Real pruning, disk guardrails, no more orphan shadow repos. ([#20709](https://github.com/NousResearch/sinoclaw-agent/pull/20709))
 
@@ -39,11 +39,11 @@
 
 - **MCP levels up** — SSE transport with OAuth forwarding, stale-pipe retries, image results surface as MEDIA tags instead of getting dropped, keepalive on long-lived lifecycle waits. ([#21227](https://github.com/NousResearch/sinoclaw-agent/pull/21227), [#21323](https://github.com/NousResearch/sinoclaw-agent/pull/21323), [#21289](https://github.com/NousResearch/sinoclaw-agent/pull/21289), [#21328](https://github.com/NousResearch/sinoclaw-agent/pull/21328), [#20209](https://github.com/NousResearch/sinoclaw-agent/pull/20209))
 
-- **Curator grows subcommands** — `hermes curator archive`, `prune`, `list-archived`. Manual `hermes curator run` is synchronous now — you see results without polling. ([#20200](https://github.com/NousResearch/sinoclaw-agent/pull/20200), [#21236](https://github.com/NousResearch/sinoclaw-agent/pull/21236), [#21216](https://github.com/NousResearch/sinoclaw-agent/pull/21216))
+- **Curator grows subcommands** — `sinoclaw curator archive`, `prune`, `list-archived`. Manual `sinoclaw curator run` is synchronous now — you see results without polling. ([#20200](https://github.com/NousResearch/sinoclaw-agent/pull/20200), [#21236](https://github.com/NousResearch/sinoclaw-agent/pull/21236), [#21216](https://github.com/NousResearch/sinoclaw-agent/pull/21216))
 
 - **ACP — `/steer` and `/queue`** — direct the in-flight agent or queue follow-ups from Zed, VS Code, or JetBrains. Plus atomic session persistence and reasoning-metadata preservation across restarts. (@HenkDz) ([#18114](https://github.com/NousResearch/sinoclaw-agent/pull/18114), [#20279](https://github.com/NousResearch/sinoclaw-agent/pull/20279), [#20296](https://github.com/NousResearch/sinoclaw-agent/pull/20296), [#20433](https://github.com/NousResearch/sinoclaw-agent/pull/20433))
 
-- **TUI glow-up** — `/model` picker matches `hermes model` with inline auth (@austinpickett), collapsible startup banner sections (@kshitijk4poor), context-compression counter in the status bar. ([#18117](https://github.com/NousResearch/sinoclaw-agent/pull/18117), [#20625](https://github.com/NousResearch/sinoclaw-agent/pull/20625), [#21218](https://github.com/NousResearch/sinoclaw-agent/pull/21218))
+- **TUI glow-up** — `/model` picker matches `sinoclaw model` with inline auth (@austinpickett), collapsible startup banner sections (@kshitijk4poor), context-compression counter in the status bar. ([#18117](https://github.com/NousResearch/sinoclaw-agent/pull/18117), [#20625](https://github.com/NousResearch/sinoclaw-agent/pull/20625), [#21218](https://github.com/NousResearch/sinoclaw-agent/pull/21218))
 
 - **Dashboard grows up** — Plugins page (manage, enable/disable, auth status) (@austinpickett), Profiles management page (@vincez-hms-coder), sortable analytics tables, reverse-proxy support via `X-Forwarded-Prefix`, new `default-large` 18px theme. ([#18095](https://github.com/NousResearch/sinoclaw-agent/pull/18095), [#16419](https://github.com/NousResearch/sinoclaw-agent/pull/16419), [#18192](https://github.com/NousResearch/sinoclaw-agent/pull/18192), [#21296](https://github.com/NousResearch/sinoclaw-agent/pull/21296), [#20820](https://github.com/NousResearch/sinoclaw-agent/pull/20820))
 
@@ -146,7 +146,7 @@
 - **MCP OAuth — close TOCTOU window when saving credentials** ([#21176](https://github.com/NousResearch/sinoclaw-agent/pull/21176))
 - **`sinoclaw_cli/auth.py` — close TOCTOU window in credential writers** ([#21194](https://github.com/NousResearch/sinoclaw-agent/pull/21194))
 - **Browser — enforce cloud-metadata SSRF floor in hybrid routing** (#16234) ([#21228](https://github.com/NousResearch/sinoclaw-agent/pull/21228))
-- **`hermes debug share` — redact log content at upload time** (@GodsBoy) ([#19318](https://github.com/NousResearch/sinoclaw-agent/pull/19318))
+- **`sinoclaw debug share` — redact log content at upload time** (@GodsBoy) ([#19318](https://github.com/NousResearch/sinoclaw-agent/pull/19318))
 - **Cron — scan assembled prompt including skill content for prompt injection** (#3968) ([#21350](https://github.com/NousResearch/sinoclaw-agent/pull/21350))
 - **Restore .env/auth.json/state.db with 0600 perms** ([#19699](https://github.com/NousResearch/sinoclaw-agent/pull/19699))
 - **SRI integrity for dashboard plugin scripts** (salvage #19389) ([#21277](https://github.com/NousResearch/sinoclaw-agent/pull/21277))
@@ -161,7 +161,7 @@
 - **Gateway creates AIAgent with empty OpenRouter API key when OPENROUTER_API_KEY is missing** (#20982) — fallback providers correctly honored
 - **Background review + curator protected from overwriting bundled/hub skills** (#20273) ([#20194](https://github.com/NousResearch/sinoclaw-agent/pull/20194))
 - **TUI compression continuation — ghost sessions with incomplete metadata** (#20001)
-- **`hermes mcp add` silently launches chat instead of registering MCP server** (#19785) ([#21204](https://github.com/NousResearch/sinoclaw-agent/pull/21204))
+- **`sinoclaw mcp add` silently launches chat instead of registering MCP server** (#19785) ([#21204](https://github.com/NousResearch/sinoclaw-agent/pull/21204))
 - **Background review agent runtime propagation** — provider/model/credentials now actually inherit from parent
 - **Inbound document host paths translated to container paths for Docker backend** (salvage #19048) ([#21184](https://github.com/NousResearch/sinoclaw-agent/pull/21184))
 - **Matrix gateway race between auto-redaction and message delivery with high-speed models** (#19075)
@@ -309,9 +309,9 @@
 - **Hindsight — probe API for `update_mode='append'` to dedupe across processes** (@nicoloboschi) ([#20222](https://github.com/NousResearch/sinoclaw-agent/pull/20222))
 
 ### Curator
-- **`hermes curator archive` and `prune` subcommands** ([#20200](https://github.com/NousResearch/sinoclaw-agent/pull/20200))
-- **`hermes curator list-archived`** (#20651) ([#21236](https://github.com/NousResearch/sinoclaw-agent/pull/21236))
-- **Synchronous manual `hermes curator run`** (#20555) ([#21216](https://github.com/NousResearch/sinoclaw-agent/pull/21216))
+- **`sinoclaw curator archive` and `prune` subcommands** ([#20200](https://github.com/NousResearch/sinoclaw-agent/pull/20200))
+- **`sinoclaw curator list-archived`** (#20651) ([#21236](https://github.com/NousResearch/sinoclaw-agent/pull/21236))
+- **Synchronous manual `sinoclaw curator run`** (#20555) ([#21216](https://github.com/NousResearch/sinoclaw-agent/pull/21216))
 - Fix: preserve `last_report_path` in state ([#18169](https://github.com/NousResearch/sinoclaw-agent/pull/18169))
 - Fix: rewrite cron job skill refs after consolidation ([#18253](https://github.com/NousResearch/sinoclaw-agent/pull/18253))
 - Fix: defer first run + `--dry-run` preview (#18373) ([#18389](https://github.com/NousResearch/sinoclaw-agent/pull/18389))
@@ -397,7 +397,7 @@
 - **Skills — additional rescan paths in skill_commands cache** (salvage #19042) ([#21181](https://github.com/NousResearch/sinoclaw-agent/pull/21181))
 - Fix: regression tests for non-dict metadata in `extract_skill_conditions` ([#18213](https://github.com/NousResearch/sinoclaw-agent/pull/18213))
 - Docs: explain restoring bundled skills (salvage #19254) ([#20404](https://github.com/NousResearch/sinoclaw-agent/pull/20404))
-- Docs: document `hermes skills reset` subcommand (salvage #11544) ([#20395](https://github.com/NousResearch/sinoclaw-agent/pull/20395))
+- Docs: document `sinoclaw skills reset` subcommand (salvage #11544) ([#20395](https://github.com/NousResearch/sinoclaw-agent/pull/20395))
 - Docs: himalaya v1.2.0 `folder.aliases` syntax ([#19882](https://github.com/NousResearch/sinoclaw-agent/pull/19882))
 - Point agent at `sinoclaw-agent` skill + docs site sync ([#20390](https://github.com/NousResearch/sinoclaw-agent/pull/20390))
 
@@ -419,7 +419,7 @@
 - Refactor: drop dead c-S-c key binding (follow-up to #19895) ([#19919](https://github.com/NousResearch/sinoclaw-agent/pull/19919))
 
 ### TUI (Ink)
-- **`/model` picker overhaul to match `hermes model` with inline auth** (@austinpickett) ([#18117](https://github.com/NousResearch/sinoclaw-agent/pull/18117))
+- **`/model` picker overhaul to match `sinoclaw model` with inline auth** (@austinpickett) ([#18117](https://github.com/NousResearch/sinoclaw-agent/pull/18117))
 - **Collapsible sections in startup banner** — skills, system prompt, MCP (@kshitijk4poor) ([#20625](https://github.com/NousResearch/sinoclaw-agent/pull/20625))
 - **Show context compression count in status bar** ([#21218](https://github.com/NousResearch/sinoclaw-agent/pull/21218))
 - Perf: reduce overlay render churn with focused selectors (@OutThisLife) ([#20393](https://github.com/NousResearch/sinoclaw-agent/pull/20393))
@@ -437,7 +437,7 @@
 - Fix: gateway model picker current context (@helix4u) ([#20513](https://github.com/NousResearch/sinoclaw-agent/pull/20513))
 
 ### Update + setup
-- **`hermes update --yes/-y` to skip interactive prompts** ([#18261](https://github.com/NousResearch/sinoclaw-agent/pull/18261))
+- **`sinoclaw update --yes/-y` to skip interactive prompts** ([#18261](https://github.com/NousResearch/sinoclaw-agent/pull/18261))
 - **Restart manual profile gateways after update** ([#18178](https://github.com/NousResearch/sinoclaw-agent/pull/18178))
 
 ### Profiles
@@ -475,7 +475,7 @@
 
 - **Launch dashboard as side-process via `SINOCLAW_DASHBOARD=1`** (@benbarclay) ([#19540](https://github.com/NousResearch/sinoclaw-agent/pull/19540))
 - **Refuse root gateway runs in official image** (salvage #19215) ([#21250](https://github.com/NousResearch/sinoclaw-agent/pull/21250))
-- **Chown runtime `node_modules` trees to hermes user** (salvage #19303) ([#21267](https://github.com/NousResearch/sinoclaw-agent/pull/21267))
+- **Chown runtime `node_modules` trees to sinoclaw user** (salvage #19303) ([#21267](https://github.com/NousResearch/sinoclaw-agent/pull/21267))
 - Fix: exclude compose/profile runtime state from build context ([#19626](https://github.com/NousResearch/sinoclaw-agent/pull/19626))
 - CI: don't cancel overlapping builds, guard `:latest` (@ethernet8023) ([#20890](https://github.com/NousResearch/sinoclaw-agent/pull/20890))
 - Test: align Dockerfile contract tests with simplified TUI flow (salvage #19024) ([#21174](https://github.com/NousResearch/sinoclaw-agent/pull/21174))
@@ -558,8 +558,8 @@
 - Codex OAuth auth prerequisite clarification (salvage #18688) ([#20417](https://github.com/NousResearch/sinoclaw-agent/pull/20417))
 - Discord Server Members Intent + SSRC-mapping drift + /voice join slash Choice (salvage #11350) ([#20411](https://github.com/NousResearch/sinoclaw-agent/pull/20411))
 - Document `ctx.dispatch_tool()` (salvage #10955) ([#20391](https://github.com/NousResearch/sinoclaw-agent/pull/20391))
-- Document `hermes webhook subscribe --deliver-only` (salvage #12612) ([#20392](https://github.com/NousResearch/sinoclaw-agent/pull/20392))
-- Document `hermes import` reference (salvage #14711) ([#20396](https://github.com/NousResearch/sinoclaw-agent/pull/20396))
+- Document `sinoclaw webhook subscribe --deliver-only` (salvage #12612) ([#20392](https://github.com/NousResearch/sinoclaw-agent/pull/20392))
+- Document `sinoclaw import` reference (salvage #14711) ([#20396](https://github.com/NousResearch/sinoclaw-agent/pull/20396))
 - Document per-provider TTS `max_text_length` caps (salvage #13825) ([#20389](https://github.com/NousResearch/sinoclaw-agent/pull/20389))
 - Clarify supported prompt customization surfaces (salvage #19987) ([#20383](https://github.com/NousResearch/sinoclaw-agent/pull/20383))
 - Correct `web_extract` summarizer timeout comment (salvage #20051) ([#20381](https://github.com/NousResearch/sinoclaw-agent/pull/20381))

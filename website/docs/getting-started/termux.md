@@ -13,7 +13,7 @@ It gives you a working local CLI on the phone, plus the core extras that are cur
 ## What is supported in the tested path?
 
 The tested Termux bundle installs:
-- the Hermes CLI
+- the Sinoclaw CLI
 - cron support
 - PTY/background terminal support
 - Telegram gateway support (manual / best-effort background runs)
@@ -116,7 +116,7 @@ python -m pip install -e '.' -c constraints-termux.txt
 ### 5. Put `hermes` on your Termux PATH
 
 ```bash
-ln -sf "$PWD/venv/bin/hermes" "$PREFIX/bin/hermes"
+ln -sf "$PWD/venv/bin/sinoclaw" "$PREFIX/bin/sinoclaw"
 ```
 
 `$PREFIX/bin` is already on PATH in Termux, so this makes the `hermes` command persist across new shells without re-activating the venv every time.
@@ -203,7 +203,7 @@ export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
 python -m pip install -e '.[termux]' -c constraints-termux.txt
 ```
 
-### `hermes doctor` says ripgrep or Node is missing
+### `sinoclaw doctor` says ripgrep or Node is missing
 
 Install them with Termux packages:
 
@@ -238,5 +238,5 @@ If you hit a new Android-specific issue, please open a GitHub issue with:
 - your Android version
 - `termux-info`
 - `python --version`
-- `hermes doctor`
+- `sinoclaw doctor`
 - the exact install command and full error output

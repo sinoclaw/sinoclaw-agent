@@ -11,7 +11,7 @@ Sinoclaw Agent now supports **both** native Windows and WSL2.  This page covers 
 
 **When to pick WSL2 over native:**
 - You want to use the dashboard's embedded terminal (`/chat` tab) — that pane requires a POSIX PTY and is WSL2-only.
-- You're doing POSIX-heavy development work and want your Hermes sessions to share the same filesystem / paths as your dev tools.
+- You're doing POSIX-heavy development work and want your Sinoclaw sessions to share the same filesystem / paths as your dev tools.
 - You already have a WSL2 environment and don't want to maintain a second install.
 
 **When native is fine (or better):**
@@ -34,9 +34,9 @@ WSL2 runs a real Linux kernel in a lightweight VM, so Hermes inside it is essent
 
 Practical consequences of WSL2:
 
-- The Hermes CLI, gateway, sessions, memory, skills, and tool runtimes all live inside the Linux VM.
+- The Sinoclaw CLI, gateway, sessions, memory, skills, and tool runtimes all live inside the Linux VM.
 - Windows programs (browsers, native apps, Chrome with your logged-in profile) live outside it.
-- Every time you want the two to talk — share files, open URLs, control Chrome, hit a local model server, expose the Hermes gateway to your phone — you cross a boundary. Those boundaries are what this guide is about.
+- Every time you want the two to talk — share files, open URLs, control Chrome, hit a local model server, expose the Sinoclaw gateway to your phone — you cross a boundary. Those boundaries are what this guide is about.
 
 ## Install WSL2
 
@@ -186,7 +186,7 @@ dos2unix path/to/script.sh
 
 ### "Clone inside WSL or on `/mnt/c`?"
 
-Clone inside WSL. Always, unless you have a specific reason not to. A typical Hermes workflow (`hermes chat`, tool calls that `rg`/`ripgrep` the repo, file watchers, background gateway) will be dramatically faster and more reliable against `~/code/myrepo` than `/mnt/c/Users/you/myrepo`.
+Clone inside WSL. Always, unless you have a specific reason not to. A typical Hermes workflow (`sinoclaw chat`, tool calls that `rg`/`ripgrep` the repo, file watchers, background gateway) will be dramatically faster and more reliable against `~/code/myrepo` than `/mnt/c/Users/you/myrepo`.
 
 One exception: **MCP bridges that launch Windows binaries.** If you're using `chrome-devtools-mcp` through `cmd.exe` (see [MCP guide: WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-sinoclaw-in-wsl-to-windows-chrome)), Windows may complain with a `UNC` warning if Hermes's current working directory is `~`. In that case, start Hermes from somewhere under `/mnt/c/` so the Windows process has a drive-letter cwd.
 
@@ -214,7 +214,7 @@ For the full table (Ollama / LM Studio / vLLM / SGLang bind addresses, firewall 
 This is the reverse direction and is less documented elsewhere, but it's what you need for:
 
 - Using the Hermes **web dashboard** from a Windows browser.
-- Using the **API server** (`hermes api`) from a Windows-side tool.
+- Using the **API server** (`sinoclaw api`) from a Windows-side tool.
 - Testing a **messaging gateway** (Telegram, Discord, etc.) where the platform pings a local webhook URL — usually you'd use `cloudflared`/`ngrok` rather than raw port forwarding.
 
 #### Subcase 2a: from the Windows host itself
@@ -294,7 +294,7 @@ If you're running a **Windows-native** local-model server (Ollama for Windows, L
 **"Connection refused" to my Windows-hosted Ollama / LM Studio.**
 See [WSL2 Networking](/docs/integrations/providers#wsl2-networking-windows-users). Ninety percent of the time the server is bound to `127.0.0.1` and needs `0.0.0.0` (Ollama: `OLLAMA_HOST=0.0.0.0`), or you're missing a firewall rule.
 
-**Massive slowness on `git status` / `hermes chat` in a repo.**
+**Massive slowness on `git status` / `sinoclaw chat` in a repo.**
 You're probably working under `/mnt/c/...`. Move the repo to `~/code/...` (Linux side). Order-of-magnitude faster.
 
 **`bad interpreter: /bin/bash^M` on scripts.**

@@ -41,7 +41,7 @@ pip install -e '.[acp]'
 
 This installs the `agent-client-protocol` dependency and enables:
 
-- `hermes acp`
+- `sinoclaw acp`
 - `sinoclaw-acp`
 - `python -m acp_adapter`
 

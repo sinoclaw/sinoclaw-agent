@@ -14,7 +14,7 @@ Build, test, and debug Sinoclaw Agent RL environments for Atropos training. Cove
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/sinoclaw-atropos-environments` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/sinoclaw-atropos-environments` |
 | Path | `optional-skills/mlops/sinoclaw-atropos-environments` |
 | Version | `1.1.0` |
 | Author | Sinoclaw Agent |

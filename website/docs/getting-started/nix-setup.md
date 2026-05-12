@@ -19,7 +19,7 @@ The `curl | bash` installer manages Python, Node, and dependencies itself. The N
 
 **For non-NixOS users**, this only changes the install step. Everything after (`sinoclaw setup`, `sinoclaw gateway install`, config editing) works identically to the standard install.
 
-**For NixOS module users**, the entire lifecycle is different: configuration lives in `configuration.nix`, secrets go through sops-nix/agenix, the service is a systemd unit, and CLI config commands are blocked. You manage hermes the same way you manage any other NixOS service.
+**For NixOS module users**, the entire lifecycle is different: configuration lives in `configuration.nix`, secrets go through sops-nix/agenix, the service is a systemd unit, and CLI config commands are blocked. You manage sinoclaw the same way you manage any other NixOS service.
 :::
 
 ## Prerequisites
@@ -110,7 +110,7 @@ That's it. `nixos-rebuild switch` creates the `hermes` user, generates `config.y
 The `environmentFiles` line above assumes you have [sops-nix](https://github.com/Mic92/sops-nix) or [agenix](https://github.com/ryantm/agenix) configured. The file should contain at least one LLM provider key (e.g., `OPENROUTER_API_KEY=sk-or-...`). See [Secrets Management](#secrets-management) for full setup. If you don't have a secrets manager yet, you can use a plain file as a starting point — just ensure it's not world-readable:
 
 ```bash
-echo "OPENROUTER_API_KEY=sk-or-your-key" | sudo install -m 0600 -o hermes /dev/stdin /var/lib/hermes/env
+echo "OPENROUTER_API_KEY=sk-or-your-key" | sudo install -m 0600 -o sinoclaw /dev/stdin /var/lib/hermes/env
 ```
 
 ```nix
@@ -127,10 +127,10 @@ Setting `addToSystemPackages = true` does two things: puts the `hermes` CLI on y
 :::info
 When `container.enable = true` and `addToSystemPackages = true`, **every** `hermes` command on the host automatically routes into the managed container. This means your interactive CLI session runs inside the same environment as the gateway service — with access to all container-installed packages and tools.
 
-- The routing is transparent: `hermes chat`, `hermes sessions list`, `hermes version`, etc. all exec into the container under the hood
+- The routing is transparent: `sinoclaw chat`, `sinoclaw sessions list`, `sinoclaw version`, etc. all exec into the container under the hood
 - All CLI flags are forwarded as-is
 - If the container isn't running, the CLI retries briefly (5s with a spinner for interactive use, 10s silently for scripts) then fails with a clear error — no silent fallback
-- For developers working on the hermes codebase, set `SINOCLAW_DEV=1` to bypass container routing and run the local checkout directly
+- For developers working on the sinoclaw codebase, set `SINOCLAW_DEV=1` to bypass container routing and run the local checkout directly
 
 Set `container.hostUsers` to create a `~/.sinoclaw` symlink to the service state directory, so the host CLI and the container share sessions, config, and memories:
 
@@ -156,7 +156,7 @@ security.sudo.extraRules = [{
 }];
 ```
 
-The CLI auto-detects when sudo is needed and uses it transparently. Without this, you'll need to run `sudo hermes chat` manually.
+The CLI auto-detects when sudo is needed and uses it transparently. Without this, you'll need to run `sudo sinoclaw chat` manually.
 :::
 
 ### Verify It Works
@@ -325,8 +325,8 @@ Quick reference for the most common things Nix users want to customize:
 | Share state between host CLI and container | `container.hostUsers` | `[ "sidbin" ]` |
 | Make extra tools available to the agent | `extraPackages` | `[ pkgs.pandoc pkgs.imagemagick ]` |
 | Use a custom base image | `container.image` | `"ubuntu:24.04"` |
-| Override the hermes package | `package` | `inputs.sinoclaw-agent.packages.${system}.default.override { ... }` |
-| Change state directory | `stateDir` | `"/opt/hermes"` |
+| Override the sinoclaw package | `package` | `inputs.sinoclaw-agent.packages.${system}.default.override { ... }` |
+| Change state directory | `stateDir` | `"/opt/sinoclaw"` |
 | Set the agent's working directory | `workingDirectory` | `"/home/user/projects"` |
 
 ---
@@ -478,11 +478,11 @@ The first OAuth authorization requires a browser-based consent flow. In a headle
 ```bash
 # Container mode
 docker exec -it sinoclaw-agent \
-  hermes mcp add my-oauth-server --url https://mcp.example.com/mcp --auth oauth
+  sinoclaw mcp add my-oauth-server --url https://mcp.example.com/mcp --auth oauth
 
 # Native mode
-sudo -u hermes SINOCLAW_HOME=/var/lib/hermes/.hermes \
-  hermes mcp add my-oauth-server --url https://mcp.example.com/mcp --auth oauth
+sudo -u sinoclaw SINOCLAW_HOME=/var/lib/hermes/.hermes \
+  sinoclaw mcp add my-oauth-server --url https://mcp.example.com/mcp --auth oauth
 ```
 
 The container uses `--network=host`, so the OAuth callback listener on `127.0.0.1` is reachable from the host browser.
@@ -522,20 +522,20 @@ Some MCP servers can request LLM completions from the agent:
 
 ## Managed Mode
 
-When hermes runs via the NixOS module, the following CLI commands are **blocked** with a descriptive error pointing you to `configuration.nix`:
+When sinoclaw runs via the NixOS module, the following CLI commands are **blocked** with a descriptive error pointing you to `configuration.nix`:
 
 | Blocked command | Why |
 |---|---|
 | `sinoclaw setup` | Config is declarative — edit `settings` in your Nix config |
-| `hermes config edit` | Config is generated from `settings` |
-| `hermes config set <key> <value>` | Config is generated from `settings` |
+| `sinoclaw config edit` | Config is generated from `settings` |
+| `sinoclaw config set <key> <value>` | Config is generated from `settings` |
 | `sinoclaw gateway install` | The systemd service is managed by NixOS |
 | `sinoclaw gateway uninstall` | The systemd service is managed by NixOS |
 
 This prevents drift between what Nix declares and what's on disk. Detection uses two signals:
 
 1. **`SINOCLAW_MANAGED=true`** environment variable — set by the systemd service, visible to the gateway process
-2. **`.managed` marker file** in `SINOCLAW_HOME` — set by the activation script, visible to interactive shells (e.g., `docker exec -it sinoclaw-agent hermes config set ...` is also blocked)
+2. **`.managed` marker file** in `SINOCLAW_HOME` — set by the activation script, visible to interactive shells (e.g., `docker exec -it sinoclaw-agent sinoclaw config set ...` is also blocked)
 
 To change configuration, edit your Nix config and run `sudo nixos-rebuild switch`.
 
@@ -547,7 +547,7 @@ To change configuration, edit your Nix config and run `sudo nixos-rebuild switch
 This section is only relevant if you're using `container.enable = true`. Skip it for native mode deployments.
 :::
 
-When container mode is enabled, hermes runs inside a persistent Ubuntu container with the Nix-built binary bind-mounted read-only from the host:
+When container mode is enabled, sinoclaw runs inside a persistent Ubuntu container with the Nix-built binary bind-mounted read-only from the host:
 
 ```
 Host                                    Container
@@ -587,7 +587,7 @@ The Nix-built binary works inside the Ubuntu container because `/nix/store` is b
 | Volume/options change | **Yes** | Persists | Persists | **Lost** |
 | `environment`/`environmentFiles` change | No | Persists | Persists | Persists |
 
-The container is only recreated when its **identity hash** changes. The hash covers: schema version, image, `extraVolumes`, `extraOptions`, and the entrypoint script. Changes to environment variables, settings, documents, or the hermes package itself do **not** trigger recreation.
+The container is only recreated when its **identity hash** changes. The hash covers: schema version, image, `extraVolumes`, `extraOptions`, and the entrypoint script. Changes to environment variables, settings, documents, or the sinoclaw package itself do **not** trigger recreation.
 
 :::warning Writable layer loss
 When the identity hash changes (image upgrade, new volumes, new container options), the container is destroyed and recreated from a fresh pull of `container.image`. Any `apt install`, `pip install`, or `npm install` packages in the writable layer are lost. State in `/data` and `/home/hermes` is preserved (these are bind mounts).
@@ -597,13 +597,13 @@ If the agent relies on specific packages, consider baking them into a custom ima
 
 ### GC Root Protection
 
-The `preStart` script creates a GC root at `${stateDir}/.gc-root` pointing to the current hermes package. This prevents `nix-collect-garbage` from removing the running binary. If the GC root somehow breaks, restarting the service recreates it.
+The `preStart` script creates a GC root at `${stateDir}/.gc-root` pointing to the current sinoclaw package. This prevents `nix-collect-garbage` from removing the running binary. If the GC root somehow breaks, restarting the service recreates it.
 
 ---
 
 ## Plugins
 
-The NixOS module supports declarative plugin installation — no imperative `hermes plugins install` needed.
+The NixOS module supports declarative plugin installation — no imperative `sinoclaw plugins install` needed.
 
 ### Directory Plugins (`extraPlugins`)
 
@@ -643,7 +643,7 @@ services.sinoclaw-agent.extraPythonPackages = [
 ];
 ```
 
-The package's `site-packages` is added to PYTHONPATH in the hermes wrapper. `importlib.metadata` discovers the entry point at session start.
+The package's `site-packages` is added to PYTHONPATH in the sinoclaw wrapper. `importlib.metadata` discovers the entry point at session start.
 
 ### Combining Both
 
@@ -683,7 +683,7 @@ services.sinoclaw-agent.settings.plugins.enabled = [
 ```
 
 :::note
-A build-time collision check prevents plugin packages from shadowing core hermes dependencies. If a plugin provides a package already in the sealed venv, `nixos-rebuild` fails with a clear error.
+A build-time collision check prevents plugin packages from shadowing core sinoclaw dependencies. If a plugin provides a package already in the sealed venv, `nixos-rebuild` fails with a clear error.
 :::
 
 ---
@@ -739,10 +739,10 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 
 | Check | What it tests |
 |---|---|
-| `package-contents` | `hermes` and `sinoclaw-agent` binaries exist and `hermes version` runs |
+| `package-contents` | `hermes` and `sinoclaw-agent` binaries exist and `sinoclaw version` runs |
 | `entry-points-sync` | Every `[project.scripts]` entry in `pyproject.toml` has a wrapped binary in the Nix package |
-| `cli-commands` | `hermes --help` exposes `gateway` and `config` subcommands |
-| `managed-guard` | `SINOCLAW_MANAGED=true hermes config set ...` prints the NixOS error |
+| `cli-commands` | `sinoclaw --help` exposes `gateway` and `config` subcommands |
+| `managed-guard` | `SINOCLAW_MANAGED=true sinoclaw config set ...` prints the NixOS error |
 | `bundled-skills` | Skills directory exists, contains SKILL.md files, `SINOCLAW_BUNDLED_SKILLS` is set in wrapper |
 | `config-roundtrip` | 7 merge scenarios: fresh install, Nix override, user key preservation, mixed merge, MCP additive merge, nested deep merge, idempotency |
 
@@ -761,7 +761,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | `user` | `str` | `"hermes"` | System user |
 | `group` | `str` | `"hermes"` | System group |
 | `createUser` | `bool` | `true` | Auto-create user/group |
-| `stateDir` | `str` | `"/var/lib/hermes"` | State directory (`SINOCLAW_HOME` parent) |
+| `stateDir` | `str` | `"/var/lib/sinoclaw"` | State directory (`SINOCLAW_HOME` parent) |
 | `workingDirectory` | `str` | `"${stateDir}/workspace"` | Agent working directory (`MESSAGING_CWD`) |
 | `addToSystemPackages` | `bool` | `false` | Add `hermes` CLI to system PATH and set `SINOCLAW_HOME` system-wide |
 
@@ -809,7 +809,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `extraArgs` | `listOf str` | `[]` | Extra args for `sinoclaw gateway` |
-| `extraPackages` | `listOf package` | `[]` | Extra packages available to the agent. Added to the hermes user's per-user profile so terminal commands, skills, and cron jobs all see them |
+| `extraPackages` | `listOf package` | `[]` | Extra packages available to the agent. Added to the sinoclaw user's per-user profile so terminal commands, skills, and cron jobs all see them |
 | `extraPlugins` | `listOf package` | `[]` | Directory plugin packages to symlink into `$SINOCLAW_HOME/plugins/`. Each must contain `plugin.yaml` |
 | `extraPythonPackages` | `listOf package` | `[]` | Python packages added to PYTHONPATH for entry-point plugin discovery. Build with `python312Packages` |
 | `restart` | `str` | `"always"` | systemd `Restart=` policy |
@@ -924,7 +924,7 @@ If the agent starts but can't authenticate with the LLM provider, check that the
 
 ```bash
 # Native mode
-sudo -u hermes cat /var/lib/hermes/.sinoclaw/.env
+sudo -u sinoclaw cat /var/lib/hermes/.sinoclaw/.env
 
 # Container mode
 docker exec sinoclaw-agent cat /data/.sinoclaw/.env
@@ -942,9 +942,9 @@ nix-store --query --roots $(docker exec sinoclaw-agent readlink /data/current-pa
 |---|---|---|
 | `Cannot save configuration: managed by NixOS` | CLI guards active | Edit `configuration.nix` and `nixos-rebuild switch` |
 | Container recreated unexpectedly | `extraVolumes`, `extraOptions`, or `image` changed | Expected — writable layer resets. Reinstall packages or use a custom image |
-| `hermes version` shows old version | Container not restarted | `systemctl restart sinoclaw-agent` |
+| `sinoclaw version` shows old version | Container not restarted | `systemctl restart sinoclaw-agent` |
 | Permission denied on `/var/lib/hermes` | State dir is `0750 hermes:hermes` | Use `docker exec` or `sudo -u hermes` |
-| `nix-collect-garbage` removed hermes | GC root missing | Restart the service (preStart recreates the GC root) |
+| `nix-collect-garbage` removed sinoclaw | GC root missing | Restart the service (preStart recreates the GC root) |
 | `no container with name or ID "sinoclaw-agent"` (Podman) | Podman rootful container not visible to regular user | Add passwordless sudo for podman (see [Container Mode](#container-mode) section) |
 | `unable to find user hermes` | Container still starting (entrypoint hasn't created user yet) | Wait a few seconds and retry — the CLI retries automatically |
 | Tool added via `extraPackages` not found in terminal | Requires `nixos-rebuild switch` to update the per-user profile | Rebuild and restart: `nixos-rebuild switch && systemctl restart sinoclaw-agent` |

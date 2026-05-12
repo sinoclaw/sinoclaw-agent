@@ -246,7 +246,7 @@ def _redact_sensitive(text: str) -> str:
 
 
 def _mime_for_message_type(mime: str) -> MessageType:
-    """Map a MIME string to a hermes MessageType.
+    """Map a MIME string to a sinoclaw MessageType.
 
     Anything not image/audio/video falls through to DOCUMENT so the agent
     still receives the file.
@@ -1443,7 +1443,7 @@ class GoogleChatAdapter(BasePlatformAdapter):
     async def _build_message_event(
         self, msg: Dict[str, Any], envelope: Dict[str, Any]
     ) -> Optional[MessageEvent]:
-        """Parse a Chat API message into a hermes MessageEvent."""
+        """Parse a Chat API message into a sinoclaw MessageEvent."""
         space = envelope.get("space") or msg.get("space") or {}
         space_name = space.get("name") or ""  # "spaces/XXX"
         space_type = (space.get("type") or space.get("spaceType") or "").upper()
@@ -3055,7 +3055,7 @@ async def _standalone_send(
     """POST a single Google Chat message via the REST API without the SDK.
 
     Used by ``tools/send_message_tool._send_via_adapter`` when the gateway
-    runner is not in this process (e.g. ``hermes cron`` running as a
+    runner is not in this process (e.g. ``sinoclaw cron`` running as a
     separate process from ``sinoclaw gateway``).  Without this hook,
     ``deliver=google_chat`` cron jobs fail with ``No live adapter for
     platform``.

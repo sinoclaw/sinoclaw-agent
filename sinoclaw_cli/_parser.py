@@ -1,5 +1,5 @@
 """
-Top-level argparse construction for the hermes CLI.
+Top-level argparse construction for the sinoclaw CLI.
 
 Lives in its own module so other modules (e.g. ``relaunch.py``) can
 introspect the parser to discover which flags exist without running the
@@ -39,43 +39,43 @@ def _inherited_flag(parser, *args, **kwargs):
 
 _EPILOGUE = """
 Examples:
-    hermes                        Start interactive chat
-    hermes chat -q "Hello"        Single query mode
-    hermes -c                     Resume the most recent session
-    hermes -c "my project"        Resume a session by name (latest in lineage)
-    hermes --resume <session_id>  Resume a specific session by ID
+    sinoclaw                        Start interactive chat
+    sinoclaw chat -q "Hello"        Single query mode
+    sinoclaw -c                     Resume the most recent session
+    sinoclaw -c "my project"        Resume a session by name (latest in lineage)
+    sinoclaw --resume <session_id>  Resume a specific session by ID
     sinoclaw setup                  Run setup wizard
-    hermes logout                 Clear stored authentication
-    hermes auth add <provider>    Add a pooled credential
-    hermes auth list              List pooled credentials
-    hermes auth remove <p> <t>    Remove pooled credential by index, id, or label
-    hermes auth reset <provider>  Clear exhaustion status for a provider
-    hermes model                  Select default model
-    hermes fallback [list]        Show fallback provider chain
-    hermes fallback add           Add a fallback provider (same picker as `hermes model`)
-    hermes fallback remove        Remove a fallback provider from the chain
-    hermes config                 View configuration
-    hermes config edit            Edit config in $EDITOR
-    hermes config set model gpt-4 Set a config value
+    sinoclaw logout                 Clear stored authentication
+    sinoclaw auth add <provider>    Add a pooled credential
+    sinoclaw auth list              List pooled credentials
+    sinoclaw auth remove <p> <t>    Remove pooled credential by index, id, or label
+    sinoclaw auth reset <provider>  Clear exhaustion status for a provider
+    sinoclaw model                  Select default model
+    sinoclaw fallback [list]        Show fallback provider chain
+    sinoclaw fallback add           Add a fallback provider (same picker as `sinoclaw model`)
+    sinoclaw fallback remove        Remove a fallback provider from the chain
+    sinoclaw config                 View configuration
+    sinoclaw config edit            Edit config in $EDITOR
+    sinoclaw config set model gpt-4 Set a config value
     sinoclaw gateway                Run messaging gateway
-    hermes -s sinoclaw-agent-dev,github-auth
-    hermes -w                     Start in isolated git worktree
+    sinoclaw -s sinoclaw-agent-dev,github-auth
+    sinoclaw -w                     Start in isolated git worktree
     sinoclaw gateway install        Install gateway background service
-    hermes sessions list          List past sessions
-    hermes sessions browse        Interactive session picker
-    hermes sessions rename ID T   Rename/title a session
-    hermes logs                   View agent.log (last 50 lines)
-    hermes logs -f                Follow agent.log in real time
-    hermes logs errors            View errors.log
-    hermes logs --since 1h        Lines from the last hour
-    hermes debug share             Upload debug report for support
-    hermes update                 Update to latest version
-    hermes dashboard              Start web UI dashboard (port 9119)
-    hermes dashboard --stop       Stop running dashboard processes
-    hermes dashboard --status     List running dashboard processes
+    sinoclaw sessions list          List past sessions
+    sinoclaw sessions browse        Interactive session picker
+    sinoclaw sessions rename ID T   Rename/title a session
+    sinoclaw logs                   View agent.log (last 50 lines)
+    sinoclaw logs -f                Follow agent.log in real time
+    sinoclaw logs errors            View errors.log
+    sinoclaw logs --since 1h        Lines from the last hour
+    sinoclaw debug share             Upload debug report for support
+    sinoclaw update                 Update to latest version
+    sinoclaw dashboard              Start web UI dashboard (port 9119)
+    sinoclaw dashboard --stop       Stop running dashboard processes
+    sinoclaw dashboard --status     List running dashboard processes
 
 For more help on a command:
-    hermes <command> --help
+    sinoclaw <command> --help
 """
 
 
@@ -87,7 +87,7 @@ def build_top_level_parser():
     other subparsers via ``subparsers.add_parser(...)``.
     """
     parser = argparse.ArgumentParser(
-        prog="hermes",
+        prog="sinoclaw",
         description="Sinoclaw Agent - AI assistant with tool-calling capabilities",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=_EPILOGUE,
@@ -112,7 +112,7 @@ def build_top_level_parser():
     # --model / --provider are accepted at the top level so they can pair
     # with -z without needing the `chat` subcommand.  If neither -z nor a
     # subcommand consumes them, they fall through harmlessly as None.
-    # Mirrors `hermes chat --model ... --provider ...` semantics.
+    # Mirrors `sinoclaw chat --model ... --provider ...` semantics.
     _inherited_flag(
         parser,
         "-m",

@@ -14,7 +14,7 @@ Parameter-efficient fine-tuning for LLMs using LoRA, QLoRA, and 25+ methods. Use
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/peft` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/peft` |
 | Path | `optional-skills/mlops/peft` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

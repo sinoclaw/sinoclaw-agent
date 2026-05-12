@@ -32,7 +32,7 @@ Once configured, run the container in the background as a persistent gateway (Te
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --restart unless-stopped \
   -v ~/.sinoclaw:/opt/data \
   -p 8642:8642 \
@@ -45,7 +45,7 @@ Note: the API server is gated on `API_SERVER_ENABLED=true`. To expose it beyond 
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --restart unless-stopped \
   -v ~/.sinoclaw:/opt/data \
   -p 8642:8642 \
@@ -64,7 +64,7 @@ The built-in web dashboard runs as an optional side-process inside the same cont
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --restart unless-stopped \
   -v ~/.sinoclaw:/opt/data \
   -p 8642:8642 \
@@ -73,16 +73,16 @@ docker run -d \
   nousresearch/sinoclaw-agent gateway run
 ```
 
-The entrypoint starts `hermes dashboard` in the background (running as the non-root `hermes` user) before `exec`-ing the main command. Dashboard output is prefixed with `[dashboard]` in `docker logs` so it's easy to separate from gateway logs.
+The entrypoint starts `sinoclaw dashboard` in the background (running as the non-root `hermes` user) before `exec`-ing the main command. Dashboard output is prefixed with `[dashboard]` in `docker logs` so it's easy to separate from gateway logs.
 
 | Environment variable | Description | Default |
 |---------------------|-------------|---------|
 | `SINOCLAW_DASHBOARD` | Set to `1` (or `true` / `yes`) to launch the dashboard alongside the main command | *(unset — dashboard not started)* |
 | `SINOCLAW_DASHBOARD_HOST` | Bind address for the dashboard HTTP server | `0.0.0.0` |
 | `SINOCLAW_DASHBOARD_PORT` | Port for the dashboard HTTP server | `9119` |
-| `SINOCLAW_DASHBOARD_TUI` | Set to `1` to expose the in-browser Chat tab (embedded `hermes --tui` via PTY/WebSocket) | *(unset)* |
+| `SINOCLAW_DASHBOARD_TUI` | Set to `1` to expose the in-browser Chat tab (embedded `sinoclaw --tui` via PTY/WebSocket) | *(unset)* |
 
-The default `SINOCLAW_DASHBOARD_HOST=0.0.0.0` is required for the host to reach the dashboard through the published port; the entrypoint automatically passes `--insecure` to `hermes dashboard` in that case. Override to `127.0.0.1` if you want to restrict the dashboard to in-container access only (e.g. behind a reverse proxy in a sidecar).
+The default `SINOCLAW_DASHBOARD_HOST=0.0.0.0` is required for the host to reach the dashboard through the published port; the entrypoint automatically passes `--insecure` to `sinoclaw dashboard` in that case. Override to `127.0.0.1` if you want to restrict the dashboard to in-container access only (e.g. behind a reverse proxy in a sidecar).
 
 :::note
 The dashboard side-process is **not supervised** — if it crashes, it stays down until the container restarts. Running it as a separate container is not supported: the dashboard's gateway-liveness detection requires a shared PID namespace with the gateway process.
@@ -243,7 +243,7 @@ Set limits in Docker:
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --restart unless-stopped \
   --memory=4g --cpus=2 \
   -v ~/.sinoclaw:/opt/data \
@@ -268,7 +268,7 @@ The entrypoint script (`docker/entrypoint.sh`) bootstraps the data volume on fir
 - Copies default `config.yaml` if missing
 - Copies default `SOUL.md` if missing
 - Syncs bundled skills using a manifest-based approach (preserves user edits)
-- Optionally launches `hermes dashboard` as a background side-process when `SINOCLAW_DASHBOARD=1` (see [Running the dashboard](#running-the-dashboard))
+- Optionally launches `sinoclaw dashboard` as a background side-process when `SINOCLAW_DASHBOARD=1` (see [Running the dashboard](#running-the-dashboard))
 - Then runs `hermes` with whatever arguments you pass
 
 :::warning
@@ -283,7 +283,7 @@ Pull the latest image and recreate the container. Your data directory is untouch
 docker pull nousresearch/sinoclaw-agent:latest
 docker rm -f hermes
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --restart unless-stopped \
   -v ~/.sinoclaw:/opt/data \
   nousresearch/sinoclaw-agent gateway run
@@ -372,7 +372,7 @@ If your inference server runs directly on the host (not in Docker), use `host.do
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   -v ~/.sinoclaw:/opt/data \
   -p 8642:8642 \
   nousresearch/sinoclaw-agent gateway run
@@ -391,7 +391,7 @@ model:
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --network host \
   -v ~/.sinoclaw:/opt/data \
   nousresearch/sinoclaw-agent gateway run
@@ -414,7 +414,7 @@ model:
 From inside the Hermes container, confirm the inference server is reachable:
 
 ```sh
-docker exec hermes curl -s http://vllm:8000/v1/models
+docker exec sinoclaw curl -s http://vllm:8000/v1/models
 ```
 
 You should see a JSON response listing your served model. If this fails, check:
@@ -457,7 +457,7 @@ Playwright needs shared memory. Add `--shm-size=1g` to your Docker run command:
 
 ```sh
 docker run -d \
-  --name hermes \
+  --name sinoclaw \
   --shm-size=1g \
   -v ~/.sinoclaw:/opt/data \
   nousresearch/sinoclaw-agent gateway run
@@ -474,7 +474,7 @@ docker restart hermes
 ### Checking container health
 
 ```sh
-docker logs --tail 50 hermes          # Recent logs
+docker logs --tail 50 sinoclaw          # Recent logs
 docker run -it --rm nousresearch/sinoclaw-agent:latest version     # Verify version
-docker stats hermes                    # Resource usage
+docker stats sinoclaw                    # Resource usage
 ```

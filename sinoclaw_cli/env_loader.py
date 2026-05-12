@@ -1,4 +1,4 @@
-"""Helpers for loading Hermes .env files consistently across entrypoints."""
+"""Helpers for loading Sinoclaw .env files consistently across entrypoints."""
 
 from __future__ import annotations
 
@@ -103,7 +103,7 @@ def _sanitize_env_file_if_needed(path: Path) -> None:
     (see #8908).
 
     We delegate to ``sinoclaw_cli.config._sanitize_env_lines`` which
-    already knows all valid Hermes env-var names and can split
+    already knows all valid Sinoclaw env-var names and can split
     concatenated lines correctly.
     """
     if not path.exists():

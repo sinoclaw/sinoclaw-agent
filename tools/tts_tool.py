@@ -299,7 +299,7 @@ def _get_provider(tts_config: Dict[str, Any]) -> str:
 #           command: "piper -m ~/model.onnx -f {output_path} < {input_path}"
 #           output_format: wav
 #
-# Hermes writes the input text to a temp UTF-8 file, runs the command with
+# Sinoclaw writes the input text to a temp UTF-8 file, runs the command with
 # placeholder substitution, and reads the audio file the command wrote to
 # ``{output_path}``. Supported placeholders: ``{input_path}``,
 # ``{text_path}`` (alias for input_path), ``{output_path}``, ``{format}``,

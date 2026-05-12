@@ -10,13 +10,13 @@ zero migration needed.
 
 Usage::
 
-    hermes profile create coder          # fresh profile + bundled skills
-    hermes profile create coder --clone  # also copy config, .env, SOUL.md, skills
-    hermes profile create coder --clone-all  # full copy of source profile
+    sinoclaw profile create coder          # fresh profile + bundled skills
+    sinoclaw profile create coder --clone  # also copy config, .env, SOUL.md, skills
+    sinoclaw profile create coder --clone-all  # full copy of source profile
     coder chat                           # use via wrapper alias
-    hermes -p coder chat                 # or via flag
-    hermes profile use coder             # set as sticky default
-    hermes profile delete coder          # remove profile + alias + service
+    sinoclaw -p coder chat                 # or via flag
+    sinoclaw profile use coder             # set as sticky default
+    sinoclaw profile delete coder          # remove profile + alias + service
 """
 
 import json
@@ -97,11 +97,11 @@ _CLONE_ALL_DEFAULT_EXCLUDE_ROOT: frozenset[str] = frozenset({
     "node_modules",
 })
 
-# Marker file written by `hermes profile create --no-skills`.  When present in
+# Marker file written by `sinoclaw profile create --no-skills`.  When present in
 # a profile's root, callers of seed_profile_skills() (fresh-create, `hermes
 # update`'s all-profile sync, the web dashboard) skip bundled-skill seeding
 # for that profile.  The user can still install skills manually via
-# `hermes skills install` or drop SKILL.md files into the profile's skills/.
+# `sinoclaw skills install` or drop SKILL.md files into the profile's skills/.
 # Delete the marker file to opt back in.
 NO_BUNDLED_SKILLS_MARKER = ".no-bundled-skills"
 
@@ -210,7 +210,7 @@ _SINOCLAW_SUBCOMMANDS = frozenset({
 def _get_profiles_root() -> Path:
     """Return the directory where named profiles are stored.
 
-    Anchored to the hermes root, NOT to the current SINOCLAW_HOME
+    Anchored to the sinoclaw root, NOT to the current SINOCLAW_HOME
     (which may itself be a profile).  This ensures ``coder profile list``
     can see all profiles.
 
@@ -317,13 +317,13 @@ def profile_exists(name: str) -> bool:
 def check_alias_collision(name: str) -> Optional[str]:
     """Return a human-readable collision message, or None if the name is safe.
 
-    Checks: reserved names, hermes subcommands, existing binaries in PATH.
+    Checks: reserved names, sinoclaw subcommands, existing binaries in PATH.
     """
     canon = normalize_profile_name(name)
     if canon in _RESERVED_NAMES:
         return f"'{canon}' is a reserved name"
     if canon in _SINOCLAW_SUBCOMMANDS:
-        return f"'{canon}' conflicts with a hermes subcommand"
+        return f"'{canon}' conflicts with a sinoclaw subcommand"
 
     # Check existing commands in PATH
     wrapper_dir = _get_wrapper_dir()
@@ -337,7 +337,7 @@ def check_alias_collision(name: str) -> Optional[str]:
             if existing_path == str(wrapper_dir / canon):
                 try:
                     content = (wrapper_dir / canon).read_text()
-                    if "hermes -p" in content:
+                    if "sinoclaw -p" in content:
                         return None  # it's our wrapper, safe to overwrite
                 except Exception:
                     pass
@@ -369,7 +369,7 @@ def create_wrapper_script(name: str) -> Optional[Path]:
 
     wrapper_path = wrapper_dir / canon
     try:
-        wrapper_path.write_text(f'#!/bin/sh\nexec hermes -p {canon} "$@"\n')
+        wrapper_path.write_text(f'#!/bin/sh\nexec sinoclaw -p {canon} "$@"\n')
         wrapper_path.chmod(wrapper_path.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
         return wrapper_path
     except OSError as e:
@@ -384,7 +384,7 @@ def remove_wrapper_script(name: str) -> bool:
         try:
             # Verify it's our wrapper before removing
             content = wrapper_path.read_text()
-            if "hermes -p" in content:
+            if "sinoclaw -p" in content:
                 wrapper_path.unlink()
                 return True
         except Exception:
@@ -419,7 +419,7 @@ def _read_distribution_meta(profile_dir: Path) -> tuple:
     if present; ``(None, None, None)`` otherwise.
 
     Failures (missing file, bad YAML) are swallowed — a bad manifest should
-    never break ``hermes profile list`` for an unrelated profile.
+    never break ``sinoclaw profile list`` for an unrelated profile.
     """
     mf_path = profile_dir / "distribution.yaml"
     if not mf_path.is_file():
@@ -563,7 +563,7 @@ def create_profile(
         If True, skip wrapper script creation.
     no_skills:
         If True, create an empty profile with no bundled skills, and write
-        a marker file so ``hermes update`` skips re-seeding this profile's
+        a marker file so ``sinoclaw update`` skips re-seeding this profile's
         skills. Mutually exclusive with ``clone_config``/``clone_all`` (those
         explicitly copy skills from the source).
 
@@ -654,14 +654,14 @@ def create_profile(
         except Exception:
             pass  # best-effort — don't fail profile creation over this
 
-    # Write the opt-out marker so seed_profile_skills() and `hermes update`'s
+    # Write the opt-out marker so seed_profile_skills() and `sinoclaw update`'s
     # all-profile sync loop both skip this profile for bundled-skill seeding.
     if no_skills:
         try:
             (profile_dir / NO_BUNDLED_SKILLS_MARKER).write_text(
                 "This profile opted out of bundled-skill seeding "
-                "(`hermes profile create --no-skills`).\n"
-                "Delete this file to re-enable sync on the next `hermes update`.\n",
+                "(`sinoclaw profile create --no-skills`).\n"
+                "Delete this file to re-enable sync on the next `sinoclaw update`.\n",
                 encoding="utf-8",
             )
         except OSError:
@@ -676,7 +676,7 @@ def seed_profile_skills(profile_dir: Path, quiet: bool = False) -> Optional[dict
     Uses subprocess because sync_skills() caches SINOCLAW_HOME at module level.
     Returns the sync result dict, or None on failure.
 
-    Profiles that opted out of bundled skills (via ``hermes profile create
+    Profiles that opted out of bundled skills (via ``sinoclaw profile create
     --no-skills`` — which writes ``.no-bundled-skills`` to the profile root)
     are skipped and get an empty-result dict so callers can report
     "opted out" instead of "failed".
@@ -729,7 +729,7 @@ def delete_profile(name: str, yes: bool = False) -> Path:
     if canon == "default":
         raise ValueError(
             "Cannot delete the default profile (~/.sinoclaw).\n"
-            "To remove everything, use: hermes uninstall"
+            "To remove everything, use: sinoclaw uninstall"
         )
 
     profile_dir = get_profile_dir(canon)
@@ -929,7 +929,7 @@ def set_active_profile(name: str) -> None:
     if canon != "default" and not profile_exists(canon):
         raise FileNotFoundError(
             f"Profile '{canon}' does not exist. "
-            f"Create it with: hermes profile create {canon}"
+            f"Create it with: sinoclaw profile create {canon}"
         )
 
     path = _get_active_profile_path()
@@ -1138,7 +1138,7 @@ def import_profile(archive_path: str, name: Optional[str] = None) -> Path:
     if not inferred_name:
         raise ValueError(
             "Cannot determine profile name from archive. "
-            "Specify it explicitly: hermes profile import <archive> --name <name>"
+            "Specify it explicitly: sinoclaw profile import <archive> --name <name>"
         )
     if archive_root is None:
         raise ValueError(
@@ -1153,7 +1153,7 @@ def import_profile(archive_path: str, name: Optional[str] = None) -> Path:
     if canon == "default":
         raise ValueError(
             "Cannot import as 'default' — that is the built-in root profile (~/.sinoclaw). "
-            "Specify a different name: hermes profile import <archive> --name <name>"
+            "Specify a different name: sinoclaw profile import <archive> --name <name>"
         )
 
     profile_dir = get_profile_dir(canon)
@@ -1300,7 +1300,7 @@ def rename_profile(old_name: str, new_name: str) -> Path:
 # ---------------------------------------------------------------------------
 
 def generate_bash_completion() -> str:
-    """Generate a bash completion script for hermes profile names."""
+    """Generate a bash completion script for sinoclaw profile names."""
     return '''# Sinoclaw Agent profile completion
 # Add to ~/.bashrc: eval "$(hermes completion bash)"
 
@@ -1350,7 +1350,7 @@ complete -F _sinoclaw_completion hermes
 
 
 def generate_zsh_completion() -> str:
-    """Generate a zsh completion script for hermes profile names."""
+    """Generate a zsh completion script for sinoclaw profile names."""
     return '''#compdef hermes
 # Sinoclaw Agent profile completion
 # Add to ~/.zshrc: eval "$(hermes completion zsh)"
@@ -1387,7 +1387,7 @@ _hermes "$@"
 def resolve_profile_env(profile_name: str) -> str:
     """Resolve a profile name to a SINOCLAW_HOME path string.
 
-    Called early in the CLI entry point, before any hermes modules
+    Called early in the CLI entry point, before any sinoclaw modules
     are imported, to set the SINOCLAW_HOME environment variable.
     """
     canon = normalize_profile_name(profile_name)
@@ -1397,7 +1397,7 @@ def resolve_profile_env(profile_name: str) -> str:
     if canon != "default" and not profile_dir.is_dir():
         raise FileNotFoundError(
             f"Profile '{canon}' does not exist. "
-            f"Create it with: hermes profile create {canon}"
+            f"Create it with: sinoclaw profile create {canon}"
         )
 
     return str(profile_dir)

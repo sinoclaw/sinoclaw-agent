@@ -59,7 +59,7 @@ def remove_path_from_shell_configs():
             content = config_path.read_text()
             original_content = content
             
-            # Remove lines containing sinoclaw-agent or hermes PATH entries
+            # Remove lines containing sinoclaw-agent or sinoclaw PATH entries
             new_lines = []
             skip_next = False
             
@@ -96,10 +96,10 @@ def remove_path_from_shell_configs():
 
 
 def remove_wrapper_script():
-    """Remove the hermes wrapper script if it exists."""
+    """Remove the sinoclaw wrapper script if it exists."""
     wrapper_paths = [
         Path.home() / ".local" / "bin" / "hermes",
-        Path("/usr/local/bin/hermes"),
+        Path("/usr/local/bin/sinoclaw"),
     ]
     
     removed = []
@@ -247,7 +247,7 @@ def uninstall_gateway_service():
 #   3. Downloads PortableGit to ``%LOCALAPPDATA%\hermes\git\`` and Node to
 #      ``%LOCALAPPDATA%\hermes\node\`` as user-scoped, isolated copies.
 #      These are ~200MB combined and serve no purpose after uninstall.
-#   4. On the ``hermes dashboard`` + gateway paths, drops files into
+#   4. On the ``sinoclaw dashboard`` + gateway paths, drops files into
 #      ``%LOCALAPPDATA%\hermes\gateway-service\`` and sometimes
 #      ``%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\`` — the
 #      latter is handled by ``gateway_windows.uninstall()`` already.
@@ -387,7 +387,7 @@ def _uninstall_profile(profile) -> None:
     """Fully uninstall a single named profile: stop its gateway service,
     remove its alias wrapper, and wipe its SINOCLAW_HOME directory.
 
-    We shell out to ``hermes -p <name> gateway stop|uninstall`` because
+    We shell out to ``sinoclaw -p <name> gateway stop|uninstall`` because
     service names, unit paths, and plist paths are all derived from the
     current SINOCLAW_HOME and can't be easily switched in-process.
     """
@@ -587,7 +587,7 @@ def run_uninstall(args):
             log_info("No Sinoclaw-set User env vars to remove")
     
     # 3. Remove wrapper script
-    log_info("Removing hermes command...")
+    log_info("Removing sinoclaw command...")
     removed_wrappers = remove_wrapper_script()
     if removed_wrappers:
         for wrapper in removed_wrappers:

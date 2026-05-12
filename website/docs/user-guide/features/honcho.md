@@ -212,15 +212,15 @@ hermes honcho enable          # Enable Honcho
 hermes honcho disable         # Disable Honcho
 ```
 
-## Migrating from `hermes honcho`
+## Migrating from `sinoclaw honcho`
 
-If you previously used the standalone `hermes honcho setup`:
+If you previously used the standalone `sinoclaw honcho setup`:
 
 1. Your existing configuration (`honcho.json` or `~/.honcho/config.json`) is preserved
 2. Your server-side data (memories, conclusions, user profiles) is intact
 3. Set `memory.provider: honcho` in config.yaml to reactivate
 
-No re-login or re-setup needed. Run `hermes memory setup` and select "honcho" — the wizard detects your existing config.
+No re-login or re-setup needed. Run `sinoclaw memory setup` and select "honcho" — the wizard detects your existing config.
 
 ## Full Documentation
 

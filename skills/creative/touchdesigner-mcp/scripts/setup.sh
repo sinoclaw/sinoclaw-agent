@@ -72,7 +72,7 @@ if 'twozero_td' not in cfg['mcp_servers']:
 " 2>/dev/null && echo -e " ${OK} twozero_td MCP entry added to config" \
               || { echo -e " ${FAIL} Could not update config (is PyYAML installed?)"; \
                    manual_steps+=("Add twozero_td MCP entry to ${SINOCLAW_CFG} manually"); }
-    manual_steps+=("Restart Hermes session to pick up config change")
+    manual_steps+=("Restart Sinoclaw session to pick up config change")
 fi
 
 # ── 4. Test if MCP port is responding ──

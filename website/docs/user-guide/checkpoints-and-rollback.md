@@ -48,12 +48,12 @@ CLI for inspecting and managing the store outside a session:
 
 | Command | Description |
 |---------|-------------|
-| `hermes checkpoints` | Show total size, project count, per-project breakdown |
-| `hermes checkpoints status` | Same as bare `checkpoints` |
-| `hermes checkpoints list` | Alias for `status` |
-| `hermes checkpoints prune` | Force a sweep: delete orphans/stale, GC, enforce size cap |
-| `hermes checkpoints clear` | Nuke the entire checkpoint base (asks first) |
-| `hermes checkpoints clear-legacy` | Delete only the `legacy-*` archives from v1 migration |
+| `sinoclaw checkpoints` | Show total size, project count, per-project breakdown |
+| `sinoclaw checkpoints status` | Same as bare `checkpoints` |
+| `sinoclaw checkpoints list` | Alias for `status` |
+| `sinoclaw checkpoints prune` | Force a sweep: delete orphans/stale, GC, enforce size cap |
+| `sinoclaw checkpoints clear` | Nuke the entire checkpoint base (asks first) |
+| `sinoclaw checkpoints clear-legacy` | Delete only the `legacy-*` archives from v1 migration |
 
 ## How Checkpoints Work
 
@@ -111,7 +111,7 @@ checkpoints:
   auto_prune: false
 ```
 
-When `enabled: false`, the Checkpoint Manager is a no-op and never attempts git operations. When `auto_prune: false`, the store grows until you run `hermes checkpoints prune` manually.
+When `enabled: false`, the Checkpoint Manager is a no-op and never attempts git operations. When `auto_prune: false`, the store grows until you run `sinoclaw checkpoints prune` manually.
 
 ## Listing Checkpoints
 
@@ -159,7 +159,7 @@ Projects:        12
 Legacy archives (1):
   legacy-20260506-050616                           4.2 MB
 
-Clear with: hermes checkpoints clear-legacy
+Clear with: sinoclaw checkpoints clear-legacy
 ```
 
 Force a full sweep (ignores the 24h idempotency marker):
@@ -224,7 +224,7 @@ Restore just one file from a checkpoint without affecting the rest of the direct
   └── legacy-<ts>/           # archived pre-v2 per-project shadow repos
 ```
 
-Each `<hash>` is derived from the absolute path of the working directory. You normally never need to touch these manually — use `hermes checkpoints status` / `prune` / `clear` instead.
+Each `<hash>` is derived from the absolute path of the working directory. You normally never need to touch these manually — use `sinoclaw checkpoints status` / `prune` / `clear` instead.
 
 ### Migration from v1
 
@@ -240,10 +240,10 @@ to reclaim the space. Legacy archives are also swept by `auto_prune` after `rete
 
 ## Best Practices
 
-- **Enable checkpoints only when you need them** — `hermes chat --checkpoints` or per-profile `enabled: true`.
+- **Enable checkpoints only when you need them** — `sinoclaw chat --checkpoints` or per-profile `enabled: true`.
 - **Use `/rollback diff` before restoring** — preview what will change to pick the right checkpoint.
 - **Use `/rollback` instead of `git reset`** when you want to undo agent-driven changes only.
-- **Check `hermes checkpoints status` occasionally** if you use checkpoints regularly — shows which projects are active and what the store costs you.
-- **Combine with Git worktrees** for maximum safety — keep each Hermes session in its own worktree/branch, with checkpoints as an extra layer.
+- **Check `sinoclaw checkpoints status` occasionally** if you use checkpoints regularly — shows which projects are active and what the store costs you.
+- **Combine with Git worktrees** for maximum safety — keep each Sinoclaw session in its own worktree/branch, with checkpoints as an extra layer.
 
 For running multiple agents in parallel on the same repo, see the guide on [Git worktrees](./git-worktrees.md).

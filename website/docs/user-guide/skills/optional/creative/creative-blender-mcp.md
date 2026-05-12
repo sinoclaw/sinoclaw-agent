@@ -14,7 +14,7 @@ Control Blender directly from Hermes via socket connection to the blender-mcp ad
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/creative/blender-mcp` |
+| Source | Optional — install with `sinoclaw skills install official/creative/blender-mcp` |
 | Path | `optional-skills/creative/blender-mcp` |
 | Version | `1.0.0` |
 | Author | alireza78a |

@@ -207,7 +207,7 @@ class TestIRCAdapterMessageParsing:
         adapter._registered = False
         adapter._registration_event = asyncio.Event()
 
-        await adapter._handle_line(":server 001 hermes :Welcome to IRC")
+        await adapter._handle_line(":server 001 sinoclaw :Welcome to IRC")
         assert adapter._registered is True
         assert adapter._registration_event.is_set()
 
@@ -268,7 +268,7 @@ class TestIRCAdapterMessageParsing:
         adapter._dispatch_message = capture_dispatch
         adapter._message_handler = AsyncMock()
 
-        await adapter._handle_line(":user!u@host PRIVMSG hermes :private message")
+        await adapter._handle_line(":user!u@host PRIVMSG sinoclaw :private message")
         assert len(dispatched) == 1
         assert dispatched[0]["text"] == "private message"
         assert dispatched[0]["chat_type"] == "dm"
@@ -298,7 +298,7 @@ class TestIRCAdapterMessageParsing:
         adapter._dispatch_message = capture_dispatch
         adapter._message_handler = AsyncMock()
 
-        await adapter._handle_line(":user!u@host PRIVMSG hermes :\x01ACTION waves\x01")
+        await adapter._handle_line(":user!u@host PRIVMSG sinoclaw :\x01ACTION waves\x01")
         assert len(dispatched) == 1
         assert dispatched[0]["text"] == "* user waves"
 

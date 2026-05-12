@@ -481,7 +481,7 @@ class CredentialPool:
         When a Codex OAuth access token expires (or the ChatGPT account hits
         its 5h/weekly quota), the pool entry gets marked ``STATUS_EXHAUSTED``
         with a ``last_error_reset_at`` that can be many hours in the future.
-        Meanwhile the user may run ``hermes model`` / ``hermes auth`` which
+        Meanwhile the user may run ``sinoclaw model`` / ``sinoclaw auth`` which
         performs a fresh device-code login and writes new tokens to
         ``auth.json`` under ``_auth_store_lock``.  Without this sync the pool
         entry stays frozen until ``last_error_reset_at`` elapses — even
@@ -872,7 +872,7 @@ class CredentialPool:
                     entry = synced
                     cleared_any = True
             # For openai-codex entries, same pattern: the user may have
-            # re-authed via `hermes model` / `hermes auth` after a 429/401,
+            # re-authed via `sinoclaw model` / `sinoclaw auth` after a 429/401,
             # leaving fresh tokens on disk while the pool entry is still
             # frozen behind last_error_reset_at (can be hours in the
             # future for ChatGPT weekly windows).
@@ -1172,7 +1172,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
     auth_store = _load_auth_store()
 
     # Shared suppression gate — used at every upsert site so
-    # `hermes auth remove <provider> <N>` is stable across all source types.
+    # `sinoclaw auth remove <provider> <N>` is stable across all source types.
     try:
         from sinoclaw_cli.auth import is_source_suppressed as _is_suppressed
     except ImportError:
@@ -1221,7 +1221,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             active_sources.add("device_code")
             # Prefer a user-supplied label embedded in the singleton state
             # (set by persist_nous_credentials(label=...) when the user ran
-            # `hermes auth add nous --label <name>`).  Fall back to the
+            # `sinoclaw auth add nous --label <name>`).  Fall back to the
             # auto-derived token fingerprint for logins that didn't supply one.
             custom_label = str(state.get("label") or "").strip()
             seeded_label = custom_label or label_from_token(
@@ -1322,7 +1322,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
     elif provider == "minimax-oauth":
         # MiniMax OAuth tokens live in ~/.sinoclaw/auth.json providers.minimax-oauth.
         # Seed the pool so `/auth list` reflects the logged-in state and the
-        # standard `hermes auth remove minimax-oauth <N>` flow works.
+        # standard `sinoclaw auth remove minimax-oauth <N>` flow works.
         # Use refresh_if_expiring=False equivalent: resolve_minimax_oauth_runtime_credentials
         # always refreshes on expiry, so instead read raw state here to avoid
         # surprise network calls during provider discovery.
@@ -1362,7 +1362,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             logger.debug("MiniMax OAuth token seed failed: %s", exc)
 
     elif provider == "openai-codex":
-        # Respect user suppression — `hermes auth remove openai-codex` marks
+        # Respect user suppression — `sinoclaw auth remove openai-codex` marks
         # the device_code source as suppressed so it won't be re-seeded from
         # the Hermes auth store.  Without this gate the removal is instantly
         # undone on the next load_pool() call.
@@ -1376,7 +1376,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         # single-use, so sharing them with Codex CLI / VS Code causes
         # refresh_token_reused race failures.  Users who want to adopt
         # existing Codex CLI credentials get a one-time, explicit prompt
-        # via `hermes auth openai-codex`.
+        # via `sinoclaw auth openai-codex`.
         if isinstance(tokens, dict) and tokens.get("access_token"):
             active_sources.add("device_code")
             changed |= _upsert_entry(
@@ -1410,7 +1410,7 @@ def _seed_from_env(provider: str, entries: List[PooledCredential]) -> Tuple[bool
         val = env_file.get(key) or os.environ.get(key) or ""
         return val.strip()
 
-    # Honour user suppression — `hermes auth remove <provider> <N>` for an
+    # Honour user suppression — `sinoclaw auth remove <provider> <N>` for an
     # env-seeded credential marks the env:<VAR> source as suppressed so it
     # won't be re-seeded from the user's shell environment or ~/.sinoclaw/.env.
     # Without this gate the removal is silently undone on the next

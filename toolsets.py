@@ -373,11 +373,11 @@ TOOLSETS = {
 
     "sinoclaw-cron": {
         # Mirrors sinoclaw-cli so cron's "default" toolset is the same set of
-        # core tools users see interactively — then `hermes tools` filters
+        # core tools users see interactively — then `sinoclaw tools` filters
         # them down per the platform config. _DEFAULT_OFF_TOOLSETS (moa,
         # homeassistant, rl) are excluded by _get_platform_tools() unless
         # the user explicitly enables them.
-        "description": "Default cron toolset - same core tools as sinoclaw-cli; gated by `hermes tools`",
+        "description": "Default cron toolset - same core tools as sinoclaw-cli; gated by `sinoclaw tools`",
         "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },

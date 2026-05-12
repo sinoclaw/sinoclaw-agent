@@ -1,10 +1,10 @@
 """
-Backup and import commands for hermes CLI.
+Backup and import commands for sinoclaw CLI.
 
-`hermes backup` creates a zip archive of the entire ~/.sinoclaw/ directory
+`sinoclaw backup` creates a zip archive of the entire ~/.sinoclaw/ directory
 (excluding the sinoclaw-agent repo and transient files).
 
-`hermes import` restores from a backup zip, overlaying onto the current
+`sinoclaw import` restores from a backup zip, overlaying onto the current
 SINOCLAW_HOME root.
 """
 
@@ -66,7 +66,7 @@ _SECRET_FILE_NAMES = {".env", "auth.json", "state.db"}
 
 
 def _should_exclude(rel_path: Path) -> bool:
-    """Return True if *rel_path* (relative to hermes root) should be skipped."""
+    """Return True if *rel_path* (relative to sinoclaw root) should be skipped."""
     parts = rel_path.parts
 
     # Any path component matches an excluded dir name
@@ -176,7 +176,7 @@ def run_backup(args) -> None:
             if _should_exclude(rel):
                 continue
 
-            # Skip the output zip itself if it happens to be inside hermes root
+            # Skip the output zip itself if it happens to be inside sinoclaw root
             try:
                 if fpath.resolve() == out_path.resolve():
                     continue
@@ -246,7 +246,7 @@ def run_backup(args) -> None:
         if len(errors) > 10:
             print(f"  ... and {len(errors) - 10} more")
 
-    print(f"\nRestore with: hermes import {out_path.name}")
+    print(f"\nRestore with: sinoclaw import {out_path.name}")
 
 
 # ---------------------------------------------------------------------------
@@ -262,7 +262,7 @@ def _validate_backup_zip(zf: zipfile.ZipFile) -> tuple[bool, str]:
     if not names:
         return False, "zip archive is empty"
 
-    # Look for telltale files that a hermes home would have
+    # Look for telltale files that a sinoclaw home would have
     markers = {"config.yaml", ".env", "state.db"}
     found = set()
     for n in names:
@@ -297,7 +297,7 @@ def _detect_prefix(zf: zipfile.ZipFile) -> str:
     first_parts = {p[0] for p in parts_list if len(p) > 1}
     if len(first_parts) == 1:
         prefix = first_parts.pop()
-        # Only strip if it looks like a hermes dir name
+        # Only strip if it looks like a sinoclaw dir name
         if prefix in (".sinoclaw", "sinoclaw"):
             return prefix + "/"
 
@@ -446,25 +446,25 @@ def run_import(args) -> None:
                 # sinoclaw_cli.profiles might not be available (fresh install)
                 if any(profiles_dir.iterdir()):
                     print(f"\n  Profiles detected but aliases could not be created.")
-                    print(f"  Run: hermes profile list  (after installing hermes)")
+                    print(f"  Run: sinoclaw profile list  (after installing hermes)")
 
         # Guidance
         print()
         if not (sinoclaw_root / "sinoclaw-agent").is_dir():
             print("Note: The sinoclaw-agent codebase was not included in the backup.")
-            print("  If this is a fresh install, run: hermes update")
+            print("  If this is a fresh install, run: sinoclaw update")
 
         if restored_profiles:
             gw_profiles = [n for n, _ in restored_profiles]
             print("\nTo re-enable gateway services for profiles:")
             for pname in gw_profiles:
-                print(f"  hermes -p {pname} gateway install")
+                print(f"  sinoclaw -p {pname} gateway install")
 
         print("Done. Your Hermes configuration has been restored.")
 
 
 # ---------------------------------------------------------------------------
-# Quick state snapshots (used by /snapshot slash command and hermes backup --quick)
+# Quick state snapshots (used by /snapshot slash command and sinoclaw backup --quick)
 # ---------------------------------------------------------------------------
 
 # Critical state files to include in quick snapshots (relative to SINOCLAW_HOME).
@@ -474,7 +474,7 @@ def run_import(args) -> None:
 # Entries may be individual files OR directories.  Directories are captured
 # recursively; missing entries are silently skipped.  Pairing data lives in
 # platform-specific JSON blobs outside state.db, so it's listed here explicitly
-# — `hermes update` snapshots this set before pulling so approved-user lists
+# — `sinoclaw update` snapshots this set before pulling so approved-user lists
 # are recoverable if anything goes wrong (issue #15733).
 _QUICK_STATE_FILES = (
     "state.db",
@@ -689,7 +689,7 @@ def prune_quick_snapshots(
 
 
 def run_quick_backup(args) -> None:
-    """CLI entry point for hermes backup --quick."""
+    """CLI entry point for sinoclaw backup --quick."""
     label = getattr(args, "label", None)
     snap_id = create_quick_snapshot(label=label)
     if snap_id:
@@ -837,7 +837,7 @@ def create_pre_update_backup(
 
     Returns the path to the created zip, or ``None`` if no files were
     found or the backup could not be created.  Never raises — the caller
-    (``hermes update``) should continue even if the backup fails.
+    (``sinoclaw update``) should continue even if the backup fails.
     """
     sinoclaw_root = sinoclaw_home or get_default_sinoclaw_root()
     if not sinoclaw_root.is_dir():
@@ -862,7 +862,7 @@ def create_pre_update_backup(
 
 
 # ---------------------------------------------------------------------------
-# Pre-migration auto-backup (used by `hermes claw migrate`)
+# Pre-migration auto-backup (used by `sinoclaw claw migrate`)
 # ---------------------------------------------------------------------------
 
 _PRE_MIGRATION_PREFIX = "pre-migration-"
@@ -903,11 +903,11 @@ def create_pre_migration_backup(
     keep: int = _PRE_MIGRATION_DEFAULT_KEEP,
 ) -> Optional[Path]:
     """Create a full zip backup of SINOCLAW_HOME under ``backups/`` before a
-    ``hermes claw migrate`` apply.
+    ``sinoclaw claw migrate`` apply.
 
     Shares implementation with :func:`create_pre_update_backup` via
     ``_write_full_zip_backup`` — same exclusions, same SQLite safe-copy,
-    restorable with ``hermes import <archive>``.  Writes to
+    restorable with ``sinoclaw import <archive>``.  Writes to
     ``<SINOCLAW_HOME>/backups/pre-migration-<timestamp>.zip`` and auto-prunes
     old pre-migration backups.
 
@@ -919,7 +919,7 @@ def create_pre_migration_backup(
     if not sinoclaw_root.is_dir():
         return None
 
-    # Reuses the shared backups/ directory so `hermes import` and the
+    # Reuses the shared backups/ directory so `sinoclaw import` and the
     # update-backup listing pick up pre-migration archives too.
     backup_dir = _pre_update_backup_dir(sinoclaw_root)
     try:

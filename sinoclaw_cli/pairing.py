@@ -2,14 +2,14 @@
 CLI commands for the DM pairing system.
 
 Usage:
-    hermes pairing list              # Show all pending + approved users
-    hermes pairing approve <platform> <code>  # Approve a pairing code
-    hermes pairing revoke <platform> <user_id> # Revoke user access
-    hermes pairing clear-pending     # Clear all expired/pending codes
+    sinoclaw pairing list              # Show all pending + approved users
+    sinoclaw pairing approve <platform> <code>  # Approve a pairing code
+    sinoclaw pairing revoke <platform> <user_id> # Revoke user access
+    sinoclaw pairing clear-pending     # Clear all expired/pending codes
 """
 
 def pairing_command(args):
-    """Handle hermes pairing subcommands."""
+    """Handle sinoclaw pairing subcommands."""
     from gateway.pairing import PairingStore
 
     store = PairingStore()
@@ -24,7 +24,7 @@ def pairing_command(args):
     elif action == "clear-pending":
         _cmd_clear_pending(store)
     else:
-        print("Usage: hermes pairing {list|approve|revoke|clear-pending}")
+        print("Usage: sinoclaw pairing {list|approve|revoke|clear-pending}")
         print("Run 'hermes pairing --help' for details.")
 
 

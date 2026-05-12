@@ -7,7 +7,7 @@
     "date": "2026-04-25",
     "category": "dev-workflow",
     "headline": "12 Hermes instances every day, in parallel",
-    "quote": "I literally run 12 hermes agent instances every day in parallel to build Sinoclaw Agent, and its now a top 100 GitHub repositories of all time. Our backend team uses it to monitor and investigate issues with our stack. Our post training team uses them to create new RL environments and benchmarks, investigate, inspect and sometimes directly manipulate the datasets.",
+    "quote": "I literally run 12 sinoclaw agent instances every day in parallel to build Sinoclaw Agent, and its now a top 100 GitHub repositories of all time. Our backend team uses it to monitor and investigate issues with our stack. Our post training team uses them to create new RL environments and benchmarks, investigate, inspect and sometimes directly manipulate the datasets.",
     "size": "lg"
   },
   {
@@ -172,7 +172,7 @@
     "date": "2026-04-15",
     "category": "personal-assistant",
     "headline": "Jarvis at home in 2026",
-    "quote": "m2.7 + hermes agent: we really got jarvis at home in 2026 but strangely enough no one seems to care.",
+    "quote": "m2.7 + sinoclaw agent: we really got jarvis at home in 2026 but strangely enough no one seems to care.",
     "size": "sm"
   },
   {
@@ -523,7 +523,7 @@
     "url": "https://gist.github.com/nazt/849e29cd25c148b6cebafdbcc38bb6cc",
     "date": "2026",
     "category": "integrations",
-    "headline": "Fat agent → thin tool provider via hermes mcp serve",
+    "headline": "Fat agent → thin tool provider via sinoclaw mcp serve",
     "quote": "hermes mcp serve turns Hermes from a monolithic agent into a composable capability layer — any MCP client can borrow Hermes's 15+ messaging platforms, SQLite FTS5 persistence, and 73-skill tool surface without running Hermes as the primary agent.",
     "size": "md"
   },
@@ -876,7 +876,7 @@
     "date": "2026",
     "category": "privacy",
     "headline": "Tailscale serve for secure remote access, no exposed ports",
-    "quote": "Users want secure remote access to the Hermes API server / Open WebUI without exposing ports publicly. Tailscale serve provides zero-config HTTPS tunneling over a private mesh.",
+    "quote": "Users want secure remote access to the Sinoclaw API server / Open WebUI without exposing ports publicly. Tailscale serve provides zero-config HTTPS tunneling over a private mesh.",
     "size": "sm"
   },
   {

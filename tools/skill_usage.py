@@ -254,8 +254,8 @@ def list_archived_skill_names() -> List[str]:
     """Enumerate skills in ``~/.sinoclaw/skills/.archive/``.
 
     Archive layout is flat (``.archive/<skill>/``) as set by ``archive_skill``,
-    so the directory name is the skill name. Used by ``hermes curator
-    list-archived`` to help users pass a name to ``hermes curator restore``.
+    so the directory name is the skill name. Used by ``sinoclaw curator
+    list-archived`` to help users pass a name to ``sinoclaw curator restore``.
     """
     archive_root = _archive_dir()
     if not archive_root.exists():

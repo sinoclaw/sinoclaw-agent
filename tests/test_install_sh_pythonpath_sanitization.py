@@ -24,7 +24,7 @@ def test_sinoclaw_launcher_wrapper_clears_python_env_before_exec() -> None:
     text = INSTALL_SH.read_text()
 
     # Wrapper should clear env and forward args untouched to the venv entrypoint.
-    assert 'cat > "$command_link_dir/hermes" <<EOF' in text
+    assert 'cat > "$command_link_dir/sinoclaw" <<EOF' in text
     assert 'unset PYTHONPATH' in text
     assert 'unset PYTHONHOME' in text
     assert 'exec "$SINOCLAW_BIN" "\\$@"' in text

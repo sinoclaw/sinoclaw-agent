@@ -14,7 +14,7 @@ Gym workout planner and nutrition tracker. Search 690+ exercises by muscle, equi
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/health/fitness-nutrition` |
+| Source | Optional — install with `sinoclaw skills install official/health/fitness-nutrition` |
 | Path | `optional-skills/health/fitness-nutrition` |
 | Version | `1.0.0` |
 | License | MIT |

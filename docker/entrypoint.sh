@@ -7,7 +7,7 @@ INSTALL_DIR="/opt/sinoclaw"
 
 # --- Privilege dropping via gosu ---
 # When started as root (the default for Docker, or fakeroot in rootless Podman),
-# optionally remap the hermes user/group to match host-side ownership, fix volume
+# optionally remap the sinoclaw user/group to match host-side ownership, fix volume
 # permissions, then re-exec as hermes.
 if [ "$(id -u)" = "0" ]; then
     if [ -n "$SINOCLAW_UID" ] && [ "$SINOCLAW_UID" != "$(id -u sinoclaw)" ]; then
@@ -100,16 +100,16 @@ if [ -d "$INSTALL_DIR/skills" ]; then
     python3 "$INSTALL_DIR/tools/skills_sync.py"
 fi
 
-# Optionally start `hermes dashboard` as a side-process.
+# Optionally start `sinoclaw dashboard` as a side-process.
 #
 # Toggled by SINOCLAW_DASHBOARD=1 (also accepts "true"/"yes", case-insensitive).
 # Host/port/TUI can be overridden via:
 #   SINOCLAW_DASHBOARD_HOST  (default 0.0.0.0 — exposed outside the container)
-#   SINOCLAW_DASHBOARD_PORT  (default 9119, matches `hermes dashboard` default)
-#   SINOCLAW_DASHBOARD_TUI   (already honored by `hermes dashboard` itself)
+#   SINOCLAW_DASHBOARD_PORT  (default 9119, matches `sinoclaw dashboard` default)
+#   SINOCLAW_DASHBOARD_TUI   (already honored by `sinoclaw dashboard` itself)
 #
 # The dashboard is a long-lived server.  We background it *before* the final
-# `exec hermes "$@"` so the user's chosen foreground command (chat, gateway,
+# `exec sinoclaw "$@"` so the user's chosen foreground command (chat, gateway,
 # sleep infinity, …) remains PID-of-interest for the container runtime.  When
 # the container stops the whole process tree is torn down, so no explicit
 # cleanup is needed.
@@ -125,11 +125,11 @@ case "${SINOCLAW_DASHBOARD:-}" in
         if [ "$dash_host" != "127.0.0.1" ] && [ "$dash_host" != "localhost" ]; then
             dash_args+=(--insecure)
         fi
-        echo "Starting hermes dashboard on ${dash_host}:${dash_port} (background)"
+        echo "Starting sinoclaw dashboard on ${dash_host}:${dash_port} (background)"
         # Prefix dashboard output so it's distinguishable from the main
         # process in `docker logs`.  stdbuf keeps the pipe line-buffered.
         (
-            stdbuf -oL -eL hermes dashboard "${dash_args[@]}" 2>&1 \
+            stdbuf -oL -eL sinoclaw dashboard "${dash_args[@]}" 2>&1 \
                 | sed -u 's/^/[dashboard] /'
         ) &
         ;;
@@ -138,7 +138,7 @@ esac
 # Final exec: two supported invocation patterns.
 #
 #   docker run <image>                 -> exec `hermes` with no args (legacy default)
-#   docker run <image> chat -q "..."   -> exec `hermes chat -q "..."` (legacy wrap)
+#   docker run <image> chat -q "..."   -> exec `sinoclaw chat -q "..."` (legacy wrap)
 #   docker run <image> sleep infinity  -> exec `sleep infinity` directly
 #   docker run <image> bash            -> exec `bash` directly
 #

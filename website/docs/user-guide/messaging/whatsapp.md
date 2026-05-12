@@ -82,7 +82,7 @@ After getting the number:
 
 1. Install WhatsApp on a phone (or use WhatsApp Business app with dual-SIM)
 2. Register the new number with WhatsApp
-3. Run `hermes whatsapp` and scan the QR code from that WhatsApp account
+3. Run `sinoclaw whatsapp` and scan the QR code from that WhatsApp account
 
 ---
 
@@ -206,9 +206,9 @@ When the agent calls tools (web search, file operations, etc.), WhatsApp display
 | Problem | Solution |
 |---------|----------|
 | **QR code not scanning** | Ensure terminal is wide enough (60+ columns). Try a different terminal. Make sure you're scanning from the correct WhatsApp account (bot number, not personal). |
-| **QR code expires** | QR codes refresh every ~20 seconds. If it times out, restart `hermes whatsapp`. |
+| **QR code expires** | QR codes refresh every ~20 seconds. If it times out, restart `sinoclaw whatsapp`. |
 | **Session not persisting** | Check that `~/.sinoclaw/platforms/whatsapp/session` exists and is writable. If containerized, mount it as a persistent volume. |
-| **Logged out unexpectedly** | WhatsApp unlinks devices after long inactivity. Keep the phone on and connected to the network, then re-pair with `hermes whatsapp` if needed. |
+| **Logged out unexpectedly** | WhatsApp unlinks devices after long inactivity. Keep the phone on and connected to the network, then re-pair with `sinoclaw whatsapp` if needed. |
 | **Bridge crashes or reconnect loops** | Restart the gateway, update Hermes, and re-pair if the session was invalidated by a WhatsApp protocol change. |
 | **Bot stops working after WhatsApp update** | Update Hermes to get the latest bridge version, then re-pair. |
 | **macOS: "Node.js not installed" but node works in terminal** | launchd services don't inherit your shell PATH. Run `sinoclaw gateway install` to re-snapshot your current PATH into the plist, then `sinoclaw gateway start`. See the [Gateway Service docs](./index.md#macos-launchd) for details. |

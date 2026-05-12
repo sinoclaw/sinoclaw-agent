@@ -40,7 +40,7 @@ hermes status
 
 ### 在模型配置流程中
 
-运行 `hermes model` 并选择 Nous Portal 作为提供商时，Hermes 会主动询问是否启用 Tool Gateway：
+运行 `sinoclaw model` 并选择 Nous Portal 作为提供商时，Hermes 会主动询问是否启用 Tool Gateway：
 
 ```
 Your Nous subscription includes the Tool Gateway.
@@ -62,7 +62,7 @@ Your Nous subscription includes the Tool Gateway.
 
 若 `.env` 中已有部分直连 API Key，提示会相应变化：可为全部工具启用网关（直连 Key 仍保留在 `.env` 但运行时不用）、仅为未配置项启用，或完全跳过。
 
-### 通过 `hermes tools`
+### 通过 `sinoclaw tools`
 
 也可在交互式工具配置中逐项启用：
 
@@ -102,7 +102,7 @@ browser:
 3. **TTS** — `text_to_speech` 走网关的 OpenAI Audio 端点  
 4. **浏览器** — `browser_navigate` 等走网关的 Browser Use 端点  
 
-网关使用 Nous Portal 凭据认证（在 `hermes model` 完成后写入 `~/.sinoclaw/auth.json`）。
+网关使用 Nous Portal 凭据认证（在 `sinoclaw model` 完成后写入 `~/.sinoclaw/auth.json`）。
 
 ### 优先级
 
@@ -129,7 +129,7 @@ web:
   use_gateway: false  # 此时使用 .env 中的 FIRECRAWL_API_KEY
 ```
 
-在 `hermes tools` 中选择非网关提供商时，`use_gateway` 会自动设为 `false`，避免配置自相矛盾。
+在 `sinoclaw tools` 中选择非网关提供商时，`use_gateway` 会自动设为 `false`，避免配置自相矛盾。
 
 ## 查看状态
 
@@ -176,7 +176,7 @@ FIRECRAWL_GATEWAY_URL=https://...         # 单独覆盖 Firecrawl 端点
 
 ### 订阅到期会怎样？
 
-经网关路由的工具会停止工作，直到你 [续订](https://portal.nousresearch.com/manage-subscription) 或通过 `hermes tools` 改回直连 Key。
+经网关路由的工具会停止工作，直到你 [续订](https://portal.nousresearch.com/manage-subscription) 或通过 `sinoclaw tools` 改回直连 Key。
 
 ### 与「消息网关」（各聊天平台）是否冲突？
 

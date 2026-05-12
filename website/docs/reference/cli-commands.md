@@ -21,7 +21,7 @@ hermes [global-options] <command> [subcommand/options]
 | Option | Description |
 |--------|-------------|
 | `--version`, `-V` | Show version and exit. |
-| `--profile <name>`, `-p <name>` | Select which Hermes profile to use for this invocation. Overrides the sticky default set by `hermes profile use`. |
+| `--profile <name>`, `-p <name>` | Select which Hermes profile to use for this invocation. Overrides the sticky default set by `sinoclaw profile use`. |
 | `--resume <session>`, `-r <session>` | Resume a previous session by ID or title. |
 | `--continue [name]`, `-c [name]` | Resume the most recent session, or the most recent session matching a title. |
 | `--worktree`, `-w` | Start in an isolated git worktree for parallel-agent workflows. |
@@ -36,48 +36,48 @@ hermes [global-options] <command> [subcommand/options]
 
 | Command | Purpose |
 |---------|---------|
-| `hermes chat` | Interactive or one-shot chat with the agent. |
-| `hermes model` | Interactively choose the default provider and model. |
-| `hermes fallback` | Manage fallback providers tried when the primary model errors. |
+| `sinoclaw chat` | Interactive or one-shot chat with the agent. |
+| `sinoclaw model` | Interactively choose the default provider and model. |
+| `sinoclaw fallback` | Manage fallback providers tried when the primary model errors. |
 | `sinoclaw gateway` | Run or manage the messaging gateway service. |
 | `sinoclaw setup` | Interactive setup wizard for all or part of the configuration. |
-| `hermes whatsapp` | Configure and pair the WhatsApp bridge. |
-| `hermes slack` | Slack helpers (currently: generate the app manifest with every command as a native slash). |
-| `hermes auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Nous/Anthropic. |
-| `hermes login` / `logout` | **Deprecated** — use `hermes auth` instead. |
-| `hermes status` | Show agent, auth, and platform status. |
-| `hermes cron` | Inspect and tick the cron scheduler. |
-| `hermes kanban` | Multi-profile collaboration board (tasks, links, dispatcher). |
-| `hermes webhook` | Manage dynamic webhook subscriptions for event-driven activation. |
-| `hermes hooks` | Inspect, approve, or remove shell-script hooks declared in `config.yaml`. |
-| `hermes doctor` | Diagnose config and dependency issues. |
-| `hermes dump` | Copy-pasteable setup summary for support/debugging. |
-| `hermes debug` | Debug tools — upload logs and system info for support. |
-| `hermes backup` | Back up Sinoclaw home directory to a zip file. |
-| `hermes checkpoints` | Inspect / prune / clear `~/.sinoclaw/checkpoints/` (the shadow store used by `/rollback`). Run with no args for a status overview. |
-| `hermes import` | Restore a Hermes backup from a zip file. |
-| `hermes logs` | View, tail, and filter agent/gateway/error log files. |
-| `hermes config` | Show, edit, migrate, and query configuration files. |
-| `hermes pairing` | Approve or revoke messaging pairing codes. |
-| `hermes skills` | Browse, install, publish, audit, and configure skills. |
-| `hermes curator` | Background skill maintenance — status, run, pause, pin. See [Curator](../user-guide/features/curator.md). |
-| `hermes memory` | Configure external memory provider. Plugin-specific subcommands (e.g. `hermes honcho`) register automatically when their provider is active. |
-| `hermes acp` | Run Hermes as an ACP server for editor integration. |
-| `hermes mcp` | Manage MCP server configurations and run Hermes as an MCP server. |
-| `hermes plugins` | Manage Sinoclaw Agent plugins (install, enable, disable, remove). |
-| `hermes tools` | Configure enabled tools per platform. |
-| `hermes sessions` | Browse, export, prune, rename, and delete sessions. |
-| `hermes insights` | Show token/cost/activity analytics. |
-| `hermes fallback` | Interactive manager for the fallback provider chain. |
-| `hermes claw` | OpenClaw migration helpers. |
-| `hermes dashboard` | Launch the web dashboard for managing config, API keys, and sessions. |
-| `hermes profile` | Manage profiles — multiple isolated Hermes instances. |
-| `hermes completion` | Print shell completion scripts (bash/zsh/fish). |
-| `hermes version` | Show version information. |
-| `hermes update` | Pull latest code and reinstall dependencies. `--check` prints commit diff without pulling; `--backup` takes a pre-pull `SINOCLAW_HOME` snapshot. |
-| `hermes uninstall` | Remove Hermes from the system. |
+| `sinoclaw whatsapp` | Configure and pair the WhatsApp bridge. |
+| `sinoclaw slack` | Slack helpers (currently: generate the app manifest with every command as a native slash). |
+| `sinoclaw auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Nous/Anthropic. |
+| `sinoclaw login` / `logout` | **Deprecated** — use `sinoclaw auth` instead. |
+| `sinoclaw status` | Show agent, auth, and platform status. |
+| `sinoclaw cron` | Inspect and tick the cron scheduler. |
+| `sinoclaw kanban` | Multi-profile collaboration board (tasks, links, dispatcher). |
+| `sinoclaw webhook` | Manage dynamic webhook subscriptions for event-driven activation. |
+| `sinoclaw hooks` | Inspect, approve, or remove shell-script hooks declared in `config.yaml`. |
+| `sinoclaw doctor` | Diagnose config and dependency issues. |
+| `sinoclaw dump` | Copy-pasteable setup summary for support/debugging. |
+| `sinoclaw debug` | Debug tools — upload logs and system info for support. |
+| `sinoclaw backup` | Back up Sinoclaw home directory to a zip file. |
+| `sinoclaw checkpoints` | Inspect / prune / clear `~/.sinoclaw/checkpoints/` (the shadow store used by `/rollback`). Run with no args for a status overview. |
+| `sinoclaw import` | Restore a Hermes backup from a zip file. |
+| `sinoclaw logs` | View, tail, and filter agent/gateway/error log files. |
+| `sinoclaw config` | Show, edit, migrate, and query configuration files. |
+| `sinoclaw pairing` | Approve or revoke messaging pairing codes. |
+| `sinoclaw skills` | Browse, install, publish, audit, and configure skills. |
+| `sinoclaw curator` | Background skill maintenance — status, run, pause, pin. See [Curator](../user-guide/features/curator.md). |
+| `sinoclaw memory` | Configure external memory provider. Plugin-specific subcommands (e.g. `sinoclaw honcho`) register automatically when their provider is active. |
+| `sinoclaw acp` | Run Hermes as an ACP server for editor integration. |
+| `sinoclaw mcp` | Manage MCP server configurations and run Hermes as an MCP server. |
+| `sinoclaw plugins` | Manage Sinoclaw Agent plugins (install, enable, disable, remove). |
+| `sinoclaw tools` | Configure enabled tools per platform. |
+| `sinoclaw sessions` | Browse, export, prune, rename, and delete sessions. |
+| `sinoclaw insights` | Show token/cost/activity analytics. |
+| `sinoclaw fallback` | Interactive manager for the fallback provider chain. |
+| `sinoclaw claw` | OpenClaw migration helpers. |
+| `sinoclaw dashboard` | Launch the web dashboard for managing config, API keys, and sessions. |
+| `sinoclaw profile` | Manage profiles — multiple isolated Hermes instances. |
+| `sinoclaw completion` | Print shell completion scripts (bash/zsh/fish). |
+| `sinoclaw version` | Show version information. |
+| `sinoclaw update` | Pull latest code and reinstall dependencies. `--check` prints commit diff without pulling; `--backup` takes a pre-pull `SINOCLAW_HOME` snapshot. |
+| `sinoclaw uninstall` | Remove Hermes from the system. |
 
-## `hermes chat`
+## `sinoclaw chat`
 
 ```bash
 hermes chat [options]
@@ -117,9 +117,9 @@ hermes chat --worktree -q "Review this repo and open a PR"
 hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
 ```
 
-### `hermes -z <prompt>` — scripted one-shot
+### `sinoclaw -z <prompt>` — scripted one-shot
 
-For programmatic callers (shell scripts, CI, cron, parent processes piping in a prompt), `hermes -z` is the purest one-shot entry point: **single prompt in, final response text out, nothing else on stdout or stderr.** No banner, no spinner, no tool previews, no `Session:` line — just the agent's final reply as plain text.
+For programmatic callers (shell scripts, CI, cron, parent processes piping in a prompt), `sinoclaw -z` is the purest one-shot entry point: **single prompt in, final response text out, nothing else on stdout or stderr.** No banner, no spinner, no tool previews, no `Session:` line — just the agent's final reply as plain text.
 
 ```bash
 hermes -z "What's the capital of France?"
@@ -139,12 +139,12 @@ Per-run overrides (no mutation to `~/.sinoclaw/config.yaml`):
 ```bash
 hermes -z "…" --provider openrouter --model openai/gpt-5.5
 # or:
-SINOCLAW_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
+SINOCLAW_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 sinoclaw -z "…"
 ```
 
-Same agent, same tools, same skills — just strips every interactive / cosmetic layer. If you need tool output in the transcript too, use `hermes chat -q` instead; `-z` is explicitly for "I only want the final answer".
+Same agent, same tools, same skills — just strips every interactive / cosmetic layer. If you need tool output in the transcript too, use `sinoclaw chat -q` instead; `-z` is explicitly for "I only want the final answer".
 
-## `hermes model`
+## `sinoclaw model`
 
 Interactive provider + model selector. **This is the command for adding new providers, setting up API keys, and running OAuth flows.** Run it from your terminal — not from inside an active Hermes chat session.
 
@@ -160,12 +160,12 @@ Use this when you want to:
 - configure a custom/self-hosted endpoint
 - save the new default into config
 
-:::warning hermes model vs /model — know the difference
-**`hermes model`** (run from your terminal, outside any Hermes session) is the **full provider setup wizard**. It can add new providers, run OAuth flows, prompt for API keys, and configure endpoints.
+:::warning sinoclaw model vs /model — know the difference
+**`sinoclaw model`** (run from your terminal, outside any Sinoclaw session) is the **full provider setup wizard**. It can add new providers, run OAuth flows, prompt for API keys, and configure endpoints.
 
 **`/model`** (typed inside an active Hermes chat session) can only **switch between providers and models you've already set up**. It cannot add new providers, run OAuth, or prompt for API keys.
 
-**If you need to add a new provider:** Exit your Hermes session first (`Ctrl+C` or `/quit`), then run `hermes model` from your terminal prompt.
+**If you need to add a new provider:** Exit your Sinoclaw session first (`Ctrl+C` or `/quit`), then run `sinoclaw model` from your terminal prompt.
 :::
 
 ### `/model` slash command (mid-session)
@@ -189,7 +189,7 @@ By default, `/model` changes apply **to the current session only**. Add `--globa
 ```
 
 :::info What if I only see OpenRouter models?
-If you've only configured OpenRouter, `/model` will only show OpenRouter models. To add another provider (Anthropic, DeepSeek, Copilot, etc.), exit your session and run `hermes model` from the terminal.
+If you've only configured OpenRouter, `/model` will only show OpenRouter models. To add another provider (Anthropic, DeepSeek, Copilot, etc.), exit your session and run `sinoclaw model` from the terminal.
 :::
 
 Provider and base URL changes are persisted to `config.yaml` automatically. When switching away from a custom endpoint, the stale base URL is cleared to prevent it leaking into other providers.
@@ -217,10 +217,10 @@ Options:
 
 | Option | Description |
 |--------|-------------|
-| `--all` | On `start` / `restart` / `stop`: act on **every profile's** gateway, not just the active `SINOCLAW_HOME`. Useful if you run multiple profiles side-by-side and want to restart them all after `hermes update`. |
+| `--all` | On `start` / `restart` / `stop`: act on **every profile's** gateway, not just the active `SINOCLAW_HOME`. Useful if you run multiple profiles side-by-side and want to restart them all after `sinoclaw update`. |
 
 :::tip WSL users
-Use `sinoclaw gateway run` instead of `sinoclaw gateway start` — WSL's systemd support is unreliable. Wrap it in tmux for persistence: `tmux new -s hermes 'sinoclaw gateway run'`. See [WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-sinoclaw-gateway-start-fails) for details.
+Use `sinoclaw gateway run` instead of `sinoclaw gateway start` — WSL's systemd support is unreliable. Wrap it in tmux for persistence: `tmux new -s sinoclaw 'sinoclaw gateway run'`. See [WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-sinoclaw-gateway-start-fails) for details.
 :::
 
 ## `sinoclaw setup`
@@ -252,7 +252,7 @@ Options:
 | `--reset` | Reset configuration to defaults before setup. |
 | `--reconfigure` | Backwards-compat alias — bare `sinoclaw setup` on an existing install now does this by default. |
 
-## `hermes whatsapp`
+## `sinoclaw whatsapp`
 
 ```bash
 hermes whatsapp
@@ -260,7 +260,7 @@ hermes whatsapp
 
 Runs the WhatsApp pairing/setup flow, including mode selection and QR-code pairing.
 
-## `hermes slack`
+## `sinoclaw slack`
 
 ```bash
 hermes slack manifest              # print manifest to stdout
@@ -283,17 +283,17 @@ reinstall if scopes or slash commands changed.
 | `--description DESC` | default blurb | Bot description shown in the Slack app directory. |
 | `--slashes-only` | off | Emit only `features.slash_commands` for merging into a manually-maintained manifest. |
 
-Run `hermes slack manifest --write` again after `hermes update` to pick
+Run `sinoclaw slack manifest --write` again after `sinoclaw update` to pick
 up any new commands.
 
 
-## `hermes login` / `hermes logout` *(Deprecated)*
+## `sinoclaw login` / `sinoclaw logout` *(Deprecated)*
 
 :::caution
-`hermes login` has been removed. Use `hermes auth` to manage OAuth credentials, `hermes model` to select a provider, or `sinoclaw setup` for full interactive setup.
+`sinoclaw login` has been removed. Use `sinoclaw auth` to manage OAuth credentials, `sinoclaw model` to select a provider, or `sinoclaw setup` for full interactive setup.
 :::
 
-## `hermes auth`
+## `sinoclaw auth`
 
 Manage credential pools for same-provider key rotation. See [Credential Pools](/docs/user-guide/features/credential-pools) for full documentation.
 
@@ -309,7 +309,7 @@ hermes auth reset openrouter                             # Clear cooldowns
 
 Subcommands: `add`, `list`, `remove`, `reset`. When called with no subcommand, launches the interactive management wizard.
 
-## `hermes status`
+## `sinoclaw status`
 
 ```bash
 hermes status [--all] [--deep]
@@ -320,7 +320,7 @@ hermes status [--all] [--deep]
 | `--all` | Show all details in a shareable redacted format. |
 | `--deep` | Run deeper checks that may take longer. |
 
-## `hermes cron`
+## `sinoclaw cron`
 
 ```bash
 hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
@@ -338,7 +338,7 @@ hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 | `status` | Check whether the cron scheduler is running. |
 | `tick` | Run due jobs once and exit. |
 
-## `hermes kanban`
+## `sinoclaw kanban`
 
 ```bash
 hermes kanban [--board <slug>] <action> [options]
@@ -350,9 +350,9 @@ Multi-profile, multi-project collaboration board. Each install can host many boa
 
 | Flag | Purpose |
 |------|---------|
-| `--board <slug>` | Operate on a specific board. Defaults to the current board (set via `hermes kanban boards switch`, the `SINOCLAW_KANBAN_BOARD` env var, or `default`). |
+| `--board <slug>` | Operate on a specific board. Defaults to the current board (set via `sinoclaw kanban boards switch`, the `SINOCLAW_KANBAN_BOARD` env var, or `default`). |
 
-**This is the human / scripting surface.** Agent workers spawned by the dispatcher drive the board through a dedicated `kanban_*` [toolset](/docs/user-guide/features/kanban#how-workers-interact-with-the-board) (`kanban_show`, `kanban_complete`, `kanban_block`, `kanban_create`, `kanban_link`, `kanban_comment`, `kanban_heartbeat`) instead of shelling to `hermes kanban`. Workers have `SINOCLAW_KANBAN_BOARD` pinned in their env so they physically cannot see other boards.
+**This is the human / scripting surface.** Agent workers spawned by the dispatcher drive the board through a dedicated `kanban_*` [toolset](/docs/user-guide/features/kanban#how-workers-interact-with-the-board) (`kanban_show`, `kanban_complete`, `kanban_block`, `kanban_create`, `kanban_link`, `kanban_comment`, `kanban_heartbeat`) instead of shelling to `sinoclaw kanban`. Workers have `SINOCLAW_KANBAN_BOARD` pinned in their env so they physically cannot see other boards.
 
 | Action | Purpose |
 |--------|---------|
@@ -403,7 +403,7 @@ All actions are also available as a slash command in the gateway (`/kanban …`)
 
 For the full design — comparison with Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise, eight collaboration patterns, four user stories, concurrency correctness proof — see `docs/sinoclaw-kanban-v1-spec.pdf` in the repository or the [Kanban user guide](/docs/user-guide/features/kanban).
 
-## `hermes webhook`
+## `sinoclaw webhook`
 
 ```bash
 hermes webhook <subscribe|list|remove|test>
@@ -418,7 +418,7 @@ Manage dynamic webhook subscriptions for event-driven agent activation. Requires
 | `remove` / `rm` | Delete a dynamic subscription. Static routes from config.yaml are not affected. |
 | `test` | Send a test POST to verify a subscription is working. |
 
-### `hermes webhook subscribe`
+### `sinoclaw webhook subscribe`
 
 ```bash
 hermes webhook subscribe <name> [options]
@@ -437,7 +437,7 @@ hermes webhook subscribe <name> [options]
 
 Subscriptions persist to `~/.sinoclaw/webhook_subscriptions.json` and are hot-reloaded by the webhook adapter without a gateway restart.
 
-## `hermes doctor`
+## `sinoclaw doctor`
 
 ```bash
 hermes doctor [--fix]
@@ -447,7 +447,7 @@ hermes doctor [--fix]
 |--------|-------------|
 | `--fix` | Attempt automatic repairs where possible. |
 
-## `hermes dump`
+## `sinoclaw dump`
 
 ```bash
 hermes dump [--show-keys]
@@ -477,7 +477,7 @@ Outputs a compact, plain-text summary of your entire Hermes setup. Designed to b
 ### Example output
 
 ```
---- hermes dump ---
+--- sinoclaw dump ---
 version:          0.8.0 (2026.4.8) [af4abd2f]
 os:               Linux 6.14.0-37-generic x86_64
 python:           3.11.14
@@ -520,10 +520,10 @@ config_overrides:
 - Quick sanity check when something isn't working
 
 :::tip
-`hermes dump` is specifically designed for sharing. For interactive diagnostics, use `hermes doctor`. For a visual overview, use `hermes status`.
+`sinoclaw dump` is specifically designed for sharing. For interactive diagnostics, use `sinoclaw doctor`. For a visual overview, use `sinoclaw status`.
 :::
 
-## `hermes debug`
+## `sinoclaw debug`
 
 ```bash
 hermes debug share [options]
@@ -550,7 +550,7 @@ hermes debug share --expire 30  # Keep paste for 30 days
 hermes debug share --local      # Print report to terminal (no upload)
 ```
 
-## `hermes backup`
+## `sinoclaw backup`
 
 ```bash
 hermes backup [options]
@@ -581,7 +581,7 @@ hermes backup --quick                   # Quick state-only snapshot
 hermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
 ```
 
-## `hermes checkpoints`
+## `sinoclaw checkpoints`
 
 ```bash
 hermes checkpoints [COMMAND]
@@ -591,7 +591,7 @@ Inspect and manage the shadow git store at `~/.sinoclaw/checkpoints/` — the st
 
 | Subcommand | Description |
 |------------|-------------|
-| `status` (default) | Show total size, project count, and per-project breakdown. Bare `hermes checkpoints` is equivalent. |
+| `status` (default) | Show total size, project count, and per-project breakdown. Bare `sinoclaw checkpoints` is equivalent. |
 | `list` | Alias for `status`. |
 | `prune` | Force a cleanup sweep — delete orphan and stale projects, GC the store, enforce the size cap. Ignores the 24h idempotency marker. |
 | `clear` | Delete the entire checkpoint base. Irreversible; asks for confirmation unless `-f`. |
@@ -619,7 +619,7 @@ hermes checkpoints clear -f                         # wipe everything
 
 See [Checkpoints and `/rollback`](../user-guide/checkpoints-and-rollback.md) for the full architecture and the in-session commands.
 
-## `hermes import`
+## `sinoclaw import`
 
 ```bash
 hermes import <zipfile> [options]
@@ -641,7 +641,7 @@ hermes import ~/sinoclaw-backup-20260423.zip           # Prompts before overwrit
 hermes import ~/sinoclaw-backup-20260423.zip --force   # Overwrite without prompting
 ```
 
-## `hermes logs`
+## `sinoclaw logs`
 
 ```bash
 hermes logs [log_name] [options]
@@ -707,9 +707,9 @@ Lines without a parseable timestamp are included when `--since` is active (they 
 
 ### Log rotation
 
-Hermes uses Python's `RotatingFileHandler`. Old logs are rotated automatically — look for `agent.log.1`, `agent.log.2`, etc. The `hermes logs list` subcommand shows all log files including rotated ones.
+Hermes uses Python's `RotatingFileHandler`. Old logs are rotated automatically — look for `agent.log.1`, `agent.log.2`, etc. The `sinoclaw logs list` subcommand shows all log files including rotated ones.
 
-## `hermes config`
+## `sinoclaw config`
 
 ```bash
 hermes config <subcommand>
@@ -727,7 +727,7 @@ Subcommands:
 | `check` | Check for missing or stale config. |
 | `migrate` | Add newly introduced options interactively. |
 
-## `hermes pairing`
+## `sinoclaw pairing`
 
 ```bash
 hermes pairing <list|approve|revoke|clear-pending>
@@ -740,7 +740,7 @@ hermes pairing <list|approve|revoke|clear-pending>
 | `revoke <platform> <user-id>` | Revoke a user's access. |
 | `clear-pending` | Clear pending pairing codes. |
 
-## `hermes skills`
+## `sinoclaw skills`
 
 ```bash
 hermes skills <subcommand>
@@ -792,7 +792,7 @@ Notes:
 - `--source well-known` lets you point Hermes at a site exposing `/.well-known/skills/index.json`.
 - Passing an `http(s)://…/*.md` URL installs a single-file SKILL.md directly. When frontmatter has no `name:` and the URL slug isn't a valid identifier, an interactive terminal prompts for a name; non-interactive surfaces (`/skills install` inside the TUI, gateway platforms) require `--name <x>` instead.
 
-## `hermes curator`
+## `sinoclaw curator`
 
 ```bash
 hermes curator <subcommand>
@@ -817,11 +817,11 @@ The curator is an auxiliary-model background task that periodically reviews agen
 | `unpin <skill>` | Unpin a skill |
 | `restore <skill>` | Restore an archived skill |
 
-On a fresh install the first scheduled pass is deferred by one full `interval_hours` (7 days by default) — the gateway will not curate immediately on the first tick after `hermes update`. Use `hermes curator run --dry-run` to preview before that happens.
+On a fresh install the first scheduled pass is deferred by one full `interval_hours` (7 days by default) — the gateway will not curate immediately on the first tick after `sinoclaw update`. Use `sinoclaw curator run --dry-run` to preview before that happens.
 
 See [Curator](../user-guide/features/curator.md) for behavior and config.
 
-## `hermes fallback`
+## `sinoclaw fallback`
 
 ```bash
 hermes fallback <subcommand>
@@ -832,13 +832,13 @@ Manage the fallback provider chain. Fallback providers are tried in order when t
 | Subcommand | Description |
 |------------|-------------|
 | `list` (alias: `ls`) | Show the current fallback chain (default when no subcommand) |
-| `add` | Pick a provider + model (same picker as `hermes model`) and append to the chain |
+| `add` | Pick a provider + model (same picker as `sinoclaw model`) and append to the chain |
 | `remove` (alias: `rm`) | Pick an entry to delete from the chain |
 | `clear` | Remove all fallback entries |
 
 See [Fallback Providers](../user-guide/features/fallback-providers.md).
 
-## `hermes hooks`
+## `sinoclaw hooks`
 
 ```bash
 hermes hooks <subcommand>
@@ -855,7 +855,7 @@ Inspect shell-script hooks declared in `~/.sinoclaw/config.yaml`, test them agai
 
 See [Hooks](../user-guide/features/hooks.md) for event signatures and payload shapes.
 
-## `hermes memory`
+## `sinoclaw memory`
 
 ```bash
 hermes memory <subcommand>
@@ -872,10 +872,10 @@ Subcommands:
 | `off` | Disable external provider (built-in only). |
 
 :::info Provider-specific subcommands
-When an external memory provider is active, it may register its own top-level `hermes <provider>` command for provider-specific management (e.g. `hermes honcho` when Honcho is active). Inactive providers do not expose their subcommands. Run `hermes --help` to see what's currently wired in.
+When an external memory provider is active, it may register its own top-level `sinoclaw <provider>` command for provider-specific management (e.g. `sinoclaw honcho` when Honcho is active). Inactive providers do not expose their subcommands. Run `sinoclaw --help` to see what's currently wired in.
 :::
 
-## `hermes acp`
+## `sinoclaw acp`
 
 ```bash
 hermes acp
@@ -898,7 +898,7 @@ pip install -e '.[acp]'
 
 See [ACP Editor Integration](../user-guide/features/acp.md) and [ACP Internals](../developer-guide/acp-internals.md).
 
-## `hermes mcp`
+## `sinoclaw mcp`
 
 ```bash
 hermes mcp <subcommand>
@@ -917,13 +917,13 @@ Manage MCP (Model Context Protocol) server configurations and run Hermes as an M
 
 See [MCP Config Reference](./mcp-config-reference.md), [Use MCP with Hermes](../guides/use-mcp-with-hermes.md), and [MCP Server Mode](../user-guide/features/mcp.md#running-sinoclaw-as-an-mcp-server).
 
-## `hermes plugins`
+## `sinoclaw plugins`
 
 ```bash
 hermes plugins [subcommand]
 ```
 
-Unified plugin management — general plugins, memory providers, and context engines in one place. Running `hermes plugins` with no subcommand opens a composite interactive screen with two sections:
+Unified plugin management — general plugins, memory providers, and context engines in one place. Running `sinoclaw plugins` with no subcommand opens a composite interactive screen with two sections:
 
 - **General Plugins** — multi-select checkboxes to enable/disable installed plugins
 - **Provider Plugins** — single-select configuration for Memory Provider and Context Engine. Press ENTER on a category to open a radio picker.
@@ -946,7 +946,7 @@ General plugin disabled list is stored in `config.yaml` under `plugins.disabled`
 
 See [Plugins](../user-guide/features/plugins.md) and [Build a Hermes Plugin](../guides/build-a-sinoclaw-plugin.md).
 
-## `hermes tools`
+## `sinoclaw tools`
 
 ```bash
 hermes tools [--summary]
@@ -958,7 +958,7 @@ hermes tools [--summary]
 
 Without `--summary`, this launches the interactive per-platform tool configuration UI.
 
-## `hermes sessions`
+## `sinoclaw sessions`
 
 ```bash
 hermes sessions <subcommand>
@@ -976,7 +976,7 @@ Subcommands:
 | `stats` | Show session-store statistics. |
 | `rename <session-id> <title>` | Set or change a session title. |
 
-## `hermes insights`
+## `sinoclaw insights`
 
 ```bash
 hermes insights [--days N] [--source platform]
@@ -987,7 +987,7 @@ hermes insights [--days N] [--source platform]
 | `--days <n>` | Analyze the last `n` days (default: 30). |
 | `--source <platform>` | Filter by source such as `cli`, `telegram`, or `discord`. |
 
-## `hermes claw`
+## `sinoclaw claw`
 
 ```bash
 hermes claw migrate [options]
@@ -1001,7 +1001,7 @@ Migrate your OpenClaw setup to Hermes. Reads from `~/.openclaw` (or a custom pat
 | `--preset <name>` | Migration preset: `full` (all compatible settings) or `user-data` (excludes infrastructure config). Neither preset imports secrets — pass `--migrate-secrets` explicitly. |
 | `--overwrite` | Overwrite existing Hermes files on conflicts (default: refuse to apply when the plan has conflicts). |
 | `--migrate-secrets` | Include API keys in migration. Required even under `--preset full`. |
-| `--no-backup` | Skip the pre-migration zip snapshot of `~/.sinoclaw/` (by default a single restore-point archive is written to `~/.sinoclaw/backups/pre-migration-*.zip` before apply; restorable with `hermes import`). |
+| `--no-backup` | Skip the pre-migration zip snapshot of `~/.sinoclaw/` (by default a single restore-point archive is written to `~/.sinoclaw/backups/pre-migration-*.zip` before apply; restorable with `sinoclaw import`). |
 | `--source <path>` | Custom OpenClaw directory (default: `~/.openclaw`). |
 | `--workspace-target <path>` | Target directory for workspace instructions (AGENTS.md). |
 | `--skill-conflict <mode>` | Handle skill name collisions: `skip` (default), `overwrite`, or `rename`. |
@@ -1038,7 +1038,7 @@ hermes claw migrate --preset user-data --overwrite
 hermes claw migrate --source /home/user/old-openclaw
 ```
 
-## `hermes dashboard`
+## `sinoclaw dashboard`
 
 ```bash
 hermes dashboard [options]
@@ -1060,7 +1060,7 @@ hermes dashboard
 hermes dashboard --port 8080 --no-open
 ```
 
-## `hermes profile`
+## `sinoclaw profile`
 
 ```bash
 hermes profile <subcommand>
@@ -1094,10 +1094,10 @@ hermes profile export work -o work-backup.tar.gz
 hermes profile import work-backup.tar.gz --name restored
 hermes profile install github.com/user/my-distro --alias
 hermes profile update work
-hermes -p work chat -q "Hello from work profile"
+sinoclaw -p work chat -q "Hello from work profile"
 ```
 
-## `hermes completion`
+## `sinoclaw completion`
 
 ```bash
 hermes completion [bash|zsh|fish]
@@ -1118,7 +1118,7 @@ hermes completion zsh >> ~/.zshrc
 hermes completion fish > ~/.config/fish/completions/hermes.fish
 ```
 
-## `hermes update`
+## `sinoclaw update`
 
 ```bash
 hermes update [--check] [--backup] [--restart-gateway]
@@ -1134,17 +1134,17 @@ Pulls the latest `sinoclaw-agent` code and reinstalls dependencies in your venv,
 
 Additional behavior:
 
-- **Pairing data snapshot.** Even when `--backup` is off, `hermes update` takes a lightweight snapshot of `~/.sinoclaw/pairing/` and the Feishu comment rules before `git pull`. You can roll it back with `hermes backup restore --state pre-update` if a pull rewrites a file you were editing.
-- **Legacy `hermes.service` warning.** If Hermes detects a pre-rename `hermes.service` systemd unit (instead of the current `sinoclaw-gateway.service`), it prints a one-time migration hint so you can avoid flap-loop issues.
+- **Pairing data snapshot.** Even when `--backup` is off, `sinoclaw update` takes a lightweight snapshot of `~/.sinoclaw/pairing/` and the Feishu comment rules before `git pull`. You can roll it back with `sinoclaw backup restore --state pre-update` if a pull rewrites a file you were editing.
+- **Legacy `sinoclaw.service` warning.** If Hermes detects a pre-rename `sinoclaw.service` systemd unit (instead of the current `sinoclaw-gateway.service`), it prints a one-time migration hint so you can avoid flap-loop issues.
 - **Exit codes.** `0` on success, `1` on pull/install/post-install errors, `2` on unexpected working-tree changes that block `git pull`.
 
-## `hermes fallback`
+## `sinoclaw fallback`
 
 ```bash
 hermes fallback           # interactive manager
 ```
 
-Manage the fallback provider chain (used when your primary provider hits a rate limit or returns a fatal error) without hand-editing `config.yaml`. Reuses the provider picker from `hermes model` — same provider list, same credential prompts, same validation.
+Manage the fallback provider chain (used when your primary provider hits a rate limit or returns a fatal error) without hand-editing `config.yaml`. Reuses the provider picker from `sinoclaw model` — same provider list, same credential prompts, same validation.
 
 Typical session:
 
@@ -1160,9 +1160,9 @@ See [Fallback Providers](/docs/user-guide/features/fallback-providers) for behav
 
 | Command | Description |
 |---------|-------------|
-| `hermes version` | Print version information. |
-| `hermes update` | Pull latest changes and reinstall dependencies. |
-| `hermes uninstall [--full] [--yes]` | Remove Hermes, optionally deleting all config/data. |
+| `sinoclaw version` | Print version information. |
+| `sinoclaw update` | Pull latest changes and reinstall dependencies. |
+| `sinoclaw uninstall [--full] [--yes]` | Remove Hermes, optionally deleting all config/data. |
 
 ## See also
 

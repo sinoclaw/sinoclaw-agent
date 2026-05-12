@@ -299,7 +299,7 @@ Only one Weixin gateway instance can use a given token at a time. The adapter ac
 | `Weixin startup failed: aiohttp and cryptography are required` | Install both: `pip install aiohttp cryptography` |
 | `Weixin startup failed: WEIXIN_TOKEN is required` | Run `sinoclaw gateway setup` to complete QR login, or set `WEIXIN_TOKEN` manually |
 | `Weixin startup failed: WEIXIN_ACCOUNT_ID is required` | Set `WEIXIN_ACCOUNT_ID` in your `.env` or run `sinoclaw gateway setup` |
-| `Another local Hermes gateway is already using this Weixin token` | Stop the other gateway instance first — only one poller per token is allowed |
+| `Another local Sinoclaw gateway is already using this Weixin token` | Stop the other gateway instance first — only one poller per token is allowed |
 | Session expired (`errcode=-14`) | Your login session has expired. Re-run `sinoclaw gateway setup` to scan a new QR code |
 | QR code expired during setup | The QR auto-refreshes up to 3 times. If it keeps expiring, check your network connection |
 | Bot doesn't respond to DMs | Check `WEIXIN_DM_POLICY` — if set to `allowlist`, the sender must be in `WEIXIN_ALLOWED_USERS` |

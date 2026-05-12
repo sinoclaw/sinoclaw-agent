@@ -14,8 +14,8 @@ Every template works with **any model** — not locked to a single provider.
 | Trigger | How | Tool |
 |---------|-----|------|
 | **Schedule** | Runs on a cadence (hourly, nightly, weekly) | `cronjob` tool or `/cron` slash command |
-| **GitHub Event** | Fires on PR opens, pushes, issues, CI results | Webhook platform (`hermes webhook subscribe`) |
-| **API Call** | External service POSTs JSON to your endpoint | Webhook platform (config.yaml routes or `hermes webhook subscribe`) |
+| **GitHub Event** | Fires on PR opens, pushes, issues, CI results | Webhook platform (`sinoclaw webhook subscribe`) |
+| **API Call** | External service POSTs JSON to your endpoint | Webhook platform (config.yaml routes or `sinoclaw webhook subscribe`) |
 
 All three support delivery to Telegram, Discord, Slack, SMS, email, GitHub comments, or local files.
 :::

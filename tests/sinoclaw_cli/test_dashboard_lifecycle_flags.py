@@ -90,7 +90,7 @@ class TestDashboardStop:
         mock_kill.assert_called_once()
         # --stop should pass a reason so the output doesn't say "running
         # backend no longer matches the updated frontend" (that wording is
-        # for the post-`hermes update` path).
+        # for the post-`sinoclaw update` path).
         kwargs = mock_kill.call_args.kwargs
         assert "reason" in kwargs
         assert "stop" in kwargs["reason"].lower()

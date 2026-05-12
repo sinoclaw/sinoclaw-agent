@@ -1,5 +1,5 @@
 """
-Tests for sinoclaw_cli.mcp_config — ``hermes mcp`` subcommands.
+Tests for sinoclaw_cli.mcp_config — ``sinoclaw mcp`` subcommands.
 
 These tests mock the MCP server connection layer so they run without
 any actual MCP servers or API keys.

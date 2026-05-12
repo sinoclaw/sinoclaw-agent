@@ -14,7 +14,7 @@ Optimizes LLM inference with NVIDIA TensorRT for maximum throughput and lowest l
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/mlops/tensorrt-llm` |
+| Source | Optional — install with `sinoclaw skills install official/mlops/tensorrt-llm` |
 | Path | `optional-skills/mlops/tensorrt-llm` |
 | Version | `1.0.0` |
 | Author | Orchestra Research |

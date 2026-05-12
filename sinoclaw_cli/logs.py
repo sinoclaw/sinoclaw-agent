@@ -1,4 +1,4 @@
-"""``hermes logs`` — view and filter Hermes log files.
+"""``sinoclaw logs`` — view and filter Hermes log files.
 
 Supports tailing, following, session filtering, level filtering,
 component filtering, and relative time ranges.  All log files live
@@ -6,15 +6,15 @@ under ``~/.sinoclaw/logs/``.
 
 Usage examples::
 
-    hermes logs                    # last 50 lines of agent.log
-    hermes logs -f                 # follow agent.log in real time
-    hermes logs errors             # last 50 lines of errors.log
-    hermes logs gateway -n 100    # last 100 lines of gateway.log
-    hermes logs --level WARNING    # only WARNING+ lines
-    hermes logs --session abc123   # filter by session ID substring
-    hermes logs --component tools  # only tool-related lines
-    hermes logs --since 1h         # lines from the last hour
-    hermes logs --since 30m -f     # follow, starting 30 min ago
+    sinoclaw logs                    # last 50 lines of agent.log
+    sinoclaw logs -f                 # follow agent.log in real time
+    sinoclaw logs errors             # last 50 lines of errors.log
+    sinoclaw logs gateway -n 100    # last 100 lines of gateway.log
+    sinoclaw logs --level WARNING    # only WARNING+ lines
+    sinoclaw logs --session abc123   # filter by session ID substring
+    sinoclaw logs --component tools  # only tool-related lines
+    sinoclaw logs --since 1h         # lines from the last hour
+    sinoclaw logs --since 30m -f     # follow, starting 30 min ago
 """
 
 import re

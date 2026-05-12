@@ -5,7 +5,7 @@ Bug: `agent/redact.py` snapshots `_REDACT_ENABLED` from the env var
 line ~174 calls `setup_logging(mode="cli")` which transitively imports
 `agent.redact` — BEFORE any config bridge ran. So if a user set
 `security.redact_secrets: false` in config.yaml (instead of as an env var
-in .env), the toggle was silently ignored in both `hermes chat` and
+in .env), the toggle was silently ignored in both `sinoclaw chat` and
 `sinoclaw gateway run`.
 
 Fix: bridge `security.redact_secrets` from config.yaml → `SINOCLAW_REDACT_SECRETS`

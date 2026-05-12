@@ -1,6 +1,6 @@
 """CLI commands for the google_meet plugin.
 
-Wires ``hermes meet <subcommand>``:
+Wires ``sinoclaw meet <subcommand>``:
   setup       — preflight playwright, chromium, auth file, print fixes
   auth        — open a browser to sign into Google, save storage state
   join <url>  — join a Meet URL synchronously (also callable from the agent)
@@ -33,7 +33,7 @@ def _auth_state_path() -> Path:
 # ---------------------------------------------------------------------------
 
 def register_cli(subparser: argparse.ArgumentParser) -> None:
-    """Build the ``hermes meet`` argparse tree.
+    """Build the ``sinoclaw meet`` argparse tree.
 
     Called by :func:`_register_cli_commands` at plugin load time.
     """
@@ -108,7 +108,7 @@ def register_cli(subparser: argparse.ArgumentParser) -> None:
 def meet_command(args: argparse.Namespace) -> int:
     sub = getattr(args, "meet_command", None)
     if not sub:
-        print("usage: hermes meet {setup,auth,join,status,transcript,say,stop,node}")
+        print("usage: sinoclaw meet {setup,auth,join,status,transcript,say,stop,node}")
         return 2
     if sub == "setup":
         return _cmd_setup()
@@ -141,7 +141,7 @@ def meet_command(args: argparse.Namespace) -> int:
         # whatever its subparsers wired.
         fn = getattr(args, "func", None)
         if fn is None or fn is meet_command:
-            print("usage: hermes meet node {run,list,approve,remove,status,ping}")
+            print("usage: sinoclaw meet node {run,list,approve,remove,status,ping}")
             return 2
         return fn(args)
     print(f"unknown subcommand: {sub}")
@@ -197,7 +197,7 @@ def _cmd_setup() -> int:
     auth_ok = auth_path.is_file()
     print(
         "  google auth    : "
-        + (f"ok ({auth_path})" if auth_ok else "not saved — run: hermes meet auth")
+        + (f"ok ({auth_path})" if auth_ok else "not saved — run: sinoclaw meet auth")
     )
 
     print()
@@ -325,12 +325,12 @@ def _cmd_install(*, realtime: bool, assume_yes: bool) -> int:
                 "\n  NOTE: macOS does not auto-route audio. Open\n"
                 "    System Settings → Sound → Input\n"
                 "  and select 'BlackHole 2ch' before starting a realtime meeting.\n"
-                "  hermes will not switch your default input for you."
+                "  sinoclaw will not switch your default input for you."
             )
     else:
         print("\n[3/3] skipped (pass --realtime to install audio tooling too)")
 
-    print("\ndone. verify with: hermes meet setup")
+    print("\ndone. verify with: sinoclaw meet setup")
     return 0
 
 
@@ -365,7 +365,7 @@ def _cmd_auth() -> int:
     except Exception as e:
         print(f"auth failed: {e}")
         return 1
-    print("saved. you can now run: hermes meet join <url>")
+    print("saved. you can now run: sinoclaw meet join <url>")
     return 0
 
 
