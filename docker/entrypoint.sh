@@ -145,9 +145,9 @@ esac
 # If the first positional arg resolves to an executable on PATH, we assume the
 # caller wants to run it directly (needed by the launcher which runs long-lived
 # `sleep infinity` sandbox containers — see tools/environments/docker.py).
-# Otherwise we treat the args as a hermes subcommand and wrap with `hermes`,
+# Otherwise we treat the args as a sinoclaw subcommand and wrap with `sinoclaw`,
 # preserving the documented `docker run <image> <subcommand>` behavior.
 if [ $# -gt 0 ] && command -v "$1" >/dev/null 2>&1; then
     exec "$@"
 fi
-exec hermes "$@"
+exec sinoclaw "$@"
