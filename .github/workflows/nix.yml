@@ -41,6 +41,18 @@ jobs:
         continue-on-error: true
         run: nix flake check --print-build-logs
 
+      - name: Clear stale nix derivation cache
+        if: runner.os == 'Linux'
+        run: |
+          # The nix-daemon caches .drv files whose embedded npm-deps path can drift
+          # from the current package-lock.json.  Delete any stale .drv for the web
+          # package so nix re-evaluates from scratch.
+          DRV=$(nix --print-build-logs eval .#sinoclaw-web.drvPath 2>/dev/null || true)
+          if [ -n "$DRV" ] && [ -f "$DRV" ]; then
+            echo "Removing stale .drv: $DRV"
+            nix store delete "$DRV" 2>/dev/null || sudo nix store delete "$DRV" 2>/dev/null || true
+          fi
+
       - name: Build package
         id: build
         if: runner.os == 'Linux'
