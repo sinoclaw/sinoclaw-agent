@@ -202,8 +202,8 @@ json.dump(sorted(leaf_paths(DEFAULT_CONFIG)), sys.stdout, indent=2)
           }
 
           echo "=== Checking SINOCLAW_MANAGED guards ==="
-          check_blocked "config set" ${sinoclaw-agent}/bin/sinoclaw-agent config set model foo
-          check_blocked "config edit" ${sinoclaw-agent}/bin/sinoclaw-agent config edit
+          check_blocked "config set" ${sinoclaw-agent}/bin/sinoclaw config set model foo
+          check_blocked "config edit" ${sinoclaw-agent}/bin/sinoclaw config edit
 
           echo "=== All guard checks passed ==="
           mkdir -p $out
