@@ -159,10 +159,10 @@ def get_managed_update_command() -> Optional[str]:
 
 def recommended_update_command() -> str:
     """Return the best update command for the current installation."""
-    return get_managed_update_command() or "hermes update"
+    return get_managed_update_command() or "sinoclaw update"
 
 
-def format_managed_message(action: str = "modify this Hermes installation") -> str:
+def format_managed_message(action: str = "modify this Sinoclaw installation") -> str:
     """Build a user-facing error for managed installs."""
     managed_system = get_managed_system() or "a package manager"
     raw = os.getenv("SINOCLAW_MANAGED", "").strip().lower()
@@ -170,7 +170,7 @@ def format_managed_message(action: str = "modify this Hermes installation") -> s
     if managed_system == "NixOS":
         env_hint = "true" if raw in _MANAGED_TRUE_VALUES else raw or "true"
         return (
-            f"Cannot {action}: this Hermes installation is managed by NixOS "
+            f"Cannot {action}: this Sinoclaw installation is managed by NixOS "
             f"(SINOCLAW_MANAGED={env_hint}).\n"
             "Edit services.sinoclaw-agent.settings in your configuration.nix and run:\n"
             "  sudo nixos-rebuild switch"
@@ -179,15 +179,15 @@ def format_managed_message(action: str = "modify this Hermes installation") -> s
     if managed_system == "Homebrew":
         env_hint = raw or "homebrew"
         return (
-            f"Cannot {action}: this Hermes installation is managed by Homebrew "
+            f"Cannot {action}: this Sinoclaw installation is managed by Homebrew "
             f"(SINOCLAW_MANAGED={env_hint}).\n"
             "Use:\n"
             "  brew upgrade sinoclaw-agent"
         )
 
     return (
-        f"Cannot {action}: this Hermes installation is managed by {managed_system}.\n"
-        "Use your package manager to upgrade or reinstall Hermes."
+        f"Cannot {action}: this Sinoclaw installation is managed by {managed_system}.\n"
+        "Use your package manager to upgrade or reinstall Sinoclaw."
     )
 
 def managed_error(action: str = "modify configuration"):
