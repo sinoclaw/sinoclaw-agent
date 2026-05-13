@@ -695,7 +695,7 @@ def _run_post_setup(post_setup_key: str):
                 _print_info("    IMPORTANT — grant macOS permissions now:")
                 _print_info("      System Settings > Privacy & Security > Accessibility")
                 _print_info("      System Settings > Privacy & Security > Screen Recording")
-                _print_info("    Both must allow the terminal / Hermes process.")
+                _print_info("    Both must allow the terminal / Sinoclaw process.")
             else:
                 _print_warning("    cua-driver install did not complete. Re-run manually:")
                 _print_info(f"      {install_cmd}")

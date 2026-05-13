@@ -162,7 +162,7 @@ def setup_logging(
     mode: Optional[str] = None,
     force: bool = False,
 ) -> Path:
-    """Configure the Hermes logging subsystem.
+    """Configure the Sinoclaw logging subsystem.
 
     Safe to call multiple times — the second call is a no-op unless
     *force* is ``True``.

@@ -107,7 +107,7 @@ def list_parsers() -> List[str]:
 
 # Import all parser modules to trigger registration via @register_parser decorators
 # Each module registers itself when imported
-from environments.tool_call_parsers.sinoclaw_parser import HermesToolCallParser  # noqa: E402, F401
+from environments.tool_call_parsers.hermes_parser import HermesToolCallParser  # noqa: E402, F401
 from environments.tool_call_parsers.longcat_parser import LongcatToolCallParser  # noqa: E402, F401
 from environments.tool_call_parsers.mistral_parser import MistralToolCallParser  # noqa: E402, F401
 from environments.tool_call_parsers.llama_parser import LlamaToolCallParser  # noqa: E402, F401

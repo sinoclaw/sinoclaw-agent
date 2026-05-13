@@ -1,1 +1,1 @@
-# Hermes plugins package
+# Sinoclaw plugins package

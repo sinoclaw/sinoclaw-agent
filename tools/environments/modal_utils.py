@@ -1,6 +1,6 @@
 """Shared Sinoclaw-side execution flow for Modal transports.
 
-This module deliberately stops at the Hermes boundary:
+This module deliberately stops at the Sinoclaw boundary:
 - command preparation
 - cwd/timeout normalization
 - stdin/sudo shell wrapping

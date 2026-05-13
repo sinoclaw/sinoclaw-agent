@@ -6,7 +6,7 @@ from typing import Optional
 
 
 def detect_provider() -> Optional[str]:
-    """Resolve the active Hermes runtime provider, or None if unavailable."""
+    """Resolve the active Sinoclaw runtime provider, or None if unavailable."""
     try:
         from sinoclaw_cli.runtime_provider import resolve_runtime_provider
         runtime = resolve_runtime_provider()
@@ -20,5 +20,5 @@ def detect_provider() -> Optional[str]:
 
 
 def has_provider() -> bool:
-    """Return True if Hermes can resolve any runtime provider credentials."""
+    """Return True if Sinoclaw can resolve any runtime provider credentials."""
     return detect_provider() is not None

@@ -1,4 +1,4 @@
-"""ACP session manager — maps ACP sessions to Hermes AIAgent instances.
+"""ACP session manager — maps ACP sessions to Sinoclaw AIAgent instances.
 
 Sessions are persisted to the shared SessionDB (``~/.sinoclaw/state.db``) so they
 survive process restarts and appear in ``session_search``.  When the editor
@@ -37,7 +37,7 @@ def _win_path_to_wsl(path: str) -> str | None:
 
 
 def _translate_acp_cwd(cwd: str) -> str:
-    """Translate Windows ACP cwd values when Hermes itself is running in WSL.
+    """Translate Windows ACP cwd values when Sinoclaw itself is running in WSL.
 
     Windows ACP clients can launch ``sinoclaw acp`` inside WSL while still sending
     editor workspaces as Windows drive paths such as ``E:\\Projects``. Store
@@ -123,7 +123,7 @@ def _acp_stderr_print(*args, **kwargs) -> None:
 def _register_task_cwd(task_id: str, cwd: str) -> None:
     """Bind a task/session id to the editor's working directory for tools.
 
-    Zed can launch Hermes from a Windows workspace while the ACP process runs
+    Zed can launch Sinoclaw from a Windows workspace while the ACP process runs
     inside WSL. In that case ACP sends cwd as e.g. ``E:\\Projects\\POTI``;
     local tools need the WSL mount equivalent or subprocess creation fails
     before the command can run.
@@ -184,7 +184,7 @@ class SessionState:
 
 
 class SessionManager:
-    """Thread-safe manager for ACP sessions backed by Hermes AIAgent instances.
+    """Thread-safe manager for ACP sessions backed by Sinoclaw AIAgent instances.
 
     Sessions are held in-memory for fast access **and** persisted to the
     shared SessionDB so they survive process restarts and are searchable
@@ -196,7 +196,7 @@ class SessionManager:
         Args:
             agent_factory: Optional callable that creates an AIAgent-like object.
                            Used by tests. When omitted, a real AIAgent is created
-                           using the current Hermes runtime provider configuration.
+                           using the current Sinoclaw runtime provider configuration.
             db:            Optional SessionDB instance. When omitted, the default
                            SessionDB (``~/.sinoclaw/state.db``) is lazily created.
         """

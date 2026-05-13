@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Hermes Skills Index — a centralized JSON catalog of all skills.
+"""Build the Sinoclaw Skills Index — a centralized JSON catalog of all skills.
 
 This script crawls every skill source (skills.sh, GitHub taps, official,
 clawhub, lobehub, claude-marketplace) and writes a JSON index with resolved
@@ -243,7 +243,7 @@ def batch_resolve_paths(skills: list, auth: GitHubAuth) -> list:
 
 
 def main():
-    print("Building Hermes Skills Index...", flush=True)
+    print("Building Sinoclaw Skills Index...", flush=True)
     overall_start = time.time()
 
     auth = GitHubAuth()

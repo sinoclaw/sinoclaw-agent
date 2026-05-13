@@ -144,7 +144,7 @@ def load_sinoclaw_dotenv(
     sinoclaw_home: str | os.PathLike | None = None,
     project_env: str | os.PathLike | None = None,
 ) -> list[Path]:
-    """Load Hermes environment files with user config taking precedence.
+    """Load Sinoclaw environment files with user config taking precedence.
 
     Behavior:
     - `~/.sinoclaw/.env` overrides stale shell-exported values when present.

@@ -126,7 +126,7 @@ class BrowserUseProvider(CloudBrowserProvider):
             headers["X-Idempotency-Key"] = _get_or_create_pending_create_key(task_id)
 
         # Keep gateway-backed sessions short so billing authorization does not
-        # default to a long Browser-Use timeout when Hermes only needs a task-
+        # default to a long Browser-Use timeout when Sinoclaw only needs a task-
         # scoped ephemeral browser.
         payload = (
             {

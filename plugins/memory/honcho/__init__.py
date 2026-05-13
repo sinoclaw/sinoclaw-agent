@@ -381,7 +381,7 @@ class HonchoMemoryProvider(MemoryProvider):
         self._session_initialized = True
 
         # ----- B6: Memory file migration (one-time, for new sessions) -----
-        # Skip under per-session strategy: every Hermes run creates a fresh
+        # Skip under per-session strategy: every Sinoclaw run creates a fresh
         # Honcho session by design, so uploading MEMORY.md/USER.md/SOUL.md to
         # each one would flood the backend with short-lived duplicates instead
         # of performing a one-time migration.

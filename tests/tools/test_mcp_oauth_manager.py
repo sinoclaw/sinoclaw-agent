@@ -125,7 +125,7 @@ async def test_disk_watch_invalidates_on_mtime_change(tmp_path, monkeypatch):
 
 
 def test_manager_builds_sinoclaw_provider_subclass(tmp_path, monkeypatch):
-    """get_or_build_provider returns HermesMCPOAuthProvider, not plain OAuthClientProvider."""
+    """get_or_build_provider returns SinoclawMCPOAuthProvider, not plain OAuthClientProvider."""
     from tools.mcp_oauth_manager import (
         MCPOAuthManager, _SINOCLAW_PROVIDER_CLS, reset_manager_for_tests,
     )

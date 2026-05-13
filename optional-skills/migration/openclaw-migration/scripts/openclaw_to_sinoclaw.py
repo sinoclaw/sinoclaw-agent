@@ -45,7 +45,7 @@ WORKSPACE_INSTRUCTIONS_FILENAME = "AGENTS" + ".md"
 MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     "soul": {
         "label": "SOUL.md",
-        "description": "Import the OpenClaw persona file into Hermes.",
+        "description": "Import the OpenClaw persona file into Sinoclaw.",
     },
     "workspace-agents": {
         "label": "Workspace instructions",
@@ -53,11 +53,11 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "memory": {
         "label": "MEMORY.md",
-        "description": "Import long-term memory entries into Hermes memories.",
+        "description": "Import long-term memory entries into Sinoclaw memories.",
     },
     "user-profile": {
         "label": "USER.md",
-        "description": "Import user profile entries into Hermes memories.",
+        "description": "Import user profile entries into Sinoclaw memories.",
     },
     "messaging-settings": {
         "label": "Messaging settings",
@@ -69,7 +69,7 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "command-allowlist": {
         "label": "Command allowlist",
-        "description": "Merge OpenClaw exec approval patterns into Hermes command_allowlist.",
+        "description": "Merge OpenClaw exec approval patterns into Sinoclaw command_allowlist.",
     },
     "skills": {
         "label": "User skills",
@@ -81,39 +81,39 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "discord-settings": {
         "label": "Discord settings",
-        "description": "Import Discord bot token and allowlist into Hermes .env.",
+        "description": "Import Discord bot token and allowlist into Sinoclaw .env.",
     },
     "slack-settings": {
         "label": "Slack settings",
-        "description": "Import Slack bot/app tokens and allowlist into Hermes .env.",
+        "description": "Import Slack bot/app tokens and allowlist into Sinoclaw .env.",
     },
     "whatsapp-settings": {
         "label": "WhatsApp settings",
-        "description": "Import WhatsApp allowlist into Hermes .env.",
+        "description": "Import WhatsApp allowlist into Sinoclaw .env.",
     },
     "signal-settings": {
         "label": "Signal settings",
-        "description": "Import Signal account, HTTP URL, and allowlist into Hermes .env.",
+        "description": "Import Signal account, HTTP URL, and allowlist into Sinoclaw .env.",
     },
     "provider-keys": {
         "label": "Provider API keys",
-        "description": "Import model provider API keys into Hermes .env (requires --migrate-secrets).",
+        "description": "Import model provider API keys into Sinoclaw .env (requires --migrate-secrets).",
     },
     "model-config": {
         "label": "Default model",
-        "description": "Import the default model setting into Hermes config.yaml.",
+        "description": "Import the default model setting into Sinoclaw config.yaml.",
     },
     "tts-config": {
         "label": "TTS configuration",
-        "description": "Import TTS provider and voice settings into Hermes config.yaml.",
+        "description": "Import TTS provider and voice settings into Sinoclaw config.yaml.",
     },
     "shared-skills": {
         "label": "Shared skills",
-        "description": "Copy shared OpenClaw skills from ~/.openclaw/skills/ into Hermes.",
+        "description": "Copy shared OpenClaw skills from ~/.openclaw/skills/ into Sinoclaw.",
     },
     "daily-memory": {
         "label": "Daily memory files",
-        "description": "Merge daily memory entries from workspace/memory/ into Hermes MEMORY.md.",
+        "description": "Merge daily memory entries from workspace/memory/ into Sinoclaw MEMORY.md.",
     },
     "archive": {
         "label": "Archive unmapped docs",
@@ -121,7 +121,7 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "mcp-servers": {
         "label": "MCP servers",
-        "description": "Import MCP server definitions from OpenClaw into Hermes config.yaml.",
+        "description": "Import MCP server definitions from OpenClaw into Sinoclaw config.yaml.",
     },
     "plugins-config": {
         "label": "Plugins configuration",
@@ -137,7 +137,7 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "agent-config": {
         "label": "Agent defaults and multi-agent setup",
-        "description": "Import agent defaults (compaction, context, thinking) into Hermes config. Archive multi-agent list.",
+        "description": "Import agent defaults (compaction, context, thinking) into Sinoclaw config. Archive multi-agent list.",
     },
     "gateway-config": {
         "label": "Gateway configuration",
@@ -149,7 +149,7 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "full-providers": {
         "label": "Full model provider definitions",
-        "description": "Import custom model providers (baseUrl, apiType, headers) into Hermes custom_providers.",
+        "description": "Import custom model providers (baseUrl, apiType, headers) into Sinoclaw custom_providers.",
     },
     "deep-channels": {
         "label": "Deep channel configuration",
@@ -157,15 +157,15 @@ MIGRATION_OPTION_METADATA: Dict[str, Dict[str, str]] = {
     },
     "browser-config": {
         "label": "Browser configuration",
-        "description": "Import browser automation settings into Hermes config.yaml.",
+        "description": "Import browser automation settings into Sinoclaw config.yaml.",
     },
     "tools-config": {
         "label": "Tools configuration",
-        "description": "Import tool settings (exec timeout, sandbox, web search) into Hermes config.yaml.",
+        "description": "Import tool settings (exec timeout, sandbox, web search) into Sinoclaw config.yaml.",
     },
     "approvals-config": {
         "label": "Approval rules",
-        "description": "Import approval mode and rules into Hermes config.yaml approvals section.",
+        "description": "Import approval mode and rules into Sinoclaw config.yaml approvals section.",
     },
     "memory-backend": {
         "label": "Memory backend configuration",
@@ -355,7 +355,7 @@ def load_yaml_file(path: Path) -> Dict[str, Any]:
 
 def dump_yaml_file(path: Path, data: Dict[str, Any]) -> None:
     if yaml is None:
-        raise RuntimeError("PyYAML is required to update Hermes config.yaml")
+        raise RuntimeError("PyYAML is required to update Sinoclaw config.yaml")
     ensure_parent(path)
     path.write_text(
         yaml.safe_dump(data, sort_keys=False, allow_unicode=False),
@@ -396,13 +396,13 @@ def backup_existing(path: Path, backup_root: Path) -> Optional[Path]:
 
 
 # ── Brand rewriting ─────────────────────────────────────────
-# Replace OpenClaw brand names with Hermes in migrated text so that
+# Replace OpenClaw brand names with Sinoclaw in migrated text so that
 # memory entries, user profiles, SOUL.md, and workspace instructions
 # read as self-referential to the new agent identity.
 #
-# Case-preserving: ``OpenClaw`` → ``Hermes`` (prose), but lowercase matches
+# Case-preserving: ``OpenClaw`` → ``Sinoclaw`` (prose), but lowercase matches
 # like ``openclaw`` → ``hermes`` (so filesystem paths like ``~/.openclaw``
-# become ``~/.sinoclaw`` — the real Sinoclaw home — not the broken ``~/.Hermes``).
+# become ``~/.sinoclaw`` — the real Sinoclaw home — not the broken ``~/.Sinoclaw``).
 _REBRAND_PATTERNS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r'\bOpen[\s-]?Claw\b', re.IGNORECASE), 'Sinoclaw'),
     (re.compile(r'\bClawdBot\b', re.IGNORECASE), 'Sinoclaw'),
@@ -414,10 +414,10 @@ def _case_preserving_replacement(replacement: str):
     """Return a re.sub replacement fn that lowercases the result when the
     matched text was all-lowercase.
 
-    Keeps ``OpenClaw`` → ``Hermes`` but maps ``openclaw`` → ``hermes`` so a
+    Keeps ``OpenClaw`` → ``Sinoclaw`` but maps ``openclaw`` → ``hermes`` so a
     filesystem path like ``~/.openclaw/config.yaml`` rewrites to
     ``~/.sinoclaw/config.yaml`` (the real Sinoclaw home) instead of the broken
-    ``~/.Hermes/config.yaml``.
+    ``~/.Sinoclaw/config.yaml``.
     """
     def _sub(match: "re.Match[str]") -> str:
         matched = match.group(0)
@@ -668,7 +668,7 @@ def write_report(output_dir: Path, report: Dict[str, Any]) -> None:
         grouped.setdefault(item["status"], []).append(item)
 
     lines = [
-        "# OpenClaw -> Hermes Migration Report",
+        "# OpenClaw -> Sinoclaw Migration Report",
         "",
         f"- Timestamp: {redacted['timestamp']}",
         f"- Mode: {redacted['mode']}",
@@ -781,7 +781,7 @@ class Migrator:
     def is_selected(self, option_id: str) -> bool:
         return option_id in self.selected_options
 
-    # Option ids that mutate the Hermes config.yaml file.  Once any one of
+    # Option ids that mutate the Sinoclaw config.yaml file.  Once any one of
     # them records a conflict/error on config.yaml, subsequent ones are
     # short-circuited to avoid partial writes.  Keep in sync with methods
     # that call load_yaml_file(target_root / "config.yaml") + dump_yaml_file.
@@ -1062,7 +1062,7 @@ class Migrator:
             warnings.append(
                 "API keys and other credentials were detected but not imported. "
                 "Re-run with --migrate-secrets to copy supported keys into the "
-                "Hermes env file."
+                "Sinoclaw env file."
             )
         return warnings
 
@@ -1228,7 +1228,7 @@ class Migrator:
             self.record("command-allowlist", source, destination, "skipped", "No allowlist patterns found")
             return
         if not destination.exists():
-            self.record("command-allowlist", source, destination, "skipped", "Hermes config.yaml does not exist yet")
+            self.record("command-allowlist", source, destination, "skipped", "Sinoclaw config.yaml does not exist yet")
             return
 
         config = load_yaml_file(destination)
@@ -1330,7 +1330,7 @@ class Migrator:
         if isinstance(workspace, str) and workspace.strip():
             ws_path = workspace.strip()
             # Skip if the workspace points inside the OpenClaw source directory —
-            # that path will be stale after migration and would cause the Hermes
+            # that path will be stale after migration and would cause the Sinoclaw
             # gateway to use the old OpenClaw workspace as its cwd, picking up
             # OpenClaw's AGENTS.md, MEMORY.md, etc.
             try:
@@ -1737,7 +1737,7 @@ class Migrator:
 
         provider = tts.get("provider")
         if isinstance(provider, str) and provider in ("elevenlabs", "openai", "edge", "microsoft"):
-            # OpenClaw renamed "edge" to "microsoft"; Hermes still uses "edge"
+            # OpenClaw renamed "edge" to "microsoft"; Sinoclaw still uses "edge"
             tts_data["provider"] = "edge" if provider == "microsoft" else provider
 
         # TTS provider settings live under messages.tts.providers.{provider}
@@ -2059,12 +2059,12 @@ class Migrator:
         ]
         for candidate in candidates:
             if candidate:
-                self.archive_path(candidate, reason="No direct Hermes destination; archived for manual review")
+                self.archive_path(candidate, reason="No direct Sinoclaw destination; archived for manual review")
 
         for rel in ("workspace/.learnings", "workspace/memory"):
             candidate = self.source_root / rel
             if candidate.exists():
-                self.archive_path(candidate, reason="No direct Hermes destination; archived for manual review")
+                self.archive_path(candidate, reason="No direct Sinoclaw destination; archived for manual review")
 
         partially_extracted = [
             ("openclaw.json", "Selected Sinoclaw-compatible values were extracted; raw OpenClaw config was not copied."),
@@ -2117,7 +2117,7 @@ class Migrator:
                 continue
             if name in existing_mcp and not self.overwrite:
                 self.record("mcp-servers", f"mcp.servers.{name}", f"mcp_servers.{name}", "conflict",
-                            "MCP server already exists in Hermes config")
+                            "MCP server already exists in Sinoclaw config")
                 continue
 
             sinoclaw_srv: Dict[str, Any] = {}
@@ -2302,7 +2302,7 @@ class Migrator:
             agent_cfg["verbose"] = defaults["verboseDefault"]
             changes = True
         if defaults.get("thinkingDefault"):
-            # Map OpenClaw thinking -> Hermes reasoning_effort
+            # Map OpenClaw thinking -> Sinoclaw reasoning_effort
             thinking = defaults["thinkingDefault"]
             if thinking in ("always", "high", "xhigh"):
                 agent_cfg["reasoning_effort"] = "high"
@@ -2373,7 +2373,7 @@ class Migrator:
                 self.maybe_backup(sinoclaw_cfg_path)
                 dump_yaml_file(sinoclaw_cfg_path, sinoclaw_cfg)
             self.record("agent-config", "openclaw.json agents.defaults", "config.yaml agent/compression/terminal",
-                        "migrated", "Agent defaults mapped to Hermes config")
+                        "migrated", "Agent defaults mapped to Sinoclaw config")
 
         # Archive multi-agent list
         if agent_list:
@@ -2603,7 +2603,7 @@ class Migrator:
                         continue
                     self._set_env_var(env_key, str(val), f"channels.{ch_name}.{oc_key}")
 
-        # Map Discord-specific settings to Hermes config
+        # Map Discord-specific settings to Sinoclaw config
         discord_cfg = channels.get("discord") or {}
         if discord_cfg:
             sinoclaw_cfg_path = self.target_root / "config.yaml"
@@ -2653,7 +2653,7 @@ class Migrator:
         browser_hermes = sinoclaw_cfg.get("browser") or {}
         changed = False
 
-        # Map fields that have Hermes equivalents
+        # Map fields that have Sinoclaw equivalents
         if browser.get("cdpUrl"):
             browser_hermes["cdp_url"] = browser["cdpUrl"]
             changed = True
@@ -2842,7 +2842,7 @@ class Migrator:
         if not self.output_dir:
             return
         notes = [
-            "# OpenClaw -> Hermes Migration Notes",
+            "# OpenClaw -> Sinoclaw Migration Notes",
             "",
             "This document lists items that require manual attention after migration.",
             "",
@@ -2860,7 +2860,7 @@ class Migrator:
                 "## Archived Items (Manual Review Needed)",
                 "",
                 "These OpenClaw configurations were archived because they don't have a",
-                "direct 1:1 mapping in Hermes. Review each file and recreate manually:",
+                "direct 1:1 mapping in Sinoclaw. Review each file and recreate manually:",
                 "",
             ])
             for item in archived:
@@ -2870,9 +2870,9 @@ class Migrator:
         conflicts = [i for i in self.items if i.status == "conflict"]
         if conflicts:
             notes.extend([
-                "## Conflicts (Existing Hermes Config Not Overwritten)",
+                "## Conflicts (Existing Sinoclaw Config Not Overwritten)",
                 "",
-                "These items already existed in your Hermes config. Re-run with",
+                "These items already existed in your Sinoclaw config. Re-run with",
                 "`--overwrite` to force, or merge manually:",
                 "",
             ])
@@ -2894,7 +2894,7 @@ class Migrator:
             "",
             "After migration, your OpenClaw directory still exists on disk with workspace",
             "state files (todo.json, sessions, logs). If the Sinoclaw agent discovers these",
-            "directories, it may read/write to them instead of the Hermes state, causing",
+            "directories, it may read/write to them instead of the Sinoclaw state, causing",
             "confusion (e.g., cron jobs reading a different todo list than interactive sessions).",
             "",
             "**Strongly recommended:** Run `sinoclaw claw cleanup` to rename the OpenClaw",
@@ -2966,7 +2966,7 @@ def parse_args() -> argparse.Namespace:
         help="Optional workspace root where the workspace instructions file should be copied",
     )
     parser.add_argument("--execute", action="store_true", help="Apply changes instead of reporting a dry run")
-    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing Hermes targets after backing them up")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing Sinoclaw targets after backing them up")
     parser.add_argument(
         "--migrate-secrets",
         action="store_true",
@@ -3044,7 +3044,7 @@ def main() -> int:
 
     print()
     print(f"  ╔══════════════════════════════════════════════════════╗")
-    print(f"  ║   OpenClaw -> Hermes Migration   [{mode_label:>8s}]   ║")
+    print(f"  ║   OpenClaw -> Sinoclaw Migration   [{mode_label:>8s}]   ║")
     print(f"  ╠══════════════════════════════════════════════════════╣")
     print(f"  ║  Source:  {str(report['source_root'])[:42]:<42s}  ║")
     print(f"  ║  Target:  {str(report['target_root'])[:42]:<42s}  ║")

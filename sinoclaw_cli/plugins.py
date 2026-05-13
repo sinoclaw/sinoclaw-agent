@@ -1,5 +1,5 @@
 """
-Hermes Plugin System
+Sinoclaw Plugin System
 ====================
 
 Discovers, loads, and manages plugins from four sources:
@@ -736,7 +736,7 @@ class PluginManager:
             # enforced by the tool wrapper.
             #
             # Bundled platform plugins (gateway adapters like IRC) auto-load
-            # for the same reason: every platform Hermes ships must be
+            # for the same reason: every platform Sinoclaw ships must be
             # available out of the box without the user having to opt in.
             if manifest.source == "bundled" and manifest.kind in ("backend", "platform"):
                 self._load_plugin(manifest)

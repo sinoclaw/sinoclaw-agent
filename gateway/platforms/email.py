@@ -1,7 +1,7 @@
 """
 Email platform adapter for the Sinoclaw gateway.
 
-Allows users to interact with Hermes by sending emails.
+Allows users to interact with Sinoclaw by sending emails.
 Uses IMAP to receive and SMTP to send messages.
 
 Environment variables:

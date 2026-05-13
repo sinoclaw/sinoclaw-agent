@@ -16,7 +16,7 @@ Built-in TTS providers:
 
 Custom command providers:
 - Users can declare any number of named providers with ``type: command``
-  under ``tts.providers.<name>`` in ``~/.sinoclaw/config.yaml``. Hermes
+  under ``tts.providers.<name>`` in ``~/.sinoclaw/config.yaml``. Sinoclaw
   writes the input text to a temp file and runs the configured shell
   command, which must produce the audio file at the expected path.
   See the Local Command section of ``website/docs/user-guide/features/tts.md``.
@@ -288,7 +288,7 @@ def _get_provider(tts_config: Dict[str, Any]) -> str:
 #
 # Users can declare any number of command-type providers alongside the
 # built-ins so they can plug any local CLI (Piper, VoxCPM, Kokoro CLIs,
-# custom voice-cloning scripts, etc.) into Hermes without any Python code
+# custom voice-cloning scripts, etc.) into Sinoclaw without any Python code
 # changes. The config shape is::
 #
 #     tts:
@@ -896,7 +896,7 @@ def _generate_xai_tts(text: str, output_path: str, tts_config: Dict[str, Any]) -
     ).strip().rstrip("/")
 
     # Match the documented minimal POST /v1/tts shape by default. Only send
-    # output_format when Hermes actually needs a non-default format/override.
+    # output_format when Sinoclaw actually needs a non-default format/override.
     codec = "wav" if output_path.endswith(".wav") else "mp3"
     payload: Dict[str, Any] = {
         "text": text,
@@ -1336,7 +1336,7 @@ def _check_piper_available() -> bool:
 
 
 def _get_piper_voices_dir() -> Path:
-    """Return the directory where Hermes caches Piper voice models.
+    """Return the directory where Sinoclaw caches Piper voice models.
 
     Resolves to ``~/.sinoclaw/cache/piper-voices/`` under the active
     SINOCLAW_HOME so voice downloads follow profile boundaries.
