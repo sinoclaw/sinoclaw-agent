@@ -47,6 +47,8 @@ source ~/.bashrc    # 重新加载 shell（或: source ~/.zshrc）
 sinoclaw              # 开始对话！
 ```
 
+> 🔧 **需要更多安装方式？** 参见 [**INSTALL.zh-CN.md**](INSTALL.zh-CN.md)，包含 **pip/pipx**、**Docker / docker-compose**、**源码安装**、**各操作系统说明**（Linux / macOS / Windows / WSL2 / Termux）、**systemd 服务部署**、**升级**、**故障排查**（含国内镜像加速）。
+
 ---
 
 ## 快速入门
