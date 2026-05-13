@@ -408,7 +408,7 @@ tail -f ~/.sinoclaw/logs/gateway.log
 From Telegram, send `/update` to the bot — it will pull the latest version and restart. Or from the server:
 
 ```bash
-hermes update
+sinoclaw update
 sinoclaw gateway stop && sinoclaw gateway start
 ```
 

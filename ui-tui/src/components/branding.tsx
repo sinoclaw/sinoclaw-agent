@@ -49,11 +49,11 @@ export function Banner({ t }: { t: Theme }) {
         <ArtLines lines={logoLines} />
       ) : (
         <Text bold color={t.color.primary}>
-          {t.brand.icon} NOUS HERMES
+          {t.brand.icon} SINOCLAW
         </Text>
       )}
 
-      <Text color={t.color.muted}>{t.brand.icon} Nous Research · Messenger of the Digital Gods</Text>
+      <Text color={t.color.muted}>{t.brand.icon} Sinoclaw Team · AI Agent for the Modern Builder</Text>
     </Box>
   )
 }

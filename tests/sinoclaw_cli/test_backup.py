@@ -1270,7 +1270,7 @@ class TestQuickSnapshot:
         assert snap_id is not None
 
 # ---------------------------------------------------------------------------
-# Pre-update backup (hermes update safety net)
+# Pre-update backup (sinoclaw update safety net)
 # ---------------------------------------------------------------------------
 
 class TestPreUpdateBackup:

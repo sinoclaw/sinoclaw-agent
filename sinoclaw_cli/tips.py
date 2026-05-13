@@ -102,7 +102,7 @@ TIPS = [
     "sinoclaw webhook subscribe creates event-driven webhook routes with HMAC validation.",
     "Save money: sinoclaw tools disables unused tools, sinoclaw skills config trims skills down.",
     "/reasoning low or /reasoning minimal cuts thinking depth below the default (medium) — faster, cheaper responses.",
-    "sinoclaw models routes vision, compression, and aux tasks to cheaper models — cuts background token cost 85%+ without downgrading your main chat model.",
+    "sinoclaw models routes vision, compression, and aux tasks to cheaper models — cuts background token cost 85%+ without changing main chat.",
 
     # --- Configuration ---
     "Set display.bell_on_complete: true in config.yaml to hear a bell when long tasks finish.",

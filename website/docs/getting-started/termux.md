@@ -125,7 +125,7 @@ ln -sf "$PWD/venv/bin/sinoclaw" "$PREFIX/bin/sinoclaw"
 
 ```bash
 hermes version
-hermes doctor
+sinoclaw doctor
 ```
 
 ### 7. Start Hermes

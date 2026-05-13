@@ -172,7 +172,7 @@ journalctl -u sinoclaw-agent -f
 
 # If addToSystemPackages is true, test the CLI
 hermes version
-hermes config       # shows the generated config
+sinoclaw config       # shows the generated config
 ```
 
 ### Choosing a Deployment Mode

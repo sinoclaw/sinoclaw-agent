@@ -123,7 +123,7 @@ def test_get_container_exec_info_docker_backend(container_env):
         "backend=docker\n"
         "container_name=sinoclaw-custom\n"
         "exec_user=myuser\n"
-        "sinoclaw_bin=/opt/hermes/bin/hermes\n"
+        "sinoclaw_bin=/opt/hermes/bin/sinoclaw\n"
     )
 
     with patch("sinoclaw_constants.is_container", return_value=False):

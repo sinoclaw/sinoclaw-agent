@@ -265,13 +265,13 @@ After adding a new provider via `sinoclaw model`, start a new chat session — `
 **Solution:**
 ```bash
 # Check your configuration
-hermes config show
+sinoclaw config show
 
 # Re-configure your provider
 hermes model
 
 # Or set directly
-hermes config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
+sinoclaw config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 ```
 
 :::warning
@@ -288,7 +288,7 @@ Make sure the key matches the provider. An OpenAI key won't work with OpenRouter
 hermes model
 
 # Set a valid model
-hermes config set SINOCLAW_MODEL anthropic/claude-opus-4.7
+sinoclaw config set SINOCLAW_MODEL anthropic/claude-opus-4.7
 
 # Or specify per-session
 hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
@@ -443,7 +443,7 @@ pip install "sinoclaw-agent[messaging]"  # Telegram, Discord, Slack, and shared 
 lsof -i :8080
 
 # Verify configuration
-hermes config show
+sinoclaw config show
 ```
 
 #### WSL: Gateway keeps disconnecting or `sinoclaw gateway start` fails
@@ -588,7 +588,7 @@ mcp_servers:
 
 ```bash
 # Verify MCP servers are configured
-hermes config show | grep -A 12 mcp_servers
+sinoclaw config show | grep -A 12 mcp_servers
 
 # Restart Sinoclaw or reload MCP after config changes
 hermes chat
@@ -838,7 +838,7 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 **Solution:**
 ```bash
 # Check what model and provider are configured
-hermes config show | head -20
+sinoclaw config show | head -20
 
 # Re-run model selection
 hermes model

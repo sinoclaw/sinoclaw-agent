@@ -24,7 +24,7 @@ When your main LLM provider encounters errors — rate limits, server overload, 
 The easiest path is the interactive manager:
 
 ```bash
-hermes fallback
+sinoclaw fallback
 ```
 
 `sinoclaw fallback` reuses the provider picker from `sinoclaw model` — same provider list, same credential prompts, same validation. Press `a` to add a fallback, `↑`/`↓` to reorder, `d` to remove, `q` to save and exit. Changes persist under `model.fallback_providers` in `config.yaml`.

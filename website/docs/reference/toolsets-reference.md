@@ -37,7 +37,7 @@ toolsets:
 ### Interactive management
 
 ```bash
-hermes tools                            # curses UI to enable/disable per platform
+sinoclaw tools                            # curses UI to enable/disable per platform
 ```
 
 Or in-session:

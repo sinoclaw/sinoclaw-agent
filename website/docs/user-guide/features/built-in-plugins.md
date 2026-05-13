@@ -125,7 +125,7 @@ The plugin is fail-open: no SDK installed, no credentials, or a transient Langfu
 **Setup (interactive — recommended):**
 
 ```bash
-hermes tools          # → Langfuse Observability → Cloud or Self-Hosted
+sinoclaw tools          # → Langfuse Observability → Cloud or Self-Hosted
 ```
 
 The wizard collects your keys, `pip install`s the `langfuse` SDK, and adds `observability/langfuse` to `plugins.enabled` for you. Restart Sinoclaw and the next turn ships a trace.

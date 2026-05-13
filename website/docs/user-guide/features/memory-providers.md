@@ -282,7 +282,7 @@ openviking-server
 # Then configure Hermes
 hermes memory setup    # select "openviking"
 # Or manually:
-hermes config set memory.provider openviking
+sinoclaw config set memory.provider openviking
 echo "OPENVIKING_ENDPOINT=http://localhost:1933" >> ~/.sinoclaw/.env
 ```
 
@@ -310,7 +310,7 @@ Server-side LLM fact extraction with semantic search, reranking, and automatic d
 ```bash
 hermes memory setup    # select "mem0"
 # Or manually:
-hermes config set memory.provider mem0
+sinoclaw config set memory.provider mem0
 echo "MEM0_API_KEY=your-key" >> ~/.sinoclaw/.env
 ```
 
@@ -340,7 +340,7 @@ Long-term memory with knowledge graph, entity resolution, and multi-strategy ret
 ```bash
 hermes memory setup    # select "hindsight"
 # Or manually:
-hermes config set memory.provider hindsight
+sinoclaw config set memory.provider hindsight
 echo "HINDSIGHT_API_KEY=your-key" >> ~/.sinoclaw/.env
 ```
 
@@ -387,7 +387,7 @@ Local SQLite fact store with FTS5 full-text search, trust scoring, and HRR (Holo
 ```bash
 hermes memory setup    # select "holographic"
 # Or manually:
-hermes config set memory.provider holographic
+sinoclaw config set memory.provider holographic
 ```
 
 **Config:** `config.yaml` under `plugins.sinoclaw-memory-store`
@@ -423,7 +423,7 @@ Cloud memory API with hybrid search (Vector + BM25 + Reranking), 7 memory types,
 ```bash
 hermes memory setup    # select "retaindb"
 # Or manually:
-hermes config set memory.provider retaindb
+sinoclaw config set memory.provider retaindb
 echo "RETAINDB_API_KEY=your-key" >> ~/.sinoclaw/.env
 ```
 
@@ -450,7 +450,7 @@ curl -fsSL https://byterover.dev/install.sh | sh
 # Then configure Hermes
 hermes memory setup    # select "byterover"
 # Or manually:
-hermes config set memory.provider byterover
+sinoclaw config set memory.provider byterover
 ```
 
 **Key features:**
@@ -477,7 +477,7 @@ Semantic long-term memory with profile recall, semantic search, explicit memory 
 ```bash
 hermes memory setup    # select "supermemory"
 # Or manually:
-hermes config set memory.provider supermemory
+sinoclaw config set memory.provider supermemory
 echo 'SUPERMEMORY_API_KEY=***' >> ~/.sinoclaw/.env
 ```
 

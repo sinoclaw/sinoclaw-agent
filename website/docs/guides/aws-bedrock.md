@@ -119,7 +119,7 @@ Use the `/model` command during a conversation:
 ## Diagnostics
 
 ```bash
-hermes doctor
+sinoclaw doctor
 ```
 
 The doctor checks:

@@ -988,7 +988,7 @@ class TestSinoclawHomeIsolation:
         from tools.tirith_security import _failure_marker_path
         with patch.dict(os.environ, {"SINOCLAW_HOME": "/custom/sinoclaw"}):
             result = _failure_marker_path()
-        assert result == "/custom/hermes/.tirith-install-failed"
+        assert result == "/custom/sinoclaw/.tirith-install-failed"
 
     def test_conftest_isolation_prevents_real_home_writes(self):
         """The conftest autouse fixture sets SINOCLAW_HOME; verify it's active."""

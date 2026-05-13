@@ -42,10 +42,10 @@ Paid [Nous Portal](https://portal.nousresearch.com) subscribers can use web sear
 hermes chat --toolsets "web,terminal"
 
 # See all available tools
-hermes tools
+sinoclaw tools
 
 # Configure tools per platform (interactive)
-hermes tools
+sinoclaw tools
 ```
 
 Common toolsets include `web`, `search`, `terminal`, `file`, `browser`, `vision`, `image_gen`, `moa`, `skills`, `tts`, `todo`, `memory`, `session_search`, `cronjob`, `code_execution`, `delegation`, `clarify`, `homeassistant`, `messaging`, `spotify`, `discord`, `discord_admin`, `debugging`, `safe`, and `rl`.
@@ -110,8 +110,8 @@ TERMINAL_SSH_KEY=~/.ssh/id_rsa
 apptainer build ~/python.sif docker://python:3.11-slim
 
 # Configure
-hermes config set terminal.backend singularity
-hermes config set terminal.singularity_image ~/python.sif
+sinoclaw config set terminal.backend singularity
+sinoclaw config set terminal.singularity_image ~/python.sif
 ```
 
 ### Modal (Serverless Cloud)
@@ -119,15 +119,15 @@ hermes config set terminal.singularity_image ~/python.sif
 ```bash
 uv pip install modal
 modal setup
-hermes config set terminal.backend modal
+sinoclaw config set terminal.backend modal
 ```
 
 ### Vercel Sandbox
 
 ```bash
 pip install 'sinoclaw-agent[vercel]'
-hermes config set terminal.backend vercel_sandbox
-hermes config set terminal.vercel_runtime node24
+sinoclaw config set terminal.backend vercel_sandbox
+sinoclaw config set terminal.vercel_runtime node24
 ```
 
 Authenticate with all three of `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, and `VERCEL_TEAM_ID`. This access-token setup is the supported path for deployments and normal long-running Sinoclaw processes on Render, Railway, Docker, and similar hosts. Supported runtimes are `node24`, `node22`, and `python3.13`; Hermes defaults to `/vercel/sandbox` as the remote workspace root.

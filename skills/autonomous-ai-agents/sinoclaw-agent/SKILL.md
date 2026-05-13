@@ -50,7 +50,7 @@ sinoclaw setup
 hermes model
 
 # Check health
-hermes doctor
+sinoclaw doctor
 ```
 
 ---
@@ -93,38 +93,38 @@ hermes chat [flags]
 ```
 sinoclaw setup [section]      Interactive wizard (model|terminal|gateway|tools|agent)
 hermes model                Interactive model/provider picker
-hermes config               View current config
-hermes config edit          Open config.yaml in $EDITOR
-hermes config set KEY VAL   Set a config value
-hermes config path          Print config.yaml path
-hermes config env-path      Print .env path
-hermes config check         Check for missing/outdated config
-hermes config migrate       Update config with new options
+sinoclaw config               View current config
+sinoclaw config edit          Open config.yaml in $EDITOR
+sinoclaw config set KEY VAL   Set a config value
+sinoclaw config path          Print config.yaml path
+sinoclaw config env-path      Print .env path
+sinoclaw config check         Check for missing/outdated config
+sinoclaw config migrate       Update config with new options
 hermes login [--provider P] OAuth login (nous, openai-codex)
 hermes logout               Clear stored auth
-hermes doctor [--fix]       Check dependencies and config
+sinoclaw doctor [--fix]       Check dependencies and config
 hermes status [--all]       Show component status
 ```
 
 ### Tools & Skills
 
 ```
-hermes tools                Interactive tool enable/disable (curses UI)
-hermes tools list           Show all tools and status
-hermes tools enable NAME    Enable a toolset
-hermes tools disable NAME   Disable a toolset
+sinoclaw tools                Interactive tool enable/disable (curses UI)
+sinoclaw tools list           Show all tools and status
+sinoclaw tools enable NAME    Enable a toolset
+sinoclaw tools disable NAME   Disable a toolset
 
-hermes skills list          List installed skills
-hermes skills search QUERY  Search the skills hub
-hermes skills install ID    Install a skill (ID can be a hub identifier OR a direct https://…/SKILL.md URL; pass --name to override when frontmatter has no name)
-hermes skills inspect ID    Preview without installing
-hermes skills config        Enable/disable skills per platform
-hermes skills check         Check for updates
-hermes skills update        Update outdated skills
-hermes skills uninstall N   Remove a hub skill
-hermes skills publish PATH  Publish to registry
-hermes skills browse        Browse all available skills
-hermes skills tap add REPO  Add a GitHub repo as skill source
+sinoclaw skills list          List installed skills
+sinoclaw skills search QUERY  Search the skills hub
+sinoclaw skills install ID    Install a skill (ID can be a hub identifier OR a direct https://…/SKILL.md URL; pass --name to override when frontmatter has no name)
+sinoclaw skills inspect ID    Preview without installing
+sinoclaw skills config        Enable/disable skills per platform
+sinoclaw skills check         Check for updates
+sinoclaw skills update        Update outdated skills
+sinoclaw skills uninstall N   Remove a hub skill
+sinoclaw skills publish PATH  Publish to registry
+sinoclaw skills browse        Browse all available skills
+sinoclaw skills tap add REPO  Add a GitHub repo as skill source
 ```
 
 ### MCP Servers
@@ -203,17 +203,17 @@ hermes profile import FILE  Import from archive
 ### Credential Pools
 
 ```
-hermes auth add             Interactive credential wizard
-hermes auth list [PROVIDER] List pooled credentials
-hermes auth remove P INDEX  Remove by provider + index
-hermes auth reset PROVIDER  Clear exhaustion status
+sinoclaw auth add             Interactive credential wizard
+sinoclaw auth list [PROVIDER] List pooled credentials
+sinoclaw auth remove P INDEX  Remove by provider + index
+sinoclaw auth reset PROVIDER  Clear exhaustion status
 ```
 
 ### Other
 
 ```
 hermes insights [--days N]  Usage analytics
-hermes update               Update to latest version
+sinoclaw update               Update to latest version
 hermes pairing list/approve/revoke  DM authorization
 hermes plugins list/install/remove  Plugin management
 hermes honcho setup/status  Honcho memory integration (requires honcho plugin)
@@ -447,14 +447,14 @@ Common "why is Hermes doing X to my output / tool calls / commands?" toggles —
 Secret redaction is **off by default** — tool output (terminal stdout, `read_file`, web content, subagent summaries, etc.) passes through unmodified. If the user wants Hermes to auto-mask strings that look like API keys, tokens, and secrets before they enter the conversation context and logs:
 
 ```bash
-hermes config set security.redact_secrets true       # enable globally
+sinoclaw config set security.redact_secrets true       # enable globally
 ```
 
 **Restart required.** `security.redact_secrets` is snapshotted at import time — toggling it mid-session (e.g. via `export SINOCLAW_REDACT_SECRETS=true` from a tool call) will NOT take effect for the running process. Tell the user to run `sinoclaw config set security.redact_secrets true` in a terminal, then start a new session. This is deliberate — it prevents an LLM from flipping the toggle on itself mid-task.
 
 Disable again with:
 ```bash
-hermes config set security.redact_secrets false
+sinoclaw config set security.redact_secrets false
 ```
 
 ### PII redaction in gateway messages
@@ -462,8 +462,8 @@ hermes config set security.redact_secrets false
 Separate from secret redaction. When enabled, the gateway hashes user IDs and strips phone numbers from the session context before it reaches the model:
 
 ```bash
-hermes config set privacy.redact_pii true    # enable
-hermes config set privacy.redact_pii false   # disable (default)
+sinoclaw config set privacy.redact_pii true    # enable
+sinoclaw config set privacy.redact_pii false   # disable (default)
 ```
 
 ### Command approval prompts
@@ -475,8 +475,8 @@ By default (`approvals.mode: manual`), Hermes prompts the user before running sh
 - `off` — skip all approval prompts (equivalent to `--yolo`)
 
 ```bash
-hermes config set approvals.mode smart       # recommended middle ground
-hermes config set approvals.mode off         # bypass everything (not recommended)
+sinoclaw config set approvals.mode smart       # recommended middle ground
+sinoclaw config set approvals.mode off         # bypass everything (not recommended)
 ```
 
 Per-invocation bypass without changing config:
@@ -838,8 +838,8 @@ Common gateway problems:
 ### Auxiliary models not working
 If `auxiliary` tasks (vision, compression, session_search) fail silently, the `auto` provider can't find a backend. Either set `OPENROUTER_API_KEY` or `GOOGLE_API_KEY`, or explicitly configure each auxiliary task's provider:
 ```bash
-hermes config set auxiliary.vision.provider <your_provider>
-hermes config set auxiliary.vision.model <model_name>
+sinoclaw config set auxiliary.vision.provider <your_provider>
+sinoclaw config set auxiliary.vision.model <model_name>
 ```
 
 ---

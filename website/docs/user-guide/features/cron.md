@@ -482,7 +482,7 @@ For `update`, pass `skills=[]` to remove all attached skills.
 Cron runs each job in a fresh agent session with no chat platform attached. By default the cron agent gets **the toolset you configured for the `cron` platform in `sinoclaw tools`** — not the CLI default, not everything under the sun.
 
 ```bash
-hermes tools
+sinoclaw tools
 # → pick the "cron" platform in the curses UI
 # → toggle toolsets on/off just like you would for Telegram/Discord/etc.
 ```

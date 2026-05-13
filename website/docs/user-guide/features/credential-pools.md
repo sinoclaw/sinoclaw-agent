@@ -35,20 +35,20 @@ If you already have an API key set in `.env`, Hermes auto-discovers it as a 1-ke
 
 ```bash
 # Add a second OpenRouter key
-hermes auth add openrouter --api-key sk-or-v1-your-second-key
+sinoclaw auth add openrouter --api-key sk-or-v1-your-second-key
 
 # Add a second Anthropic key
-hermes auth add anthropic --type api-key --api-key sk-ant-api03-your-second-key
+sinoclaw auth add anthropic --type api-key --api-key sk-ant-api03-your-second-key
 
 # Add an Anthropic OAuth credential (requires Claude Max plan + extra usage credits)
-hermes auth add anthropic --type oauth
+sinoclaw auth add anthropic --type oauth
 # Opens browser for OAuth login
 ```
 
 Check your pools:
 
 ```bash
-hermes auth list
+sinoclaw auth list
 ```
 
 Output:
@@ -70,7 +70,7 @@ The `←` marks the currently selected credential.
 Run `sinoclaw auth` with no subcommand for an interactive wizard:
 
 ```bash
-hermes auth
+sinoclaw auth
 ```
 
 This shows your full pool status and offers a menu:
@@ -144,13 +144,13 @@ When you set up a custom endpoint via `sinoclaw model`, it auto-generates a name
 
 ```bash
 # After setting up a custom endpoint via sinoclaw model:
-hermes auth list
+sinoclaw auth list
 # Shows:
 #   Together.ai (1 credential):
 #     #1  config key    api_key config:Together.ai ←
 
 # Add a second key for the same endpoint:
-hermes auth add Together.ai --api-key sk-together-second-key
+sinoclaw auth add Together.ai --api-key sk-together-second-key
 ```
 
 Custom endpoint pools are stored in `auth.json` under `credential_pool` with a `custom:` prefix:

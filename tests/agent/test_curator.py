@@ -607,7 +607,7 @@ def test_curator_review_prompt_offers_support_file_actions():
 
 
 def test_cli_unpin_refuses_bundled_skill(curator_env, capsys):
-    """hermes curator unpin must refuse bundled/hub skills too (matches pin)."""
+    """sinoclaw curator unpin must refuse bundled/hub skills too (matches pin)."""
     from sinoclaw_cli import curator as cli
     skills_dir = curator_env["home"] / "skills"
     _write_skill(skills_dir, "ship-skill")

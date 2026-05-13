@@ -26,16 +26,16 @@ All settings are stored in the `~/.sinoclaw/` directory for easy access.
 ## Managing Configuration
 
 ```bash
-hermes config              # View current configuration
-hermes config edit         # Open config.yaml in your editor
-hermes config set KEY VAL  # Set a specific value
-hermes config check        # Check for missing options (after updates)
-hermes config migrate      # Interactively add missing options
+sinoclaw config              # View current configuration
+sinoclaw config edit         # Open config.yaml in your editor
+sinoclaw config set KEY VAL  # Set a specific value
+sinoclaw config check        # Check for missing options (after updates)
+sinoclaw config migrate      # Interactively add missing options
 
 # Examples:
-hermes config set model anthropic/claude-opus-4
-hermes config set terminal.backend docker
-hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
+sinoclaw config set model anthropic/claude-opus-4
+sinoclaw config set terminal.backend docker
+sinoclaw config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 ```
 
 :::tip
@@ -428,7 +428,7 @@ terminal:
 To disable:
 
 ```bash
-hermes config set terminal.persistent_shell false
+sinoclaw config set terminal.persistent_shell false
 ```
 
 **What persists across commands:**
@@ -476,7 +476,7 @@ skills:
 **Setting values manually:**
 
 ```bash
-hermes config set skills.config.myplugin.path ~/myplugin-data
+sinoclaw config set skills.config.myplugin.path ~/myplugin-data
 ```
 
 For details on declaring config settings in your own skills, see [Creating Skills — Config Settings](/docs/developer-guide/creating-skills#config-settings-configyaml).

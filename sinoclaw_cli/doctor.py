@@ -291,7 +291,7 @@ def run_doctor(args):
     
     print()
     print(color("┌─────────────────────────────────────────────────────────┐", Colors.CYAN))
-    print(color("│                 🩺 Hermes Doctor                        │", Colors.CYAN))
+    print(color("│                 🩺 Sinoclaw Doctor                        │", Colors.CYAN))
     print(color("└─────────────────────────────────────────────────────────┘", Colors.CYAN))
     
     # =========================================================================
@@ -489,7 +489,7 @@ def run_doctor(args):
                     issues.append(
                         f"model.provider '{provider_raw}' is unknown. "
                         f"Valid providers: {known_list}. "
-                        f"Fix: run 'hermes config set model.provider <valid_provider>'"
+                        f"Fix: run 'sinoclaw config set model.provider <valid_provider>'"
                     )
 
             # Warn if model is set to a provider-prefixed name on a provider that doesn't use them
@@ -545,7 +545,7 @@ def run_doctor(args):
                             issues.append(
                                 f"No credentials found for provider '{runtime_provider}'. "
                                 f"Run 'sinoclaw setup' or set the provider's API key in {_DHH}/.env, "
-                                f"or switch providers with 'hermes config set model.provider <name>'"
+                                f"or switch providers with 'sinoclaw config set model.provider <name>'"
                             )
                 except Exception:
                     pass
@@ -589,7 +589,7 @@ def run_doctor(args):
                         check_warn(f"Auto-migration failed: {mig_err}")
                         issues.append("Run 'sinoclaw setup' to migrate config")
                 else:
-                    issues.append("Run 'hermes doctor --fix' or 'sinoclaw setup' to migrate config")
+                    issues.append("Run 'sinoclaw doctor --fix' or 'sinoclaw setup' to migrate config")
             else:
                 check_ok(f"Config version up to date (v{current_ver})")
         except Exception:
@@ -618,7 +618,7 @@ def run_doctor(args):
                     check_ok("Migrated stale root-level keys into model section")
                     fixed_count += 1
                 else:
-                    issues.append("Stale root-level provider/base_url in config.yaml — run 'hermes doctor --fix'")
+                    issues.append("Stale root-level provider/base_url in config.yaml — run 'sinoclaw doctor --fix'")
         except Exception:
             pass
 
@@ -815,7 +815,7 @@ def run_doctor(args):
                     check_ok(f"WAL checkpoint performed ({wal_size // 1024}K → {new_size // 1024}K)")
                     fixed_count += 1
                 else:
-                    issues.append("Large WAL file — run 'hermes doctor --fix' to checkpoint")
+                    issues.append("Large WAL file — run 'sinoclaw doctor --fix' to checkpoint")
             elif wal_size > 10 * 1024 * 1024:  # 10 MB
                 check_info(f"WAL file is {wal_size // (1024*1024)} MB (normal for active sessions)")
         except Exception:
@@ -877,7 +877,7 @@ def run_doctor(args):
                         check_ok(f"Fixed symlink: {_cmd_link_display}/hermes → {_venv_bin}")
                         fixed_count += 1
                     else:
-                        issues.append(f"Broken symlink at {_cmd_link_display}/hermes — run 'hermes doctor --fix'")
+                        issues.append(f"Broken symlink at {_cmd_link_display}/sinoclaw — run 'sinoclaw doctor --fix'")
             elif _cmd_link.exists():
                 # It's a regular file, not a symlink — possibly a wrapper script
                 check_ok(f"{_cmd_link_display}/hermes exists (non-symlink)")
@@ -901,7 +901,7 @@ def run_doctor(args):
                         )
                         manual_issues.append(f"Add {_cmd_link_display} to your PATH")
                 else:
-                    issues.append(f"Missing {_cmd_link_display}/hermes symlink — run 'hermes doctor --fix'")
+                    issues.append(f"Missing {_cmd_link_display}/sinoclaw symlink — run 'sinoclaw doctor --fix'")
 
     # =========================================================================
     # Check: External tools
@@ -1186,7 +1186,7 @@ def run_doctor(args):
                 print(f"\r  {color('✗', Colors.RED)} OpenRouter API {color('(out of credits — payment required)', Colors.DIM)}")
                 issues.append(
                     "OpenRouter account has insufficient credits. "
-                    "Fix: run 'hermes config set model.provider <provider>' to switch providers, "
+                    "Fix: run 'sinoclaw config set model.provider <provider>' to switch providers, "
                     "or fund your OpenRouter account at https://openrouter.ai/settings/credits"
                 )
             elif response.status_code == 429:
@@ -1599,7 +1599,7 @@ def run_doctor(args):
             print(f"  {i}. {issue}")
         print()
         if not should_fix:
-            print(color("  Tip: run 'hermes doctor --fix' to auto-fix what's possible.", Colors.DIM))
+            print(color("  Tip: run 'sinoclaw doctor --fix' to auto-fix what's possible.", Colors.DIM))
     else:
         print(color("─" * 60, Colors.GREEN))
         print(color("  All checks passed! 🎉", Colors.GREEN, Colors.BOLD))

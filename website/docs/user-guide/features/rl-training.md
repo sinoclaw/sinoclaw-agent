@@ -29,8 +29,8 @@ RL training requires:
 
 ```bash
 # Set up API keys
-hermes config set TINKER_API_KEY your-tinker-key
-hermes config set WANDB_API_KEY your-wandb-key
+sinoclaw config set TINKER_API_KEY your-tinker-key
+sinoclaw config set WANDB_API_KEY your-wandb-key
 ```
 
 When both keys are present and Python >= 3.11 is available, the `rl` toolset is automatically enabled.

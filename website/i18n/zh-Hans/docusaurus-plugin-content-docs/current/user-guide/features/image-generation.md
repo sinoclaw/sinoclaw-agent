@@ -42,7 +42,7 @@ Sinoclaw Agent 通过 FAL.ai 根据文字提示生成图像。默认内置 8 个
 执行：
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 进入 **🎨 Image Generation**，选择后端（Nous Subscription 或 FAL.ai），随后在表格中用方向键选择模型，回车确认：

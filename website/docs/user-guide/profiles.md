@@ -90,7 +90,7 @@ hermes chat -p coder -q "hello"    # works in any position
 ```bash
 hermes profile use coder
 hermes chat                   # now targets coder
-hermes tools                  # configures coder's tools
+sinoclaw tools                  # configures coder's tools
 hermes profile use default    # switch back
 ```
 
@@ -188,7 +188,7 @@ coder config set terminal.cwd /absolute/path/to/project
 `sinoclaw update` pulls code once (shared) and syncs new bundled skills to **all** profiles automatically:
 
 ```bash
-hermes update
+sinoclaw update
 # → Code updated (12 commits)
 # → Skills synced: default (up to date), coder (+2 new), assistant (+2 new)
 ```

@@ -335,7 +335,7 @@ If your skill is specialized, community-contributed, or niche, it's better suite
 ### To the Skills Hub
 
 ```bash
-hermes skills publish skills/my-skill --to github --repo owner/repo
+sinoclaw skills publish skills/my-skill --to github --repo owner/repo
 ```
 
 ### To a Custom Repository
@@ -343,7 +343,7 @@ hermes skills publish skills/my-skill --to github --repo owner/repo
 Add your repo as a tap:
 
 ```bash
-hermes skills tap add owner/repo
+sinoclaw skills tap add owner/repo
 ```
 
 Users can then search and install from your repository.

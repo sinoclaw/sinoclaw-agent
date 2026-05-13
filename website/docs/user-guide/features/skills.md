@@ -263,28 +263,28 @@ Browse, search, install, and manage skills from online registries, `skills.sh`, 
 ### Common commands
 
 ```bash
-hermes skills browse                              # Browse all hub skills (official first)
-hermes skills browse --source official            # Browse only official optional skills
-hermes skills search kubernetes                   # Search all sources
-hermes skills search react --source skills-sh     # Search the skills.sh directory
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect openai/skills/k8s           # Preview before installing
-hermes skills install openai/skills/k8s           # Install with security scan
-hermes skills install official/security/1password
-hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
-hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
-hermes skills install https://sharethis.chat/SKILL.md              # Direct URL (single-file SKILL.md)
-hermes skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
-hermes skills list --source hub                   # List hub-installed skills
-hermes skills check                               # Check installed hub skills for upstream updates
-hermes skills update                              # Reinstall hub skills with upstream changes when needed
-hermes skills audit                               # Re-scan all hub skills for security
-hermes skills uninstall k8s                       # Remove a hub skill
-hermes skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
-hermes skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
-hermes skills publish skills/my-skill --to github --repo owner/repo
-hermes skills snapshot export setup.json          # Export skill config
-hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
+sinoclaw skills browse                              # Browse all hub skills (official first)
+sinoclaw skills browse --source official            # Browse only official optional skills
+sinoclaw skills search kubernetes                   # Search all sources
+sinoclaw skills search react --source skills-sh     # Search the skills.sh directory
+sinoclaw skills search https://mintlify.com/docs --source well-known
+sinoclaw skills inspect openai/skills/k8s           # Preview before installing
+sinoclaw skills install openai/skills/k8s           # Install with security scan
+sinoclaw skills install official/security/1password
+sinoclaw skills install skills-sh/vercel-labs/json-render/json-render-react --force
+sinoclaw skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+sinoclaw skills install https://sharethis.chat/SKILL.md              # Direct URL (single-file SKILL.md)
+sinoclaw skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
+sinoclaw skills list --source hub                   # List hub-installed skills
+sinoclaw skills check                               # Check installed hub skills for upstream updates
+sinoclaw skills update                              # Reinstall hub skills with upstream changes when needed
+sinoclaw skills audit                               # Re-scan all hub skills for security
+sinoclaw skills uninstall k8s                       # Remove a hub skill
+sinoclaw skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
+sinoclaw skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
+sinoclaw skills publish skills/my-skill --to github --repo owner/repo
+sinoclaw skills snapshot export setup.json          # Export skill config
+sinoclaw skills tap add myorg/skills-repo           # Add a custom GitHub source
 ```
 
 ### Supported hub sources
@@ -311,8 +311,8 @@ These are maintained in the Hermes repository itself and install with builtin tr
 - Example:
 
 ```bash
-hermes skills browse --source official
-hermes skills install official/security/1password
+sinoclaw skills browse --source official
+sinoclaw skills install official/security/1password
 ```
 
 #### 2. skills.sh (`skills-sh`)
@@ -325,9 +325,9 @@ This is Vercel's public skills directory. Hermes can search it directly, inspect
 - Example:
 
 ```bash
-hermes skills search react --source skills-sh
-hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
-hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
+sinoclaw skills search react --source skills-sh
+sinoclaw skills inspect skills-sh/vercel-labs/json-render/json-render-react
+sinoclaw skills install skills-sh/vercel-labs/json-render/json-render-react --force
 ```
 
 #### 3. Well-known skill endpoints (`well-known`)
@@ -339,9 +339,9 @@ This is URL-based discovery from sites that publish `/.well-known/skills/index.j
 - Example:
 
 ```bash
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlify
-hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+sinoclaw skills search https://mintlify.com/docs --source well-known
+sinoclaw skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+sinoclaw skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
 ```
 
 #### 4. Direct GitHub skills (`github`)
@@ -357,8 +357,8 @@ Default taps (browsable without any setup):
 - Example:
 
 ```bash
-hermes skills install openai/skills/k8s
-hermes skills tap add myorg/skills-repo
+sinoclaw skills install openai/skills/k8s
+sinoclaw skills tap add myorg/skills-repo
 ```
 
 #### 5. ClawHub (`clawhub`)
@@ -396,8 +396,8 @@ Install a single-file `SKILL.md` directly from any HTTP(S) URL — useful when a
 - Scope: **single-file `SKILL.md`** only. Multi-file skills with `references/` or `scripts/` need a manifest and should be published via one of the other sources above.
 
 ```bash
-hermes skills install https://sharethis.chat/SKILL.md
-hermes skills install https://example.com/my-skill/SKILL.md --category productivity
+sinoclaw skills install https://sharethis.chat/SKILL.md
+sinoclaw skills install https://example.com/my-skill/SKILL.md --category productivity
 ```
 
 Name resolution, in order:
@@ -408,7 +408,7 @@ Name resolution, in order:
 
 ```bash
 # Frontmatter has no name and the URL slug is unhelpful — supply one:
-hermes skills install https://example.com/SKILL.md --name sharethis-chat
+sinoclaw skills install https://example.com/SKILL.md --name sharethis-chat
 
 # Or inside a chat session:
 /skills install https://example.com/SKILL.md --name sharethis-chat
@@ -431,7 +431,7 @@ All hub-installed skills go through a **security scanner** that checks for data 
 Use `--force` when you have reviewed a third-party skill and want to override a non-dangerous policy block:
 
 ```bash
-hermes skills install skills-sh/anthropics/skills/pdf --force
+sinoclaw skills install skills-sh/anthropics/skills/pdf --force
 ```
 
 Important behavior:
@@ -453,9 +453,9 @@ Important behavior:
 The hub now tracks enough provenance to re-check upstream copies of installed skills:
 
 ```bash
-hermes skills check          # Report which installed hub skills changed upstream
-hermes skills update         # Reinstall only the skills with updates available
-hermes skills update react   # Update one specific installed hub skill
+sinoclaw skills check          # Report which installed hub skills changed upstream
+sinoclaw skills update         # Reinstall only the skills with updates available
+sinoclaw skills update react   # Update one specific installed hub skill
 ```
 
 This uses the stored source identifier plus the current upstream bundle content hash to detect drift.
@@ -526,9 +526,9 @@ Step 1: ...
 After pushing that to GitHub, any Hermes user can subscribe and install:
 
 ```bash
-hermes skills tap add my-org/sinoclaw-skills
-hermes skills search deploy
-hermes skills install my-org/sinoclaw-skills/deploy-runbook
+sinoclaw skills tap add my-org/sinoclaw-skills
+sinoclaw skills search deploy
+sinoclaw skills install my-org/sinoclaw-skills/deploy-runbook
 ```
 
 #### Non-default paths
@@ -550,7 +550,7 @@ The `sinoclaw skills tap add` CLI defaults new taps to `path: "skills/"`; edit t
 Users can also install a single skill from any public GitHub repo without adding the whole repo as a tap:
 
 ```bash
-hermes skills install owner/repo/skills/my-workflow
+sinoclaw skills install owner/repo/skills/my-workflow
 ```
 
 Useful when you want to share one skill without asking the user to subscribe to your whole registry.
@@ -562,9 +562,9 @@ New taps are assigned `community` trust by default. Skills installed from them r
 #### Tap management
 
 ```bash
-hermes skills tap list                                # show all configured taps
-hermes skills tap add myorg/skills-repo               # add (default path: skills/)
-hermes skills tap remove myorg/skills-repo            # remove
+sinoclaw skills tap list                                # show all configured taps
+sinoclaw skills tap add myorg/skills-repo               # add (default path: skills/)
+sinoclaw skills tap remove myorg/skills-repo            # remove
 ```
 
 Inside a running session:
@@ -593,14 +593,14 @@ The protection is good, but it has one sharp edge. If you edit a bundled skill a
 ```bash
 # Safe: clears the manifest entry for this skill. Your current copy is preserved,
 # but the next sync re-baselines against it so future updates work normally.
-hermes skills reset google-workspace
+sinoclaw skills reset google-workspace
 
 # Full restore: also deletes your local copy and re-copies the current bundled
 # version. Use this when you want the pristine upstream skill back.
-hermes skills reset google-workspace --restore
+sinoclaw skills reset google-workspace --restore
 
 # Non-interactive (e.g. in scripts or TUI mode) — skip the --restore confirmation.
-hermes skills reset google-workspace --restore --yes
+sinoclaw skills reset google-workspace --restore --yes
 ```
 
 The same command works in chat as a slash command:

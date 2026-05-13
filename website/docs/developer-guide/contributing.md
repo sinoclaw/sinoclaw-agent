@@ -75,7 +75,7 @@ mkdir -p ~/.local/bin
 ln -sf "$(pwd)/venv/bin/sinoclaw" ~/.local/bin/hermes
 
 # Verify
-hermes doctor
+sinoclaw doctor
 hermes chat -q "Hello"
 ```
 

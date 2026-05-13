@@ -206,7 +206,7 @@ Set `profile.api_mode` to match the default your provider ships — it acts as a
 Provider discovery is **lazy** — triggered by the first `get_provider_profile()` or `list_providers()` call in the process. In practice this happens early at startup (`auth.py` module load extends `PROVIDER_REGISTRY` eagerly). If you need to verify your plugin loaded, run:
 
 ```bash
-hermes doctor
+sinoclaw doctor
 ```
 
 — a successful `auth_type="api_key"` profile appears under the Provider Connectivity section with a `/models` probe.
