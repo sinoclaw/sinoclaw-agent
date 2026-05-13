@@ -599,7 +599,7 @@ agent:
 # If a platform isn't listed here, its built-in default is used.
 #
 # You can use EITHER:
-#   - A preset like "hermes-cli" or "hermes-telegram" (curated tool set)
+#   - A preset like "sinoclaw-cli" or "sinoclaw-telegram" (curated tool set)
 #   - A list of individual toolsets to compose your own (see list below)
 #
 # Supported platform keys: cli, telegram, discord, whatsapp, slack, qqbot, teams, google_chat
@@ -608,8 +608,8 @@ agent:
 #
 #   # Use presets (same as defaults):
 #   platform_toolsets:
-#     cli: [hermes-cli]
-#     telegram: [hermes-telegram]
+#     cli: [sinoclaw-cli]
+#     telegram: [sinoclaw-telegram]
 #
 #   # Custom: give Telegram only web + terminal + file + planning:
 #   platform_toolsets:
@@ -624,29 +624,29 @@ agent:
 #     discord: [web, vision, skills, todo]
 #
 # If not set, defaults are:
-#   cli:           hermes-cli            (everything + cronjob management)
-#   telegram:      hermes-telegram       (terminal, file, web, vision, image, tts, browser, skills, todo, cronjob, messaging)
-#   discord:       hermes-discord        (same as telegram)
-#   whatsapp:      hermes-whatsapp       (same as telegram)
-#   slack:         hermes-slack          (same as telegram)
-#   signal:        hermes-signal         (same as telegram)
-#   homeassistant: hermes-homeassistant  (same as telegram)
-#   qqbot:            hermes-qqbot            (same as telegram)
-#   teams:            hermes-teams            (same as telegram)
-#   google_chat:      hermes-google_chat      (same as telegram)
+#   cli:           sinoclaw-cli            (everything + cronjob management)
+#   telegram:      sinoclaw-telegram       (terminal, file, web, vision, image, tts, browser, skills, todo, cronjob, messaging)
+#   discord:       sinoclaw-discord        (same as telegram)
+#   whatsapp:      sinoclaw-whatsapp       (same as telegram)
+#   slack:         sinoclaw-slack          (same as telegram)
+#   signal:        sinoclaw-signal         (same as telegram)
+#   homeassistant: sinoclaw-homeassistant  (same as telegram)
+#   qqbot:            sinoclaw-qqbot            (same as telegram)
+#   teams:            sinoclaw-teams            (same as telegram)
+#   google_chat:      sinoclaw-google_chat      (same as telegram)
 #
 platform_toolsets:
-  cli: [hermes-cli]
-  telegram: [hermes-telegram]
-  discord: [hermes-discord]
-  whatsapp: [hermes-whatsapp]
-  slack: [hermes-slack]
-  signal: [hermes-signal]
-  homeassistant: [hermes-homeassistant]
-  qqbot: [hermes-qqbot]
-  yuanbao: [hermes-yuanbao]
-  teams: [hermes-teams]
-  google_chat: [hermes-google_chat]
+  cli: [sinoclaw-cli]
+  telegram: [sinoclaw-telegram]
+  discord: [sinoclaw-discord]
+  whatsapp: [sinoclaw-whatsapp]
+  slack: [sinoclaw-slack]
+  signal: [sinoclaw-signal]
+  homeassistant: [sinoclaw-homeassistant]
+  qqbot: [sinoclaw-qqbot]
+  yuanbao: [sinoclaw-yuanbao]
+  teams: [sinoclaw-teams]
+  google_chat: [sinoclaw-google_chat]
 
 # =============================================================================
 # Gateway Platform Settings
@@ -686,12 +686,12 @@ platform_toolsets:
 #   rl           - rl_list_environments, rl_start_training, etc. (requires TINKER_API_KEY)
 #
 # PRESETS (curated bundles):
-#   hermes-cli       - All of the above except rl + send_message
-#   hermes-telegram  - terminal, file, web, vision, image_gen, tts, browser,
+#   sinoclaw-cli       - All of the above except rl + send_message
+#   sinoclaw-telegram  - terminal, file, web, vision, image_gen, tts, browser,
 #                      skills, todo, cronjob, send_message
-#   hermes-discord   - Same as hermes-telegram
-#   hermes-whatsapp  - Same as hermes-telegram
-#   hermes-slack     - Same as hermes-telegram
+#   sinoclaw-discord   - Same as sinoclaw-telegram
+#   sinoclaw-whatsapp  - Same as sinoclaw-telegram
+#   sinoclaw-slack     - Same as sinoclaw-telegram
 #
 # COMPOSITE:
 #   debugging    - terminal + web + file
