@@ -605,9 +605,9 @@ def _print_setup_summary(config: dict, sinoclaw_home):
     print(f"   {color('sinoclaw setup gateway', Colors.GREEN)}  Configure messaging")
     print(f"   {color('sinoclaw setup tools', Colors.GREEN)}    Configure tool providers")
     print()
-    print(f"   {color('hermes config', Colors.GREEN)}         View current settings")
+    print(f"   {color('sinoclaw config', Colors.GREEN)}         View current settings")
     print(
-        f"   {color('hermes config edit', Colors.GREEN)}    Open config in your editor"
+        f"   {color('sinoclaw config edit', Colors.GREEN)}    Open config in your editor"
     )
     print(f"   {color('sinoclaw config set <key> <value>', Colors.GREEN)}")
     print("                          Set a specific value")
@@ -621,9 +621,9 @@ def _print_setup_summary(config: dict, sinoclaw_home):
     print()
     print(color("🚀 Ready to go!", Colors.CYAN, Colors.BOLD))
     print()
-    print(f"   {color('hermes', Colors.GREEN)}              Start chatting")
+    print(f"   {color('sinoclaw', Colors.GREEN)}            Start chatting")
     print(f"   {color('sinoclaw gateway', Colors.GREEN)}      Start messaging gateway")
-    print(f"   {color('hermes doctor', Colors.GREEN)}       Check for issues")
+    print(f"   {color('sinoclaw doctor', Colors.GREEN)}       Check for issues")
     print()
 
 
@@ -2900,7 +2900,7 @@ def _offer_openclaw_migration(sinoclaw_home: Path) -> bool:
     print()
     print_header("OpenClaw Installation Detected")
     print_info(f"Found OpenClaw data at {openclaw_dir}")
-    print_info("Hermes can preview what would be imported before making any changes.")
+    print_info("Sinoclaw can preview what would be imported before making any changes.")
     print()
 
     if not prompt_yes_no("Would you like to see what can be imported?", default=True):
@@ -3212,7 +3212,7 @@ def run_setup_wizard(args):
     print_info(f"Data folder:  {sinoclaw_home}")
     print_info(f"Install dir:  {PROJECT_ROOT}")
     print()
-    print_info("You can edit these files directly or use 'hermes config edit'")
+    print_info("You can edit these files directly or use 'sinoclaw config edit'")
 
     if migration_ran:
         print()

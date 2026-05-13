@@ -1328,7 +1328,7 @@ def _get_config_hint_for_unknown_provider(provider_name: str) -> str:
         if not issues:
             return ""
 
-        lines = ["Config issue detected — run 'hermes doctor' for full diagnostics:"]
+        lines = ["Config issue detected — run 'sinoclaw doctor' for full diagnostics:"]
         for ci in issues:
             prefix = "ERROR" if ci.severity == "error" else "WARNING"
             lines.append(f"  [{prefix}] {ci.message}")
@@ -1419,7 +1419,7 @@ def resolve_provider(
         if _config_hint:
             msg += f"\n\n{_config_hint}"
         else:
-            msg += " Check 'hermes model' for available providers, or run 'hermes doctor' to diagnose config issues."
+            msg += " Check 'sinoclaw model' for available providers, or run 'sinoclaw doctor' to diagnose config issues."
         raise AuthError(msg, code="invalid_provider")
 
     # Explicit one-off CLI creds always mean openrouter/custom
@@ -1466,7 +1466,7 @@ def resolve_provider(
         pass  # boto3 not installed — skip Bedrock auto-detection
 
     raise AuthError(
-        "No inference provider configured. Run 'hermes model' to choose a "
+        "No inference provider configured. Run 'sinoclaw model' to choose a "
         "provider and model, or set an API key (OPENROUTER_API_KEY, "
         "OPENAI_API_KEY, etc.) in ~/.sinoclaw/.env.",
         code="no_provider_configured",
@@ -4478,10 +4478,10 @@ def _save_model_choice(model_id: str) -> None:
 
 
 def login_command(args) -> None:
-    """Deprecated: use 'hermes model' or 'sinoclaw setup' instead."""
+    """Deprecated: use 'sinoclaw model' or 'sinoclaw setup' instead."""
     print("The 'hermes login' command has been removed.")
     print("Use 'hermes auth' to manage credentials,")
-    print("'hermes model' to select a provider, or 'sinoclaw setup' for full setup.")
+    print("'sinoclaw model' to select a provider, or 'sinoclaw setup' for full setup.")
     raise SystemExit(0)
 
 
