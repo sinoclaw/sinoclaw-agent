@@ -1313,10 +1313,14 @@ install_node_deps() {
 
     if [ -f "$INSTALL_DIR/package.json" ]; then
         log_info "Installing Node.js dependencies (browser tools)..."
+        log_info "This pulls @askjo/camofox-browser + agent-browser (~300MB, several minutes on slow networks)"
         cd "$INSTALL_DIR"
-        npm install --silent 2>/dev/null || {
+        # Show npm progress so users don't think it hung. Pipe stderr to stdout
+        # so warnings/errors are visible. --no-audit --no-fund cuts noise.
+        if ! npm install --no-audit --no-fund --progress=true 2>&1 | tail -20; then
             log_warn "npm install failed (browser tools may not work)"
-        }
+            log_warn "Try manually: cd $INSTALL_DIR && npm install"
+        fi
         log_success "Node.js dependencies installed"
 
         # Install Playwright browser + system dependencies.
