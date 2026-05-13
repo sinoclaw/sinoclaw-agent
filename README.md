@@ -61,6 +61,8 @@ source ~/.bashrc    # reload shell (or: source ~/.zshrc)
 sinoclaw              # start chatting!
 ```
 
+> 🔧 **Need more install options?** See [**INSTALL.md**](INSTALL.md) for **pip/pipx**, **Docker / docker-compose**, **from-source**, **per-OS notes** (Linux/macOS/Windows/WSL2/Termux), **systemd service setup**, **upgrading**, and **troubleshooting**.
+
 ---
 
 ## Getting Started

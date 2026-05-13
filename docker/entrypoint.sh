@@ -8,7 +8,7 @@ INSTALL_DIR="/opt/sinoclaw"
 # --- Privilege dropping via gosu ---
 # When started as root (the default for Docker, or fakeroot in rootless Podman),
 # optionally remap the sinoclaw user/group to match host-side ownership, fix volume
-# permissions, then re-exec as hermes.
+# permissions, then re-exec as sinoclaw.
 if [ "$(id -u)" = "0" ]; then
     if [ -n "$SINOCLAW_UID" ] && [ "$SINOCLAW_UID" != "$(id -u sinoclaw)" ]; then
         echo "Changing sinoclaw UID to $SINOCLAW_UID"
@@ -82,7 +82,7 @@ if [ ! -f "$SINOCLAW_HOME/SOUL.md" ]; then
 fi
 
 # auth.json: bootstrap from env on first boot only.  Used by orchestrators
-# (e.g. provisioning a Hermes VPS from an account-management service) that
+# (e.g. provisioning a Sinoclaw VPS from an account-management service) that
 # need to seed the OAuth refresh credential non-interactively, instead of
 # walking the user through `sinoclaw setup` + the device-flow login dance.
 # Subsequent token rotations write back to the same file, which lives on a
@@ -137,7 +137,7 @@ esac
 
 # Final exec: two supported invocation patterns.
 #
-#   docker run <image>                 -> exec `hermes` with no args (legacy default)
+#   docker run <image>                 -> exec `sinoclaw` with no args (legacy default)
 #   docker run <image> chat -q "..."   -> exec `sinoclaw chat -q "..."` (legacy wrap)
 #   docker run <image> sleep infinity  -> exec `sleep infinity` directly
 #   docker run <image> bash            -> exec `bash` directly
