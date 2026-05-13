@@ -8,7 +8,7 @@ description: >
   running locally.
 platforms: [linux, macos, windows]
 version: 1.0.0
-author: Sinoclaw Agent + Nous Research
+author: Sinoclaw Agent + Sinoclaw Team
 license: MIT
 metadata:
   hermes:

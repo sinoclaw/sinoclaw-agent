@@ -245,7 +245,7 @@ Claude Sonnet 4 is robust against all current techniques for clearly harmful con
 
 3. **ULTRAPLINIAN costs money** — Racing 55 models means 55 API calls. Use `fast` tier (10 models) for quick tests, `ultra` only when maximum coverage is needed.
 
-4. **Hermes models don't need jailbreaking** — `nousresearch/sinoclaw-3-*` and `sinoclaw-4-*` are already uncensored. Use them directly.
+4. **Hermes models don't need jailbreaking** — `sinoclaw/sinoclaw-3-*` and `sinoclaw-4-*` are already uncensored. Use them directly.
 
 5. **Always use `load_godmode.py` in execute_code** — The individual scripts (`parseltongue.py`, `godmode_race.py`, `auto_jailbreak.py`) have argparse CLI entry points. When loaded via `exec()` in execute_code, `__name__` is `'__main__'` and argparse fires, crashing the script. The loader handles this.
 

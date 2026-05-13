@@ -6,7 +6,7 @@ description: "Building RL training environments, running evaluation benchmarks, 
 
 # Environments, Benchmarks & Data Generation
 
-Hermes Agent includes a full environment framework that connects its tool-calling capabilities to the [Atropos](https://github.com/NousResearch/atropos) RL training framework. This enables three workflows:
+Hermes Agent includes a full environment framework that connects its tool-calling capabilities to the [Atropos](https://github.com/sinoclaw/atropos) RL training framework. This enables three workflows:
 
 1. **RL Training** — Train language models on multi-turn agentic tasks with GRPO
 2. **Benchmarks** — Evaluate models on standardised agentic benchmarks
@@ -202,7 +202,7 @@ python environments/benchmarks/terminalbench_2/terminalbench2_env.py evaluate \
     --env.task_filter fix-git,git-multibranch
 ```
 
-Dataset: [NousResearch/terminal-bench-2](https://huggingface.co/datasets/NousResearch/terminal-bench-2) on HuggingFace.
+Dataset: [sinoclaw/terminal-bench-2](https://huggingface.co/datasets/sinoclaw/terminal-bench-2) on HuggingFace.
 
 ### TBLite (OpenThoughts Terminal Bench Lite)
 
@@ -223,7 +223,7 @@ python environments/benchmarks/tblite/tblite_env.py evaluate \
     --config environments/benchmarks/tblite/default.yaml
 ```
 
-TBLite is a thin subclass of TerminalBench2 — only the dataset and timeouts differ. Created by the OpenThoughts Agent team (Snorkel AI + Bespoke Labs). Dataset: [NousResearch/openthoughts-tblite](https://huggingface.co/datasets/NousResearch/openthoughts-tblite).
+TBLite is a thin subclass of TerminalBench2 — only the dataset and timeouts differ. Created by the OpenThoughts Agent team (Snorkel AI + Bespoke Labs). Dataset: [sinoclaw/openthoughts-tblite](https://huggingface.co/datasets/sinoclaw/openthoughts-tblite).
 
 ### YC-Bench
 
@@ -447,8 +447,8 @@ env:
   agent_temperature: 0.8
   terminal_backend: "modal"
   terminal_timeout: 300
-  dataset_name: "NousResearch/terminal-bench-2"
-  tokenizer_name: "NousResearch/Hermes-3-Llama-3.1-8B"
+  dataset_name: "sinoclaw/terminal-bench-2"
+  tokenizer_name: "sinoclaw/Hermes-3-Llama-3.1-8B"
   use_wandb: true
   wandb_name: "my-benchmark"
 
@@ -472,7 +472,7 @@ python my_env.py evaluate \
 ### For all environments
 
 - Python >= 3.11
-- `atroposlib`: `pip install git+https://github.com/NousResearch/atropos.git`
+- `atroposlib`: `pip install git+https://github.com/sinoclaw/atropos.git`
 - An LLM API key (OpenRouter, OpenAI, or self-hosted VLLM/SGLang)
 
 ### For Modal-sandboxed benchmarks (TB2, TBLite)

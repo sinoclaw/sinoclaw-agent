@@ -4,7 +4,7 @@ This document outlines the security protocols, trust model, and deployment harde
 
 ## 1. Vulnerability Reporting
 
-Sinoclaw Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/NousResearch/sinoclaw-agent/security/advisories/new) or by emailing **security@nousresearch.com**. Do not open public issues for security vulnerabilities.
+Sinoclaw Agent does **not** operate a bug bounty program. Security issues should be reported via [GitHub Security Advisories (GHSA)](https://github.com/sinoclaw/sinoclaw-agent/security/advisories/new) or by emailing **security@sinoclaw.com**. Do not open public issues for security vulnerabilities.
 
 ### Required Submission Details
 - **Title & Severity:** Concise description and CVSS score/rating.
@@ -80,5 +80,5 @@ The following scenarios are **not** considered security breaches:
 ## 5. Disclosure Process
 
 - **Coordinated Disclosure:** 90-day window or until a fix is released, whichever comes first.
-- **Communication:** All updates occur via the GHSA thread or email correspondence with security@nousresearch.com.
+- **Communication:** All updates occur via the GHSA thread or email correspondence with security@sinoclaw.com.
 - **Credits:** Reporters are credited in release notes unless anonymity is requested.

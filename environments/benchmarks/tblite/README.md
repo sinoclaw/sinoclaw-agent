@@ -14,8 +14,8 @@ OpenThoughts-TBLite was created by the [OpenThoughts](https://www.openthoughts.a
 
 We converted the source into the same schema used by our Terminal-Bench 2.0 environment (pre-built Docker Hub images, base64-encoded test tarballs, etc.) and published it as:
 
-- **Dataset (ours):** [NousResearch/openthoughts-tblite](https://huggingface.co/datasets/NousResearch/openthoughts-tblite)
-- **Docker images:** `nousresearch/tblite-<task-name>:latest` on Docker Hub (100 images)
+- **Dataset (ours):** [sinoclaw/openthoughts-tblite](https://huggingface.co/datasets/sinoclaw/openthoughts-tblite)
+- **Docker images:** `sinoclaw/tblite-<task-name>:latest` on Docker Hub (100 images)
 
 The conversion script is at `scripts/prepare_tblite_dataset.py`.
 
@@ -55,7 +55,7 @@ python environments/benchmarks/tblite/tblite_env.py evaluate \
 
 | Setting        | TB2                              | TBLite                                  |
 |----------------|----------------------------------|-----------------------------------------|
-| Dataset        | `NousResearch/terminal-bench-2`  | `NousResearch/openthoughts-tblite`      |
+| Dataset        | `sinoclaw/terminal-bench-2`  | `sinoclaw/openthoughts-tblite`      |
 | Tasks          | 89                               | 100                                     |
 | Task timeout   | 1800s (30 min)                   | 1200s (20 min)                          |
 | Wandb name     | `terminal-bench-2`               | `openthoughts-tblite`                   |

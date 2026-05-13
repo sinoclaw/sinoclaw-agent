@@ -391,7 +391,7 @@ npm config set registry https://registry.npmmirror.com
 - Run `sinoclaw doctor` — diagnoses 30+ common issues
 - Browse logs: `sinoclaw logs --follow`
 - Open an issue: https://github.com/sinoclaw/sinoclaw-agent/issues
-- Discord: https://discord.gg/NousResearch
+- Discord: https://github.com/sinoclaw/sinoclaw-agent
 
 ---
 

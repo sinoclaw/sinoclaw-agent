@@ -66,7 +66,7 @@ Watch a GitHub repo (set `GITHUB_TOKEN` in `~/.sinoclaw/.env` to avoid the 60 re
 
 ```bash
 python $SINOCLAW_HOME/skills/devops/watchers/scripts/watch_github.py \
-  --name sinoclaw-issues --repo NousResearch/sinoclaw-agent --scope issues
+  --name sinoclaw-issues --repo sinoclaw/sinoclaw-agent --scope issues
 ```
 
 Poll an arbitrary JSON API:

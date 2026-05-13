@@ -14,7 +14,7 @@ env:
   group_size: 4
   terminal_backend: "modal"
   tool_call_parser: "hermes"
-  tokenizer_name: "NousResearch/DeepHermes-3-Llama-3-3B-Preview"
+  tokenizer_name: "sinoclaw/DeepHermes-3-Llama-3-3B-Preview"
   dataset_name: "bigcode/humanevalpack"
   dataset_split: "test"
   prompt_field: "prompt"
@@ -29,6 +29,6 @@ env:
 
 openai:
   base_url: "http://localhost:8000/v1"
-  model_name: "NousResearch/DeepHermes-3-Llama-3-3B-Preview"
+  model_name: "sinoclaw/DeepHermes-3-Llama-3-3B-Preview"
   server_type: "openai"
   api_key: ""

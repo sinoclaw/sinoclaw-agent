@@ -17,7 +17,7 @@ Migrate a user's OpenClaw customization footprint into Sinoclaw Agent. Imports S
 | Source | Optional — install with `sinoclaw skills install official/migration/openclaw-migration` |
 | Path | `optional-skills/migration/openclaw-migration` |
 | Version | `1.0.0` |
-| Author | Sinoclaw Agent (Nous Research) |
+| Author | Sinoclaw Agent (Sinoclaw Team) |
 | License | MIT |
 | Tags | `Migration`, `OpenClaw`, `Hermes`, `Memory`, `Persona`, `Import` |
 | Related skills | [`sinoclaw-agent`](/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-sinoclaw-agent) |
