@@ -437,7 +437,7 @@ def _get_named_custom_provider(requested_provider: str) -> Optional[Dict[str, An
         logger.warning(
             "custom_providers in config.yaml is a dict, not a list. "
             "Each entry must be prefixed with '-' in YAML. "
-            "Run 'hermes doctor' for details."
+            "Run 'sinoclaw doctor' for details."
         )
         return None
 
@@ -711,7 +711,7 @@ def _resolve_azure_foundry_runtime(
     base_url = explicit_base_url_clean or cfg_base_url or env_base_url
     if not base_url:
         raise AuthError(
-            "Azure Foundry requires a base URL. Set it via 'hermes model' or "
+            "Azure Foundry requires a base URL. Set it via 'sinoclaw model' or "
             "the AZURE_FOUNDRY_BASE_URL environment variable."
         )
 
@@ -727,7 +727,7 @@ def _resolve_azure_foundry_runtime(
     if not api_key:
         raise AuthError(
             "Azure Foundry requires an API key. Set AZURE_FOUNDRY_API_KEY in "
-            "~/.sinoclaw/.env or run 'hermes model' to configure."
+            "~/.sinoclaw/.env or run 'sinoclaw model' to configure."
         )
 
     # Anthropic SDK appends /v1/messages itself, so strip any trailing /v1

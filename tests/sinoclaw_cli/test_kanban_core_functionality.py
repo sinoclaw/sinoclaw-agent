@@ -1179,7 +1179,7 @@ def test_list_profiles_on_disk_custom_root(tmp_path, monkeypatch):
         (d / "config.yaml").write_text("model: {}\n")
 
     names = kb.list_profiles_on_disk()
-    assert names == ["researcher", "writer"]
+    assert names == ["default", "researcher", "writer"]
 
 
 def test_known_assignees_merges_disk_and_board(tmp_path, monkeypatch):

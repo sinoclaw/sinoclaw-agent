@@ -23,7 +23,7 @@ def _setup_doctor_env(monkeypatch, tmp_path, venv_name="venv"):
     # Create a fake venv entry point
     venv_bin_dir = project / venv_name / "bin"
     venv_bin_dir.mkdir(parents=True, exist_ok=True)
-    sinoclaw_bin = venv_bin_dir / "hermes"
+    sinoclaw_bin = venv_bin_dir / "sinoclaw"
     sinoclaw_bin.write_text("#!/usr/bin/env python\n# entry point\n")
     sinoclaw_bin.chmod(0o755)
 
@@ -77,7 +77,7 @@ class TestDoctorCommandInstallation:
         # Create the command link dir with correct symlink
         cmd_link_dir = tmp_path / ".local" / "bin"
         cmd_link_dir.mkdir(parents=True)
-        cmd_link = cmd_link_dir / "hermes"
+        cmd_link = cmd_link_dir / "sinoclaw"
         cmd_link.symlink_to(sinoclaw_bin)
 
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -111,7 +111,7 @@ class TestDoctorCommandInstallation:
         assert "Created symlink" in out
 
         # Verify the symlink was actually created
-        cmd_link = tmp_path / ".local" / "bin" / "hermes"
+        cmd_link = tmp_path / ".local" / "bin" / "sinoclaw"
         assert cmd_link.is_symlink()
         assert cmd_link.resolve() == sinoclaw_bin.resolve()
 
@@ -122,7 +122,7 @@ class TestDoctorCommandInstallation:
         # Create a symlink pointing to the wrong target
         cmd_link_dir = tmp_path / ".local" / "bin"
         cmd_link_dir.mkdir(parents=True)
-        cmd_link = cmd_link_dir / "hermes"
+        cmd_link = cmd_link_dir / "sinoclaw"
         wrong_target = tmp_path / "wrong_hermes"
         wrong_target.write_text("#!/usr/bin/env python\n")
         cmd_link.symlink_to(wrong_target)
@@ -140,7 +140,7 @@ class TestDoctorCommandInstallation:
         # Create a symlink pointing to wrong target
         cmd_link_dir = tmp_path / ".local" / "bin"
         cmd_link_dir.mkdir(parents=True)
-        cmd_link = cmd_link_dir / "hermes"
+        cmd_link = cmd_link_dir / "sinoclaw"
         wrong_target = tmp_path / "wrong_hermes"
         wrong_target.write_text("#!/usr/bin/env python\n")
         cmd_link.symlink_to(wrong_target)
@@ -196,10 +196,10 @@ class TestDoctorCommandInstallation:
         home, project, _ = _setup_doctor_env(monkeypatch, tmp_path, venv_name=".venv")
 
         # Create the command link with correct symlink
-        sinoclaw_bin = project / ".venv" / "bin" / "hermes"
+        sinoclaw_bin = project / ".venv" / "bin" / "sinoclaw"
         cmd_link_dir = tmp_path / ".local" / "bin"
         cmd_link_dir.mkdir(parents=True)
-        cmd_link = cmd_link_dir / "hermes"
+        cmd_link = cmd_link_dir / "sinoclaw"
         cmd_link.symlink_to(sinoclaw_bin)
 
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -215,7 +215,7 @@ class TestDoctorCommandInstallation:
 
         cmd_link_dir = tmp_path / ".local" / "bin"
         cmd_link_dir.mkdir(parents=True)
-        cmd_link = cmd_link_dir / "hermes"
+        cmd_link = cmd_link_dir / "sinoclaw"
         cmd_link.write_text("#!/bin/sh\nexec python -m sinoclaw_cli.main \"$@\"\n")
 
         monkeypatch.setattr(Path, "home", lambda: tmp_path)
