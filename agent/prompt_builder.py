@@ -90,7 +90,7 @@ _SINOCLAW_MD_NAMES = (".sinoclaw.md", "SINOCLAW.md")
 
 
 def _find_sinoclaw_md(cwd: Path) -> Optional[Path]:
-    """Discover the nearest ``.sinoclaw.md`` or ``HERMES.md``.
+    """Discover the nearest ``.sinoclaw.md`` or ``SINOCLAW.md``.
 
     Search order: *cwd* first, then each parent directory up to (and
     including) the git repository root.  Returns the first match, or
@@ -1319,7 +1319,7 @@ def load_soul_md() -> Optional[str]:
 
 
 def _load_sinoclaw_md(cwd_path: Path) -> str:
-    """.sinoclaw.md / HERMES.md — walk to git root."""
+    """.sinoclaw.md / SINOCLAW.md — walk to git root."""
     sinoclaw_md_path = _find_sinoclaw_md(cwd_path)
     if not sinoclaw_md_path:
         return ""
@@ -1407,7 +1407,7 @@ def build_context_files_prompt(cwd: Optional[str] = None, skip_soul: bool = Fals
     """Discover and load context files for the system prompt.
 
     Priority (first found wins — only ONE project context type is loaded):
-      1. .sinoclaw.md / HERMES.md  (walk to git root)
+      1. .sinoclaw.md / SINOCLAW.md  (walk to git root)
       2. AGENTS.md / agents.md   (cwd only)
       3. CLAUDE.md / claude.md   (cwd only)
       4. .cursorrules / .cursor/rules/*.mdc  (cwd only)
