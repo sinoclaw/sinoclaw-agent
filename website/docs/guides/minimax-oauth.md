@@ -51,7 +51,7 @@ After the first login, credentials are stored under `~/.sinoclaw/auth.json` and 
 You can trigger a login without going through the model picker:
 
 ```bash
-hermes auth add minimax-oauth
+sinoclaw auth add minimax-oauth
 ```
 
 ### China region
@@ -59,7 +59,7 @@ hermes auth add minimax-oauth
 If your account is on the China platform (`minimaxi.com`), pass `--region cn`:
 
 ```bash
-hermes auth add minimax-oauth --region cn
+sinoclaw auth add minimax-oauth --region cn
 ```
 
 ### Remote / headless sessions
@@ -67,7 +67,7 @@ hermes auth add minimax-oauth --region cn
 On servers or containers where no browser is available:
 
 ```bash
-hermes auth add minimax-oauth --no-browser
+sinoclaw auth add minimax-oauth --no-browser
 ```
 
 Hermes will print the verification URL and user code — open the URL on any device and enter the code when prompted.
@@ -87,7 +87,7 @@ Token refresh (standard OAuth `refresh_token` grant) runs automatically at each 
 ## Checking Login Status
 
 ```bash
-hermes doctor
+sinoclaw doctor
 ```
 
 The `◆ Auth Providers` section will show:
@@ -113,8 +113,8 @@ hermes model
 Or set the model directly:
 
 ```bash
-hermes config set model MiniMax-M2.7
-hermes config set provider minimax-oauth
+sinoclaw config set model MiniMax-M2.7
+sinoclaw config set provider minimax-oauth
 ```
 
 ## Configuration Reference
@@ -197,7 +197,7 @@ Hermes detected that the `state` value returned by the authorization server does
 If `hermes` cannot open a browser window, use `--no-browser`:
 
 ```bash
-hermes auth add minimax-oauth --no-browser
+sinoclaw auth add minimax-oauth --no-browser
 ```
 
 Hermes prints the URL and code. Open the URL on any device and complete the flow there.
@@ -213,7 +213,7 @@ The auth store has no credentials for `minimax-oauth`. You have not logged in ye
 To remove stored MiniMax OAuth credentials:
 
 ```bash
-hermes auth remove minimax-oauth
+sinoclaw auth remove minimax-oauth
 ```
 
 ## See Also
@@ -221,4 +221,4 @@ hermes auth remove minimax-oauth
 - [AI Providers reference](../integrations/providers.md)
 - [Environment Variables](../reference/environment-variables.md)
 - [Configuration](../user-guide/configuration.md)
-- [hermes doctor](../reference/cli-commands.md)
+- [sinoclaw doctor](../reference/cli-commands.md)

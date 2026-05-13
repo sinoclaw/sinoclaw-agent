@@ -186,7 +186,7 @@ If you have not configured Gemini yet, exit the session and run `sinoclaw model`
 ## Diagnostics
 
 ```bash
-hermes doctor
+sinoclaw doctor
 ```
 
 The doctor checks:

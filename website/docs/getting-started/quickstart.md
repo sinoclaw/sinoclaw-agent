@@ -128,9 +128,9 @@ Hermes separates secrets from normal config:
 The easiest way to set values correctly is through the CLI:
 
 ```bash
-hermes config set model anthropic/claude-opus-4.6
-hermes config set terminal.backend docker
-hermes config set OPENROUTER_API_KEY sk-or-...
+sinoclaw config set model anthropic/claude-opus-4.6
+sinoclaw config set terminal.backend docker
+sinoclaw config set OPENROUTER_API_KEY sk-or-...
 ```
 
 The right value goes to the right file automatically.
@@ -233,8 +233,8 @@ Connect [Telegram](/docs/user-guide/messaging/telegram), [Discord](/docs/user-gu
 For safety, run the agent in a Docker container or on a remote server:
 
 ```bash
-hermes config set terminal.backend docker    # Docker isolation
-hermes config set terminal.backend ssh       # Remote server
+sinoclaw config set terminal.backend docker    # Docker isolation
+sinoclaw config set terminal.backend ssh       # Remote server
 ```
 
 ### Voice mode
@@ -249,8 +249,8 @@ Then in the CLI: `/voice on`. Press `Ctrl+B` to record. See [Voice Mode](../user
 ### Skills
 
 ```bash
-hermes skills search kubernetes
-hermes skills install openai/skills/k8s
+sinoclaw skills search kubernetes
+sinoclaw skills install openai/skills/k8s
 ```
 
 Or use `/skills` inside a chat session.

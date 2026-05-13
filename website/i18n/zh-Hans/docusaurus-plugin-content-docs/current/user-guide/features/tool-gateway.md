@@ -67,7 +67,7 @@ Your Nous subscription includes the Tool Gateway.
 也可在交互式工具配置中逐项启用：
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 选择工具类别（Web、Browser、Image Generation、TTS），再将提供商选为 **Nous Subscription**。这会在配置里把对应工具的 `use_gateway` 设为 `true`。
@@ -118,7 +118,7 @@ browser:
 对单个工具停用网关：
 
 ```bash
-hermes tools    # 选择该工具 → 选直连提供商
+sinoclaw tools    # 选择该工具 → 选直连提供商
 ```
 
 或在配置中设 `use_gateway: false`：

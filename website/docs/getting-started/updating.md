@@ -11,7 +11,7 @@ description: "How to update Sinoclaw Agent to the latest version or uninstall it
 Update to the latest version with a single command:
 
 ```bash
-hermes update
+sinoclaw update
 ```
 
 This pulls the latest code, updates dependencies, and prompts you to configure any new options that were added since your last update.
@@ -39,7 +39,7 @@ Want to know if you're behind `origin/main` before actually pulling? Run `sinocl
 For high-value profiles (production gateways, shared team installs) you can opt into a full pre-pull backup of `SINOCLAW_HOME` (config, auth, sessions, skills, pairing):
 
 ```bash
-hermes update --backup
+sinoclaw update --backup
 ```
 
 Or make it the default for every run:
@@ -132,8 +132,8 @@ uv pip install -e ".[all]"
 uv pip install -e "./tinker-atropos"
 
 # Check for new config options
-hermes config check
-hermes config migrate   # Interactively add any missing options
+sinoclaw config check
+sinoclaw config migrate   # Interactively add any missing options
 ```
 
 ### Rollback instructions

@@ -71,8 +71,8 @@ OPEN_WEBUI_ENABLE_SERVICE=false bash scripts/setup_open_webui.sh
 ### 1. Enable the API server
 
 ```bash
-hermes config set API_SERVER_ENABLED true
-hermes config set API_SERVER_KEY your-secret-key
+sinoclaw config set API_SERVER_ENABLED true
+sinoclaw config set API_SERVER_KEY your-secret-key
 ```
 
 `sinoclaw config set` auto-routes the flag to `config.yaml` and the secret to `~/.sinoclaw/.env`. If the gateway is already running, restart it so the change takes effect:

@@ -79,7 +79,7 @@ The gateway is per-tool. Turn it on for just what you want:
 Switch any tool at any time via:
 
 ```bash
-hermes tools          # Interactive picker for each tool category
+sinoclaw tools          # Interactive picker for each tool category
 ```
 
 Select the tool, pick **Nous Subscription** as the provider (or any direct provider you prefer). No config editing required.

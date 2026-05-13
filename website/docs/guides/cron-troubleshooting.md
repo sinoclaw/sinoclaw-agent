@@ -104,7 +104,7 @@ cron:
 ### Check 1: Verify skills are installed
 
 ```bash
-hermes skills list
+sinoclaw skills list
 ```
 
 Skills must be installed before they can be attached to cron jobs. If a skill is missing, install it first with `sinoclaw skills install <skill-name>` or via `/skills` in the CLI.
@@ -203,7 +203,7 @@ hermes cron list                    # Show all jobs, states, next_run times
 hermes cron run <job_id>            # Schedule for next tick (for testing)
 hermes cron edit <job_id>           # Fix configuration issues
 hermes logs                         # View recent Hermes logs
-hermes skills list                  # Verify installed skills
+sinoclaw skills list                  # Verify installed skills
 ```
 
 ---

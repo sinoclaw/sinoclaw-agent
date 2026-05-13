@@ -40,7 +40,7 @@ If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, 
 Run `sinoclaw tools`, navigate to **Web Search & Extract**, and pick a provider. The wizard prompts for the required URL or API key and writes it to your config.
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 ---
@@ -337,7 +337,7 @@ Switch to a self-hosted instance (see [Option A](#option-a--self-host-with-docke
 For agents that need to use SearXNG via `curl` directly (e.g. as a fallback when the web toolset isn't available), install the `searxng-search` optional skill:
 
 ```bash
-hermes skills install official/research/searxng-search
+sinoclaw skills install official/research/searxng-search
 ```
 
 This adds a skill that teaches the agent how to:

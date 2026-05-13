@@ -29,7 +29,7 @@ def test_format_managed_message_homebrew(monkeypatch):
 def test_recommended_update_command_defaults_to_sinoclaw_update(monkeypatch):
     monkeypatch.delenv("SINOCLAW_MANAGED", raising=False)
 
-    assert recommended_update_command() == "hermes update"
+assert recommended_update_command() == "sinoclaw update"
 
 
 def test_cmd_update_blocks_managed_homebrew(monkeypatch, capsys):

@@ -9,14 +9,14 @@ description: "Official optional skills shipped with sinoclaw-agent — install v
 Optional skills ship with sinoclaw-agent under `optional-skills/` but are **not active by default**. Install them explicitly:
 
 ```bash
-hermes skills install official/<category>/<skill>
+sinoclaw skills install official/<category>/<skill>
 ```
 
 For example:
 
 ```bash
-hermes skills install official/blockchain/solana
-hermes skills install official/mlops/flash-attention
+sinoclaw skills install official/blockchain/solana
+sinoclaw skills install official/mlops/flash-attention
 ```
 
 Each skill below links to a dedicated page with its full definition, setup, and usage.
@@ -24,7 +24,7 @@ Each skill below links to a dedicated page with its full definition, setup, and 
 To uninstall:
 
 ```bash
-hermes skills uninstall <skill-name>
+sinoclaw skills uninstall <skill-name>
 ```
 
 ## autonomous-ai-agents

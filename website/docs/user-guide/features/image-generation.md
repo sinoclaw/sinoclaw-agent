@@ -43,7 +43,7 @@ If the managed gateway returns `HTTP 4xx` for a specific model, that model isn't
 Run the tools command:
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 Navigate to **🎨 Image Generation**, pick your backend (Nous Subscription or FAL.ai), then the picker shows all supported models in a column-aligned table — arrow keys to navigate, Enter to select:

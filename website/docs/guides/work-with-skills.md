@@ -21,7 +21,7 @@ Every Hermes installation ships with bundled skills. See what's available:
 /skills
 
 # Or from the CLI:
-hermes skills list
+sinoclaw skills list
 ```
 
 This shows a compact list with names and descriptions:
@@ -90,13 +90,13 @@ Official optional skills ship with Hermes but aren't active by default. Install 
 
 ```bash
 # Install an official optional skill
-hermes skills install official/research/arxiv
+sinoclaw skills install official/research/arxiv
 
 # Install from the hub in a chat session
 /skills install official/creative/songwriting-and-ai-music
 
 # Install a single-file SKILL.md directly from any HTTP(S) URL
-hermes skills install https://sharethis.chat/SKILL.md
+sinoclaw skills install https://sharethis.chat/SKILL.md
 /skills install https://example.com/SKILL.md --name my-skill
 ```
 
@@ -113,7 +113,7 @@ Installed skills take effect in new sessions. If you want it available in the cu
 
 ```bash
 # Check it's there
-hermes skills list | grep arxiv
+sinoclaw skills list | grep arxiv
 
 # Or in chat
 /skills search arxiv
@@ -159,10 +159,10 @@ Manage skill config from the CLI:
 
 ```bash
 # Interactive config for a specific skill
-hermes skills config gif-search
+sinoclaw skills config gif-search
 
 # View all skill config
-hermes config get skills.config
+sinoclaw config get skills.config
 ```
 
 ---
@@ -251,7 +251,7 @@ The agent can also create and update skills itself using `skill_manage`. After s
 Control which skills are available on which platforms:
 
 ```bash
-hermes skills
+sinoclaw skills
 ```
 
 This opens an interactive TUI where you can enable or disable skills per platform (CLI, Telegram, Discord, etc.). Useful when you want certain skills only available in specific contexts — for example, keeping development skills off Telegram.

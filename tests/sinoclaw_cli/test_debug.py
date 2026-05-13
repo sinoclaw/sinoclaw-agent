@@ -790,7 +790,7 @@ class TestRunDebug:
         run_debug(args)
 
         out = capsys.readouterr().out
-        assert "hermes debug" in out
+        assert "sinoclaw debug" in out
         assert "share" in out
         assert "delete" in out
 

@@ -20,7 +20,7 @@ class FakeVikingClient:
 
 class TestOpenVikingSummaryUriNormalization:
     def test_normalize_summary_uri_maps_pseudo_files_to_parent_directory(self):
-        assert OpenVikingMemoryProvider._normalize_summary_uri("viking://user/hermes/.overview.md") == "viking://user/sinoclaw"
+        assert OpenVikingMemoryProvider._normalize_summary_uri("viking://user/hermes/.overview.md") == "viking://user/hermes"
         assert OpenVikingMemoryProvider._normalize_summary_uri("viking://resources/.abstract.md") == "viking://resources"
         assert OpenVikingMemoryProvider._normalize_summary_uri("viking://") == "viking://"
         assert OpenVikingMemoryProvider._normalize_summary_uri("viking://user/hermes/memories/profile.md") == "viking://user/hermes/memories/profile.md"
@@ -33,7 +33,7 @@ class TestOpenVikingRead:
             {
                 (
                     "/api/v1/content/overview",
-                    (("uri", "viking://user/sinoclaw"),),
+                    (("uri", "viking://user/hermes"),),
                 ): {"result": {"content": "overview text"}},
             }
         )
@@ -41,12 +41,12 @@ class TestOpenVikingRead:
         result = json.loads(provider._tool_read({"uri": "viking://user/hermes/.overview.md", "level": "overview"}))
 
         assert result["uri"] == "viking://user/hermes/.overview.md"
-        assert result["resolved_uri"] == "viking://user/sinoclaw"
+        assert result["resolved_uri"] == "viking://user/hermes"
         assert result["level"] == "overview"
         assert result["content"] == "overview text"
         assert provider._client.calls == [(
             "/api/v1/content/overview",
-            {"uri": "viking://user/sinoclaw"},
+            {"uri": "viking://user/hermes"},
         )]
 
     def test_full_read_keeps_original_uri(self):
@@ -107,7 +107,7 @@ class TestOpenVikingRead:
             {
                 (
                     "/api/v1/content/overview",
-                    (("uri", "viking://user/sinoclaw"),),
+                    (("uri", "viking://user/hermes"),),
                 ): {"result": "overview"},
             }
         )
@@ -117,7 +117,7 @@ class TestOpenVikingRead:
         assert result["content"] == "overview"
         # No fs/stat call — normalization already determined it's a directory.
         assert provider._client.calls == [
-            ("/api/v1/content/overview", {"uri": "viking://user/sinoclaw"}),
+            ("/api/v1/content/overview", {"uri": "viking://user/hermes"}),
         ]
 
     def test_overview_directory_uri_uses_stat_probe_then_overview(self):
@@ -185,7 +185,7 @@ class TestOpenVikingRead:
             {
                 (
                     "/api/v1/content/overview",
-                    (("uri", "viking://user/sinoclaw"),),
+                    (("uri", "viking://user/hermes"),),
                 ): RuntimeError("500 Internal Server Error"),
             }
         )
@@ -197,7 +197,7 @@ class TestOpenVikingRead:
             pass
 
         assert provider._client.calls == [
-            ("/api/v1/content/overview", {"uri": "viking://user/sinoclaw"}),
+            ("/api/v1/content/overview", {"uri": "viking://user/hermes"}),
         ]
 
 
@@ -208,7 +208,7 @@ class TestOpenVikingBrowse:
             {
                 (
                     "/api/v1/fs/ls",
-                    (("uri", "viking://user/sinoclaw"),),
+                    (("uri", "viking://user/hermes"),),
                 ): {
                     "result": {
                         "entries": [
@@ -220,14 +220,14 @@ class TestOpenVikingBrowse:
             }
         )
 
-        result = json.loads(provider._tool_browse({"action": "list", "path": "viking://user/sinoclaw"}))
+        result = json.loads(provider._tool_browse({"action": "list", "path": "viking://user/hermes"}))
 
-        assert result["path"] == "viking://user/sinoclaw"
+        assert result["path"] == "viking://user/hermes"
         assert result["entries"] == [
             {"name": "memories", "uri": "viking://user/hermes/memories", "type": "dir", "abstract": ""},
             {"name": "profile.md", "uri": "viking://user/hermes/memories/profile.md", "type": "file", "abstract": "Profile"},
         ]
         assert provider._client.calls == [(
             "/api/v1/fs/ls",
-            {"uri": "viking://user/sinoclaw"},
+            {"uri": "viking://user/hermes"},
         )]

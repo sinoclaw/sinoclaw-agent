@@ -180,7 +180,7 @@ Check:
 Try these checks:
 
 ```bash
-hermes doctor
+sinoclaw doctor
 hermes status
 hermes acp
 ```

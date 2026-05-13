@@ -17,7 +17,7 @@ Unlike Hermes' built-in OAuth integrations (Google, GitHub Copilot, Codex), Spot
 The fastest path. Run:
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 Scroll to `🎵 Spotify`, press space to toggle it on, then `s` to save. Hermes drops you straight into the OAuth flow — if you don't have a Spotify app yet, it walks you through creating one inline. Once you finish, the toolset is enabled AND authenticated in one pass.
@@ -29,7 +29,7 @@ If you prefer to do the steps separately (or you're re-authing later), use the t
 #### 1. Enable the toolset
 
 ```bash
-hermes tools
+sinoclaw tools
 ```
 
 Toggle `🎵 Spotify` on, save, and when the inline wizard opens, dismiss it (Ctrl+C). The toolset stays on; only the auth step is deferred.
@@ -37,7 +37,7 @@ Toggle `🎵 Spotify` on, save, and when the inline wizard opens, dismiss it (Ct
 #### 2. Run the login wizard
 
 ```bash
-hermes auth spotify
+sinoclaw auth spotify
 ```
 
 The 7 Spotify tools only appear in the agent's toolset after step 1 — they're off by default so users who don't want them don't ship extra tool schemas on every API call.
@@ -73,7 +73,7 @@ If `SSH_CLIENT` or `SSH_TTY` is set, Hermes skips the automatic browser open dur
 ## Verify
 
 ```bash
-hermes auth status spotify
+sinoclaw auth status spotify
 ```
 
 Shows whether tokens are present and when the access token expires. Refresh is automatic: when any Spotify API call returns 401, the client exchanges the refresh token and retries once. Refresh tokens persist across Hermes restarts, so you only re-auth if you revoke the app in your Spotify account settings or run `sinoclaw auth logout spotify`.
@@ -208,7 +208,7 @@ Full cron reference: [Cron Jobs](./cron).
 ## Sign out
 
 ```bash
-hermes auth logout spotify
+sinoclaw auth logout spotify
 ```
 
 Removes tokens from `~/.sinoclaw/auth.json`. To also clear the app config, delete `SINOCLAW_SPOTIFY_CLIENT_ID` (and `SINOCLAW_SPOTIFY_REDIRECT_URI` if you set it) from `~/.sinoclaw/.env`, or run the wizard again.
@@ -236,7 +236,7 @@ To revoke the app on Spotify's side, visit [Apps connected to your account](http
 By default Hermes requests the scopes needed for every shipped tool. Override if you want to restrict access:
 
 ```bash
-hermes auth spotify --scope "user-read-playback-state user-modify-playback-state playlist-read-private"
+sinoclaw auth spotify --scope "user-read-playback-state user-modify-playback-state playlist-read-private"
 ```
 
 Scope reference: [Spotify Web API scopes](https://developer.spotify.com/documentation/web-api/concepts/scopes). If you request fewer scopes than a tool needs, that tool's calls will fail with 403.
@@ -244,7 +244,7 @@ Scope reference: [Spotify Web API scopes](https://developer.spotify.com/document
 ## Advanced: custom client ID / redirect URI
 
 ```bash
-hermes auth spotify --client-id <id> --redirect-uri http://localhost:3000/callback
+sinoclaw auth spotify --client-id <id> --redirect-uri http://localhost:3000/callback
 ```
 
 Or set them permanently in `~/.sinoclaw/.env`:

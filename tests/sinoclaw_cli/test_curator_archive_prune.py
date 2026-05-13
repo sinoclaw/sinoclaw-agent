@@ -43,7 +43,7 @@ def test_archive_refuses_pinned(monkeypatch, capsys):
     assert called == []
     out = capsys.readouterr().out
     assert "pinned" in out.lower()
-    assert "hermes curator unpin" in out
+    assert "sinoclaw curator unpin" in out
 
 
 def test_archive_calls_archive_skill(monkeypatch, capsys):
@@ -243,7 +243,7 @@ def test_archive_and_prune_registered():
     import argparse
     import sinoclaw_cli.curator as curator_cli
 
-    parser = argparse.ArgumentParser(prog="hermes curator")
+    parser = argparse.ArgumentParser(prog="sinoclaw curator")
     curator_cli.register_cli(parser)
 
     args = parser.parse_args(["archive", "my-skill"])
@@ -261,7 +261,7 @@ def test_prune_defaults():
     import argparse
     import sinoclaw_cli.curator as curator_cli
 
-    parser = argparse.ArgumentParser(prog="hermes curator")
+    parser = argparse.ArgumentParser(prog="sinoclaw curator")
     curator_cli.register_cli(parser)
     args = parser.parse_args(["prune"])
     assert args.days == 90

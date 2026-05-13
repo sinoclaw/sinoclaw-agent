@@ -208,7 +208,7 @@ function SkillCard({
               </div>
             )}
             <div className={styles.installHint}>
-              <code>hermes skills install {skill.name}</code>
+              <code>sinoclaw skills install {skill.name}</code>
             </div>
           </div>
         )}

@@ -83,20 +83,20 @@ Earlier releases used a one-off `curator.auxiliary.{provider,model}` block. That
 ## CLI
 
 ```bash
-hermes curator status         # last run, counts, pinned list, LRU top 5
-hermes curator run            # trigger a review now (blocks until the LLM pass finishes)
-hermes curator run --background  # fire-and-forget: start the LLM pass in a background thread
-hermes curator run --dry-run  # preview only — report without any mutations
-hermes curator backup         # take a manual snapshot of ~/.sinoclaw/skills/
-hermes curator rollback       # restore from the newest snapshot
-hermes curator rollback --list     # list available snapshots
-hermes curator rollback --id <ts>  # restore a specific snapshot
-hermes curator rollback -y         # skip the confirmation prompt
-hermes curator pause          # stop runs until resumed
-hermes curator resume
-hermes curator pin <skill>    # never auto-transition this skill
-hermes curator unpin <skill>
-hermes curator restore <skill>  # move an archived skill back to active
+sinoclaw curator status         # last run, counts, pinned list, LRU top 5
+sinoclaw curator run            # trigger a review now (blocks until the LLM pass finishes)
+sinoclaw curator run --background  # fire-and-forget: start the LLM pass in a background thread
+sinoclaw curator run --dry-run  # preview only — report without any mutations
+sinoclaw curator backup         # take a manual snapshot of ~/.sinoclaw/skills/
+sinoclaw curator rollback       # restore from the newest snapshot
+sinoclaw curator rollback --list     # list available snapshots
+sinoclaw curator rollback --id <ts>  # restore a specific snapshot
+sinoclaw curator rollback -y         # skip the confirmation prompt
+sinoclaw curator pause          # stop runs until resumed
+sinoclaw curator resume
+sinoclaw curator pin <skill>    # never auto-transition this skill
+sinoclaw curator unpin <skill>
+sinoclaw curator restore <skill>  # move an archived skill back to active
 ```
 
 ## Backups and rollback
@@ -104,9 +104,9 @@ hermes curator restore <skill>  # move an archived skill back to active
 Before every real curator pass, Hermes takes a tar.gz snapshot of `~/.sinoclaw/skills/` at `~/.sinoclaw/skills/.curator_backups/<utc-iso>/skills.tar.gz`. If a pass archives or consolidates something you didn't want touched, you can undo the whole run with one command:
 
 ```bash
-hermes curator rollback        # restore newest snapshot (with confirmation)
-hermes curator rollback -y     # skip the prompt
-hermes curator rollback --list # see all snapshots with reason + size
+sinoclaw curator rollback        # restore newest snapshot (with confirmation)
+sinoclaw curator rollback -y     # skip the prompt
+sinoclaw curator rollback --list # see all snapshots with reason + size
 ```
 
 The rollback itself is reversible: before replacing the skills tree, Hermes takes another snapshot tagged `pre-rollback to <target-id>`, so a mistaken rollback can be undone by rolling forward to that one with `--id`.
@@ -165,8 +165,8 @@ Pinning protects a skill from deletion — both the curator's automated archive 
 Pin and unpin with:
 
 ```bash
-hermes curator pin <skill>
-hermes curator unpin <skill>
+sinoclaw curator pin <skill>
+sinoclaw curator unpin <skill>
 ```
 
 The flag is stored as `"pinned": true` on the skill's entry in `~/.sinoclaw/skills/.usage.json`, so it survives across sessions.
@@ -222,7 +222,7 @@ Every curator run writes a timestamped directory under `~/.sinoclaw/logs/curator
 If the curator archived something you still want:
 
 ```bash
-hermes curator restore <skill-name>
+sinoclaw curator restore <skill-name>
 ```
 
 This moves the skill back from `~/.sinoclaw/skills/.archive/` to the active tree and resets its state to `active`. The restore refuses if a bundled or hub-installed skill has since been installed under the same name (would shadow upstream).
