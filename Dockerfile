@@ -12,7 +12,7 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/opt/sinoclaw/.playwright
 
 # Install system dependencies in one layer, clear APT cache
 # tini reaps orphaned zombie processes (MCP stdio subprocesses, git, bun, etc.)
-# that would otherwise accumulate when hermes runs as PID 1. See #15012.
+# that would otherwise accumulate when sinoclaw runs as PID 1. See #15012.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential curl nodejs npm python3 ripgrep ffmpeg gcc python3-dev libffi-dev procps git openssh-client docker-cli tini && \
@@ -44,7 +44,7 @@ COPY ui-tui/packages/sinoclaw-ink/ ui-tui/packages/sinoclaw-ink/
 # which defaults to `install-links=true` and installs file deps as *copies*.
 # The host-side package-lock.json is generated with a newer npm that uses
 # symlinks, so an install-as-copy produces a hidden node_modules/.package-lock.json
-# that permanently disagrees with the root lock on the @hermes/ink entry.
+# that permanently disagrees with the root lock on the @sinoclaw/ink entry.
 # That disagreement trips the TUI launcher's `_tui_need_npm_install()`
 # check on every startup and triggers a runtime `npm install` that then
 # fails with EACCES (node_modules/ is root-owned from build time).
@@ -91,7 +91,7 @@ RUN cd web && npm run build && \
 # ---------- Permissions ----------
 # Make install dir world-readable so any SINOCLAW_UID can read it at runtime.
 # The venv needs to be traversable too.
-# node_modules trees additionally need to be writable by the hermes user
+# node_modules trees additionally need to be writable by the sinoclaw user
 # so the runtime `npm install` triggered by _tui_need_npm_install() in
 # sinoclaw_cli/main.py succeeds (see #18800). /opt/sinoclaw/web is build-time
 # only (SINOCLAW_WEB_DIST points at sinoclaw_cli/web_dist) and is intentionally
