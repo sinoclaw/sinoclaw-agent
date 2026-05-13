@@ -32,9 +32,9 @@ Label, prioritize, and summarize new issues every night. Delivers a digest to yo
 
 ```bash
 hermes cron create "0 2 * * *" \
-  "You are a project manager triaging the NousResearch/sinoclaw-agent GitHub repo.
+  "You are a project manager triaging the sinoclaw/sinoclaw-agent GitHub repo.
 
-1. Run: gh issue list --repo NousResearch/sinoclaw-agent --state open --json number,title,labels,author,createdAt --limit 30
+1. Run: gh issue list --repo sinoclaw/sinoclaw-agent --state open --json number,title,labels,author,createdAt --limit 30
 2. Identify issues opened in the last 24 hours
 3. For each new issue:
    - Suggest a priority label (P0-critical, P1-high, P2-medium, P3-low)
@@ -114,9 +114,9 @@ Weekly scan of merged PRs to find API changes that need documentation updates.
 
 ```bash
 hermes cron create "0 9 * * 1" \
-  "Scan the NousResearch/sinoclaw-agent repo for documentation drift.
+  "Scan the sinoclaw/sinoclaw-agent repo for documentation drift.
 
-1. Run: gh pr list --repo NousResearch/sinoclaw-agent --state merged --json number,title,files,mergedAt --limit 30
+1. Run: gh pr list --repo sinoclaw/sinoclaw-agent --state merged --json number,title,files,mergedAt --limit 30
 2. Filter to PRs merged in the last 7 days
 3. For each merged PR, check if it modified:
    - Tool schemas (tools/*.py) — may need docs/reference/tools-reference.md update

@@ -35,11 +35,11 @@ No clone needed. Nix fetches, builds, and runs everything:
 
 ```bash
 # Run directly (builds on first use, cached after)
-nix run github:NousResearch/sinoclaw-agent -- setup
-nix run github:NousResearch/sinoclaw-agent -- chat
+nix run github:sinoclaw/sinoclaw-agent -- setup
+nix run github:sinoclaw/sinoclaw-agent -- chat
 
 # Or install persistently
-nix profile install github:NousResearch/sinoclaw-agent
+nix profile install github:sinoclaw/sinoclaw-agent
 sinoclaw setup
 hermes chat
 ```
@@ -50,7 +50,7 @@ After `nix profile install`, `hermes`, `sinoclaw-agent`, and `sinoclaw-acp` are 
 <summary><strong>Building from a local clone</strong></summary>
 
 ```bash
-git clone https://github.com/NousResearch/sinoclaw-agent.git
+git clone https://github.com/sinoclaw/sinoclaw-agent.git
 cd sinoclaw-agent
 nix build
 ./result/bin/sinoclaw setup
@@ -75,7 +75,7 @@ This module requires NixOS. For non-NixOS systems (macOS, other Linux distros), 
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    sinoclaw-agent.url = "github:NousResearch/sinoclaw-agent";
+    sinoclaw-agent.url = "github:sinoclaw/sinoclaw-agent";
   };
 
   outputs = { nixpkgs, sinoclaw-agent, ... }: {
@@ -663,7 +663,7 @@ External flakes can override the package directly:
 
 ```nix
 {
-  inputs.sinoclaw-agent.url = "github:NousResearch/sinoclaw-agent";
+  inputs.sinoclaw-agent.url = "github:sinoclaw/sinoclaw-agent";
   outputs = { sinoclaw-agent, nixpkgs, ... }: {
     nixpkgs.overlays = [ sinoclaw-agent.overlays.default ];
     # Then: pkgs.sinoclaw-agent.override { extraPythonPackages = [...]; }

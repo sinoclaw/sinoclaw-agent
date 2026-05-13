@@ -29,7 +29,7 @@ env:
   db_dir: "/tmp/yc_bench_dbs"
   company_name: "BenchCo"
   start_date: "01/01/2025"   # MM/DD/YYYY (yc-bench convention)
-  tokenizer_name: "NousResearch/Hermes-3-Llama-3.1-8B"
+  tokenizer_name: "sinoclaw/Hermes-3-Llama-3.1-8B"
   use_wandb: true
   wandb_name: "yc-bench"
   ensure_scores_are_not_same: false

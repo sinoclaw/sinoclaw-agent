@@ -153,8 +153,8 @@ Full automation templates gallery: [sinoclaw-agent.nousresearch.com/docs/guides/
 
 Documentation: [sinoclaw-agent.nousresearch.com](https://sinoclaw-agent.nousresearch.com)
 
-GitHub: [github.com/NousResearch/sinoclaw-agent](https://github.com/NousResearch/sinoclaw-agent)
+GitHub: [github.com/sinoclaw/sinoclaw-agent](https://github.com/sinoclaw/sinoclaw-agent)
 
 ---
 
-*Sinoclaw Agent is built by [Nous Research](https://nousresearch.com). Open source, model-agnostic, runs on your infrastructure.*
+*Sinoclaw Agent is built by [Sinoclaw Team](https://github.com/sinoclaw). Open source, model-agnostic, runs on your infrastructure.*

@@ -20,11 +20,11 @@ env:
   terminal_backend: "docker"
   terminal_timeout: 300
   tool_pool_size: 16
-  dataset_name: "NousResearch/openthoughts-tblite"
+  dataset_name: "sinoclaw/openthoughts-tblite"
   test_timeout: 600
   task_timeout: 1200
   eval_concurrency: 8          # max 8 tasks at once
-  tokenizer_name: "NousResearch/Hermes-3-Llama-3.1-8B"
+  tokenizer_name: "sinoclaw/Hermes-3-Llama-3.1-8B"
   use_wandb: false
   wandb_name: "openthoughts-tblite-local"
   ensure_scores_are_not_same: false

@@ -18,7 +18,7 @@ env:
   steps_per_eval: 3
   terminal_backend: "modal"
   tool_call_parser: "hermes"
-  tokenizer_name: "NousResearch/DeepHermes-3-Llama-3-3B-Preview"
+  tokenizer_name: "sinoclaw/DeepHermes-3-Llama-3-3B-Preview"
   ensure_scores_are_not_same: false
   use_wandb: false
   system_prompt: >
