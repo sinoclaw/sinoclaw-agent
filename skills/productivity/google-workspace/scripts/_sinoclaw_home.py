@@ -1,6 +1,6 @@
 """Resolve SINOCLAW_HOME for standalone skill scripts.
 
-Skill scripts may run outside the Hermes process (e.g. system Python,
+Skill scripts may run outside the Sinoclaw process (e.g. system Python,
 nix env, CI) where ``sinoclaw_constants`` is not importable.  This module
 provides the same ``get_sinoclaw_home()`` and ``display_sinoclaw_home()``
 contracts as ``sinoclaw_constants`` without requiring it on ``sys.path``.

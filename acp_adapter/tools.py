@@ -192,7 +192,7 @@ def _json_loads_maybe(value: Optional[str]) -> Any:
     except Exception:
         pass
 
-    # Some Hermes tools append a human hint after a JSON payload, e.g.
+    # Some Sinoclaw tools append a human hint after a JSON payload, e.g.
     # ``{...}\n\n[Hint: Results truncated...]``. Keep the structured rendering path
     # by decoding the first JSON value instead of falling back to raw text.
     try:
@@ -268,7 +268,7 @@ def _format_read_file_result(result: Optional[str], args: Optional[Dict[str, Any
     header = f"Read {path}{suffix}"
     if data.get("total_lines") is not None:
         header += f" — {data.get('total_lines')} total lines"
-    # Hermes read_file output is line-numbered with `|`. If we send it as raw
+    # Sinoclaw read_file output is line-numbered with `|`. If we send it as raw
     # Markdown, Zed can interpret pipes as tables and collapse the layout.
     # Fence the payload so file lines stay readable and literal.
     return _truncate_text(f"{header}\n\n{_fenced_text(content)}")

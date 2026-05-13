@@ -254,7 +254,7 @@ def run_backup(args) -> None:
 # ---------------------------------------------------------------------------
 
 def _validate_backup_zip(zf: zipfile.ZipFile) -> tuple[bool, str]:
-    """Check that a zip looks like a Hermes backup.
+    """Check that a zip looks like a Sinoclaw backup.
 
     Returns (ok, reason).
     """
@@ -273,7 +273,7 @@ def _validate_backup_zip(zf: zipfile.ZipFile) -> tuple[bool, str]:
 
     if not found:
         return False, (
-            "zip does not appear to be a Hermes backup "
+            "zip does not appear to be a Sinoclaw backup "
             "(no config.yaml, .env, or state databases found)"
         )
 
@@ -305,7 +305,7 @@ def _detect_prefix(zf: zipfile.ZipFile) -> str:
 
 
 def run_import(args) -> None:
-    """Restore a Hermes backup from a zip file."""
+    """Restore a Sinoclaw backup from a zip file."""
     zip_path = Path(args.zipfile).expanduser().resolve()
 
     if not zip_path.is_file():
@@ -341,7 +341,7 @@ def run_import(args) -> None:
 
         if (has_config or has_env) and not args.force:
             print()
-            print("Warning: Target directory already has Hermes configuration.")
+            print("Warning: Target directory already has Sinoclaw configuration.")
             print("Importing will overwrite existing files with backup contents.")
             print()
             try:
@@ -460,7 +460,7 @@ def run_import(args) -> None:
             for pname in gw_profiles:
                 print(f"  sinoclaw -p {pname} gateway install")
 
-        print("Done. Your Hermes configuration has been restored.")
+        print("Done. Your Sinoclaw configuration has been restored.")
 
 
 # ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-"""Unified removal contract for every credential source Hermes reads from.
+"""Unified removal contract for every credential source Sinoclaw reads from.
 
-Hermes seeds its credential pool from many places:
+Sinoclaw seeds its credential pool from many places:
 
     env:<VAR>     — os.environ / ~/.sinoclaw/.env
     claude_code   — ~/.claude/.credentials.json
@@ -179,8 +179,8 @@ def _remove_env_source(provider: str, removed) -> RemovalResult:
             f"Note: {env_var} is still set in your shell environment "
             f"(not in ~/.sinoclaw/.env).",
             "  Unset it there (shell profile, systemd EnvironmentFile, "
-            "launchd plist, etc.) or it will keep being visible to Hermes.",
-            f"  The pool entry is now suppressed — Hermes will ignore "
+            "launchd plist, etc.) or it will keep being visible to Sinoclaw.",
+            f"  The pool entry is now suppressed — Sinoclaw will ignore "
             f"{env_var} until you run `sinoclaw auth add {provider}`.",
         ])
     else:
@@ -195,7 +195,7 @@ def _remove_claude_code(provider: str, removed) -> RemovalResult:
     """~/.claude/.credentials.json is owned by Claude Code itself.
 
     We don't delete it — the user's Claude Code install still needs to
-    work.  We just suppress it so Hermes stops reading it.
+    work.  We just suppress it so Sinoclaw stops reading it.
     """
     return RemovalResult(hints=[
         "Suppressed claude_code credential — it will not be re-seeded.",
@@ -213,7 +213,7 @@ def _remove_sinoclaw_pkce(provider: str, removed) -> RemovalResult:
     if oauth_file.exists():
         try:
             oauth_file.unlink()
-            result.cleaned.append("Cleared Hermes Anthropic OAuth credentials")
+            result.cleaned.append("Cleared Sinoclaw Anthropic OAuth credentials")
         except OSError as exc:
             result.hints.append(f"Could not delete {oauth_file}: {exc}")
     return result
@@ -269,7 +269,7 @@ def _remove_codex_device_code(provider: str, removed) -> RemovalResult:
     """Codex tokens live in TWO places: our auth store AND ~/.codex/auth.json.
 
     refresh_codex_oauth_pure() writes both every time, so clearing only
-    the Hermes auth store is not enough — _seed_from_singletons() would
+    the Sinoclaw auth store is not enough — _seed_from_singletons() would
     re-import from ~/.codex/auth.json on the next load_pool() call and
     the removal would be instantly undone.  We suppress instead of
     deleting Codex CLI's file, so the Codex CLI itself keeps working.
@@ -323,7 +323,7 @@ def _remove_copilot_gh(provider: str, removed) -> RemovalResult:
     user clicked.
 
     We don't touch the user's gh CLI or shell state — just suppress so
-    Hermes stops picking the token up.
+    Sinoclaw stops picking the token up.
     """
     # Suppress ALL copilot source variants up-front so no path resurrects
     # the pool entry.  The central dispatcher in auth_remove_command will

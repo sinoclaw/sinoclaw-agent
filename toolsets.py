@@ -307,7 +307,7 @@ TOOLSETS = {
     },
     
     # ==========================================================================
-    # Full Hermes toolsets (CLI + messaging platforms)
+    # Full Sinoclaw toolsets (CLI + messaging platforms)
     #
     # All platforms share the same core tools (including send_message,
     # which is gated on gateway running via its check_fn).
@@ -428,7 +428,7 @@ TOOLSETS = {
     },
 
     "sinoclaw-email": {
-        "description": "Email bot toolset - interact with Hermes via email (IMAP/SMTP)",
+        "description": "Email bot toolset - interact with Sinoclaw via email (IMAP/SMTP)",
         "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },
@@ -501,7 +501,7 @@ TOOLSETS = {
     },
 
     "sinoclaw-sms": {
-        "description": "SMS bot toolset - interact with Hermes via SMS (Twilio)",
+        "description": "SMS bot toolset - interact with Sinoclaw via SMS (Twilio)",
         "tools": _SINOCLAW_CORE_TOOLS,
         "includes": []
     },

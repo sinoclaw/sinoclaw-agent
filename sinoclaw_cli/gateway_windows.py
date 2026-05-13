@@ -157,7 +157,7 @@ def get_task_script_path() -> Path:
 
     Lives under ``%LOCALAPPDATA%\\hermes\\gateway-service\\<task_name>.cmd``
     (or ``<SINOCLAW_HOME>/gateway-service/<task_name>.cmd`` so per-profile
-    Hermes installs stay self-contained).
+    Sinoclaw installs stay self-contained).
     """
     _assert_windows()
     from sinoclaw_cli.config import get_sinoclaw_home

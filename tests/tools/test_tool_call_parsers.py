@@ -32,7 +32,7 @@ class TestParserRegistry:
         parsers = list_parsers()
         assert len(parsers) > 0
 
-    def test_sinoclaw_parser_registered(self):
+    def test_hermes_parser_registered(self):
         parsers = list_parsers()
         assert "hermes" in parsers
 

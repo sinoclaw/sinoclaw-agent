@@ -273,7 +273,7 @@ class HonchoClientConfig:
     # honcho_reasoning tool param (agentic). When false, always uses
     # dialecticReasoningLevel and ignores model-provided overrides.
     dialectic_dynamic: bool = True
-    # Max chars of dialectic result to inject into Hermes system prompt
+    # Max chars of dialectic result to inject into Sinoclaw system prompt
     dialectic_max_chars: int = 600
     # Dialectic depth: how many .chat() calls per dialectic cycle (1-3).
     # Depth 1: single call. Depth 2: self-audit + targeted synthesis.
@@ -352,7 +352,7 @@ class HonchoClientConfig:
         """Create config from the resolved Honcho config path.
 
         Resolution: $SINOCLAW_HOME/honcho.json -> ~/.honcho/config.json -> env vars.
-        When host is None, derives it from the active Hermes profile.
+        When host is None, derives it from the active Sinoclaw profile.
         """
         resolved_host = host or resolve_active_host()
         path = config_path or resolve_config_path()

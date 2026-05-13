@@ -1,5 +1,5 @@
 """
-Hermes tool call parser.
+Sinoclaw tool call parser.
 
 Format: <tool_call>{"name": "func", "arguments": {...}}</tool_call>
 Based on VLLM's Hermes2ProToolParser.extract_tool_calls()

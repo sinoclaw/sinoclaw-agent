@@ -289,7 +289,7 @@ class TerminalBench2EvalEnv(SinoclawAgentBaseEnv):
             steps_per_eval=1,
             total_steps=1,
 
-            tokenizer_name="NousResearch/Hermes-3-Llama-3.1-8B",
+            tokenizer_name="NousResearch/Sinoclaw-3-Llama-3.1-8B",
             use_wandb=True,
             wandb_name="terminal-bench-2",
             ensure_scores_are_not_same=False,  # Binary rewards may all be 0 or 1

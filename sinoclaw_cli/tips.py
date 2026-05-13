@@ -56,7 +56,7 @@ TIPS = [
     # --- Keybindings ---
     "Alt+Enter inserts a newline for multi-line input. (Windows Terminal intercepts Alt+Enter — use Ctrl+Enter instead.)",
     "Ctrl+C interrupts the agent. Double-press within 2 seconds to force exit.",
-    "Ctrl+Z suspends Hermes to the background — run fg in your shell to resume.",
+    "Ctrl+Z suspends Sinoclaw to the background — run fg in your shell to resume.",
     "Tab accepts auto-suggestion ghost text or autocompletes slash commands.",
     "Type a new message while the agent is working to interrupt and redirect it.",
     "Alt+V pastes an image from your clipboard into the conversation.",
@@ -89,7 +89,7 @@ TIPS = [
     "sinoclaw skills tap add myorg/skills-repo adds a custom GitHub skill source.",
     "sinoclaw skills snapshot export setup.json exports your skill configuration for backup or sharing.",
     "sinoclaw mcp add github --command npx adds MCP servers from the command line.",
-    "sinoclaw mcp serve runs Hermes itself as an MCP server for other agents.",
+    "sinoclaw mcp serve runs Sinoclaw itself as an MCP server for other agents.",
     "sinoclaw auth add lets you add multiple API keys for credential pool rotation.",
     "sinoclaw completion bash >> ~/.bashrc enables tab completion for all commands and profiles.",
     "sinoclaw logs -f follows agent.log in real time. --level WARNING --since 1h filters output.",
@@ -97,7 +97,7 @@ TIPS = [
     "sinoclaw profile create coder creates an isolated profile that becomes its own command.",
     "sinoclaw profile create work --clone copies your current config and keys to a new profile.",
     "sinoclaw update syncs new bundled skills to ALL profiles automatically.",
-    "sinoclaw gateway install sets up Hermes as a system service (systemd/launchd).",
+    "sinoclaw gateway install sets up Sinoclaw as a system service (systemd/launchd).",
     "sinoclaw memory setup lets you configure an external memory provider (Honcho, Mem0, etc.).",
     "sinoclaw webhook subscribe creates event-driven webhook routes with HMAC validation.",
     "Save money: sinoclaw tools disables unused tools, sinoclaw skills config trims skills down.",
@@ -128,7 +128,7 @@ TIPS = [
     "provider_routing controls OpenRouter provider sorting, whitelisting, and blacklisting.",
 
     # --- Tools & Capabilities ---
-    "execute_code runs Python scripts that call Hermes tools programmatically — results stay out of context.",
+    "execute_code runs Python scripts that call Sinoclaw tools programmatically — results stay out of context.",
     "delegate_task spawns up to 3 concurrent sub-agents by default (delegation.max_concurrent_children) with isolated contexts for parallel work.",
     "web_extract works on PDF URLs — pass any PDF link and it converts to markdown.",
     "search_files is ripgrep-backed and faster than grep — use it instead of terminal grep.",
@@ -158,7 +158,7 @@ TIPS = [
     # --- Sessions ---
     "Sessions auto-generate descriptive titles after the first exchange — no manual naming needed.",
     "Session titles support lineage: \"my project\" → \"my project #2\" → \"my project #3\".",
-    "When exiting, Hermes prints a resume command with session ID and stats.",
+    "When exiting, Sinoclaw prints a resume command with session ID and stats.",
     "sinoclaw sessions export backup.jsonl exports all sessions for backup or analysis.",
     "hermes -r SESSION_ID resumes any specific past session by its ID.",
 
@@ -192,10 +192,10 @@ TIPS = [
     "Voice messages on Telegram, Discord, WhatsApp, and Slack are auto-transcribed.",
 
     # --- Gateway & Messaging ---
-    "Hermes runs on 21 messaging platforms: Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, email, and more.",
+    "Sinoclaw runs on 21 messaging platforms: Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, email, and more.",
     "sinoclaw gateway install sets it up as a system service that starts on boot.",
     "DingTalk uses Stream Mode — no webhooks or public URL needed.",
-    "BlueBubbles brings iMessage to Hermes via a local macOS server.",
+    "BlueBubbles brings iMessage to Sinoclaw via a local macOS server.",
     "Webhook routes support HMAC validation, rate limiting, and event filtering.",
     "The API server exposes an OpenAI-compatible endpoint compatible with Open WebUI and LibreChat.",
     "Discord voice channel mode: the bot joins VC, transcribes speech, and talks back.",
@@ -256,7 +256,7 @@ TIPS = [
     "Slash commands support prefix matching: /h resolves to /help, /mod to /model.",
     "Dragging a file path into the terminal auto-attaches images or sends as context.",
     ".worktreeinclude in your repo root lists gitignored files to copy into worktrees.",
-    "sinoclaw acp runs Hermes as an ACP server for VS Code, Zed, and JetBrains integration.",
+    "sinoclaw acp runs Sinoclaw as an ACP server for VS Code, Zed, and JetBrains integration.",
     "Custom providers: save named endpoints in config.yaml under custom_providers.",
     "SINOCLAW_EPHEMERAL_SYSTEM_PROMPT injects a system prompt that's never persisted to history.",
     "credential_pool_strategies supports fill_first, round_robin, least_used, and random rotation.",
@@ -269,11 +269,11 @@ TIPS = [
     "Cron jobs can attach a Python script (--script) whose stdout is injected into the prompt as context.",
     "Cron scripts live in ~/.sinoclaw/scripts/ and run before the agent — perfect for data collection pipelines.",
     "prefill_messages_file in config.yaml injects few-shot examples into every API call, never saved to history.",
-    "SOUL.md completely replaces the agent's default identity — rewrite it to make Hermes your own.",
+    "SOUL.md completely replaces the agent's default identity — rewrite it to make Sinoclaw your own.",
     "SOUL.md is auto-seeded with a default personality on first run. Edit ~/.sinoclaw/SOUL.md to customize.",
     "/compress <focus topic> allocates 60-70% of the summary budget to your topic and aggressively trims the rest.",
     "On second+ compression, the compressor updates the previous summary instead of starting from scratch.",
-    "Before a gateway session reset, Hermes auto-flushes important facts to memory in the background.",
+    "Before a gateway session reset, Sinoclaw auto-flushes important facts to memory in the background.",
     "network.force_ipv4: true in config.yaml fixes hangs on servers with broken IPv6 — monkey-patches socket.",
     "The terminal tool annotates common exit codes: grep returning 1 = 'No matches found (not an error)'.",
     "Failed foreground terminal commands auto-retry up to 3 times with exponential backoff (2s, 4s, 8s).",
@@ -337,13 +337,13 @@ TIPS = [
 
     # --- Advanced Slash Commands ---
     '/steer <prompt> injects a note after the next tool call — nudge direction mid-task without interrupting.',
-    '/goal <text> sets a standing Ralph-loop objective — Hermes auto-continues turn after turn until a judge says done.',
-    '/snapshot create [label] saves a full state snapshot of Hermes config; /snapshot restore <id> reverts later.',
+    '/goal <text> sets a standing Ralph-loop objective — Sinoclaw auto-continues turn after turn until a judge says done.',
+    '/snapshot create [label] saves a full state snapshot of Sinoclaw config; /snapshot restore <id> reverts later.',
     '/copy [N] copies the last assistant response to your clipboard, or the Nth-from-last with a number.',
     '/redraw forces a full UI repaint, fixing terminal drift after tmux resize or mouse selection artifacts.',
     '/agents (alias /tasks) shows active agents and running background tasks across the current session.',
     '/footer toggles the gateway footer on final replies showing model, tool counts, and turn timing.',
-    '/busy queue|steer|interrupt controls what pressing Enter does while Hermes is working.',
+    '/busy queue|steer|interrupt controls what pressing Enter does while Sinoclaw is working.',
     '/topic in Telegram DMs enables user-managed multi-session topic mode — /topic <id> restores past sessions inline.',
     '/approve session|always runs a pending dangerous command with your chosen trust scope; /deny rejects it.',
     '/restart gracefully restarts the gateway after draining active runs, then pings the requester when back up.',
@@ -378,7 +378,7 @@ TIPS = [
     'Ctrl+G or Ctrl+X Ctrl+E in the TUI opens the input buffer in $EDITOR for long multi-line prompts.',
     'The TUI renders LaTeX inline — $E=mc^2$ becomes Unicode math instead of raw TeX.',
     'sinoclaw dashboard launches a local web UI at 127.0.0.1:9119 — zero data leaves localhost.',
-    'sinoclaw dashboard --tui embeds the full Hermes TUI in your browser via xterm.js and a WebSocket PTY.',
+    'sinoclaw dashboard --tui embeds the full Sinoclaw TUI in your browser via xterm.js and a WebSocket PTY.',
     'Drop a YAML in ~/.sinoclaw/dashboard-themes/ with two palette colors to reskin the entire dashboard.',
     'Dashboard plugins are drop-in: manifest.json + JS bundle in ~/.sinoclaw/dashboard-plugins/ — no npm build required.',
     'layoutVariant: cockpit in a dashboard theme adds a 260px left rail that plugins can populate via the sidebar slot.',
@@ -462,7 +462,7 @@ TIPS = [
     'auxiliary.session_search.extra_body forwards provider-specific OpenAI-compatible fields on summarization calls.',
 
     # --- Security ---
-    'security.tirith_fail_open: false makes Hermes block commands when the tirith scanner itself errors out.',
+    'security.tirith_fail_open: false makes Sinoclaw block commands when the tirith scanner itself errors out.',
     'TIRITH_FAIL_OPEN env var overrides the tirith_fail_open config — a quick toggle without editing config.yaml.',
 
     # --- Sessions & Source Tags ---

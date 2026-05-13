@@ -40,7 +40,7 @@ nous = NousProfile(
     aliases=("nous-portal", "nousresearch"),
     env_vars=("NOUS_API_KEY",),
     display_name="Nous Research",
-    description="Nous Research — Hermes model family",
+    description="Nous Research — Sinoclaw model family",
     signup_url="https://nousresearch.com/",
     fallback_models=(
         "sinoclaw-3-405b",

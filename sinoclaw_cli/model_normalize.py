@@ -15,7 +15,7 @@ Different LLM providers expect model identifiers in different formats:
 - **DeepSeek** accepts ``deepseek-chat`` (V3), ``deepseek-reasoner``
   (R1-family), and the first-class V-series IDs (``deepseek-v4-pro``,
   ``deepseek-v4-flash``, and any future ``deepseek-v<N>-*``).  Older
-  Hermes revisions folded every non-reasoner input into
+  Sinoclaw revisions folded every non-reasoner input into
   ``deepseek-chat``, which on aggregators routes to V3 — so a user
   picking V4 Pro was silently downgraded.
 - **Custom** and remaining providers pass the name through as-is.
@@ -211,7 +211,7 @@ def _dots_to_hyphens(model_name: str) -> str:
 
 
 def _normalize_provider_alias(provider_name: str) -> str:
-    """Resolve provider aliases to Hermes' canonical ids."""
+    """Resolve provider aliases to Sinoclaw' canonical ids."""
     raw = (provider_name or "").strip().lower()
     if not raw:
         return raw

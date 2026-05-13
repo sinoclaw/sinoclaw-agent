@@ -536,7 +536,7 @@ class DockerEnvironment(BaseEnvironment):
         except Exception:
             pass
         # Explicit docker_forward_env entries are an intentional opt-in and must
-        # win over the generic Hermes secret blocklist. Only implicit passthrough
+        # win over the generic Sinoclaw secret blocklist. Only implicit passthrough
         # keys are filtered.
         forward_keys = explicit_forward_keys | (passthrough_keys - _SINOCLAW_PROVIDER_ENV_BLOCKLIST)
         sinoclaw_env = _load_sinoclaw_env_vars() if forward_keys else {}

@@ -151,7 +151,7 @@ def _path_from_file_uri(uri: str) -> Path | None:
 
     Zed may send POSIX file URIs from Linux/WSL workspaces or Windows-ish paths
     when launched through wsl.exe. Translate the common Windows drive form to
-    /mnt/<drive>/... so Hermes running in WSL can read it.
+    /mnt/<drive>/... so Sinoclaw running in WSL can read it.
     """
     raw = (uri or "").strip()
     if not raw:
@@ -232,7 +232,7 @@ def _resource_link_to_parts(block: ResourceContentBlock) -> list[dict[str, Any]]
                 uri=uri,
                 name=name,
                 title=title,
-                body="[Resource link only; Hermes cannot read non-file ACP resource URIs directly.]",
+                body="[Resource link only; Sinoclaw cannot read non-file ACP resource URIs directly.]",
             ),
         }]
 
@@ -400,7 +400,7 @@ def _content_blocks_to_openai_user_content(
         | EmbeddedResourceContentBlock
     ],
 ) -> str | list[dict[str, Any]]:
-    """Convert ACP prompt blocks into a Hermes/OpenAI-compatible user content payload."""
+    """Convert ACP prompt blocks into a Sinoclaw/OpenAI-compatible user content payload."""
     parts: list[dict[str, Any]] = []
     text_parts: list[str] = []
 
@@ -443,7 +443,7 @@ def _content_blocks_to_openai_user_content(
 
 
 class SinoclawACPAgent(acp.Agent):
-    """ACP Agent implementation wrapping Hermes AIAgent."""
+    """ACP Agent implementation wrapping Sinoclaw AIAgent."""
 
     _SLASH_COMMANDS = {
         "help": "Show available commands",
@@ -454,7 +454,7 @@ class SinoclawACPAgent(acp.Agent):
         "compact": "Compress conversation context",
         "steer": "Inject guidance into the currently running agent turn",
         "queue": "Queue a prompt to run after the current turn finishes",
-        "version": "Show Hermes version",
+        "version": "Show Sinoclaw version",
     }
 
     _ADVERTISED_COMMANDS = (
@@ -495,7 +495,7 @@ class SinoclawACPAgent(acp.Agent):
         },
         {
             "name": "version",
-            "description": "Show Hermes version",
+            "description": "Show Sinoclaw version",
         },
     )
 
@@ -609,7 +609,7 @@ class SinoclawACPAgent(acp.Agent):
 
         Zed's circular context indicator is driven by ACP ``usage_update``
         session updates: ``size`` is the model context window and ``used`` is
-        the current request pressure.  Hermes estimates ``used`` from the same
+        the current request pressure.  Sinoclaw estimates ``used`` from the same
         buckets it sends to providers: system prompt, conversation history, and
         tool schemas.
         """
@@ -751,7 +751,7 @@ class SinoclawACPAgent(acp.Agent):
                 AuthMethodAgent(
                     id=provider,
                     name=f"{provider} runtime credentials",
-                    description=f"Authenticate Hermes using the currently configured {provider} runtime credentials.",
+                    description=f"Authenticate Sinoclaw using the currently configured {provider} runtime credentials.",
                 )
             ]
 
@@ -782,7 +782,7 @@ class SinoclawACPAgent(acp.Agent):
         # provider we advertised in initialize(). Without this check,
         # authenticate() would acknowledge any method_id as long as the
         # server has provider credentials configured — harmless under
-        # Hermes' threat model (ACP is stdio-only, local-trust), but poor
+        # Sinoclaw' threat model (ACP is stdio-only, local-trust), but poor
         # API hygiene and confusing if ACP ever grows multi-method auth.
         provider = detect_provider()
         if not provider:
@@ -865,7 +865,7 @@ class SinoclawACPAgent(acp.Agent):
         Zed's ACP history UI calls ``session/load`` after the user picks an item
         from the Agents sidebar. The agent must then replay the full conversation
         as user/assistant chunks plus reconstructed tool-call start/completion
-        notifications; merely restoring server-side state makes Hermes remember
+        notifications; merely restoring server-side state makes Sinoclaw remember
         context, but leaves the editor looking like a clean thread.
         """
         if not self._conn or not state.history:
@@ -1080,7 +1080,7 @@ class SinoclawACPAgent(acp.Agent):
         session_id: str,
         **kwargs: Any,
     ) -> PromptResponse:
-        """Run Hermes on the user's prompt and stream events back to the editor."""
+        """Run Sinoclaw on the user's prompt and stream events back to the editor."""
         state = self.session_manager.get_session(session_id)
         if state is None:
             logger.error("prompt: session %s not found", session_id)
@@ -1195,7 +1195,7 @@ class SinoclawACPAgent(acp.Agent):
 
         agent = state.agent
         agent.tool_progress_callback = tool_progress_cb
-        # ACP thought panes should not receive Hermes' local kawaii waiting/status
+        # ACP thought panes should not receive Sinoclaw' local kawaii waiting/status
         # updates. Route provider/model reasoning deltas instead; if the provider
         # emits no reasoning, Zed should not get a fake "thinking" accordion.
         agent.thinking_callback = None
@@ -1698,7 +1698,7 @@ class SinoclawACPAgent(acp.Agent):
     async def set_config_option(
         self, config_id: str, session_id: str, value: str, **kwargs: Any
     ) -> SetSessionConfigOptionResponse | None:
-        """Accept ACP config option updates even when Hermes has no typed ACP config surface yet."""
+        """Accept ACP config option updates even when Sinoclaw has no typed ACP config surface yet."""
         state = self.session_manager.get_session(session_id)
         if state is None:
             logger.warning("Session %s: config update requested for missing session", session_id)
