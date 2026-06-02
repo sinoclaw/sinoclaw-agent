@@ -1,12 +1,12 @@
 ---
 name: honcho
-description: Configure and use Honcho memory with Hermes -- cross-session user modeling, multi-profile peer isolation, observation config, dialectic reasoning, session summaries, and context budget enforcement. Use when setting up Honcho, troubleshooting memory, managing profiles with Honcho peers, or tuning observation, recall, and dialectic settings.
+description: Configure and use Honcho memory with Sinoclaw -- cross-session user modeling, multi-profile peer isolation, observation config, dialectic reasoning, session summaries, and context budget enforcement. Use when setting up Honcho, troubleshooting memory, managing profiles with Honcho peers, or tuning observation, recall, and dialectic settings.
 version: 2.0.0
 author: Sinoclaw Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  sinoclaw:
     tags: [Honcho, Memory, Profiles, Observation, Dialectic, User-Modeling, Session-Summary]
     homepage: https://docs.honcho.dev
     related_skills: [sinoclaw-agent]
@@ -14,9 +14,9 @@ prerequisites:
   pip: [honcho-ai]
 ---
 
-# Honcho Memory for Hermes
+# Honcho Memory for Sinoclaw
 
-Honcho provides AI-native cross-session user modeling. It learns who the user is across conversations and gives every Hermes profile its own peer identity while sharing a unified view of the user.
+Honcho provides AI-native cross-session user modeling. It learns who the user is across conversations and gives every Sinoclaw profile its own peer identity while sharing a unified view of the user.
 
 ## When to Use
 
@@ -32,14 +32,14 @@ Honcho provides AI-native cross-session user modeling. It learns who the user is
 ### Cloud (app.honcho.dev)
 
 ```bash
-hermes honcho setup
+sinoclaw honcho setup
 # select "cloud", paste API key from https://app.honcho.dev
 ```
 
 ### Self-hosted
 
 ```bash
-hermes honcho setup
+sinoclaw honcho setup
 # select "local", enter base URL (e.g. http://localhost:8000)
 ```
 
@@ -48,7 +48,7 @@ See: https://docs.honcho.dev/v3/guides/integrations/hermes#running-honcho-locall
 ### Verify
 
 ```bash
-hermes honcho status    # shows resolved config, connection test, peer info
+sinoclaw honcho status    # shows resolved config, connection test, peer info
 ```
 
 ## Architecture
@@ -59,7 +59,7 @@ When Honcho injects context into the system prompt (in `hybrid` or `context` rec
 
 1. **Session summary** -- a short digest of the current session so far (placed first so the model has immediate conversational continuity)
 2. **User representation** -- Honcho's accumulated model of the user (preferences, facts, patterns)
-3. **AI peer card** -- the identity card for this Hermes profile's AI peer
+3. **AI peer card** -- the identity card for this Sinoclaw profile's AI peer
 
 The session summary is generated automatically by Honcho at the start of each turn (when a prior session exists). It gives the model a warm start without replaying full history.
 
@@ -76,10 +76,10 @@ You do not need to configure this -- it is automatic based on session state.
 
 ### Peers
 
-Honcho models conversations as interactions between **peers**. Hermes creates two peers per session:
+Honcho models conversations as interactions between **peers**. Sinoclaw creates two peers per session:
 
 - **User peer** (`peerName`): represents the human. Honcho builds a user representation from observed messages.
-- **AI peer** (`aiPeer`): represents this Hermes instance. Each profile gets its own AI peer so agents develop independent views.
+- **AI peer** (`aiPeer`): represents this Sinoclaw instance. Each profile gets its own AI peer so agents develop independent views.
 
 ### Observation
 
@@ -120,7 +120,7 @@ Honcho sessions scope where messages and observations land. Strategy options:
 |----------|----------|
 | `per-directory` (default) | One session per working directory |
 | `per-repo` | One session per git repository root |
-| `per-session` | New Honcho session each Hermes run |
+| `per-session` | New Honcho session each Sinoclaw run |
 | `global` | Single session across all directories |
 
 Manual override: `sinoclaw honcho map my-project-name`
@@ -196,7 +196,7 @@ Higher levels produce richer synthesis but cost more tokens on Honcho's backend.
 
 ## Multi-Profile Setup
 
-Each Hermes profile gets its own Honcho AI peer while sharing the same workspace (user context). This means:
+Each Sinoclaw profile gets its own Honcho AI peer while sharing the same workspace (user context). This means:
 
 - All profiles see the same user representation
 - Each profile builds its own AI identity and observations
@@ -205,12 +205,12 @@ Each Hermes profile gets its own Honcho AI peer while sharing the same workspace
 ### Create a profile with Honcho peer
 
 ```bash
-hermes profile create coder --clone
-# creates host block hermes.coder, AI peer "coder", inherits config from default
+sinoclaw profile create coder --clone
+# creates host block sinoclaw.coder, AI peer "coder", inherits config from default
 ```
 
 What `--clone` does for Honcho:
-1. Creates a `hermes.coder` host block in `honcho.json`
+1. Creates a `sinoclaw.coder` host block in `honcho.json`
 2. Sets `aiPeer: "coder"` (the profile name)
 3. Inherits `workspace`, `peerName`, `writeFrequency`, `recallMode`, etc. from default
 4. Eagerly creates the peer in Honcho so it exists before first message
@@ -218,7 +218,7 @@ What `--clone` does for Honcho:
 ### Backfill existing profiles
 
 ```bash
-hermes honcho sync    # creates host blocks for all profiles that don't have one yet
+sinoclaw honcho sync    # creates host blocks for all profiles that don't have one yet
 ```
 
 ### Per-profile config
@@ -228,7 +228,7 @@ Override any setting in the host block:
 ```json
 {
   "hosts": {
-    "hermes.coder": {
+    "sinoclaw.coder": {
       "aiPeer": "coder",
       "recallMode": "tools",
       "dialecticDepth": 2,
@@ -288,7 +288,7 @@ honcho_conclude delete_id="abc123"    # PII removal
 
 ## Agent Usage Patterns
 
-Guidelines for Hermes when Honcho memory is active.
+Guidelines for Sinoclaw when Honcho memory is active.
 
 ### On conversation start
 
@@ -424,8 +424,8 @@ Session summary requires at least one prior turn in the current Honcho session. 
 | `sinoclaw honcho sessions` | List known directory-to-session-name mappings |
 | `sinoclaw honcho map <name>` | Map current working directory to a Honcho session name |
 | `sinoclaw honcho identity` | Seed AI peer identity or show both peer representations |
-| `sinoclaw honcho sync` | Create host blocks for all Hermes profiles that don't have one yet |
-| `sinoclaw honcho migrate` | Step-by-step migration guide from OpenClaw native memory to Hermes + Honcho |
+| `sinoclaw honcho sync` | Create host blocks for all Sinoclaw profiles that don't have one yet |
+| `sinoclaw honcho migrate` | Step-by-step migration guide from OpenClaw native memory to Sinoclaw + Honcho |
 | `sinoclaw memory setup` | Generic memory provider picker (selecting "honcho" runs the same wizard) |
 | `sinoclaw memory status` | Show active memory provider and config |
 | `sinoclaw memory off` | Disable external memory provider |

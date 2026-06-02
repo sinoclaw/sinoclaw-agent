@@ -48,6 +48,10 @@ _SINOCLAW_CORE_TOOLS = [
     "text_to_speech",
     # Planning & memory
     "todo", "memory",
+    # Cognitive planning (MIDCA HTN planner)
+    "cognitive_goal_add", "cognitive_plan_generate", "cognitive_plan_task",
+    "cognitive_plan_nl", "cognitive_plan_show", "cognitive_simulate",
+    "cognitive_trace_register", "cognitive_trace_list",
     # Session history search
     "session_search",
     # Clarifying questions
@@ -89,6 +93,21 @@ TOOLSETS = {
     "vision": {
         "description": "Image analysis and vision tools",
         "tools": ["vision_analyze"],
+        "includes": []
+    },
+
+    "cognitive": {
+        "description": "MIDCA-based cognitive planning: HTN goal decomposition, blocksworld simulation, natural language task planning, and per-phase execution trace",
+        "tools": [
+            "cognitive_goal_add",
+            "cognitive_plan_generate",
+            "cognitive_plan_task",
+            "cognitive_plan_nl",
+            "cognitive_plan_show",
+            "cognitive_simulate",
+            "cognitive_trace_register",
+            "cognitive_trace_list",
+        ],
         "includes": []
     },
 

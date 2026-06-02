@@ -6,9 +6,8 @@ author: Anthropic (adapted by Sinoclaw Team)
 license: Apache-2.0
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
-    tags: [finance, valuation, comps, excel, openpyxl, modeling, investment-banking]
-    related_skills: [excel-author, pptx-author, dcf-model, lbo-model]
+  tags: [finance, valuation, comps, excel, openpyxl, modeling, investment-banking]
+  related_skills: [excel-author, pptx-author, dcf-model, lbo-model]
 ---
 
 ## Environment

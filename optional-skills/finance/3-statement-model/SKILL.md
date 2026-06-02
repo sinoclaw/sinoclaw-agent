@@ -6,9 +6,8 @@ author: Anthropic (adapted by Sinoclaw Team)
 license: Apache-2.0
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
-    tags: [finance, three-statement, income-statement, balance-sheet, cash-flow, excel, openpyxl, modeling]
-    related_skills: [excel-author, pptx-author, dcf-model, lbo-model]
+  tags: [finance, three-statement, income-statement, balance-sheet, cash-flow, excel, openpyxl, modeling]
+  related_skills: [excel-author, pptx-author, dcf-model, lbo-model]
 ---
 
 ## Environment

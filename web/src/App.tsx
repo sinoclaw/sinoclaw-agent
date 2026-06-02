@@ -484,7 +484,7 @@ export default function App() {
                   className="font-bold text-[1.125rem] leading-[0.95] tracking-[0.0525rem] text-midground"
                   style={{ mixBlendMode: "plus-lighter" }}
                 >
-                  Hermes
+                  Sinoclaw
                   <br />
                   Agent
                 </Typography>
@@ -703,8 +703,8 @@ function SidebarSystemActions({ onNavigate }: { onNavigate: () => void }) {
     {
       action: "update",
       icon: Download,
-      label: t.status.updateHermes,
-      runningLabel: t.status.updatingHermes,
+      label: t.status.updateSinoclaw,
+      runningLabel: t.status.updatingSinoclaw,
       spin: false,
     },
   ];

@@ -1,0 +1,4 @@
+[console_scripts]
+sinoclaw = sinoclaw_cli.main:main
+sinoclaw-acp = acp_adapter.entry:main
+sinoclaw-agent = run_agent:main

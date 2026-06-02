@@ -250,6 +250,10 @@ class ChatCompletionsTransport(ProviderTransport):
             if is_moonshot_model(model):
                 tools = sanitize_moonshot_tools(tools)
             api_kwargs["tools"] = tools
+            # Some providers (e.g. Volces ark-code) require tool_choice when tools
+            # are present.  Set "auto" to satisfy them without forcing a specific
+            # tool — this is also the OpenAI default and is safe for all providers.
+            api_kwargs["tool_choice"] = "auto"
 
         # max_tokens resolution — priority: ephemeral > user > provider default
         max_tokens_fn = params.get("max_tokens_param_fn")
@@ -423,6 +427,10 @@ class ChatCompletionsTransport(ProviderTransport):
             if is_moonshot_model(model):
                 tools = sanitize_moonshot_tools(tools)
             api_kwargs["tools"] = tools
+            # Some providers (e.g. Volces ark-code) require tool_choice when tools
+            # are present.  Set "auto" to satisfy them without forcing a specific
+            # tool — this is also the OpenAI default and is safe for all providers.
+            api_kwargs["tool_choice"] = "auto"
 
         # max_tokens resolution — priority: ephemeral > user > profile default
         max_tokens_fn = params.get("max_tokens_param_fn")

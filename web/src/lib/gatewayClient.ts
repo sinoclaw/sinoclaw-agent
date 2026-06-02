@@ -111,7 +111,7 @@ export class GatewayClient {
     if (!resolved) {
       this.setState("error");
       throw new Error(
-        "Session token not available — page must be served by the Hermes dashboard",
+        "Session token not available — page must be served by the Sinoclaw dashboard",
       );
     }
 

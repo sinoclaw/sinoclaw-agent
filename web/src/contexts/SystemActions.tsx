@@ -72,7 +72,7 @@ export function SystemActionsProvider({
         if (action === "restart") {
           await api.restartGateway();
         } else {
-          await api.updateHermes();
+          await api.updateSinoclaw();
         }
         setActiveAction(action);
       } catch (err) {

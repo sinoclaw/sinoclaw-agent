@@ -63,6 +63,7 @@ custom = CustomProfile(
     ),
     env_vars=(),  # No fixed key — custom endpoint
     base_url="",  # User-configured
+    default_headers={"User-Agent": "curl/8.5.0"},  # Required by Volces ark-code
 )
 
 register_provider(custom)

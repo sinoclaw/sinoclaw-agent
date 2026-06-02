@@ -287,7 +287,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
       fontWeightBold: "700",
       macOptionIsMeta: true,
       // Single-scroll-system experiment:
-      // let the inner Hermes TUI own transcript history/scroll behavior.
+      // let the Sinoclaw TUI own transcript history/scroll behavior.
       // The outer browser xterm should act as a display/input bridge only.
       scrollback: 0,
       theme: TERMINAL_THEME,
@@ -394,7 +394,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
 
     // Single-scroll-system experiment:
     // keep browser xterm as a display/input bridge only, and let the inner
-    // Hermes TUI own transcript scrolling.
+    // Sinoclaw TUI own transcript scrolling.
     //
     // In practice, the most reliable path here is NOT terminal mouse-wheel
     // protocol emulation — that can vary by terminal mode and parser path.
@@ -610,7 +610,7 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
     //
     // For the browser embed we prefer input stability over terminal-style
     // mouse reporting, so we drop SGR mouse reports entirely instead of
-    // forwarding them into Hermes. Keyboard input, paste, and resize still
+    // forwarding them into Sinoclaw. Keyboard input, paste, and resize still
     // behave normally.
     // eslint-disable-next-line no-control-regex -- intentional ESC byte in xterm SGR mouse report parser
     const SGR_MOUSE_RE = /^\x1b\[<(\d+);(\d+);(\d+)([Mm])$/;

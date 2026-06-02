@@ -2381,6 +2381,9 @@ def _to_async_client(sync_client, model: str, is_vision: bool = False):
         )
     elif base_url_host_matches(sync_base_url, "api.kimi.com"):
         async_kwargs["default_headers"] = {"User-Agent": "claude-code/0.1.0"}
+    elif base_url_host_matches(sync_base_url, "ark.cn-beijing.volces.com"):
+        # Volces ark-code requires User-Agent (otherwise 400).
+        async_kwargs["default_headers"] = {"User-Agent": "curl/8.5.0"}
     else:
         # Fall back to profile.default_headers for providers that declare
         # client-level headers on their ProviderProfile (e.g. attribution
